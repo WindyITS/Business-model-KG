@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.env
+
+# Outputs / scratch
+outputs/
+
+# OS
+.DS_Store
