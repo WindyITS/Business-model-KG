@@ -2,6 +2,18 @@
 
 A pipeline for turning SEC 10-K filings into structured business-model knowledge graphs using a custom ontology, local LLMs, and Neo4j.
 
+## Mission
+
+LLMs are capable of extracting structured information from unstructured text. The hard part is not extraction itself but is doing it consistently enough that the output is actually comparable and usable at scale. This project is a proof of concept for that idea, applied to a domain where the gap is concrete and the stakes are real: public company filings.
+
+Bloomberg, FactSet, and others have built extensive structured databases from SEC 10-K filings. They are excellent at the numerical layer: revenue by segment, margins, headcount, capex. This data is machine-readable, comparable across companies, and deeply integrated into analyst workflows. Doing so they leave a gap: Item 1 of every 10-K, the Business section, is where a company describes in prose how it actually makes money: what it sells, who it sells to, how it distributes, how it monetizes, which companies it depends on. This semantic layer is almost entirely absent from structured databases. Analysts who need to answer questions like "which public companies monetize primarily via transaction fees and sell through marketplaces?" have no machine-readable source. They read filings manually or rely on ad-hoc keyword search.
+
+There are roughly 10,000 public US companies filing annually. The business model information is public, standardized in form, and updated every year. A machine-readable graph of it does not exist based on what I know.
+
+A fine-tuned extractor that runs reliably over the full 10-K universe and produces a structured, ontology-aligned, cross-company-comparable knowledge graph of business models is the exact mission of this project. Not a noisy dump of whatever the LLM inferred, but a validated graph constrained to a strict schema, with canonical labels that mean the same thing across filings.
+
+---
+
 This is `v0`: the extraction pipeline works end-to-end once provided with the Item 1 Business section of a company's 10-K, and the first three dataset-building stages are implemented in the repo. The next phase is turning that data pipeline into a balanced fine-tuning set for a dedicated extractor, fine-tune such extractor and check wether it performs better on extracting information.
 
 The next data-building stage is based on:
