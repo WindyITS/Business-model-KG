@@ -1,4 +1,12 @@
 import json
+import sys
+from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parents[1]
+SRC_DIR = ROOT_DIR / "src"
+if str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
+
 from neo4j_loader import Neo4jLoader
 from llm_extractor import Triple
 
@@ -55,17 +63,22 @@ data = {
 ]
 }
 
-mapped_triples = []
-for t in data["triples"]:
-    mapped_triples.append(Triple(
-        subject=t["subject"],
-        subject_type=t["subject_type"],
-        relation=t["predicate"], # Map predicate back to the 'relation' pydantic schema key
-        object=t["object"],
-        object_type=t["object_type"]
-    ))
+def main():
+    mapped_triples = []
+    for t in data["triples"]:
+        mapped_triples.append(Triple(
+            subject=t["subject"],
+            subject_type=t["subject_type"],
+            relation=t["predicate"],
+            object=t["object"],
+            object_type=t["object_type"],
+        ))
 
-print(f"Mapped {len(mapped_triples)} raw triples into Python objects.")
-loader = Neo4jLoader()
-loader.load_triples(mapped_triples)
-print("Insertion complete!")
+    print(f"Mapped {len(mapped_triples)} raw triples into Python objects.")
+    loader = Neo4jLoader()
+    loader.load_triples(mapped_triples)
+    print("Insertion complete!")
+
+
+if __name__ == "__main__":
+    main()

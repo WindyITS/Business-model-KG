@@ -3,13 +3,32 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+.coverage.*
+*.log
 
 # Virtual environment
 venv/
 .env
+.python-version
 
 # Outputs / scratch
 outputs/
 
+# External / downloaded datasets
+data/external/*
+!data/external/.gitkeep
+
+# Local manual comparison artifacts
+data/manual/*
+!data/manual/.gitkeep
+
 # OS
 .DS_Store
+
+# Notebook / editor leftovers
+.ipynb_checkpoints/

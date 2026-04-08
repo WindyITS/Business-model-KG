@@ -11,8 +11,9 @@ from tqdm import tqdm
 
 from chunker import read_and_chunk_file
 from entity_resolver import canonical_entity_key, clean_entity_name, resolve_entities
-from llm_extractor import ExtractionError, KnowledgeGraphExtraction, LLMExtractor
+from llm_extractor import ExtractionError, KnowledgeGraphExtraction, LLMExtractor, TwoPassExtractionResult
 from neo4j_loader import Neo4jLoader
+from ontology_validator import validate_triples
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 logger = logging.getLogger(__name__)
@@ -27,11 +28,17 @@ def _write_json(path: Path, payload: Any) -> None:
 
 
 def _mode_name(args: argparse.Namespace) -> str:
+    if args.chunked:
+        return "chunked"
     if args.incremental:
         return "incremental"
     if args.zero_shot:
         return "zero_shot"
-    return "chunked"
+    if args.reflection:
+        return "reflection"
+    if args.two_pass:
+        return "two_pass"
+    return "two_pass"
 
 
 def _build_run_dir(output_dir: Path, source_file: Path, mode: str) -> Path:
@@ -147,12 +154,16 @@ def main() -> int:
     parser.add_argument("--neo4j-uri", type=str, default="bolt://localhost:7687", help="Neo4j connection URI.")
     parser.add_argument("--neo4j-user", type=str, default="neo4j", help="Neo4j username.")
     parser.add_argument("--neo4j-password", type=str, default="password", help="Neo4j password.")
+    parser.add_argument("--chunked", action="store_true", help="Process semantic chunks independently with rolling memory.")
     parser.add_argument("--zero-shot", action="store_true", help="Process the entire file in one prompt.")
     parser.add_argument("--incremental", action="store_true", help="Process the full document iteratively with memory.")
+    parser.add_argument("--two-pass", action="store_true", help="Two-pass extraction: structural skeleton first, then ontology-constrained enrichment.")
+    parser.add_argument("--reflection", action="store_true", help="Two-pass extraction plus a final graph-review pass.")
     parser.add_argument("--max-retries", type=int, default=3, help="Maximum LLM retries per chunk or iteration.")
     parser.add_argument("--max-iterations", type=int, default=20, help="Maximum iterations for incremental mode.")
     parser.add_argument("--output-dir", type=str, default="outputs", help="Directory where run artifacts are written.")
     parser.add_argument("--skip-neo4j", action="store_true", help="Skip Neo4j loading and only write extraction artifacts.")
+    parser.add_argument("--clear-neo4j", action="store_true", help="Clear the Neo4j database before loading triples. Use with care.")
     args = parser.parse_args()
 
     source_file = Path(args.file_path)
@@ -171,7 +182,7 @@ def main() -> int:
     logger.info("Writing run artifacts to %s", run_dir)
 
     try:
-        if args.zero_shot or args.incremental:
+        if mode != "chunked":
             logger.info("Reading full text without chunking...")
             full_text = source_file.read_text(encoding="utf-8")
             chunks = [full_text]
@@ -203,18 +214,70 @@ def main() -> int:
 
         extractor = LLMExtractor(base_url=args.base_url, api_key=args.api_key, model=args.model)
         logger.info("Starting LLM extraction in %s mode...", mode)
-        if args.incremental:
+        if mode == "reflection":
+            two_pass_result, final_extraction = extractor.extract_with_reflection(
+                full_text=full_text,
+                company_name=company_name,
+                max_retries=args.max_retries,
+            )
+            _write_json(
+                run_dir / "skeleton_extraction.json",
+                {
+                    "triples": [t.model_dump() for t in two_pass_result.skeleton_extraction.triples],
+                    "extraction_notes": two_pass_result.skeleton_extraction.extraction_notes,
+                },
+            )
+            _write_json(
+                run_dir / "final_extraction.json",
+                {
+                    "triples": [t.model_dump() for t in two_pass_result.final_extraction.triples],
+                    "extraction_notes": two_pass_result.final_extraction.extraction_notes,
+                },
+            )
+            _write_json(
+                run_dir / "reflection_extraction.json",
+                {
+                    "triples": [t.model_dump() for t in final_extraction.triples],
+                    "extraction_notes": final_extraction.extraction_notes,
+                },
+            )
+            extractions = [final_extraction]
+            extraction_payload: dict[str, Any] = {"extractions": _serialize_extractions(extractions)}
+        elif mode == "two_pass":
+            two_pass_result: TwoPassExtractionResult = extractor.extract_two_pass_detailed(
+                full_text=full_text,
+                company_name=company_name,
+                max_retries=args.max_retries,
+            )
+            _write_json(
+                run_dir / "skeleton_extraction.json",
+                {
+                    "triples": [t.model_dump() for t in two_pass_result.skeleton_extraction.triples],
+                    "extraction_notes": two_pass_result.skeleton_extraction.extraction_notes,
+                },
+            )
+            _write_json(
+                run_dir / "final_extraction.json",
+                {
+                    "triples": [t.model_dump() for t in two_pass_result.final_extraction.triples],
+                    "extraction_notes": two_pass_result.final_extraction.extraction_notes,
+                },
+            )
+            extractions = [two_pass_result.final_extraction]
+            extraction_payload: dict[str, Any] = {"extractions": _serialize_extractions(extractions)}
+        elif mode == "incremental":
             extractions = extractor.extract_incremental(
                 full_text=source_file.read_text(encoding="utf-8"),
                 max_iterations=args.max_iterations,
                 max_retries=args.max_retries,
             )
+            extraction_payload = {"extractions": _serialize_extractions(extractions)}
         else:
             extractions = []
             memory_state = _empty_memory_state(company_name)
             for chunk_index, chunk in enumerate(tqdm(chunks, desc="Processing Chunks"), start=1):
                 logger.info("Extracting chunk %s/%s", chunk_index, len(chunks))
-                memory_snapshot = None if args.zero_shot else _memory_snapshot(memory_state)
+                memory_snapshot = None if mode == "zero_shot" else _memory_snapshot(memory_state)
                 extraction = extractor.extract_from_chunk(
                     chunk,
                     company_name=company_name,
@@ -223,18 +286,28 @@ def main() -> int:
                     max_retries=args.max_retries,
                 )
                 extractions.append(extraction)
-                if not args.zero_shot:
+                if mode != "zero_shot":
                     _update_memory_state(memory_state, extraction)
-
-        extraction_payload = {"extractions": _serialize_extractions(extractions)}
-        if not args.zero_shot and not args.incremental:
-            extraction_payload["memory_snapshot"] = _memory_snapshot(memory_state)
+            extraction_payload = {"extractions": _serialize_extractions(extractions)}
+            if mode != "zero_shot":
+                extraction_payload["memory_snapshot"] = _memory_snapshot(memory_state)
         _write_json(run_dir / "extractions.json", extraction_payload)
-
         logger.info("Resolving entities...")
         resolved_triples = resolve_entities(extractions)
         if not resolved_triples:
             raise ExtractionError("Extraction completed but produced zero resolved triples.")
+
+        validation_report = validate_triples(
+            [triple.model_dump() for triple in resolved_triples],
+            source_text=full_text,
+            require_text_grounding=False,
+            dedupe=True,
+        )
+        _write_json(run_dir / "validation_report.json", validation_report)
+
+        resolved_triples = [type(resolved_triples[0])(**triple) for triple in validation_report["valid_triples"]] if resolved_triples else []
+        if not resolved_triples:
+            raise ExtractionError("All resolved triples were rejected by ontology validation.")
 
         _write_json(
             run_dir / "resolved_triples.json",
@@ -251,6 +324,9 @@ def main() -> int:
             logger.info("Loading triples into Neo4j...")
             loader = Neo4jLoader(uri=args.neo4j_uri, user=args.neo4j_user, password=args.neo4j_password)
             try:
+                if args.clear_neo4j:
+                    logger.warning("Clearing the entire Neo4j database before load because --clear-neo4j was provided.")
+                    loader.clear_graph()
                 loader.setup_constraints()
                 loaded_triples = loader.load_triples(resolved_triples)
             finally:
@@ -263,8 +339,11 @@ def main() -> int:
                 "chunk_count": len(chunks),
                 "extraction_count": len(extractions),
                 "resolved_triple_count": len(resolved_triples),
+                "invalid_triple_count": validation_report["summary"]["invalid_triple_count"],
+                "duplicate_triple_count": validation_report["summary"]["duplicate_triple_count"],
                 "loaded_triple_count": loaded_triples,
                 "skip_neo4j": args.skip_neo4j,
+                "clear_neo4j": args.clear_neo4j,
             }
         )
         _write_json(run_dir / "run_summary.json", summary)

@@ -16,7 +16,6 @@ ALLOWED_RELATION_TYPES = {
     "OPERATES_IN",
     "SELLS_THROUGH",
     "PARTNERS_WITH",
-    "SUPPLIED_BY",
     "MONETIZES_VIA",
     "PART_OF",
 }
@@ -28,6 +27,12 @@ class Neo4jLoader:
 
     def close(self) -> None:
         self.driver.close()
+
+    def clear_graph(self) -> None:
+        """Delete all nodes and relationships in the database."""
+        with self.driver.session() as session:
+            session.run("MATCH (n) DETACH DELETE n").consume()
+        logger.info("Cleared all nodes and relationships from Neo4j.")
 
     def setup_constraints(self) -> None:
         """Set up uniqueness constraints on the `name` property for all node types."""
