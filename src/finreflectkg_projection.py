@@ -5,6 +5,8 @@ from collections import Counter
 from pathlib import Path
 from typing import Any, Iterable, Iterator
 
+from tqdm import tqdm
+
 from chunk_quality import chunk_quality_report
 from ontology_validator import canonical_entity_key, clean_entity_name, validate_triples
 
@@ -324,7 +326,9 @@ def project_dataset_rows(
     total_kept_triples = 0
     confidence_counts: Counter[str] = Counter()
 
-    for chunk_rows in iter_grouped_rows(rows):
+    total = (skip_chunks + limit_chunks) if limit_chunks is not None else None
+    progress = tqdm(iter_grouped_rows(rows), desc="Stage 1 projection", unit="chunk", total=total)
+    for chunk_rows in progress:
         processed_chunks += 1
         total_source_rows += len(chunk_rows)
 
@@ -341,6 +345,7 @@ def project_dataset_rows(
 
         if limit_chunks is not None and (processed_chunks - skip_chunks) >= limit_chunks:
             break
+    progress.close()
 
     report = {
         "source_dataset": "domyn/FinReflectKG",
@@ -395,7 +400,8 @@ def sample_empty_examples_by_count(
     excluded_chunk_count = 0
     excluded_chunk_keys = exclude_chunk_keys or set()
 
-    for chunk_rows in iter_grouped_rows(rows):
+    progress = tqdm(iter_grouped_rows(rows), desc="Stage 2 empty sampling", unit="chunk", total=limit_chunks)
+    for chunk_rows in progress:
         processed_chunks += 1
         example = build_empty_example(
             chunk_rows,
@@ -421,6 +427,7 @@ def sample_empty_examples_by_count(
 
         if limit_chunks is not None and processed_chunks >= limit_chunks:
             break
+    progress.close()
 
     sampled_items = sorted(((-score, example) for score, example in max_heap), key=lambda item: item[0])
     empty_examples = [example for _, example in sampled_items]

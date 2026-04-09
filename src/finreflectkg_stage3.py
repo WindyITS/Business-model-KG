@@ -682,6 +682,7 @@ class Stage3TeacherAugmentor:
         debug_chunk_filter: str | None = None,
         use_schema: bool = True,
         disable_thinking: bool = False,
+        max_completion_tokens: int = 1024,
     ):
         from openai import OpenAI
 
@@ -692,6 +693,7 @@ class Stage3TeacherAugmentor:
         self.debug_chunk_filter = debug_chunk_filter
         self.use_schema = use_schema
         self.disable_thinking = disable_thinking
+        self.max_completion_tokens = max_completion_tokens
 
     @staticmethod
     def _schema_def(name: str, relation: str, object_type: str) -> dict[str, Any]:
@@ -773,12 +775,33 @@ class Stage3TeacherAugmentor:
                         {"role": "user", "content": user_prompt},
                     ],
                     "temperature": temperature,
+                    "max_tokens": self.max_completion_tokens,
                 }
                 if self.use_schema:
                     call_kwargs["response_format"] = schema_def
                 if self.disable_thinking:
                     call_kwargs["extra_body"] = {"chat_template_kwargs": {"enable_thinking": False}}
                 response = self.client.chat.completions.create(**call_kwargs)
+                finish_reason = getattr(response.choices[0], "finish_reason", None)
+                if finish_reason == "length":
+                    logger.warning(
+                        "Stage 3 teacher output hit token limit (%d) for %s — chunk will be discarded",
+                        self.max_completion_tokens,
+                        relation,
+                    )
+                    return {
+                        "relation": relation,
+                        "attempts_used": attempt,
+                        "raw_response": response.choices[0].message.content or "",
+                        "parsed_triples": [],
+                        "valid_triples": [],
+                        "invalid_triple_count": 0,
+                        "duplicate_triple_count": 0,
+                        "grounding_rejection_count": 0,
+                        "grounding_rejections": [],
+                        "subject_inventory": subject_inventory_for_relation(example, relation),
+                        "token_limit_exceeded": True,
+                    }, response.choices[0].message.content
                 content = response.choices[0].message.content
                 payload = self._load_json_payload(content or "", fallback_payload)
                 triples = self._payload_triples(payload)
@@ -889,6 +912,7 @@ class Stage3TeacherAugmentor:
         max_retries: int = 3,
     ) -> tuple[dict[str, Any], dict[str, Any]]:
         relation_reports: dict[str, dict[str, Any]] = {}
+        token_limit_exceeded = False
 
         for relation in relations:
             report, _ = self._call_relation(
@@ -897,6 +921,8 @@ class Stage3TeacherAugmentor:
                 max_retries=max_retries,
             )
             relation_reports[relation] = report
+            if report.get("token_limit_exceeded"):
+                token_limit_exceeded = True
 
         augmented_example, merge_report = merge_teacher_reports_into_example(example, relation_reports)
         call_log = {
@@ -904,7 +930,10 @@ class Stage3TeacherAugmentor:
             "prompt_profile": self.prompt_profile,
             "relation_reports": relation_reports,
             "merge_report": merge_report,
+            "token_limit_exceeded": token_limit_exceeded,
         }
+        if token_limit_exceeded:
+            augmented_example["metadata"]["token_limit_exceeded"] = True
         return augmented_example, call_log
 
     def run_relation(

@@ -100,11 +100,49 @@ No labels outside these vocabularies are allowed. If a concept doesn't fit, it g
 
 Full ontology spec: [`docs/ontology.md`](./docs/ontology.md)
 
-## What Comes Next
+## Quickstart
 
-The prompt-based extractor is a baseline, not the end state. The broader goal is a fine-tuned extractor that is cheaper, more reliable, and more standardized.
+**Requirements:**
 
-The data-building pipeline follows four stages:
+- Python 3.10+
+- Docker (for Neo4j, optional)
+- [LM Studio](https://lmstudio.ai) (or any OpenAI-compatible local endpoint)
+- A model served at `http://localhost:1234/v1`, current baseline is Gemma 4 27B IT
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+Run the test suite:
+
+```bash
+python -m unittest discover -s tests
+```
+
+Run the extraction pipeline on a 10-K:
+
+```bash
+python src/main.py data/microsoft_10k.txt --skip-neo4j
+```
+
+Or with Neo4j:
+
+```bash
+docker compose up -d
+python src/main.py data/microsoft_10k.txt
+```
+
+Neo4j Browser at `http://localhost:7474`, default credentials `neo4j / password`.
+
+---
+
+## Dataset Building Pipeline
+
+The prompt-based extractor is a baseline, not the end state. The broader goal is a fine-tuned extractor that is cheaper, more reliable, and more standardized. The data-building pipeline produces the training set for that extractor.
+
+It follows four stages:
 
 1. **Project FinReflectKG** into this ontology with a deterministic mapping script, keep only triples that fit cleanly and discard everything else (~1.15% yield rate)
 2. **Sample candidate empty chunks** so the fine-tuned model can later learn to abstain when nothing relevant is present
@@ -156,8 +194,11 @@ Run it after stage 1:
 ```bash
 python scripts/sample_empty_chunks.py \
   --projected-jsonl outputs/finreflectkg_stage1/projected_examples.jsonl \
-  --empty-ratio 0.3
+  --empty-ratio 0.3 \
+  --limit-chunks 2000
 ```
+
+The `--limit-chunks` flag caps how many chunks the sampler streams from the dataset. Without it, Stage 2 streams the entire FinReflectKG dataset which is very slow.
 
 This writes:
 
@@ -197,6 +238,7 @@ Important flags:
 
 - `--no-schema` disables JSON Schema enforcement via `response_format`. LM Studio's grammar-based constrained decoding (GBNF) conflicts with complex nested schemas containing multiple `enum` fields, causing empty responses or hallucinated field values. Without this flag, the model is asked to conform to a strict grammar that corrupts output.
 - `--no-think` disables model thinking/reasoning mode, which otherwise consumes excessive tokens and slows inference without improving extraction quality.
+- `--max-completion-tokens 1024` caps the teacher's output per relation call. If a response hits this limit, the entire chunk is discarded from the dataset and counted as a token-limit violation. Prevents runaway generation from corrupting the training set.
 
 This writes:
 
@@ -219,6 +261,18 @@ Important Stage 3 behavior:
 - subject anchoring forces the model to use the company name instead of verbose descriptions from the text
 - outputs under `outputs/` are intentionally ignored by git
 
+## Smoke Tests
+
+Stage 3 includes 12 smoke cases (6 positive, 6 negative) covering edge cases like organizational infrastructure vs. sales channels, service descriptions vs. revenue models, and subject anchoring. Run them against a live model:
+
+```bash
+python scripts/evaluate_stage3_smoke.py \
+  --no-schema --no-think \
+  --model gemma-4-27b-it
+```
+
+This writes a detailed per-case report to `outputs/stage3_smoke_eval/`.
+
 ## Batch Runner
 
 For production-scale dataset generation, use the batch runner which orchestrates the full Stage 1 → 2 → 3 pipeline:
@@ -238,49 +292,6 @@ python scripts/run_batch.py --merge
 ```
 
 Each batch processes 80,000 chunks (configurable via `--chunks-per-batch`). Outputs are written to `outputs/batch_N/stage{1,2,3}/`. The merge step deduplicates by chunk key and writes the combined dataset to `outputs/merged/`.
-
-## Quickstart
-
-**Requirements:**
-
-- Python 3.10+
-- Docker
-- [LM Studio](https://lmstudio.ai) (or any OpenAI-compatible local endpoint)
-- A model served at `http://localhost:1234/v1`, current baseline is Gemma 4 27B IT
-
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
-
-Run the test suite:
-
-```bash
-/Users/giuliosighieri/Desktop/kg-v0/venv/bin/python -m unittest discover -s tests
-```
-
-Start Neo4j:
-
-```bash
-docker compose up -d
-```
-
-Neo4j Browser at `http://localhost:7474`, default credentials `neo4j / password`.
-
-Run the pipeline on a 10-K:
-
-```bash
-python src/main.py data/microsoft_10k.txt
-```
-
-Skip Neo4j if you just want the extraction artifacts:
-
-```bash
-python src/main.py data/microsoft_10k.txt --skip-neo4j
-```
-
----
 
 ## Extraction Modes
 
@@ -372,6 +383,7 @@ kg-v0/
 │   ├── run_batch.py                batch runner for production pipeline
 │   └── sample_empty_chunks.py
 ├── src/
+│   ├── chunk_quality.py         narrative-prose gating and quality filters
 │   ├── chunker.py              heading-aware passage chunker
 │   ├── entity_resolver.py      surface-form cleanup and deduplication
 │   ├── evaluate_graph.py       gold-set comparison and Neo4j dump

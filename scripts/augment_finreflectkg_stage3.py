@@ -34,6 +34,7 @@ def main() -> int:
     parser.add_argument("--debug-chunk-filter", type=str, default=None, help="Optional chunk-key/text substring used to decide which example to dump for debugging.")
     parser.add_argument("--no-schema", action="store_true", default=False, help="Disable response_format JSON Schema enforcement.")
     parser.add_argument("--no-think", action="store_true", default=False, help="Disable model thinking/reasoning mode.")
+    parser.add_argument("--max-completion-tokens", type=int, default=1024, help="Max tokens per teacher response. Chunks exceeding this are discarded.")
     parser.add_argument(
         "--projected-jsonl",
         type=str,
@@ -144,6 +145,7 @@ def main() -> int:
         debug_chunk_filter=args.debug_chunk_filter,
         use_schema=not args.no_schema,
         disable_thinking=args.no_think,
+        max_completion_tokens=args.max_completion_tokens,
     )
 
     relation_trigger_pool_report = {
@@ -178,21 +180,31 @@ def main() -> int:
 
     augmented_positive_examples = []
     teacher_logs = []
+    token_limit_exceeded_count = 0
     for example in tqdm(projected_examples, desc="Stage 3 positives", unit="example"):
         augmented_example, call_log = augmentor.augment_example(example, relations=STAGE3_RELATIONS, max_retries=args.max_retries)
-        augmented_positive_examples.append(augmented_example)
+        if call_log.get("token_limit_exceeded"):
+            token_limit_exceeded_count += 1
+        else:
+            augmented_positive_examples.append(augmented_example)
         teacher_logs.append(call_log)
 
     initial_augmented_empty_candidates = []
     for example in tqdm(candidate_empty_examples, desc="Stage 3 empties", unit="example"):
         augmented_example, call_log = augmentor.augment_example(example, relations=STAGE3_RELATIONS, max_retries=args.max_retries)
-        initial_augmented_empty_candidates.append(augmented_example)
+        if call_log.get("token_limit_exceeded"):
+            token_limit_exceeded_count += 1
+        else:
+            initial_augmented_empty_candidates.append(augmented_example)
         teacher_logs.append(call_log)
 
     augmented_relation_trigger_candidates = []
     for example in tqdm(relation_trigger_candidates, desc="Stage 3 triggers", unit="example"):
         augmented_example, call_log = augmentor.augment_example(example, relations=STAGE3_RELATIONS, max_retries=args.max_retries)
-        augmented_relation_trigger_candidates.append(augmented_example)
+        if call_log.get("token_limit_exceeded"):
+            token_limit_exceeded_count += 1
+        else:
+            augmented_relation_trigger_candidates.append(augmented_example)
         teacher_logs.append(call_log)
 
     if args.skip_refill:
@@ -243,6 +255,8 @@ def main() -> int:
         "candidate_empty_jsonl": str(candidate_empty_path),
         "teacher_relations": list(STAGE3_RELATIONS),
         "prompt_profile": args.prompt_profile,
+        "max_completion_tokens": args.max_completion_tokens,
+        "token_limit_exceeded_count": token_limit_exceeded_count,
         "projected_example_count": len(projected_examples),
         "initial_candidate_empty_count": len(candidate_empty_examples),
         "initial_relation_trigger_candidate_count": len(relation_trigger_candidates),
@@ -261,6 +275,8 @@ def main() -> int:
     print(f"Wrote Stage 3 augmented relation-trigger candidates to {args.augmented_trigger_output}")
     print(f"Wrote final training dataset to {args.training_output}")
     print(f"Wrote Stage 3 report to {args.report_path}")
+    if token_limit_exceeded_count > 0:
+        print(f"WARNING: {token_limit_exceeded_count} chunk(s) discarded due to token limit exceeded ({args.max_completion_tokens} max tokens)")
     return 0
 
 

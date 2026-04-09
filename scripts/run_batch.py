@@ -28,6 +28,7 @@ DEFAULT_NUM_BATCHES = 5
 DEFAULT_MODEL = "gemma-4-27b-it"
 DEFAULT_PROMPT_PROFILE = "default"
 DEFAULT_EMPTY_RATIO = 0.3
+DEFAULT_MAX_COMPLETION_TOKENS = 1024
 
 
 def batch_dir(batch_num: int) -> Path:
@@ -92,6 +93,7 @@ def run_stage3(
     model: str,
     prompt_profile: str,
     empty_ratio: float,
+    max_completion_tokens: int = DEFAULT_MAX_COMPLETION_TOKENS,
 ) -> None:
     out_dir = batch_dir(batch_num) / "stage3"
 
@@ -104,6 +106,7 @@ def run_stage3(
             "--no-schema", "--no-think",
             "--model", model,
             "--empty-ratio", str(empty_ratio),
+            "--max-completion-tokens", str(max_completion_tokens),
             "--augmented-positives-output", str(out_dir / "augmented_positive_examples.jsonl"),
             "--augmented-empty-output", str(out_dir / "augmented_empty_candidates.jsonl"),
             "--augmented-trigger-output", str(out_dir / "augmented_relation_trigger_candidates.jsonl"),
@@ -227,6 +230,7 @@ def main() -> int:
     parser.add_argument("--chunks-per-batch", type=int, default=DEFAULT_CHUNKS_PER_BATCH, help=f"Chunks per batch (default: {DEFAULT_CHUNKS_PER_BATCH:,}).")
     parser.add_argument("--num-batches", type=int, default=DEFAULT_NUM_BATCHES, help=f"Total number of batches (default: {DEFAULT_NUM_BATCHES}).")
     parser.add_argument("--empty-ratio", type=float, default=DEFAULT_EMPTY_RATIO, help=f"Target empty ratio (default: {DEFAULT_EMPTY_RATIO}).")
+    parser.add_argument("--max-completion-tokens", type=int, default=DEFAULT_MAX_COMPLETION_TOKENS, help=f"Max tokens per teacher response (default: {DEFAULT_MAX_COMPLETION_TOKENS}).")
     parser.add_argument("--skip-stage1", action="store_true", help="Skip Stage 1 (reuse existing projected examples).")
     parser.add_argument("--skip-stage2", action="store_true", help="Skip Stage 2 (reuse existing empty candidates).")
     args = parser.parse_args()
@@ -275,6 +279,7 @@ def main() -> int:
         model=args.model,
         prompt_profile=args.prompt_profile,
         empty_ratio=args.empty_ratio,
+        max_completion_tokens=args.max_completion_tokens,
     )
 
     # Print summary
@@ -287,6 +292,9 @@ def main() -> int:
         print(f"  Positive: {report.get('final_positive_example_count', '?')}")
         print(f"  Empty: {report.get('selected_empty_count', '?')}")
         print(f"  Relations: {report.get('relation_counts', {})}")
+        token_exceeded = report.get('token_limit_exceeded_count', 0)
+        if token_exceeded > 0:
+            print(f"  Token limit exceeded (discarded): {token_exceeded}")
         print(f"{'='*60}")
 
     return 0
