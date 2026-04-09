@@ -32,6 +32,8 @@ def main() -> int:
     parser.add_argument("--max-retries", type=int, default=3, help="Max retries per relation-specific teacher call.")
     parser.add_argument("--debug-dir", type=str, default=None, help="Optional directory where exact Stage-3 prompts/responses are dumped.")
     parser.add_argument("--debug-chunk-filter", type=str, default=None, help="Optional chunk-key/text substring used to decide which example to dump for debugging.")
+    parser.add_argument("--no-schema", action="store_true", default=False, help="Disable response_format JSON Schema enforcement.")
+    parser.add_argument("--no-think", action="store_true", default=False, help="Disable model thinking/reasoning mode.")
     parser.add_argument(
         "--projected-jsonl",
         type=str,
@@ -140,6 +142,8 @@ def main() -> int:
         prompt_profile=args.prompt_profile,
         debug_dir=args.debug_dir,
         debug_chunk_filter=args.debug_chunk_filter,
+        use_schema=not args.no_schema,
+        disable_thinking=args.no_think,
     )
 
     relation_trigger_pool_report = {

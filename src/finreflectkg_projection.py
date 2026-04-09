@@ -315,6 +315,7 @@ def project_dataset_rows(
     *,
     instruction: str = DEFAULT_INSTRUCTION,
     limit_chunks: int | None = None,
+    skip_chunks: int = 0,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     examples: list[dict[str, Any]] = []
     processed_chunks = 0
@@ -327,6 +328,9 @@ def project_dataset_rows(
         processed_chunks += 1
         total_source_rows += len(chunk_rows)
 
+        if processed_chunks <= skip_chunks:
+            continue
+
         example = build_projection_example(chunk_rows, instruction=instruction)
         if example is not None:
             examples.append(example)
@@ -335,7 +339,7 @@ def project_dataset_rows(
             total_kept_triples += kept_triples
             confidence_counts[example["metadata"]["confidence"]] += 1
 
-        if limit_chunks is not None and processed_chunks >= limit_chunks:
+        if limit_chunks is not None and (processed_chunks - skip_chunks) >= limit_chunks:
             break
 
     report = {

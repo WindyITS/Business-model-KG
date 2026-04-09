@@ -50,6 +50,8 @@ def main() -> int:
     parser.add_argument("--api-key", type=str, default="lm-studio", help="API key for the local LLM endpoint.")
     parser.add_argument("--prompt-profile", type=str, default=DEFAULT_PROMPT_PROFILE, choices=list_prompt_profiles(), help="Named Stage 3 prompt profile to use.")
     parser.add_argument("--max-retries", type=int, default=1, help="Max retries per case.")
+    parser.add_argument("--no-schema", action="store_true", default=False, help="Disable response_format JSON Schema enforcement.")
+    parser.add_argument("--no-think", action="store_true", default=False, help="Disable model thinking/reasoning mode.")
     parser.add_argument(
         "--report-path",
         type=str,
@@ -63,6 +65,8 @@ def main() -> int:
         api_key=args.api_key,
         model=args.model,
         prompt_profile=args.prompt_profile,
+        use_schema=not args.no_schema,
+        disable_thinking=args.no_think,
     )
 
     case_reports = []

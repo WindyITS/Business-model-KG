@@ -34,6 +34,7 @@ class Stage3SmokeCaseTests(unittest.TestCase):
         self.assertIn("balanced_v1", profiles)
         self.assertIn("balanced_v2", profiles)
         self.assertIn("balanced_v3", profiles)
+        self.assertIn("balanced_v4", profiles)
         self.assertIn("naive_v1", profiles)
 
         example = smoke_case_example(SMOKE_CASES[0])
@@ -65,6 +66,16 @@ class Stage3SmokeCaseTests(unittest.TestCase):
         self.assertIn("EXAMPLE OUTPUT", balanced_v3_system)
         self.assertIn("<constraints>", balanced_v3_user)
         self.assertIn("Do not output markdown code blocks", balanced_v3_user)
+
+        balanced_v4_system = relation_system_prompt("SELLS_THROUGH", prompt_profile="balanced_v4")
+        balanced_v4_monetizes = relation_system_prompt("MONETIZES_VIA", prompt_profile="balanced_v4")
+        balanced_v4_user = build_stage3_prompt(example, "SELLS_THROUGH", prompt_profile="balanced_v4")
+        self.assertIn("strict Information Extraction system", balanced_v4_system)
+        self.assertIn("Sales offices", balanced_v4_system)
+        self.assertIn("organizational structure", balanced_v4_system)
+        self.assertIn("activity description", balanced_v4_monetizes)
+        self.assertIn("<constraints>", balanced_v4_user)
+
         self.assertIn("straightforward way", naive_system)
         self.assertIn("should count", naive_user)
 

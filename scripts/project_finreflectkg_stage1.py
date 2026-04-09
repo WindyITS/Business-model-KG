@@ -30,6 +30,7 @@ def main() -> int:
     parser.add_argument("--no-streaming", action="store_true", help="Disable streaming mode.")
     parser.add_argument("--limit-rows", type=int, default=None, help="Optional cap on raw rows read.")
     parser.add_argument("--limit-chunks", type=int, default=None, help="Optional cap on processed chunks.")
+    parser.add_argument("--skip-chunks", type=int, default=0, help="Number of chunks to skip before processing.")
     parser.add_argument(
         "--output-jsonl",
         type=str,
@@ -52,7 +53,7 @@ def main() -> int:
         streaming=not args.no_streaming,
         limit_rows=args.limit_rows,
     )
-    examples, report = project_dataset_rows(rows, limit_chunks=args.limit_chunks)
+    examples, report = project_dataset_rows(rows, limit_chunks=args.limit_chunks, skip_chunks=args.skip_chunks)
 
     output_jsonl = Path(args.output_jsonl)
     report_path = Path(args.report_path)

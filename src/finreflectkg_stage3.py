@@ -528,7 +528,7 @@ def relation_system_prompt(relation: str, *, prompt_profile: str = DEFAULT_PROMP
     skepticism_lines = "\n".join(f"- {line}" for line in task["relation_specific_skepticism"])
     decision_prefix = "\n".join(f"- {line}" for line in profile.decision_standard_prefix)
     burden_lines = "\n".join(f"- {line}" for line in profile.burden_of_proof_lines)
-    if prompt_profile == "balanced_v3":
+    if prompt_profile in ("balanced_v3", "balanced_v4"):
         relation_examples = {
             "SERVES": {
                 "text": (
@@ -561,6 +561,11 @@ def relation_system_prompt(relation: str, *, prompt_profile: str = DEFAULT_PROMP
                 "extra_rules": (
                     'Do not confuse physical presence or infrastructure with sales channels.',
                     'If the text says "third-party marketplaces", output "marketplaces".',
+                ) if prompt_profile == "balanced_v3" else (
+                    'Do not confuse physical presence, infrastructure, or organizational structure with sales channels.',
+                    '"Sales offices", "sales teams", "regional hubs", or "distribution centers" describe internal organization, NOT the "direct sales" channel.',
+                    'Extract "direct sales" only when the text says the company sells or distributes TO CUSTOMERS through a direct sales force or direct selling motion.',
+                    'If the text says "third-party marketplaces", output "marketplaces".',
                 ),
             },
             "MONETIZES_VIA": {
@@ -577,6 +582,10 @@ def relation_system_prompt(relation: str, *, prompt_profile: str = DEFAULT_PROMP
                 "extra_rules": (
                     'Look for explicit earning or charging language such as "revenue is derived from", "earns fees", or "advertising revenue".',
                     'Do not infer a revenue model from a product description or segment name alone.',
+                ) if prompt_profile == "balanced_v3" else (
+                    'Look for explicit earning or charging language such as "revenue is derived from", "earns fees", or "advertising revenue".',
+                    'Do not infer a revenue model from a product description, segment name, or activity description alone.',
+                    'Describing what services a company provides (e.g. "provides installation, maintenance, and consulting services") is NOT the same as stating it earns "service fees". Extract only when the text explicitly states how money is earned or charged.',
                 ),
             },
         }
@@ -628,7 +637,9 @@ def relation_system_prompt(relation: str, *, prompt_profile: str = DEFAULT_PROMP
             f"3. The object value in your JSON MUST be an exact string from the allowed label list.\n"
             f"4. If the text supports multiple labels, return one triple for EACH supported label in a single JSON array.\n"
             f"{extra_rules}\n"
-            f"7. If no allowed labels are explicitly supported, return {{\"triples\":[]}}.\n\n"
+            + (f"8. When the text refers to the reporting company generically (\"the company\", \"the company's ...\", \"its\", \"we\"), use the anchored company name from <constraints> as subject with subject_type \"Company\". Never use a long description as subject.\n"
+               if prompt_profile == "balanced_v4" else "")
+            + f"7. If no allowed labels are explicitly supported, return {{\"triples\":[]}}.\n\n"
             f"EXAMPLE TEXT:\n"
             f"\"{example['text']}\"\n"
             f"EXAMPLE OUTPUT:\n"
@@ -757,16 +768,24 @@ def build_stage3_prompt(example: dict[str, Any], relation: str, *, prompt_profil
         ),
     }[relation]
     prompt_parts = []
-    if prompt_profile == "balanced_v3":
+    if prompt_profile in ("balanced_v3", "balanced_v4"):
         prompt_parts.append(
             "<task>\n"
             f"Analyze the text and extract all explicitly supported triples for the relation: {relation}.\n"
             "</task>"
         )
+        subject_lines = f'- Allowed subjects: {_compact_json(allowed_subjects)}\n'
+        if company_name:
+            subject_lines += f'- Preferred company subject: "{company_name}"\n'
+        if prompt_profile == "balanced_v4":
+            subject_lines += (
+                f'- SUBJECT RULE: Always use "{company_name}" as subject when the text refers to the reporting company generically '
+                f'(e.g. "the company", "the company\'s ...", "its", "we"). '
+                f'Do NOT use descriptions like "the company\'s digital learning platform" as subject — use "{company_name}" with subject_type "Company".\n'
+            )
         prompt_parts.append(
             "<constraints>\n"
-            f'- Allowed subjects: {_compact_json(allowed_subjects)}\n'
-            + (f'- Preferred company subject: "{company_name}"\n' if company_name else "")
+            + subject_lines
             + '- You must output ONLY valid raw JSON.\n'
             + '- Do not output markdown code blocks.\n'
             + '- Do not output explanations.\n'
@@ -808,6 +827,8 @@ class Stage3TeacherAugmentor:
         prompt_profile: str = DEFAULT_PROMPT_PROFILE,
         debug_dir: str | None = None,
         debug_chunk_filter: str | None = None,
+        use_schema: bool = True,
+        disable_thinking: bool = False,
     ):
         from openai import OpenAI
 
@@ -816,6 +837,8 @@ class Stage3TeacherAugmentor:
         self.prompt_profile = prompt_profile
         self.debug_dir = Path(debug_dir) if debug_dir else None
         self.debug_chunk_filter = debug_chunk_filter
+        self.use_schema = use_schema
+        self.disable_thinking = disable_thinking
 
     @staticmethod
     def _schema_def(name: str, relation: str, object_type: str) -> dict[str, Any]:
@@ -890,15 +913,19 @@ class Stage3TeacherAugmentor:
         last_error = None
         for attempt in range(1, max_retries + 1):
             try:
-                response = self.client.chat.completions.create(
-                    model=self.model,
-                    messages=[
+                call_kwargs: dict[str, Any] = {
+                    "model": self.model,
+                    "messages": [
                         {"role": "system", "content": system_prompt},
                         {"role": "user", "content": user_prompt},
                     ],
-                    temperature=temperature,
-                    response_format=schema_def,
-                )
+                    "temperature": temperature,
+                }
+                if self.use_schema:
+                    call_kwargs["response_format"] = schema_def
+                if self.disable_thinking:
+                    call_kwargs["extra_body"] = {"chat_template_kwargs": {"enable_thinking": False}}
+                response = self.client.chat.completions.create(**call_kwargs)
                 content = response.choices[0].message.content
                 payload = self._load_json_payload(content or "", fallback_payload)
                 triples = self._payload_triples(payload)
