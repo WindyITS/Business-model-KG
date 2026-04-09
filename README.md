@@ -107,7 +107,7 @@ Full ontology spec: [`docs/ontology.md`](./docs/ontology.md)
 - Python 3.10+
 - Docker (for Neo4j, optional)
 - [LM Studio](https://lmstudio.ai) (or any OpenAI-compatible local endpoint)
-- A model served at `http://localhost:1234/v1`, current baseline is Gemma 4 27B IT
+- A model served at `http://localhost:1234/v1`, current baseline is `google/gemma-4-26b-a4b`
 
 ```bash
 python3 -m venv venv
@@ -146,7 +146,7 @@ It follows four stages:
 
 1. **Project FinReflectKG** into this ontology with a deterministic mapping script, keep only triples that fit cleanly and discard everything else (~1.15% yield rate)
 2. **Sample candidate empty chunks** so the fine-tuned model can later learn to abstain when nothing relevant is present
-3. **Teacher augmentation** done by running Gemma 4 27B via LM Studio, only on the ontology slices FinReflectKG does not cover well: `SERVES`, `SELLS_THROUGH`, `MONETIZES_VIA`. Uses anti-inference prompt engineering to prevent the model from over-extracting (e.g. confusing organizational infrastructure with sales channels, or service descriptions with revenue models)
+3. **Teacher augmentation** done by running Gemma 4 26B via LM Studio, only on the ontology slices FinReflectKG does not cover well: `SERVES`, `SELLS_THROUGH`, `MONETIZES_VIA`. Uses anti-inference prompt engineering to prevent the model from over-extracting (e.g. confusing organizational infrastructure with sales channels, or service descriptions with revenue models)
 4. **Finalize the merged dataset** by validating the teacher output, promoting empty chunks that are no longer empty, and rebalancing the final empty ratio
 
 The pipeline runs in batches of 80k chunks via `scripts/run_batch.py`, targeting 5 batches for ~4,600 positive examples plus ~1,400 empties across heterogeneous companies.
@@ -231,13 +231,13 @@ python scripts/augment_finreflectkg_stage3.py \
   --relation-trigger-count 50 \
   --empty-ratio 0.3 \
   --no-schema --no-think \
-  --model gemma-4-27b-it
+  --model google/gemma-4-26b-a4b
 ```
 
 Important flags:
 
 - `--no-schema` disables JSON Schema enforcement via `response_format`. LM Studio's grammar-based constrained decoding (GBNF) conflicts with complex nested schemas containing multiple `enum` fields, causing empty responses or hallucinated field values. Without this flag, the model is asked to conform to a strict grammar that corrupts output.
-- `--no-think` disables model thinking/reasoning mode, which otherwise consumes excessive tokens and slows inference without improving extraction quality.
+- `--no-think` disables model thinking/reasoning mode, which otherwise consumes excessive tokens and slows inference without improving extraction quality. With LM Studio and `--no-schema`, Stage 3 uses the native `/api/v1/chat` endpoint with `reasoning: "off"` so the run report can confirm zero reasoning tokens.
 - `--max-completion-tokens 1024` caps the teacher's output per relation call. If a response hits this limit, the entire chunk is discarded from the dataset and counted as a token-limit violation. Prevents runaway generation from corrupting the training set.
 
 This writes:
@@ -268,7 +268,7 @@ Stage 3 includes 12 smoke cases (6 positive, 6 negative) covering edge cases lik
 ```bash
 python scripts/evaluate_stage3_smoke.py \
   --no-schema --no-think \
-  --model gemma-4-27b-it
+  --model google/gemma-4-26b-a4b
 ```
 
 This writes a detailed per-case report to `outputs/stage3_smoke_eval/`.
@@ -282,16 +282,24 @@ For production-scale dataset generation, use the batch runner which orchestrates
 python scripts/run_batch.py --batch 1
 
 # Run with a specific model
-python scripts/run_batch.py --batch 3 --model gemma-4-27b-it
+python scripts/run_batch.py --batch 3 --model google/gemma-4-26b-a4b
+
+# Run against a local FinReflectKG parquet shard
+python scripts/run_batch.py --batch 1 \
+  --parquet-file data/external/finreflectkg/data/train-00000-of-00103.parquet \
+  --no-streaming
 
 # Skip already-completed stages
 python scripts/run_batch.py --batch 1 --skip-stage1 --skip-stage2
 
 # Merge all completed batches into a single training set
 python scripts/run_batch.py --merge
+
+# Deliberately merge only completed batches
+python scripts/run_batch.py --merge --allow-partial-merge
 ```
 
-Each batch processes 80,000 chunks (configurable via `--chunks-per-batch`). Outputs are written to `outputs/batch_N/stage{1,2,3}/`. The merge step deduplicates by chunk key and writes the combined dataset to `outputs/merged/`.
+Each batch processes 80,000 chunks (configurable via `--chunks-per-batch`). Outputs are written to `outputs/batch_N/stage{1,2,3}/`. The merge step deduplicates by chunk key and writes the combined dataset to `outputs/merged/`. By default, merge fails if any expected batch is missing; use `--allow-partial-merge` only for intentional partial runs.
 
 ## Extraction Modes
 
@@ -320,7 +328,7 @@ Each batch processes 80,000 chunks (configurable via `--chunks-per-batch`). Outp
 | `--clear-neo4j`    | off                          | Clear the whole Neo4j database before loading |
 | `--output-dir`     | `outputs`                  | Root directory for run artifacts              |
 | `--base-url`       | `http://localhost:1234/v1` | Local LLM API endpoint                        |
-| `--model`          | `local-model`              | Model identifier sent to the API              |
+| `--model`          | `google/gemma-4-26b-a4b`  | Model identifier sent to the API              |
 | `--neo4j-uri`      | `bolt://localhost:7687`    | Neo4j Bolt URI                                |
 | `--neo4j-user`     | `neo4j`                    | Neo4j username                                |
 | `--neo4j-password` | `password`                 | Neo4j password                                |

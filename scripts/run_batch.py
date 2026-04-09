@@ -5,7 +5,7 @@ Usage:
     python scripts/run_batch.py --batch 1
 
     # Run batch 3 with a custom model
-    python scripts/run_batch.py --batch 3 --model gemma-4-27b-it
+    python scripts/run_batch.py --batch 3 --model google/gemma-4-26b-a4b
 
     # Merge all completed batches into a single training set
     python scripts/run_batch.py --merge
@@ -25,10 +25,13 @@ PYTHON = str(ROOT_DIR / "venv" / "bin" / "python")
 
 DEFAULT_CHUNKS_PER_BATCH = 80000
 DEFAULT_NUM_BATCHES = 5
-DEFAULT_MODEL = "gemma-4-27b-it"
+DEFAULT_MODEL = "google/gemma-4-26b-a4b"
 DEFAULT_PROMPT_PROFILE = "default"
 DEFAULT_EMPTY_RATIO = 0.3
 DEFAULT_MAX_COMPLETION_TOKENS = 1024
+DEFAULT_HF_DATASET = "domyn/FinReflectKG"
+DEFAULT_SPLIT = "train"
+DEFAULT_CACHE_DIR = "data/external/huggingface"
 
 
 def batch_dir(batch_num: int) -> Path:
@@ -46,7 +49,28 @@ def run_cmd(args: list[str], description: str) -> None:
         sys.exit(result.returncode)
 
 
-def run_stage1(batch_num: int, chunks_per_batch: int) -> Path:
+def build_dataset_source_args(
+    *,
+    hf_dataset: str,
+    split: str,
+    cache_dir: str,
+    parquet_files: list[str],
+    streaming: bool,
+) -> list[str]:
+    args: list[str] = []
+    if parquet_files:
+        for parquet_file in parquet_files:
+            args.extend(["--parquet-file", parquet_file])
+    else:
+        args.extend(["--hf-dataset", hf_dataset])
+
+    args.extend(["--split", split, "--cache-dir", cache_dir])
+    if not streaming:
+        args.append("--no-streaming")
+    return args
+
+
+def run_stage1(batch_num: int, chunks_per_batch: int, dataset_source_args: list[str]) -> Path:
     skip = (batch_num - 1) * chunks_per_batch
     out_dir = batch_dir(batch_num) / "stage1"
     output_jsonl = out_dir / "projected_examples.jsonl"
@@ -59,13 +83,20 @@ def run_stage1(batch_num: int, chunks_per_batch: int) -> Path:
             "--skip-chunks", str(skip),
             "--output-jsonl", str(output_jsonl),
             "--report-path", str(report_path),
+            *dataset_source_args,
         ],
         f"Batch {batch_num} — Stage 1: project chunks {skip:,}–{skip + chunks_per_batch:,}",
     )
     return output_jsonl
 
 
-def run_stage2(batch_num: int, projected_jsonl: Path, chunks_per_batch: int, empty_ratio: float) -> Path:
+def run_stage2(
+    batch_num: int,
+    projected_jsonl: Path,
+    chunks_per_batch: int,
+    empty_ratio: float,
+    dataset_source_args: list[str],
+) -> Path:
     out_dir = batch_dir(batch_num) / "stage2"
     output_jsonl = out_dir / "empty_examples.jsonl"
     merged_output = out_dir / "training_examples.jsonl"
@@ -80,6 +111,7 @@ def run_stage2(batch_num: int, projected_jsonl: Path, chunks_per_batch: int, emp
             "--output-jsonl", str(output_jsonl),
             "--merged-output-jsonl", str(merged_output),
             "--report-path", str(report_path),
+            *dataset_source_args,
         ],
         f"Batch {batch_num} — Stage 2: sample empty chunks",
     )
@@ -93,6 +125,7 @@ def run_stage3(
     model: str,
     prompt_profile: str,
     empty_ratio: float,
+    dataset_source_args: list[str],
     max_completion_tokens: int = DEFAULT_MAX_COMPLETION_TOKENS,
 ) -> None:
     out_dir = batch_dir(batch_num) / "stage3"
@@ -115,20 +148,21 @@ def run_stage3(
             "--training-output", str(out_dir / "training_examples.jsonl"),
             "--teacher-log-output", str(out_dir / "teacher_logs.jsonl"),
             "--report-path", str(out_dir / "stage3_report.json"),
+            *dataset_source_args,
         ],
         f"Batch {batch_num} — Stage 3: teacher augmentation ({model}, {prompt_profile})",
     )
 
 
-def merge_batches(num_batches: int) -> None:
+def merge_batches(num_batches: int, *, allow_partial: bool = False) -> int:
     merged_dir = ROOT_DIR / "outputs" / "merged"
-    merged_dir.mkdir(parents=True, exist_ok=True)
 
     all_training: list[dict] = []
     all_positive: list[dict] = []
     all_empty: list[dict] = []
     batch_summaries: list[dict] = []
     seen_chunk_keys: set[str] = set()
+    missing_batches: list[int] = []
     duplicates_skipped = 0
 
     for batch_num in range(1, num_batches + 1):
@@ -136,7 +170,8 @@ def merge_batches(num_batches: int) -> None:
         report_path = batch_dir(batch_num) / "stage3" / "stage3_report.json"
 
         if not training_path.exists():
-            print(f"Batch {batch_num}: not found at {training_path}, skipping")
+            missing_batches.append(batch_num)
+            print(f"Batch {batch_num}: not found at {training_path}")
             continue
 
         batch_examples: list[dict] = []
@@ -169,7 +204,20 @@ def merge_batches(num_batches: int) -> None:
         })
         print(f"Batch {batch_num}: {len(batch_examples)} examples ({len(batch_pos)} pos, {len(batch_emp)} empty)")
 
+    if missing_batches and not allow_partial:
+        missing_list = ", ".join(str(batch_num) for batch_num in missing_batches)
+        print(
+            f"\nERROR: Missing batch output for batch(es): {missing_list}. "
+            "Use --allow-partial-merge to merge only completed batches."
+        )
+        return 1
+
+    if not batch_summaries:
+        print("\nERROR: No completed batch outputs found to merge.")
+        return 1
+
     # Write merged outputs
+    merged_dir.mkdir(parents=True, exist_ok=True)
     _write_jsonl(merged_dir / "training_examples.jsonl", all_training)
     _write_jsonl(merged_dir / "positive_examples.jsonl", all_positive)
     _write_jsonl(merged_dir / "empty_examples.jsonl", all_empty)
@@ -209,6 +257,7 @@ def merge_batches(num_batches: int) -> None:
     print(f"  Relations: {dict(sorted(total_relation_counts.items()))}")
     print(f"  Wrote to {merged_dir}/")
     print(f"{'='*60}")
+    return 0
 
 
 def _write_jsonl(path: Path, records: list[dict]) -> None:
@@ -225,12 +274,18 @@ def main() -> int:
     )
     parser.add_argument("--batch", type=int, choices=range(1, DEFAULT_NUM_BATCHES + 1), help="Which batch to run (1–5).")
     parser.add_argument("--merge", action="store_true", help="Merge all completed batches into a single training set.")
+    parser.add_argument("--allow-partial-merge", action="store_true", help="Allow --merge to proceed when one or more expected batch outputs are missing.")
     parser.add_argument("--model", type=str, default=DEFAULT_MODEL, help=f"Model id (default: {DEFAULT_MODEL}).")
     parser.add_argument("--prompt-profile", type=str, default=DEFAULT_PROMPT_PROFILE, help=f"Prompt profile (default: {DEFAULT_PROMPT_PROFILE}).")
     parser.add_argument("--chunks-per-batch", type=int, default=DEFAULT_CHUNKS_PER_BATCH, help=f"Chunks per batch (default: {DEFAULT_CHUNKS_PER_BATCH:,}).")
     parser.add_argument("--num-batches", type=int, default=DEFAULT_NUM_BATCHES, help=f"Total number of batches (default: {DEFAULT_NUM_BATCHES}).")
     parser.add_argument("--empty-ratio", type=float, default=DEFAULT_EMPTY_RATIO, help=f"Target empty ratio (default: {DEFAULT_EMPTY_RATIO}).")
     parser.add_argument("--max-completion-tokens", type=int, default=DEFAULT_MAX_COMPLETION_TOKENS, help=f"Max tokens per teacher response (default: {DEFAULT_MAX_COMPLETION_TOKENS}).")
+    parser.add_argument("--hf-dataset", type=str, default=DEFAULT_HF_DATASET, help=f"Hugging Face dataset id (default: {DEFAULT_HF_DATASET}).")
+    parser.add_argument("--split", type=str, default=DEFAULT_SPLIT, help=f"Dataset split (default: {DEFAULT_SPLIT}).")
+    parser.add_argument("--cache-dir", type=str, default=DEFAULT_CACHE_DIR, help=f"Dataset cache dir (default: {DEFAULT_CACHE_DIR}).")
+    parser.add_argument("--parquet-file", action="append", default=[], help="Optional local parquet file path. Repeat for multiple files.")
+    parser.add_argument("--no-streaming", action="store_true", help="Disable Hugging Face datasets streaming mode.")
     parser.add_argument("--skip-stage1", action="store_true", help="Skip Stage 1 (reuse existing projected examples).")
     parser.add_argument("--skip-stage2", action="store_true", help="Skip Stage 2 (reuse existing empty candidates).")
     args = parser.parse_args()
@@ -239,8 +294,15 @@ def main() -> int:
         parser.error("Specify --batch N or --merge.")
 
     if args.merge:
-        merge_batches(args.num_batches)
-        return 0
+        return merge_batches(args.num_batches, allow_partial=args.allow_partial_merge)
+
+    dataset_source_args = build_dataset_source_args(
+        hf_dataset=args.hf_dataset,
+        split=args.split,
+        cache_dir=args.cache_dir,
+        parquet_files=args.parquet_file,
+        streaming=not args.no_streaming,
+    )
 
     batch_num = args.batch
     bd = batch_dir(batch_num)
@@ -260,7 +322,7 @@ def main() -> int:
             return 1
         print(f"\nSkipping Stage 1, reusing {projected_jsonl}")
     else:
-        run_stage1(batch_num, args.chunks_per_batch)
+        run_stage1(batch_num, args.chunks_per_batch, dataset_source_args)
 
     # Stage 2
     if args.skip_stage2:
@@ -269,7 +331,7 @@ def main() -> int:
             return 1
         print(f"\nSkipping Stage 2, reusing {empty_jsonl}")
     else:
-        run_stage2(batch_num, projected_jsonl, args.chunks_per_batch, args.empty_ratio)
+        run_stage2(batch_num, projected_jsonl, args.chunks_per_batch, args.empty_ratio, dataset_source_args)
 
     # Stage 3
     run_stage3(
@@ -279,6 +341,7 @@ def main() -> int:
         model=args.model,
         prompt_profile=args.prompt_profile,
         empty_ratio=args.empty_ratio,
+        dataset_source_args=dataset_source_args,
         max_completion_tokens=args.max_completion_tokens,
     )
 

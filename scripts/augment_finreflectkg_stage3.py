@@ -23,10 +23,48 @@ from finreflectkg_stage3 import (
 from stage3_prompt_profiles import DEFAULT_PROMPT_PROFILE, list_prompt_profiles
 
 
+DEFAULT_STAGE3_MODEL = "google/gemma-4-26b-a4b"
+
+
+class TeacherAugmentationError(RuntimeError):
+    pass
+
+
+def teacher_error_relations(call_log: dict) -> list[str]:
+    relation_reports = call_log.get("relation_reports", {})
+    return [
+        str(relation)
+        for relation, report in relation_reports.items()
+        if isinstance(report, dict) and report.get("error")
+    ]
+
+
+def ensure_teacher_call_succeeded(call_log: dict) -> None:
+    failed_relations = teacher_error_relations(call_log)
+    if not failed_relations:
+        return
+
+    chunk_key = json.dumps(
+        call_log.get("chunk_key", {}),
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    relation_list = ", ".join(failed_relations)
+    raise TeacherAugmentationError(f"Teacher augmentation failed for {chunk_key}: {relation_list}")
+
+
+def record_teacher_log_or_raise(call_log: dict, teacher_logs: list[dict], teacher_log_path: Path) -> None:
+    teacher_logs.append(call_log)
+    if teacher_error_relations(call_log):
+        write_jsonl(teacher_log_path, teacher_logs)
+        ensure_teacher_call_succeeded(call_log)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run Stage 3 teacher augmentation for missing ontology slices.")
     parser.add_argument("--base-url", type=str, default="http://localhost:1234/v1", help="Base URL for the local LLM endpoint.")
-    parser.add_argument("--model", type=str, default="local-model", help="Model id sent to the local LLM endpoint.")
+    parser.add_argument("--model", type=str, default=DEFAULT_STAGE3_MODEL, help=f"Model id sent to the local LLM endpoint (default: {DEFAULT_STAGE3_MODEL}).")
     parser.add_argument("--api-key", type=str, default="lm-studio", help="API key for the local LLM endpoint.")
     parser.add_argument("--prompt-profile", type=str, default=DEFAULT_PROMPT_PROFILE, choices=list_prompt_profiles(), help="Named Stage 3 prompt profile to use.")
     parser.add_argument("--max-retries", type=int, default=3, help="Max retries per relation-specific teacher call.")
@@ -180,32 +218,33 @@ def main() -> int:
 
     augmented_positive_examples = []
     teacher_logs = []
+    teacher_log_path = Path(args.teacher_log_output)
     token_limit_exceeded_count = 0
     for example in tqdm(projected_examples, desc="Stage 3 positives", unit="example"):
         augmented_example, call_log = augmentor.augment_example(example, relations=STAGE3_RELATIONS, max_retries=args.max_retries)
+        record_teacher_log_or_raise(call_log, teacher_logs, teacher_log_path)
         if call_log.get("token_limit_exceeded"):
             token_limit_exceeded_count += 1
         else:
             augmented_positive_examples.append(augmented_example)
-        teacher_logs.append(call_log)
 
     initial_augmented_empty_candidates = []
     for example in tqdm(candidate_empty_examples, desc="Stage 3 empties", unit="example"):
         augmented_example, call_log = augmentor.augment_example(example, relations=STAGE3_RELATIONS, max_retries=args.max_retries)
+        record_teacher_log_or_raise(call_log, teacher_logs, teacher_log_path)
         if call_log.get("token_limit_exceeded"):
             token_limit_exceeded_count += 1
         else:
             initial_augmented_empty_candidates.append(augmented_example)
-        teacher_logs.append(call_log)
 
     augmented_relation_trigger_candidates = []
     for example in tqdm(relation_trigger_candidates, desc="Stage 3 triggers", unit="example"):
         augmented_example, call_log = augmentor.augment_example(example, relations=STAGE3_RELATIONS, max_retries=args.max_retries)
+        record_teacher_log_or_raise(call_log, teacher_logs, teacher_log_path)
         if call_log.get("token_limit_exceeded"):
             token_limit_exceeded_count += 1
         else:
             augmented_relation_trigger_candidates.append(augmented_example)
-        teacher_logs.append(call_log)
 
     if args.skip_refill:
         final_positive_examples, final_empty_examples, training_examples, final_report = finalize_stage3_dataset(
@@ -240,6 +279,10 @@ def main() -> int:
             max_refill_rounds=args.max_refill_rounds,
         )
         teacher_logs.extend(refill_logs)
+        for call_log in refill_logs:
+            if teacher_error_relations(call_log):
+                write_jsonl(teacher_log_path, teacher_logs)
+                ensure_teacher_call_succeeded(call_log)
 
     write_jsonl(Path(args.augmented_positives_output), augmented_positive_examples)
     write_jsonl(Path(args.augmented_empty_output), all_augmented_empty_candidates)
@@ -247,7 +290,7 @@ def main() -> int:
     write_jsonl(Path(args.final_positive_output), final_positive_examples)
     write_jsonl(Path(args.final_empty_output), final_empty_examples)
     write_jsonl(Path(args.training_output), training_examples)
-    write_jsonl(Path(args.teacher_log_output), teacher_logs)
+    write_jsonl(teacher_log_path, teacher_logs)
 
     report_payload = {
         "source_dataset": "domyn/FinReflectKG",
@@ -281,4 +324,8 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except TeacherAugmentationError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        raise SystemExit(1)

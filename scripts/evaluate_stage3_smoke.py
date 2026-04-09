@@ -12,6 +12,8 @@ from finreflectkg_stage3 import Stage3TeacherAugmentor, triple_key
 from stage3_prompt_profiles import DEFAULT_PROMPT_PROFILE, list_prompt_profiles
 from stage3_smoke_cases import SMOKE_CASES, smoke_case_example
 
+DEFAULT_SMOKE_MODEL = "google/gemma-4-26b-a4b"
+
 
 def _serialize_triples(triples):
     return sorted(triples, key=lambda triple: triple_key(triple))
@@ -46,7 +48,7 @@ def evaluate_case_report(case, report):
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run fixed Stage 3 smoke cases against a local teacher model.")
     parser.add_argument("--base-url", type=str, default="http://localhost:1234/v1", help="Base URL for the local LLM endpoint.")
-    parser.add_argument("--model", type=str, default="local-model", help="Model id sent to the local LLM endpoint.")
+    parser.add_argument("--model", type=str, default=DEFAULT_SMOKE_MODEL, help=f"Model id sent to the local LLM endpoint (default: {DEFAULT_SMOKE_MODEL}).")
     parser.add_argument("--api-key", type=str, default="lm-studio", help="API key for the local LLM endpoint.")
     parser.add_argument("--prompt-profile", type=str, default=DEFAULT_PROMPT_PROFILE, choices=list_prompt_profiles(), help="Named Stage 3 prompt profile to use.")
     parser.add_argument("--max-retries", type=int, default=1, help="Max retries per case.")
@@ -102,6 +104,7 @@ def main() -> int:
                 "duplicate_triple_count": report["duplicate_triple_count"],
                 "grounding_rejection_count": report["grounding_rejection_count"],
                 "grounding_rejections": report.get("grounding_rejections", []),
+                "native_stats": report.get("native_stats"),
                 "error": report.get("error"),
             }
         )

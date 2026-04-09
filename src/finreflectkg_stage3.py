@@ -7,6 +7,7 @@ import math
 from collections import Counter
 from pathlib import Path
 from typing import Any, Iterable
+from urllib import error, request
 
 from chunk_quality import chunk_quality_report, is_narrative_business_prose
 from finreflectkg_projection import (
@@ -696,6 +697,13 @@ class Stage3TeacherAugmentor:
         self.max_completion_tokens = max_completion_tokens
 
     @staticmethod
+    def _native_chat_url(base_url: str) -> str:
+        root_url = base_url.rstrip("/")
+        if root_url.endswith("/v1"):
+            root_url = root_url[:-3].rstrip("/")
+        return f"{root_url}/api/v1/chat"
+
+    @staticmethod
     def _schema_def(name: str, relation: str, object_type: str) -> dict[str, Any]:
         object_field: dict[str, Any] = {"type": "string"}
         canonical_group = canonical_labels(object_type) if object_type in {"CustomerType", "Channel", "RevenueModel"} else []
@@ -749,6 +757,47 @@ class Stage3TeacherAugmentor:
         triples = payload.get("triples", [])
         return list(triples) if isinstance(triples, list) else []
 
+    def _native_chat_completion(
+        self,
+        *,
+        system_prompt: str,
+        user_prompt: str,
+        temperature: float,
+    ) -> tuple[str, bool, dict[str, Any]]:
+        payload = {
+            "model": self.model,
+            "system_prompt": system_prompt,
+            "input": user_prompt,
+            "temperature": temperature,
+            "max_output_tokens": self.max_completion_tokens,
+            "reasoning": "off",
+            "store": False,
+        }
+        encoded_payload = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+        native_request = request.Request(
+            self._native_chat_url(str(self.client.base_url)),
+            data=encoded_payload,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+
+        try:
+            with request.urlopen(native_request, timeout=600) as response:
+                response_payload = json.loads(response.read().decode("utf-8"))
+        except error.HTTPError as exc:
+            error_body = exc.read().decode("utf-8", errors="replace")
+            raise RuntimeError(f"Native LM Studio request failed ({exc.code}): {error_body}") from exc
+
+        content_parts = [
+            str(item.get("content", ""))
+            for item in response_payload.get("output", [])
+            if isinstance(item, dict) and item.get("type") == "message"
+        ]
+        content = "\n".join(part for part in content_parts if part)
+        stats = response_payload.get("stats", {})
+        token_limit_exceeded = int(stats.get("total_output_tokens") or 0) >= self.max_completion_tokens
+        return content, token_limit_exceeded, stats
+
     def _call_relation(
         self,
         *,
@@ -777,13 +826,22 @@ class Stage3TeacherAugmentor:
                     "temperature": temperature,
                     "max_tokens": self.max_completion_tokens,
                 }
-                if self.use_schema:
-                    call_kwargs["response_format"] = schema_def
-                if self.disable_thinking:
-                    call_kwargs["extra_body"] = {"chat_template_kwargs": {"enable_thinking": False}}
-                response = self.client.chat.completions.create(**call_kwargs)
-                finish_reason = getattr(response.choices[0], "finish_reason", None)
-                if finish_reason == "length":
+                native_stats: dict[str, Any] | None = None
+                if self.disable_thinking and not self.use_schema:
+                    content, token_limit_exceeded, native_stats = self._native_chat_completion(
+                        system_prompt=system_prompt,
+                        user_prompt=user_prompt,
+                        temperature=temperature,
+                    )
+                else:
+                    if self.use_schema:
+                        call_kwargs["response_format"] = schema_def
+                    response = self.client.chat.completions.create(**call_kwargs)
+                    finish_reason = getattr(response.choices[0], "finish_reason", None)
+                    token_limit_exceeded = finish_reason == "length"
+                    content = response.choices[0].message.content or ""
+
+                if token_limit_exceeded:
                     logger.warning(
                         "Stage 3 teacher output hit token limit (%d) for %s — chunk will be discarded",
                         self.max_completion_tokens,
@@ -801,8 +859,8 @@ class Stage3TeacherAugmentor:
                         "grounding_rejections": [],
                         "subject_inventory": subject_inventory_for_relation(example, relation),
                         "token_limit_exceeded": True,
-                    }, response.choices[0].message.content
-                content = response.choices[0].message.content
+                        "native_stats": native_stats,
+                    }, content
                 payload = self._load_json_payload(content or "", fallback_payload)
                 triples = self._payload_triples(payload)
                 filtered = filter_relation_triples(example, relation, triples)
@@ -829,6 +887,7 @@ class Stage3TeacherAugmentor:
                     "grounding_rejection_count": filtered["grounding_rejection_count"],
                     "grounding_rejections": filtered["grounding_rejections"],
                     "subject_inventory": filtered["subject_inventory"],
+                    "native_stats": native_stats,
                 }, content
             except Exception as exc:  # pragma: no cover - exercised only in real API calls.
                 last_error = str(exc)

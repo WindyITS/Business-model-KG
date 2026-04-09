@@ -5,6 +5,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from finreflectkg_stage3 import (
+    Stage3TeacherAugmentor,
     build_relation_trigger_candidate_pool_from_rows,
     build_stage3_prompt,
     filter_relation_triples,
@@ -16,6 +17,16 @@ from finreflectkg_stage3 import (
 
 
 class Stage3AugmentationTests(unittest.TestCase):
+    def test_native_chat_url_derives_rest_endpoint_from_openai_base_url(self):
+        self.assertEqual(
+            Stage3TeacherAugmentor._native_chat_url("http://localhost:1234/v1"),
+            "http://localhost:1234/api/v1/chat",
+        )
+        self.assertEqual(
+            Stage3TeacherAugmentor._native_chat_url("http://localhost:1234/v1/"),
+            "http://localhost:1234/api/v1/chat",
+        )
+
     def test_build_stage3_prompt_includes_existing_graph_context(self):
         example = {
             "instruction": "x",
