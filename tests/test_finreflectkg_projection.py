@@ -95,6 +95,31 @@ class FinReflectKGProjectionTests(unittest.TestCase):
         self.assertEqual(example["metadata"]["company_name"], "Microsoft")
         self.assertEqual(example["output"]["triples"][0]["subject_type"], "Company")
 
+    def test_projection_rejects_table_like_chunk_even_with_valid_triple(self):
+        rows = [
+            {
+                "ticker": "msft",
+                "year": 2024,
+                "source_file": "microsoft.pdf",
+                "page_id": "12",
+                "chunk_id": "c2",
+                "chunk_text": (
+                    "| Fiscal Year Ended | 2024 | 2023 |\n"
+                    "| Microsoft | Europe | Azure |\n"
+                    "| Microsoft | Europe | Azure |"
+                ),
+                "entity": "Microsoft",
+                "entity_type": "ORG",
+                "relationship": "operates_in",
+                "target": "Europe",
+                "target_type": "GPE",
+            }
+        ]
+
+        example = build_projection_example(rows)
+
+        self.assertIsNone(example)
+
 
 if __name__ == "__main__":
     unittest.main()

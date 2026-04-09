@@ -5,6 +5,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any, Iterable, Iterator
 
+from chunk_quality import chunk_quality_report
 from ontology_validator import canonical_entity_key, clean_entity_name, validate_triples
 
 
@@ -167,6 +168,7 @@ def _analyze_chunk_rows(rows: list[dict[str, Any]]) -> dict[str, Any] | None:
         "source_target_types_seen": sorted(
             {normalize_source_label(row.get("target_type")) for row in rows if row.get("target_type")}
         ),
+        "chunk_quality": chunk_quality_report(chunk_text),
     }
     if company_candidates:
         metadata["company_name"] = company_candidates[0]
@@ -185,6 +187,8 @@ def build_projection_example(
 ) -> dict[str, Any] | None:
     analysis = _analyze_chunk_rows(rows)
     if analysis is None or not analysis["valid_triples"]:
+        return None
+    if not analysis["metadata"]["chunk_quality"]["is_narrative_business_prose"]:
         return None
 
     return {
