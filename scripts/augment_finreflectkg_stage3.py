@@ -20,6 +20,7 @@ from finreflectkg_stage3 import (
     refill_and_finalize_stage3_dataset,
     write_jsonl,
 )
+from stage3_prompt_profiles import DEFAULT_PROMPT_PROFILE, list_prompt_profiles
 
 
 def main() -> int:
@@ -27,6 +28,7 @@ def main() -> int:
     parser.add_argument("--base-url", type=str, default="http://localhost:1234/v1", help="Base URL for the local LLM endpoint.")
     parser.add_argument("--model", type=str, default="local-model", help="Model id sent to the local LLM endpoint.")
     parser.add_argument("--api-key", type=str, default="lm-studio", help="API key for the local LLM endpoint.")
+    parser.add_argument("--prompt-profile", type=str, default=DEFAULT_PROMPT_PROFILE, choices=list_prompt_profiles(), help="Named Stage 3 prompt profile to use.")
     parser.add_argument("--max-retries", type=int, default=3, help="Max retries per relation-specific teacher call.")
     parser.add_argument("--debug-dir", type=str, default=None, help="Optional directory where exact Stage-3 prompts/responses are dumped.")
     parser.add_argument("--debug-chunk-filter", type=str, default=None, help="Optional chunk-key/text substring used to decide which example to dump for debugging.")
@@ -135,6 +137,7 @@ def main() -> int:
         base_url=args.base_url,
         api_key=args.api_key,
         model=args.model,
+        prompt_profile=args.prompt_profile,
         debug_dir=args.debug_dir,
         debug_chunk_filter=args.debug_chunk_filter,
     )
@@ -235,6 +238,7 @@ def main() -> int:
         "projected_jsonl": str(Path(args.projected_jsonl)),
         "candidate_empty_jsonl": str(candidate_empty_path),
         "teacher_relations": list(STAGE3_RELATIONS),
+        "prompt_profile": args.prompt_profile,
         "projected_example_count": len(projected_examples),
         "initial_candidate_empty_count": len(candidate_empty_examples),
         "initial_relation_trigger_candidate_count": len(relation_trigger_candidates),

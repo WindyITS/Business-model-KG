@@ -16,6 +16,7 @@ from finreflectkg_projection import (
     load_finreflectkg_rows,
     sample_empty_examples_by_count,
 )
+from stage3_prompt_profiles import DEFAULT_PROMPT_PROFILE, get_prompt_profile
 from ontology_config import allowed_subject_types, canonical_labels, load_ontology_config
 from ontology_validator import canonical_entity_key, validate_triples
 
@@ -509,8 +510,9 @@ def filter_relation_triples(
     }
 
 
-def relation_system_prompt(relation: str) -> str:
+def relation_system_prompt(relation: str, *, prompt_profile: str = DEFAULT_PROMPT_PROFILE) -> str:
     task = RELATION_TASKS[relation]
+    profile = get_prompt_profile(prompt_profile)
     object_type = task["object_type"]
     permitted_subject_types = allowed_subject_types(relation)
     ontology = load_ontology_config()
@@ -524,27 +526,16 @@ def relation_system_prompt(relation: str) -> str:
         for label in canonical_group
     )
     skepticism_lines = "\n".join(f"- {line}" for line in task["relation_specific_skepticism"])
+    decision_prefix = "\n".join(f"- {line}" for line in profile.decision_standard_prefix)
+    burden_lines = "\n".join(f"- {line}" for line in profile.burden_of_proof_lines)
     return (
-        f"You are a strict knowledge-graph teacher for SEC 10-K extraction. "
-        f"Your mission is to help build the cleanest possible training dataset for a future extractor. "
-        f"You know this mission succeeds only when **noise is kept extremely low**. "
-        f"A missed triple is acceptable; a noisy triple is harmful because it teaches the wrong behavior. "
-        f"You are literal, skeptical, and evidence-bound. "
-        f"You reward precision over recall and prefer missing a triple over adding a weak one.\n\n"
+        f"{profile.system_identity_block}\n\n"
         f"You augment one SEC 10-K chunk by extracting only {relation} triples.\n\n"
         f"You are not re-extracting the whole graph. You are only adding {relation} facts.\n"
         f"Inputs may include <company_name>, <existing_triples>, <allowed_subjects>, and <text_to_analyze>. Your only focus is {relation} facts.\n"
         f'The default answer is {{"triples":[]}}. If the relation is not explicit, return {{"triples":[]}}.\n'
-        f"**Be conservative. Quality is more important than quantity.**\n"
-        f"Only change that default when the chunk contains very strong, relation-specific evidence.\n"
-        f"Only extract from chunks that read like explanatory business prose.\n"
-        f"If the chunk is mostly a table, list, header, address block, legal boilerplate, accounting line items, or other heavily formatted/non-narrative text, return {{\"triples\":[]}}.\n"
-        f"If the chunk does not read like a business explanation written in prose sentences, return {{\"triples\":[]}}.\n"
-        f"Extract only facts that the chunk clearly and explicitly states.\n"
-        f"Do not extract facts that are inferable, deducible, implied, suggested, likely, or merely consistent with the text.\n"
-        f"Do not use world knowledge, business intuition, probability, or background expectations to complete the extraction.\n"
-        f"Treat every candidate triple like a claim in an audit: if the chunk would not prove it on its own, it must not be extracted.\n"
-        f"The chunk must stand alone as proof. The ontology, your background knowledge, and likely business logic are not proof.\n"
+        f"{profile.system_quality_block}\n"
+        f"{profile.system_evidence_block}\n"
         f"Return a triple only if {task['trigger_text']}.\n"
         f"**Do not guess. Do not infer. Do not complete patterns from world knowledge.**\n\n"
         f"ONTOLOGY DEFINITION FOR {relation}:\n"
@@ -556,8 +547,7 @@ def relation_system_prompt(relation: str) -> str:
         f"- Canonical {object_type} label definitions:\n"
         f"{canonical_definition_lines}\n\n"
         f"DECISION STANDARD:\n"
-        f"- First decide whether the chunk is suitable evidence at all: it must be prose-like, business-explanatory, and not dominated by formatting, lists, tables, or ledger-style content.\n"
-        f"- If the chunk fails that suitability gate, output {{\"triples\":[]}} immediately.\n"
+        f"{decision_prefix}\n"
         f"- First decide whether the chunk **explicitly and surely states the relation.**\n"
         f"- Then decide whether the wording matches **exactly** one canonical {object_type} label.\n"
         f"- The chunk must do both jobs itself: it must explicitly state the relation and explicitly support the chosen canonical label.\n"
@@ -566,17 +556,10 @@ def relation_system_prompt(relation: str) -> str:
         f'- If either step fails, output {{"triples":[]}} for that candidate.\n\n'
         f"REMEMBER: better one good triple less than one bad triple more.\n\n"
         f"Burden of proof:\n"
-        f"- Ask: what exact words in the chunk prove this relation?\n"
-        f"- Ask separately: what exact words in the chunk justify this exact canonical label?\n"
-        f"- If you cannot answer both questions from the text alone, output no triple.\n"
+        f"{burden_lines}\n"
         f'- **Logical Leap Test:** If you have to use the word "because" to connect the text to the triple (e.g., "{task["logical_leap_example"]}"), then you are inferring. **If you are inferring, you must return an empty list.**\n'
-        f"- If you cannot point to concrete wording in the chunk, output no triple.\n"
-        f"- If the chunk only makes the relation seem plausible, output no triple.\n"
-        f"- If the chunk is generic, high-level, or boilerplate, output no triple.\n"
-        f"- If the chunk is heavily formatted, table-like, mostly numeric, list-like, or looks like a caption/header/statement block rather than explanatory prose, output no triple.\n"
         f"- If the text names an office, facility, segment, product, service, or business activity but does not explicitly state the target relation, output no triple.\n"
-        f"- If the text names a business segment whose title contains words like sales, rental, service, or subscription, do not treat the title itself as proof of the relation.\n"
-        f"- If you are between a triple and an empty list, choose the empty list.\n\n"
+        f"- If the text names a business segment whose title contains words like sales, rental, service, or subscription, do not treat the title itself as proof of the relation.\n\n"
         f"Subject policy:\n"
         f"- Prefer subjects already listed in <allowed_subjects>.\n"
         f"- If <allowed_subjects> is empty for a subject type, emit a triple only when that subject is explicitly named in the chunk.\n"
@@ -597,7 +580,8 @@ def relation_system_prompt(relation: str) -> str:
     )
 
 
-def build_stage3_prompt(example: dict[str, Any], relation: str) -> str:
+def build_stage3_prompt(example: dict[str, Any], relation: str, *, prompt_profile: str = DEFAULT_PROMPT_PROFILE) -> str:
+    profile = get_prompt_profile(prompt_profile)
     valid_existing_triples = existing_valid_triples(example)
     allowed_subjects = subject_inventory_for_relation(
         example,
@@ -609,16 +593,8 @@ def build_stage3_prompt(example: dict[str, Any], relation: str) -> str:
     prompt_parts = []
     prompt_parts.append(
         "<instruction>\n"
-        "First decide whether the chunk is suitable evidence at all.\n"
-        "Only extract from text that reads like explanatory business prose.\n"
-        "If the chunk is mostly a table, list, heading block, financial statement, legal disclosure, address section, or other heavily formatted/non-narrative text, return {\"triples\":[]}.\n"
-        "Return a triple only when the chunk clearly and explicitly states the relation.\n"
-        "Do not return a triple when the relation is only inferable, deducible, implied, suggested, probable, or merely consistent with the text.\n"
-        "If you would need personal knowledge, business reasoning, or synthesis across clues, return {\"triples\":[]}.\n"
-        "The chunk itself must prove both the relation and the exact canonical label.\n"
-        "If either of those still requires interpretation, return {\"triples\":[]}.\n"
-        "Names of offices, facilities, segments, products, services, or business activities are not enough by themselves.\n"
-        "If the text does not directly say it, do not extract it.\n"
+        + "\n".join(profile.user_instruction_lines)
+        + "\n"
         "</instruction>"
     )
     if company_name:
@@ -638,6 +614,7 @@ class Stage3TeacherAugmentor:
         base_url: str = "http://localhost:1234/v1",
         api_key: str = "lm-studio",
         model: str = "local-model",
+        prompt_profile: str = DEFAULT_PROMPT_PROFILE,
         debug_dir: str | None = None,
         debug_chunk_filter: str | None = None,
     ):
@@ -645,6 +622,7 @@ class Stage3TeacherAugmentor:
 
         self.client = OpenAI(base_url=base_url, api_key=api_key)
         self.model = model
+        self.prompt_profile = prompt_profile
         self.debug_dir = Path(debug_dir) if debug_dir else None
         self.debug_chunk_filter = debug_chunk_filter
 
@@ -709,8 +687,8 @@ class Stage3TeacherAugmentor:
         object_type = RELATION_TASKS[relation]["object_type"]
         schema_name = "Stage3" + "".join(part.title() for part in relation.lower().split("_")) + "Extraction"
         schema_def = self._schema_def(schema_name, relation, object_type)
-        system_prompt = relation_system_prompt(relation)
-        user_prompt = build_stage3_prompt(example, relation)
+        system_prompt = relation_system_prompt(relation, prompt_profile=self.prompt_profile)
+        user_prompt = build_stage3_prompt(example, relation, prompt_profile=self.prompt_profile)
         debug_enabled = self.debug_dir is not None and chunk_key_matches_filter(example, self.debug_chunk_filter)
 
         last_error = None
@@ -810,6 +788,7 @@ class Stage3TeacherAugmentor:
         payload = {
             "chunk_key": chunk_key,
             "relation": relation,
+            "prompt_profile": self.prompt_profile,
             "attempt": attempt,
             "system_prompt": system_prompt,
             "user_prompt": user_prompt,
@@ -840,10 +819,27 @@ class Stage3TeacherAugmentor:
         augmented_example, merge_report = merge_teacher_reports_into_example(example, relation_reports)
         call_log = {
             "chunk_key": example_chunk_key(example),
+            "prompt_profile": self.prompt_profile,
             "relation_reports": relation_reports,
             "merge_report": merge_report,
         }
         return augmented_example, call_log
+
+    def run_relation(
+        self,
+        example: dict[str, Any],
+        *,
+        relation: str,
+        max_retries: int = 3,
+        temperature: float = 0.0,
+    ) -> dict[str, Any]:
+        report, _ = self._call_relation(
+            example=example,
+            relation=relation,
+            max_retries=max_retries,
+            temperature=temperature,
+        )
+        return report
 
 
 def merge_teacher_reports_into_example(
