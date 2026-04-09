@@ -17,6 +17,32 @@ def _serialize_triples(triples):
     return sorted(triples, key=lambda triple: triple_key(triple))
 
 
+def evaluate_case_report(case, report):
+    actual = _serialize_triples(report["valid_triples"])
+    expected = _serialize_triples(list(case.expected_triples))
+    exact_match = actual == expected
+
+    failure_reasons = []
+    if report.get("error"):
+        failure_reasons.append("teacher_call_error")
+    if report.get("invalid_triple_count", 0):
+        failure_reasons.append("invalid_triples_emitted")
+    if report.get("duplicate_triple_count", 0):
+        failure_reasons.append("duplicate_triples_emitted")
+    if report.get("grounding_rejection_count", 0):
+        failure_reasons.append("grounding_rejections")
+    if not exact_match:
+        failure_reasons.append("expected_triples_mismatch")
+
+    return {
+        "passed": not failure_reasons,
+        "exact_match": exact_match,
+        "expected_triples": expected,
+        "actual_triples": actual,
+        "failure_reasons": failure_reasons,
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run fixed Stage 3 smoke cases against a local teacher model.")
     parser.add_argument("--base-url", type=str, default="http://localhost:1234/v1", help="Base URL for the local LLM endpoint.")
@@ -41,6 +67,7 @@ def main() -> int:
 
     case_reports = []
     passed_case_count = 0
+    exact_match_case_count = 0
     for case in SMOKE_CASES:
         example = smoke_case_example(case)
         report = augmentor.run_relation(
@@ -48,23 +75,29 @@ def main() -> int:
             relation=case.relation,
             max_retries=args.max_retries,
         )
-        actual = _serialize_triples(report["valid_triples"])
-        expected = _serialize_triples(list(case.expected_triples))
-        passed = actual == expected
+        evaluation = evaluate_case_report(case, report)
+        passed = evaluation["passed"]
         if passed:
             passed_case_count += 1
+        if evaluation["exact_match"]:
+            exact_match_case_count += 1
 
         case_reports.append(
             {
                 "case_id": case.case_id,
                 "relation": case.relation,
                 "passed": passed,
-                "expected_triples": expected,
-                "actual_triples": actual,
+                "exact_match": evaluation["exact_match"],
+                "expected_triples": evaluation["expected_triples"],
+                "actual_triples": evaluation["actual_triples"],
+                "failure_reasons": evaluation["failure_reasons"],
                 "attempts_used": report["attempts_used"],
+                "raw_response": report.get("raw_response", ""),
+                "parsed_triples": report.get("parsed_triples", []),
                 "invalid_triple_count": report["invalid_triple_count"],
                 "duplicate_triple_count": report["duplicate_triple_count"],
                 "grounding_rejection_count": report["grounding_rejection_count"],
+                "grounding_rejections": report.get("grounding_rejections", []),
                 "error": report.get("error"),
             }
         )
@@ -74,6 +107,7 @@ def main() -> int:
         "base_url": args.base_url,
         "prompt_profile": args.prompt_profile,
         "case_count": len(SMOKE_CASES),
+        "exact_match_case_count": exact_match_case_count,
         "passed_case_count": passed_case_count,
         "failed_case_count": len(SMOKE_CASES) - passed_case_count,
         "pass_rate": (passed_case_count / len(SMOKE_CASES)) if SMOKE_CASES else 0.0,
@@ -85,7 +119,8 @@ def main() -> int:
     report_path.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
 
     print(f"Prompt profile: {args.prompt_profile}")
-    print(f"Passed {passed_case_count}/{len(SMOKE_CASES)} smoke cases")
+    print(f"Exact matches: {exact_match_case_count}/{len(SMOKE_CASES)}")
+    print(f"Strict passes: {passed_case_count}/{len(SMOKE_CASES)} smoke cases")
     print(f"Wrote smoke report to {report_path}")
     return 0 if passed_case_count == len(SMOKE_CASES) else 1
 

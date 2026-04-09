@@ -528,6 +528,159 @@ def relation_system_prompt(relation: str, *, prompt_profile: str = DEFAULT_PROMP
     skepticism_lines = "\n".join(f"- {line}" for line in task["relation_specific_skepticism"])
     decision_prefix = "\n".join(f"- {line}" for line in profile.decision_standard_prefix)
     burden_lines = "\n".join(f"- {line}" for line in profile.burden_of_proof_lines)
+    if prompt_profile == "balanced_v3":
+        relation_examples = {
+            "SERVES": {
+                "text": (
+                    "Our security software is utilized by major government agencies and we are expanding "
+                    "our sales motion to target mid-market companies."
+                ),
+                "output": (
+                    '{"triples":[{"subject":"{company}","subject_type":"Company","relation":"SERVES",'
+                    '"object":"government agencies","object_type":"CustomerType"},'
+                    '{"subject":"{company}","subject_type":"Company","relation":"SERVES",'
+                    '"object":"mid-market companies","object_type":"CustomerType"}]}'
+                ),
+                "extra_rules": (
+                    'Ignore generic terms such as "customers", "users", or "businesses" unless the text clearly supports one allowed label.',
+                ),
+            },
+            "SELLS_THROUGH": {
+                "text": (
+                    "We reach our customers primarily through our direct sales force, though consumer hardware "
+                    "is also sold via retail and online."
+                ),
+                "output": (
+                    '{"triples":[{"subject":"{company}","subject_type":"Company","relation":"SELLS_THROUGH",'
+                    '"object":"direct sales","object_type":"Channel"},'
+                    '{"subject":"{company}","subject_type":"Company","relation":"SELLS_THROUGH",'
+                    '"object":"retail","object_type":"Channel"},'
+                    '{"subject":"{company}","subject_type":"Company","relation":"SELLS_THROUGH",'
+                    '"object":"online","object_type":"Channel"}]}'
+                ),
+                "extra_rules": (
+                    'Do not confuse physical presence or infrastructure with sales channels.',
+                    'If the text says "third-party marketplaces", output "marketplaces".',
+                ),
+            },
+            "MONETIZES_VIA": {
+                "text": (
+                    "The segment generates revenue from multi-year subscription contracts and also earns "
+                    "consumption-based revenue when clients exceed their allotted storage."
+                ),
+                "output": (
+                    '{"triples":[{"subject":"{company}","subject_type":"Company","relation":"MONETIZES_VIA",'
+                    '"object":"subscription","object_type":"RevenueModel"},'
+                    '{"subject":"{company}","subject_type":"Company","relation":"MONETIZES_VIA",'
+                    '"object":"consumption-based","object_type":"RevenueModel"}]}'
+                ),
+                "extra_rules": (
+                    'Look for explicit earning or charging language such as "revenue is derived from", "earns fees", or "advertising revenue".',
+                    'Do not infer a revenue model from a product description or segment name alone.',
+                ),
+            },
+        }
+        relation_definitions = {
+            "SERVES": "Identifies the exact customer groups a company or offering explicitly targets, supports, or sells to.",
+            "SELLS_THROUGH": "Identifies the specific sales channels or distribution paths a company uses to reach customers.",
+            "MONETIZES_VIA": "Identifies the exact revenue model by which a company, segment, or offering earns money.",
+        }
+        mapping_guides = {
+            "SERVES": (
+                '- "individual consumers" -> "consumers"\n'
+                '- "schools and universities" -> "educational institutions"'
+            ),
+            "SELLS_THROUGH": (
+                '- "direct sales force" -> "direct sales"\n'
+                '- "third-party marketplaces" -> "marketplaces"'
+            ),
+            "MONETIZES_VIA": (
+                '- "subscription": recurring payments for ongoing access\n'
+                '- "advertising": selling advertising inventory or audience access\n'
+                '- "licensing": granting rights to use IP or software\n'
+                '- "consumption-based": pay-as-you-go, metered, or usage-based charges\n'
+                '- "hardware sales": selling physical devices or equipment\n'
+                '- "service fees": consulting, maintenance, installation, or professional services fees\n'
+                '- "royalties": usage-linked payments for IP or brand use\n'
+                '- "transaction fees": charging per payment, trade, booking, or platform transaction'
+            ),
+        }
+        example = relation_examples[relation]
+        extra_rules = "\n".join(f"{index}. {line}" for index, line in enumerate(example["extra_rules"], start=5))
+        mapping_block = ""
+        if relation == "MONETIZES_VIA":
+            mapping_block = f"\nLABEL MAPPING GUIDE:\n{mapping_guides[relation]}\n"
+        elif relation in {"SERVES", "SELLS_THROUGH"}:
+            mapping_block = f"\nNORMALIZATION HINTS:\n{mapping_guides[relation]}\n"
+
+        return (
+            f"{profile.system_identity_block}\n\n"
+            f"RELATION: {relation}\n"
+            f"DEFINITION: {relation_definitions[relation]}\n\n"
+            f"ALLOWED SUBJECT TYPES:\n"
+            f"{json.dumps(permitted_subject_types, ensure_ascii=False)}\n\n"
+            f"ALLOWED OBJECT LABELS (must match exactly in output):\n"
+            f"{labels_json}\n"
+            f"{mapping_block}\n"
+            f"EXTRACTION RULES:\n"
+            f"1. Evaluate the text against the ALLOWED OBJECT LABELS list.\n"
+            f"2. Extract a triple only when the relation is explicitly supported by the text.\n"
+            f"3. The object value in your JSON MUST be an exact string from the allowed label list.\n"
+            f"4. If the text supports multiple labels, return one triple for EACH supported label in a single JSON array.\n"
+            f"{extra_rules}\n"
+            f"7. If no allowed labels are explicitly supported, return {{\"triples\":[]}}.\n\n"
+            f"EXAMPLE TEXT:\n"
+            f"\"{example['text']}\"\n"
+            f"EXAMPLE OUTPUT:\n"
+            f"{example['output']}\n\n"
+            f"OUTPUT RULES:\n"
+            f"- Output ONLY raw JSON.\n"
+            f"- Do not output markdown code blocks.\n"
+            f"- Do not output explanations.\n"
+            f'- Output shape: {{"triples":[{{"subject":"...","subject_type":"...","relation":"{relation}","object":"...","object_type":"{object_type}"}}]}}\n'
+            f"- If nothing is supported, output {{\"triples\":[]}}."
+        )
+    if prompt_profile == "balanced_v2":
+        return (
+            f"{profile.system_identity_block}\n\n"
+            f"You are working on one narrow annotation task: extract only {relation} triples from one SEC 10-K chunk. "
+            f"Read the chunk, complete the annotation, return one JSON object, and stop.\n\n"
+            f"What success looks like:\n"
+            f"- recover every {relation} triple that the chunk explicitly supports\n"
+            f"- reject anything the chunk does not actually prove\n"
+            f"- keep the output deduplicated and schema-valid\n\n"
+            f"{profile.system_quality_block}\n"
+            f"\nFOLLOW THIS REASONING STEPS:\n"
+            f"1. {profile.decision_standard_prefix[0]} {profile.decision_standard_prefix[1]}\n"
+            f"2. {profile.decision_standard_prefix[2]}\n\n"
+            f"CONSIDER THE FOLLOWING:\n"
+            f"- {profile.burden_of_proof_lines[0]}\n"
+            f"- {profile.burden_of_proof_lines[1]}\n"
+            f"- {profile.system_evidence_block.splitlines()[0]}\n"
+            f"- {profile.system_evidence_block.splitlines()[1]}\n"
+            f"- {profile.system_evidence_block.splitlines()[2]}\n"
+            f"- {profile.burden_of_proof_lines[2]}\n"
+            f"- {profile.burden_of_proof_lines[3]}\n"
+            f"- {profile.burden_of_proof_lines[4]}\n\n"
+            f"Relation you are extracting: {relation}\n"
+            f"- Definition: {relation_definition}\n"
+            f"- Allowed subject types: {json.dumps(permitted_subject_types, ensure_ascii=False)}\n"
+            f'- Object node type "{object_type}": {object_definition}\n'
+            f"- Allowed {object_type} labels: {labels_json}\n"
+            f"- Canonical {object_type} label definitions:\n"
+            f"{canonical_definition_lines.replace('- ', '    - ', 1).replace(chr(10) + '- ', chr(10) + '    - ')}\n\n"
+            f"Direct extraction standard:\n"
+            f"- If the wording directly supports two labels, extract two triples.\n"
+            f"- If the wording is explicit about the relation but generic about the label, do not extract.\n"
+            f"- If the wording makes the label likely but does not directly state the relation, do not extract.\n"
+            f"- If the chunk is non-narrative, generic, or boilerplate, return {{\"triples\":[]}}.\n\n"
+            f"Relation-specific cautions:\n"
+            f"{skepticism_lines}\n\n"
+            f"Output rules:\n"
+            f"- Output only JSON.\n"
+            f"- Output shape: {{\"triples\":[{{\"subject\":\"...\",\"subject_type\":\"...\",\"relation\":\"{relation}\",\"object\":\"...\",\"object_type\":\"{object_type}\"}}]}}\n"
+            f"- If nothing is supported, output {{\"triples\":[]}}."
+        )
     return (
         f"{profile.system_identity_block}\n\n"
         f"You augment one SEC 10-K chunk by extracting only {relation} triples.\n\n"
@@ -589,13 +742,51 @@ def build_stage3_prompt(example: dict[str, Any], relation: str, *, prompt_profil
         existing_triples=valid_existing_triples,
     )
     company_name = example_company_name(example, existing_triples=valid_existing_triples)
-
+    relation_guardrails = {
+        "SERVES": (
+            "Extract SERVES only when the text explicitly names who the company or offering is for, serves, targets, supports, or sells to.",
+            "Generic mentions such as customers, businesses, users, organizations, or markets are not enough without a canonical customer label.",
+        ),
+        "SELLS_THROUGH": (
+            "Extract SELLS_THROUGH only when the text explicitly states the selling or distribution path.",
+            "Sales offices, distribution centers, warehouses, partners, or commercial presence alone are not proof of a channel.",
+        ),
+        "MONETIZES_VIA": (
+            "Extract MONETIZES_VIA only when the text explicitly states how money is earned, charged, or priced.",
+            "Products, services, sales activity, or segment names alone are not proof of a revenue model.",
+        ),
+    }[relation]
     prompt_parts = []
+    if prompt_profile == "balanced_v3":
+        prompt_parts.append(
+            "<task>\n"
+            f"Analyze the text and extract all explicitly supported triples for the relation: {relation}.\n"
+            "</task>"
+        )
+        prompt_parts.append(
+            "<constraints>\n"
+            f'- Allowed subjects: {_compact_json(allowed_subjects)}\n'
+            + (f'- Preferred company subject: "{company_name}"\n' if company_name else "")
+            + '- You must output ONLY valid raw JSON.\n'
+            + '- Do not output markdown code blocks.\n'
+            + '- Do not output explanations.\n'
+            + '- If the text contains no explicitly supported labels, output {"triples":[]}.'
+            + "\n</constraints>"
+        )
+        prompt_parts.append(f"<text>\n{example.get('input', '')}\n</text>")
+        return "\n\n".join(prompt_parts)
+
     prompt_parts.append(
         "<instruction>\n"
         + "\n".join(profile.user_instruction_lines)
         + "\n"
         "</instruction>"
+    )
+    prompt_parts.append(
+        "<relation_guardrails>\n"
+        + "\n".join(relation_guardrails)
+        + "\n"
+        "</relation_guardrails>"
     )
     if company_name:
         prompt_parts.append(f"<company_name>\n{company_name}\n</company_name>")
@@ -675,6 +866,11 @@ class Stage3TeacherAugmentor:
         except json.JSONDecodeError:
             return json.loads(fallback_payload)
 
+    @staticmethod
+    def _payload_triples(payload: dict[str, Any]) -> list[dict[str, Any]]:
+        triples = payload.get("triples", [])
+        return list(triples) if isinstance(triples, list) else []
+
     def _call_relation(
         self,
         *,
@@ -705,7 +901,7 @@ class Stage3TeacherAugmentor:
                 )
                 content = response.choices[0].message.content
                 payload = self._load_json_payload(content or "", fallback_payload)
-                triples = payload.get("triples", [])
+                triples = self._payload_triples(payload)
                 filtered = filter_relation_triples(example, relation, triples)
                 if debug_enabled:
                     self._write_debug_payload(
@@ -716,12 +912,14 @@ class Stage3TeacherAugmentor:
                         user_prompt=user_prompt,
                         schema_def=schema_def,
                         raw_response=content or "",
+                        parsed_triples=triples,
                         filtered=filtered,
                     )
                 return {
                     "relation": relation,
                     "attempts_used": attempt,
                     "raw_response": content or "",
+                    "parsed_triples": triples,
                     "valid_triples": filtered["valid_triples"],
                     "invalid_triple_count": filtered["invalid_triple_count"],
                     "duplicate_triple_count": filtered["duplicate_triple_count"],
@@ -740,6 +938,7 @@ class Stage3TeacherAugmentor:
                         user_prompt=user_prompt,
                         schema_def=schema_def,
                         raw_response="",
+                        parsed_triples=[],
                         filtered={"valid_triples": [], "invalid_triple_count": 0, "duplicate_triple_count": 0, "grounding_rejection_count": 0, "grounding_rejections": [], "subject_inventory": {}},
                         error=last_error,
                     )
@@ -749,6 +948,7 @@ class Stage3TeacherAugmentor:
             "relation": relation,
             "attempts_used": max_retries,
             "raw_response": "",
+            "parsed_triples": [],
             "valid_triples": [],
             "invalid_triple_count": 0,
             "duplicate_triple_count": 0,
@@ -768,6 +968,7 @@ class Stage3TeacherAugmentor:
         user_prompt: str,
         schema_def: dict[str, Any],
         raw_response: str,
+        parsed_triples: list[dict[str, Any]],
         filtered: dict[str, Any],
         error: str | None = None,
     ) -> None:
@@ -794,6 +995,7 @@ class Stage3TeacherAugmentor:
             "user_prompt": user_prompt,
             "schema_def": schema_def,
             "raw_response": raw_response,
+            "parsed_triples": parsed_triples,
             "filtered_report": filtered,
             "error": error,
         }

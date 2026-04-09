@@ -203,6 +203,36 @@ SMOKE_CASES = (
         ),
         expected_triples=(),
     ),
+    Stage3SmokeCase(
+        case_id="negative_serves_generic_businesses",
+        relation="SERVES",
+        text=(
+            "The company provides workflow and analytics software to businesses of all sizes across a wide range "
+            "of industries. Management continues to focus on expanding the platform's capabilities and improving "
+            "customer retention across the installed base."
+        ),
+        expected_triples=(),
+    ),
+    Stage3SmokeCase(
+        case_id="negative_sells_through_sales_offices",
+        relation="SELLS_THROUGH",
+        text=(
+            "The company operates a network of direct sales offices, regional support hubs, and distribution "
+            "centers across North America and Europe. These facilities support customer engagement, training, "
+            "implementation, and ongoing account management."
+        ),
+        expected_triples=(),
+    ),
+    Stage3SmokeCase(
+        case_id="negative_monetizes_via_service_description",
+        relation="MONETIZES_VIA",
+        text=(
+            "The segment provides installation, maintenance, and consulting services for enterprise customers. "
+            "Its teams work closely with customers throughout deployment and ongoing support to improve adoption "
+            "and long-term product usage."
+        ),
+        expected_triples=(),
+    ),
 )
 
 
