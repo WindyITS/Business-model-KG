@@ -46,14 +46,11 @@ class Stage3AugmentationTests(unittest.TestCase):
 
         prompt = build_stage3_prompt(example, "SELLS_THROUGH")
 
-        self.assertIn("<company_name>\nMicrosoft\n</company_name>", prompt)
-        self.assertIn("<existing_triples>", prompt)
-        self.assertIn('"relation":"OFFERS"', prompt)
-        self.assertIn("<allowed_subjects>", prompt)
+        self.assertIn("Microsoft", prompt)
+        self.assertIn("<constraints>", prompt)
         self.assertIn('"Company":["Microsoft"]', prompt)
         self.assertIn('"Offering":["Azure"]', prompt)
-        self.assertIn("<relation_guardrails>", prompt)
-        self.assertIn("selling or distribution path", prompt)
+        self.assertIn("SUBJECT RULE", prompt)
 
     def test_filter_relation_triples_drops_hallucinated_subjects(self):
         example = {

@@ -27,57 +27,26 @@ class Stage3SmokeCaseTests(unittest.TestCase):
             self.assertEqual(example["metadata"]["company_name"], case.company_name)
             self.assertEqual(example["metadata"]["chunk_key"]["chunk_id"], case.case_id)
 
-    def test_prompt_profiles_are_listed_and_switchable(self):
+    def test_default_prompt_profile_is_available(self):
         profiles = list_prompt_profiles()
         self.assertIn(DEFAULT_PROMPT_PROFILE, profiles)
-        self.assertIn("relaxed_v1", profiles)
-        self.assertIn("balanced_v1", profiles)
-        self.assertIn("balanced_v2", profiles)
-        self.assertIn("balanced_v3", profiles)
-        self.assertIn("balanced_v4", profiles)
-        self.assertIn("naive_v1", profiles)
+        self.assertEqual(DEFAULT_PROMPT_PROFILE, "default")
 
+    def test_system_prompt_contains_extraction_rules(self):
+        system = relation_system_prompt("SERVES")
+        self.assertIn("strict Information Extraction system", system)
+        self.assertIn("ALLOWED OBJECT LABELS", system)
+        self.assertIn("EXAMPLE OUTPUT", system)
+        self.assertIn("Sales offices", relation_system_prompt("SELLS_THROUGH"))
+        self.assertIn("organizational structure", relation_system_prompt("SELLS_THROUGH"))
+        self.assertIn("activity description", relation_system_prompt("MONETIZES_VIA"))
+
+    def test_user_prompt_contains_constraints(self):
         example = smoke_case_example(SMOKE_CASES[0])
-        strict_system = relation_system_prompt("SERVES", prompt_profile=DEFAULT_PROMPT_PROFILE)
-        relaxed_system = relation_system_prompt("SERVES", prompt_profile="relaxed_v1")
-        relaxed_user = build_stage3_prompt(example, "SERVES", prompt_profile="relaxed_v1")
-        balanced_system = relation_system_prompt("SERVES", prompt_profile="balanced_v1")
-        balanced_v2_system = relation_system_prompt("SERVES", prompt_profile="balanced_v2")
-        balanced_v2_user = build_stage3_prompt(example, "SERVES", prompt_profile="balanced_v2")
-        balanced_v3_system = relation_system_prompt("SERVES", prompt_profile="balanced_v3")
-        balanced_v3_user = build_stage3_prompt(example, "SERVES", prompt_profile="balanced_v3")
-        naive_system = relation_system_prompt("SERVES", prompt_profile="naive_v1")
-        naive_user = build_stage3_prompt(example, "SERVES", prompt_profile="naive_v1")
-
-        self.assertNotEqual(strict_system, relaxed_system)
-        self.assertNotEqual(strict_system, balanced_system)
-        self.assertNotEqual(strict_system, balanced_v2_system)
-        self.assertNotEqual(strict_system, naive_system)
-        self.assertIn("strongly grounded", relaxed_system)
-        self.assertIn("grounds it so strongly", relaxed_user)
-        self.assertIn("ordinary business prose", balanced_system)
-        self.assertIn("careful annotation job", balanced_v2_system)
-        self.assertIn("FOLLOW THIS REASONING STEPS", balanced_v2_system)
-        self.assertIn("CONSIDER THE FOLLOWING", balanced_v2_system)
-        self.assertIn("If the wording directly supports two labels, extract two triples.", balanced_v2_system)
-        self.assertIn("If the chunk clearly supports more than one triple", balanced_v2_user)
-        self.assertIn("strict Information Extraction system", balanced_v3_system)
-        self.assertIn("ALLOWED OBJECT LABELS", balanced_v3_system)
-        self.assertIn("EXAMPLE OUTPUT", balanced_v3_system)
-        self.assertIn("<constraints>", balanced_v3_user)
-        self.assertIn("Do not output markdown code blocks", balanced_v3_user)
-
-        balanced_v4_system = relation_system_prompt("SELLS_THROUGH", prompt_profile="balanced_v4")
-        balanced_v4_monetizes = relation_system_prompt("MONETIZES_VIA", prompt_profile="balanced_v4")
-        balanced_v4_user = build_stage3_prompt(example, "SELLS_THROUGH", prompt_profile="balanced_v4")
-        self.assertIn("strict Information Extraction system", balanced_v4_system)
-        self.assertIn("Sales offices", balanced_v4_system)
-        self.assertIn("organizational structure", balanced_v4_system)
-        self.assertIn("activity description", balanced_v4_monetizes)
-        self.assertIn("<constraints>", balanced_v4_user)
-
-        self.assertIn("straightforward way", naive_system)
-        self.assertIn("should count", naive_user)
+        user = build_stage3_prompt(example, "SERVES")
+        self.assertIn("<constraints>", user)
+        self.assertIn("Do not output markdown code blocks", user)
+        self.assertIn("SUBJECT RULE", user)
 
 
 if __name__ == "__main__":

@@ -14,9 +14,9 @@ A fine-tuned extractor that runs reliably over the full 10-K universe and produc
 
 ---
 
-This is `v0`: the extraction pipeline works end-to-end once provided with the Item 1 Business section of a company's 10-K, and the first three dataset-building stages are implemented in the repo. The next phase is turning that data pipeline into a balanced fine-tuning set for a dedicated extractor, fine-tune such extractor and check wether it performs better on extracting information.
+This is `v0`: the extraction pipeline works end-to-end once provided with the Item 1 Business section of a company's 10-K, and all four dataset-building stages are implemented and validated. The pipeline is ready for production-scale dataset generation targeting ~5,000 training examples across heterogeneous companies.
 
-The next data-building stage is based on:
+The dataset-building pipeline is based on:
 
 - the paper [FinReflectKG: Agentic Construction and Evaluation of Financial Knowledge Graphs](https://arxiv.org/abs/2508.17906)
 - the dataset [domyn/FinReflectKG on Hugging Face](https://huggingface.co/datasets/domyn/FinReflectKG)
@@ -104,12 +104,14 @@ Full ontology spec: [`docs/ontology.md`](./docs/ontology.md)
 
 The prompt-based extractor is a baseline, not the end state. The broader goal is a fine-tuned extractor that is cheaper, more reliable, and more standardized.
 
-The data-building pipeline now follows four stages:
+The data-building pipeline follows four stages:
 
-1. **Project FinReflectKG** into this ontology with a deterministic mapping script, keep only triples that fit cleanly and discard everything else
+1. **Project FinReflectKG** into this ontology with a deterministic mapping script, keep only triples that fit cleanly and discard everything else (~1.15% yield rate)
 2. **Sample candidate empty chunks** so the fine-tuned model can later learn to abstain when nothing relevant is present
-3. **Teacher augmentation** done by running a strong base model (Gemma 4 26B for the moment) only on the ontology slices FinReflectKG does not cover well: `SERVES`, `SELLS_THROUGH`, `MONETIZES_VIA`
+3. **Teacher augmentation** done by running Gemma 4 27B via LM Studio, only on the ontology slices FinReflectKG does not cover well: `SERVES`, `SELLS_THROUGH`, `MONETIZES_VIA`. Uses anti-inference prompt engineering to prevent the model from over-extracting (e.g. confusing organizational infrastructure with sales channels, or service descriptions with revenue models)
 4. **Finalize the merged dataset** by validating the teacher output, promoting empty chunks that are no longer empty, and rebalancing the final empty ratio
+
+The pipeline runs in batches of 80k chunks via `scripts/run_batch.py`, targeting 5 batches for ~4,600 positive examples plus ~1,400 empties across heterogeneous companies.
 
 That's why this repo contains both a working extractor and the ontology + validation infrastructure: the same schema and validator that constrain prompts today will constrain the training data tomorrow.
 
@@ -122,8 +124,10 @@ Stage 1 is now implemented as a deterministic projection pipeline that maps the 
 Run it directly against the Hugging Face dataset:
 
 ```bash
-python scripts/project_finreflectkg_stage1.py --limit-chunks 500
+python scripts/project_finreflectkg_stage1.py --limit-chunks 500 --skip-chunks 0
 ```
+
+The `--skip-chunks` flag allows batched processing by skipping the first N chunks before applying the limit.
 
 This writes:
 
@@ -185,9 +189,14 @@ python scripts/augment_finreflectkg_stage3.py \
   --candidate-empty-jsonl outputs/finreflectkg_stage2/empty_examples.jsonl \
   --relation-trigger-count 50 \
   --empty-ratio 0.3 \
-  --base-url http://localhost:1234/v1 \
-  --model local-model
+  --no-schema --no-think \
+  --model gemma-4-27b-it
 ```
+
+Important flags:
+
+- `--no-schema` disables JSON Schema enforcement via `response_format`. LM Studio's grammar-based constrained decoding (GBNF) conflicts with complex nested schemas containing multiple `enum` fields, causing empty responses or hallucinated field values. Without this flag, the model is asked to conform to a strict grammar that corrupts output.
+- `--no-think` disables model thinking/reasoning mode, which otherwise consumes excessive tokens and slows inference without improving extraction quality.
 
 This writes:
 
@@ -206,7 +215,29 @@ Important Stage 3 behavior:
 - trigger-selected chunks are filtered in deterministic code before teacher inference
 - only chunks that look like narrative business prose are eligible for the trigger pool
 - teacher-empty trigger candidates are not reused as training empties
+- the prompt profile includes anti-inference rules that distinguish organizational infrastructure from sales channels and service descriptions from revenue models
+- subject anchoring forces the model to use the company name instead of verbose descriptions from the text
 - outputs under `outputs/` are intentionally ignored by git
+
+## Batch Runner
+
+For production-scale dataset generation, use the batch runner which orchestrates the full Stage 1 → 2 → 3 pipeline:
+
+```bash
+# Run a single batch (e.g. batch 1 of 5)
+python scripts/run_batch.py --batch 1
+
+# Run with a specific model
+python scripts/run_batch.py --batch 3 --model gemma-4-27b-it
+
+# Skip already-completed stages
+python scripts/run_batch.py --batch 1 --skip-stage1 --skip-stage2
+
+# Merge all completed batches into a single training set
+python scripts/run_batch.py --merge
+```
+
+Each batch processes 80,000 chunks (configurable via `--chunks-per-batch`). Outputs are written to `outputs/batch_N/stage{1,2,3}/`. The merge step deduplicates by chunk key and writes the combined dataset to `outputs/merged/`.
 
 ## Quickstart
 
@@ -215,7 +246,7 @@ Important Stage 3 behavior:
 - Python 3.10+
 - Docker
 - [LM Studio](https://lmstudio.ai) (or any OpenAI-compatible local endpoint)
-- A model served at `http://localhost:1234/v1`, current baseline is Gemma 4 26B
+- A model served at `http://localhost:1234/v1`, current baseline is Gemma 4 27B IT
 
 ```bash
 python3 -m venv venv
@@ -336,7 +367,9 @@ kg-v0/
 │   ├── load_custom_graph.py
 │   ├── load_manual_graph.py
 │   ├── augment_finreflectkg_stage3.py
+│   ├── evaluate_stage3_smoke.py
 │   ├── project_finreflectkg_stage1.py
+│   ├── run_batch.py                batch runner for production pipeline
 │   └── sample_empty_chunks.py
 ├── src/
 │   ├── chunker.py              heading-aware passage chunker
@@ -344,6 +377,8 @@ kg-v0/
 │   ├── evaluate_graph.py       gold-set comparison and Neo4j dump
 │   ├── finreflectkg_projection.py   dataset projection + empty sampling helpers
 │   ├── finreflectkg_stage3.py  teacher augmentation + dataset finalization
+│   ├── stage3_prompt_profiles.py  prompt profile definitions
+│   ├── stage3_smoke_cases.py   smoke test cases for Stage 3
 │   ├── llm_extractor.py        all extraction modes
 │   ├── main.py                 pipeline entry point
 │   ├── neo4j_loader.py         graph loading
@@ -353,6 +388,7 @@ kg-v0/
 │   ├── test_finreflectkg_projection.py
 │   ├── test_ontology_validator.py
 │   ├── test_stage3_augmentation.py
+│   ├── test_stage3_smoke_cases.py
 │   ├── test_stage2_empty_sampling.py
 │   └── test_pipeline_components.py
 ├── docker-compose.yml

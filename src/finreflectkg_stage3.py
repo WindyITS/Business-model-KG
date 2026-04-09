@@ -515,232 +515,123 @@ def relation_system_prompt(relation: str, *, prompt_profile: str = DEFAULT_PROMP
     profile = get_prompt_profile(prompt_profile)
     object_type = task["object_type"]
     permitted_subject_types = allowed_subject_types(relation)
-    ontology = load_ontology_config()
-    relation_definition = str(ontology["relations"][relation]["definition"]).strip()
-    object_definition = str(ontology["node_types"][object_type]["definition"]).strip()
     canonical_group = canonical_labels(object_type) if object_type in {"CustomerType", "Channel", "RevenueModel"} else []
     labels_json = json.dumps(canonical_group, ensure_ascii=False, separators=(",", ":"))
-    canonical_definitions = ontology["canonical_labels"].get(object_type, {})
-    canonical_definition_lines = "\n".join(
-        f'- "{label}": {canonical_definitions[label]}'
-        for label in canonical_group
-    )
-    skepticism_lines = "\n".join(f"- {line}" for line in task["relation_specific_skepticism"])
-    decision_prefix = "\n".join(f"- {line}" for line in profile.decision_standard_prefix)
-    burden_lines = "\n".join(f"- {line}" for line in profile.burden_of_proof_lines)
-    if prompt_profile in ("balanced_v3", "balanced_v4"):
-        relation_examples = {
-            "SERVES": {
-                "text": (
-                    "Our security software is utilized by major government agencies and we are expanding "
-                    "our sales motion to target mid-market companies."
-                ),
-                "output": (
-                    '{"triples":[{"subject":"{company}","subject_type":"Company","relation":"SERVES",'
-                    '"object":"government agencies","object_type":"CustomerType"},'
-                    '{"subject":"{company}","subject_type":"Company","relation":"SERVES",'
-                    '"object":"mid-market companies","object_type":"CustomerType"}]}'
-                ),
-                "extra_rules": (
-                    'Ignore generic terms such as "customers", "users", or "businesses" unless the text clearly supports one allowed label.',
-                ),
-            },
-            "SELLS_THROUGH": {
-                "text": (
-                    "We reach our customers primarily through our direct sales force, though consumer hardware "
-                    "is also sold via retail and online."
-                ),
-                "output": (
-                    '{"triples":[{"subject":"{company}","subject_type":"Company","relation":"SELLS_THROUGH",'
-                    '"object":"direct sales","object_type":"Channel"},'
-                    '{"subject":"{company}","subject_type":"Company","relation":"SELLS_THROUGH",'
-                    '"object":"retail","object_type":"Channel"},'
-                    '{"subject":"{company}","subject_type":"Company","relation":"SELLS_THROUGH",'
-                    '"object":"online","object_type":"Channel"}]}'
-                ),
-                "extra_rules": (
-                    'Do not confuse physical presence or infrastructure with sales channels.',
-                    'If the text says "third-party marketplaces", output "marketplaces".',
-                ) if prompt_profile == "balanced_v3" else (
-                    'Do not confuse physical presence, infrastructure, or organizational structure with sales channels.',
-                    '"Sales offices", "sales teams", "regional hubs", or "distribution centers" describe internal organization, NOT the "direct sales" channel.',
-                    'Extract "direct sales" only when the text says the company sells or distributes TO CUSTOMERS through a direct sales force or direct selling motion.',
-                    'If the text says "third-party marketplaces", output "marketplaces".',
-                ),
-            },
-            "MONETIZES_VIA": {
-                "text": (
-                    "The segment generates revenue from multi-year subscription contracts and also earns "
-                    "consumption-based revenue when clients exceed their allotted storage."
-                ),
-                "output": (
-                    '{"triples":[{"subject":"{company}","subject_type":"Company","relation":"MONETIZES_VIA",'
-                    '"object":"subscription","object_type":"RevenueModel"},'
-                    '{"subject":"{company}","subject_type":"Company","relation":"MONETIZES_VIA",'
-                    '"object":"consumption-based","object_type":"RevenueModel"}]}'
-                ),
-                "extra_rules": (
-                    'Look for explicit earning or charging language such as "revenue is derived from", "earns fees", or "advertising revenue".',
-                    'Do not infer a revenue model from a product description or segment name alone.',
-                ) if prompt_profile == "balanced_v3" else (
-                    'Look for explicit earning or charging language such as "revenue is derived from", "earns fees", or "advertising revenue".',
-                    'Do not infer a revenue model from a product description, segment name, or activity description alone.',
-                    'Describing what services a company provides (e.g. "provides installation, maintenance, and consulting services") is NOT the same as stating it earns "service fees". Extract only when the text explicitly states how money is earned or charged.',
-                ),
-            },
-        }
-        relation_definitions = {
-            "SERVES": "Identifies the exact customer groups a company or offering explicitly targets, supports, or sells to.",
-            "SELLS_THROUGH": "Identifies the specific sales channels or distribution paths a company uses to reach customers.",
-            "MONETIZES_VIA": "Identifies the exact revenue model by which a company, segment, or offering earns money.",
-        }
-        mapping_guides = {
-            "SERVES": (
-                '- "individual consumers" -> "consumers"\n'
-                '- "schools and universities" -> "educational institutions"'
-            ),
-            "SELLS_THROUGH": (
-                '- "direct sales force" -> "direct sales"\n'
-                '- "third-party marketplaces" -> "marketplaces"'
-            ),
-            "MONETIZES_VIA": (
-                '- "subscription": recurring payments for ongoing access\n'
-                '- "advertising": selling advertising inventory or audience access\n'
-                '- "licensing": granting rights to use IP or software\n'
-                '- "consumption-based": pay-as-you-go, metered, or usage-based charges\n'
-                '- "hardware sales": selling physical devices or equipment\n'
-                '- "service fees": consulting, maintenance, installation, or professional services fees\n'
-                '- "royalties": usage-linked payments for IP or brand use\n'
-                '- "transaction fees": charging per payment, trade, booking, or platform transaction'
-            ),
-        }
-        example = relation_examples[relation]
-        extra_rules = "\n".join(f"{index}. {line}" for index, line in enumerate(example["extra_rules"], start=5))
-        mapping_block = ""
-        if relation == "MONETIZES_VIA":
-            mapping_block = f"\nLABEL MAPPING GUIDE:\n{mapping_guides[relation]}\n"
-        elif relation in {"SERVES", "SELLS_THROUGH"}:
-            mapping_block = f"\nNORMALIZATION HINTS:\n{mapping_guides[relation]}\n"
 
-        return (
-            f"{profile.system_identity_block}\n\n"
-            f"RELATION: {relation}\n"
-            f"DEFINITION: {relation_definitions[relation]}\n\n"
-            f"ALLOWED SUBJECT TYPES:\n"
-            f"{json.dumps(permitted_subject_types, ensure_ascii=False)}\n\n"
-            f"ALLOWED OBJECT LABELS (must match exactly in output):\n"
-            f"{labels_json}\n"
-            f"{mapping_block}\n"
-            f"EXTRACTION RULES:\n"
-            f"1. Evaluate the text against the ALLOWED OBJECT LABELS list.\n"
-            f"2. Extract a triple only when the relation is explicitly supported by the text.\n"
-            f"3. The object value in your JSON MUST be an exact string from the allowed label list.\n"
-            f"4. If the text supports multiple labels, return one triple for EACH supported label in a single JSON array.\n"
-            f"{extra_rules}\n"
-            + (f"8. When the text refers to the reporting company generically (\"the company\", \"the company's ...\", \"its\", \"we\"), use the anchored company name from <constraints> as subject with subject_type \"Company\". Never use a long description as subject.\n"
-               if prompt_profile == "balanced_v4" else "")
-            + f"7. If no allowed labels are explicitly supported, return {{\"triples\":[]}}.\n\n"
-            f"EXAMPLE TEXT:\n"
-            f"\"{example['text']}\"\n"
-            f"EXAMPLE OUTPUT:\n"
-            f"{example['output']}\n\n"
-            f"OUTPUT RULES:\n"
-            f"- Output ONLY raw JSON.\n"
-            f"- Do not output markdown code blocks.\n"
-            f"- Do not output explanations.\n"
-            f'- Output shape: {{"triples":[{{"subject":"...","subject_type":"...","relation":"{relation}","object":"...","object_type":"{object_type}"}}]}}\n'
-            f"- If nothing is supported, output {{\"triples\":[]}}."
-        )
-    if prompt_profile == "balanced_v2":
-        return (
-            f"{profile.system_identity_block}\n\n"
-            f"You are working on one narrow annotation task: extract only {relation} triples from one SEC 10-K chunk. "
-            f"Read the chunk, complete the annotation, return one JSON object, and stop.\n\n"
-            f"What success looks like:\n"
-            f"- recover every {relation} triple that the chunk explicitly supports\n"
-            f"- reject anything the chunk does not actually prove\n"
-            f"- keep the output deduplicated and schema-valid\n\n"
-            f"{profile.system_quality_block}\n"
-            f"\nFOLLOW THIS REASONING STEPS:\n"
-            f"1. {profile.decision_standard_prefix[0]} {profile.decision_standard_prefix[1]}\n"
-            f"2. {profile.decision_standard_prefix[2]}\n\n"
-            f"CONSIDER THE FOLLOWING:\n"
-            f"- {profile.burden_of_proof_lines[0]}\n"
-            f"- {profile.burden_of_proof_lines[1]}\n"
-            f"- {profile.system_evidence_block.splitlines()[0]}\n"
-            f"- {profile.system_evidence_block.splitlines()[1]}\n"
-            f"- {profile.system_evidence_block.splitlines()[2]}\n"
-            f"- {profile.burden_of_proof_lines[2]}\n"
-            f"- {profile.burden_of_proof_lines[3]}\n"
-            f"- {profile.burden_of_proof_lines[4]}\n\n"
-            f"Relation you are extracting: {relation}\n"
-            f"- Definition: {relation_definition}\n"
-            f"- Allowed subject types: {json.dumps(permitted_subject_types, ensure_ascii=False)}\n"
-            f'- Object node type "{object_type}": {object_definition}\n'
-            f"- Allowed {object_type} labels: {labels_json}\n"
-            f"- Canonical {object_type} label definitions:\n"
-            f"{canonical_definition_lines.replace('- ', '    - ', 1).replace(chr(10) + '- ', chr(10) + '    - ')}\n\n"
-            f"Direct extraction standard:\n"
-            f"- If the wording directly supports two labels, extract two triples.\n"
-            f"- If the wording is explicit about the relation but generic about the label, do not extract.\n"
-            f"- If the wording makes the label likely but does not directly state the relation, do not extract.\n"
-            f"- If the chunk is non-narrative, generic, or boilerplate, return {{\"triples\":[]}}.\n\n"
-            f"Relation-specific cautions:\n"
-            f"{skepticism_lines}\n\n"
-            f"Output rules:\n"
-            f"- Output only JSON.\n"
-            f"- Output shape: {{\"triples\":[{{\"subject\":\"...\",\"subject_type\":\"...\",\"relation\":\"{relation}\",\"object\":\"...\",\"object_type\":\"{object_type}\"}}]}}\n"
-            f"- If nothing is supported, output {{\"triples\":[]}}."
-        )
+    relation_examples = {
+        "SERVES": {
+            "text": (
+                "Our security software is utilized by major government agencies and we are expanding "
+                "our sales motion to target mid-market companies."
+            ),
+            "output": (
+                '{"triples":[{"subject":"{company}","subject_type":"Company","relation":"SERVES",'
+                '"object":"government agencies","object_type":"CustomerType"},'
+                '{"subject":"{company}","subject_type":"Company","relation":"SERVES",'
+                '"object":"mid-market companies","object_type":"CustomerType"}]}'
+            ),
+            "extra_rules": (
+                'Ignore generic terms such as "customers", "users", or "businesses" unless the text clearly supports one allowed label.',
+            ),
+        },
+        "SELLS_THROUGH": {
+            "text": (
+                "We reach our customers primarily through our direct sales force, though consumer hardware "
+                "is also sold via retail and online."
+            ),
+            "output": (
+                '{"triples":[{"subject":"{company}","subject_type":"Company","relation":"SELLS_THROUGH",'
+                '"object":"direct sales","object_type":"Channel"},'
+                '{"subject":"{company}","subject_type":"Company","relation":"SELLS_THROUGH",'
+                '"object":"retail","object_type":"Channel"},'
+                '{"subject":"{company}","subject_type":"Company","relation":"SELLS_THROUGH",'
+                '"object":"online","object_type":"Channel"}]}'
+            ),
+            "extra_rules": (
+                'Do not confuse physical presence, infrastructure, or organizational structure with sales channels.',
+                '"Sales offices", "sales teams", "regional hubs", or "distribution centers" describe internal organization, NOT the "direct sales" channel.',
+                'Extract "direct sales" only when the text says the company sells or distributes TO CUSTOMERS through a direct sales force or direct selling motion.',
+                'If the text says "third-party marketplaces", output "marketplaces".',
+            ),
+        },
+        "MONETIZES_VIA": {
+            "text": (
+                "The segment generates revenue from multi-year subscription contracts and also earns "
+                "consumption-based revenue when clients exceed their allotted storage."
+            ),
+            "output": (
+                '{"triples":[{"subject":"{company}","subject_type":"Company","relation":"MONETIZES_VIA",'
+                '"object":"subscription","object_type":"RevenueModel"},'
+                '{"subject":"{company}","subject_type":"Company","relation":"MONETIZES_VIA",'
+                '"object":"consumption-based","object_type":"RevenueModel"}]}'
+            ),
+            "extra_rules": (
+                'Look for explicit earning or charging language such as "revenue is derived from", "earns fees", or "advertising revenue".',
+                'Do not infer a revenue model from a product description, segment name, or activity description alone.',
+                'Describing what services a company provides (e.g. "provides installation, maintenance, and consulting services") is NOT the same as stating it earns "service fees". Extract only when the text explicitly states how money is earned or charged.',
+            ),
+        },
+    }
+    relation_definitions = {
+        "SERVES": "Identifies the exact customer groups a company or offering explicitly targets, supports, or sells to.",
+        "SELLS_THROUGH": "Identifies the specific sales channels or distribution paths a company uses to reach customers.",
+        "MONETIZES_VIA": "Identifies the exact revenue model by which a company, segment, or offering earns money.",
+    }
+    mapping_guides = {
+        "SERVES": (
+            '- "individual consumers" -> "consumers"\n'
+            '- "schools and universities" -> "educational institutions"'
+        ),
+        "SELLS_THROUGH": (
+            '- "direct sales force" -> "direct sales"\n'
+            '- "third-party marketplaces" -> "marketplaces"'
+        ),
+        "MONETIZES_VIA": (
+            '- "subscription": recurring payments for ongoing access\n'
+            '- "advertising": selling advertising inventory or audience access\n'
+            '- "licensing": granting rights to use IP or software\n'
+            '- "consumption-based": pay-as-you-go, metered, or usage-based charges\n'
+            '- "hardware sales": selling physical devices or equipment\n'
+            '- "service fees": consulting, maintenance, installation, or professional services fees\n'
+            '- "royalties": usage-linked payments for IP or brand use\n'
+            '- "transaction fees": charging per payment, trade, booking, or platform transaction'
+        ),
+    }
+    example = relation_examples[relation]
+    extra_rules = "\n".join(f"{index}. {line}" for index, line in enumerate(example["extra_rules"], start=5))
+    mapping_block = ""
+    if relation == "MONETIZES_VIA":
+        mapping_block = f"\nLABEL MAPPING GUIDE:\n{mapping_guides[relation]}\n"
+    elif relation in {"SERVES", "SELLS_THROUGH"}:
+        mapping_block = f"\nNORMALIZATION HINTS:\n{mapping_guides[relation]}\n"
+
     return (
         f"{profile.system_identity_block}\n\n"
-        f"You augment one SEC 10-K chunk by extracting only {relation} triples.\n\n"
-        f"You are not re-extracting the whole graph. You are only adding {relation} facts.\n"
-        f"Inputs may include <company_name>, <existing_triples>, <allowed_subjects>, and <text_to_analyze>. Your only focus is {relation} facts.\n"
-        f'The default answer is {{"triples":[]}}. If the relation is not explicit, return {{"triples":[]}}.\n'
-        f"{profile.system_quality_block}\n"
-        f"{profile.system_evidence_block}\n"
-        f"Return a triple only if {task['trigger_text']}.\n"
-        f"**Do not guess. Do not infer. Do not complete patterns from world knowledge.**\n\n"
-        f"ONTOLOGY DEFINITION FOR {relation}:\n"
-        f"- Relation: {relation_definition}\n"
-        f'- Object node type "{object_type}": {object_definition}\n'
-        f"- Allowed subject types: {json.dumps(permitted_subject_types, ensure_ascii=False)}\n"
-        f"- Allowed object type: {object_type}\n"
-        f"- Allowed {object_type} labels: {labels_json}\n"
-        f"- Canonical {object_type} label definitions:\n"
-        f"{canonical_definition_lines}\n\n"
-        f"DECISION STANDARD:\n"
-        f"{decision_prefix}\n"
-        f"- First decide whether the chunk **explicitly and surely states the relation.**\n"
-        f"- Then decide whether the wording matches **exactly** one canonical {object_type} label.\n"
-        f"- The chunk must do both jobs itself: it must explicitly state the relation and explicitly support the chosen canonical label.\n"
-        f"- If the relation is stated but the canonical label still requires interpretation, output {{\"triples\":[]}}.\n"
-        f"- If the canonical label seems likely but the relation itself is not directly stated, output {{\"triples\":[]}}.\n"
-        f'- If either step fails, output {{"triples":[]}} for that candidate.\n\n'
-        f"REMEMBER: better one good triple less than one bad triple more.\n\n"
-        f"Burden of proof:\n"
-        f"{burden_lines}\n"
-        f'- **Logical Leap Test:** If you have to use the word "because" to connect the text to the triple (e.g., "{task["logical_leap_example"]}"), then you are inferring. **If you are inferring, you must return an empty list.**\n'
-        f"- If the text names an office, facility, segment, product, service, or business activity but does not explicitly state the target relation, output no triple.\n"
-        f"- If the text names a business segment whose title contains words like sales, rental, service, or subscription, do not treat the title itself as proof of the relation.\n\n"
-        f"Subject policy:\n"
-        f"- Prefer subjects already listed in <allowed_subjects>.\n"
-        f"- If <allowed_subjects> is empty for a subject type, emit a triple only when that subject is explicitly named in the chunk.\n"
-        f"- The subject must either appear in the chunk text or be provided in <allowed_subjects> / <company_name>.\n"
-        f"- Never use pronouns like 'we', 'our company', or 'the company' as entity names.\n"
-        f"- Never use an external partner, distributor, reseller, marketplace, or customer name as the subject just because it appears in the chunk.\n\n"
-        f"**Relation-specific skepticism ({relation}):**\n"
-        f"{skepticism_lines}\n\n"
-        f"NEGATIVE EXAMPLES:\n"
-        f'- "The primary markets served by all operating segments are local in nature and highly fragmented." -> no triple\n'
-        f'- "Product, design, price, quality, service and convenience to the customer are competitive elements." -> no triple\n'
-        f'- "The company competes with national, regional and local providers." -> no triple\n'
-        f'- "Cintas Corporation, Washington, principal executive offices..." -> no triple\n\n'
-        f"Never output any relation other than {relation}.\n"
-        f"Never invent labels outside the allowed list.\n"
-        f"\nOutput only JSON.\n"
-        f'Output shape: {{"triples":[{{"subject":"...","subject_type":"...","relation":"{relation}","object":"...","object_type":"{object_type}"}}]}}'
+        f"RELATION: {relation}\n"
+        f"DEFINITION: {relation_definitions[relation]}\n\n"
+        f"ALLOWED SUBJECT TYPES:\n"
+        f"{json.dumps(permitted_subject_types, ensure_ascii=False)}\n\n"
+        f"ALLOWED OBJECT LABELS (must match exactly in output):\n"
+        f"{labels_json}\n"
+        f"{mapping_block}\n"
+        f"EXTRACTION RULES:\n"
+        f"1. Evaluate the text against the ALLOWED OBJECT LABELS list.\n"
+        f"2. Extract a triple only when the relation is explicitly supported by the text.\n"
+        f"3. The object value in your JSON MUST be an exact string from the allowed label list.\n"
+        f"4. If the text supports multiple labels, return one triple for EACH supported label in a single JSON array.\n"
+        f"{extra_rules}\n"
+        f"8. When the text refers to the reporting company generically (\"the company\", \"the company's ...\", \"its\", \"we\"), use the anchored company name from <constraints> as subject with subject_type \"Company\". Never use a long description as subject.\n"
+        f"7. If no allowed labels are explicitly supported, return {{\"triples\":[]}}.\n\n"
+        f"EXAMPLE TEXT:\n"
+        f"\"{example['text']}\"\n"
+        f"EXAMPLE OUTPUT:\n"
+        f"{example['output']}\n\n"
+        f"OUTPUT RULES:\n"
+        f"- Output ONLY raw JSON.\n"
+        f"- Do not output markdown code blocks.\n"
+        f"- Do not output explanations.\n"
+        f'- Output shape: {{"triples":[{{"subject":"...","subject_type":"...","relation":"{relation}","object":"...","object_type":"{object_type}"}}]}}\n'
+        f"- If nothing is supported, output {{\"triples\":[]}}."
     )
 
 
@@ -753,68 +644,30 @@ def build_stage3_prompt(example: dict[str, Any], relation: str, *, prompt_profil
         existing_triples=valid_existing_triples,
     )
     company_name = example_company_name(example, existing_triples=valid_existing_triples)
-    relation_guardrails = {
-        "SERVES": (
-            "Extract SERVES only when the text explicitly names who the company or offering is for, serves, targets, supports, or sells to.",
-            "Generic mentions such as customers, businesses, users, organizations, or markets are not enough without a canonical customer label.",
-        ),
-        "SELLS_THROUGH": (
-            "Extract SELLS_THROUGH only when the text explicitly states the selling or distribution path.",
-            "Sales offices, distribution centers, warehouses, partners, or commercial presence alone are not proof of a channel.",
-        ),
-        "MONETIZES_VIA": (
-            "Extract MONETIZES_VIA only when the text explicitly states how money is earned, charged, or priced.",
-            "Products, services, sales activity, or segment names alone are not proof of a revenue model.",
-        ),
-    }[relation]
     prompt_parts = []
-    if prompt_profile in ("balanced_v3", "balanced_v4"):
-        prompt_parts.append(
-            "<task>\n"
-            f"Analyze the text and extract all explicitly supported triples for the relation: {relation}.\n"
-            "</task>"
-        )
-        subject_lines = f'- Allowed subjects: {_compact_json(allowed_subjects)}\n'
-        if company_name:
-            subject_lines += f'- Preferred company subject: "{company_name}"\n'
-        if prompt_profile == "balanced_v4":
-            subject_lines += (
-                f'- SUBJECT RULE: Always use "{company_name}" as subject when the text refers to the reporting company generically '
-                f'(e.g. "the company", "the company\'s ...", "its", "we"). '
-                f'Do NOT use descriptions like "the company\'s digital learning platform" as subject — use "{company_name}" with subject_type "Company".\n'
-            )
-        prompt_parts.append(
-            "<constraints>\n"
-            + subject_lines
-            + '- You must output ONLY valid raw JSON.\n'
-            + '- Do not output markdown code blocks.\n'
-            + '- Do not output explanations.\n'
-            + '- If the text contains no explicitly supported labels, output {"triples":[]}.'
-            + "\n</constraints>"
-        )
-        prompt_parts.append(f"<text>\n{example.get('input', '')}\n</text>")
-        return "\n\n".join(prompt_parts)
-
     prompt_parts.append(
-        "<instruction>\n"
-        + "\n".join(profile.user_instruction_lines)
-        + "\n"
-        "</instruction>"
+        "<task>\n"
+        f"Analyze the text and extract all explicitly supported triples for the relation: {relation}.\n"
+        "</task>"
     )
-    prompt_parts.append(
-        "<relation_guardrails>\n"
-        + "\n".join(relation_guardrails)
-        + "\n"
-        "</relation_guardrails>"
-    )
+    subject_lines = f'- Allowed subjects: {_compact_json(allowed_subjects)}\n'
     if company_name:
-        prompt_parts.append(f"<company_name>\n{company_name}\n</company_name>")
+        subject_lines += (
+            f'- Preferred company subject: "{company_name}"\n'
+            f'- SUBJECT RULE: Always use "{company_name}" as subject when the text refers to the reporting company generically '
+            f'(e.g. "the company", "the company\'s ...", "its", "we"). '
+            f'Do NOT use descriptions like "the company\'s digital learning platform" as subject — use "{company_name}" with subject_type "Company".\n'
+        )
     prompt_parts.append(
-        f"<existing_triples>\n{_compact_json({'triples': valid_existing_triples})}\n</existing_triples>"
+        "<constraints>\n"
+        + subject_lines
+        + '- You must output ONLY valid raw JSON.\n'
+        + '- Do not output markdown code blocks.\n'
+        + '- Do not output explanations.\n'
+        + '- If the text contains no explicitly supported labels, output {"triples":[]}.'
+        + "\n</constraints>"
     )
-    prompt_parts.append(f"<allowed_subjects>\n{_compact_json(allowed_subjects)}\n</allowed_subjects>")
-    prompt_parts.append(f"<text_to_analyze>\n{example.get('input', '')}\n</text_to_analyze>")
-    prompt_parts.append(f"<relation_to_extract>\n{relation}\n</relation_to_extract>")
+    prompt_parts.append(f"<text>\n{example.get('input', '')}\n</text>")
     return "\n\n".join(prompt_parts)
 
 
