@@ -195,10 +195,11 @@ Run it after stage 1:
 python scripts/sample_empty_chunks.py \
   --projected-jsonl outputs/finreflectkg_stage1/projected_examples.jsonl \
   --empty-ratio 0.3 \
-  --limit-chunks 2000
+  --limit-chunks 2000 \
+  --skip-chunks 0
 ```
 
-The `--limit-chunks` flag caps how many chunks the sampler streams from the dataset. Without it, Stage 2 streams the entire FinReflectKG dataset which is very slow.
+The `--skip-chunks` and `--limit-chunks` flags define the batch window for empty sampling. Without a limit, Stage 2 streams the entire FinReflectKG dataset which is very slow.
 
 This writes:
 
@@ -300,6 +301,8 @@ python scripts/run_batch.py --merge --allow-partial-merge
 ```
 
 Each batch processes 80,000 chunks (configurable via `--chunks-per-batch`). Outputs are written to `outputs/batch_N/stage{1,2,3}/`. The merge step deduplicates by chunk key and writes the combined dataset to `outputs/merged/`. By default, merge fails if any expected batch is missing; use `--allow-partial-merge` only for intentional partial runs.
+
+The batch runner applies the same chunk window to Stage 1, Stage 2, and Stage 3 replacement/refill sampling. For example, batch 2 skips the first 80,000 chunks and samples only the 80,000–160,000 window for both initial empties and any Stage 3 refill candidates.
 
 ## Extraction Modes
 

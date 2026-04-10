@@ -9,6 +9,8 @@ from pathlib import Path
 from typing import Any, Iterable
 from urllib import error, request
 
+from tqdm import tqdm
+
 from chunk_quality import chunk_quality_report, is_narrative_business_prose
 from finreflectkg_projection import (
     DEFAULT_INSTRUCTION,
@@ -269,6 +271,7 @@ def build_relation_trigger_candidate_pool_from_rows(
     target_candidate_count: int,
     instruction: str = DEFAULT_INSTRUCTION,
     limit_chunks: int | None = None,
+    skip_chunks: int = 0,
     min_word_count: int = 80,
     min_char_count: int = 400,
     exclude_chunk_keys: set[str] | None = None,
@@ -282,6 +285,9 @@ def build_relation_trigger_candidate_pool_from_rows(
 
     for chunk_rows in iter_grouped_rows(rows):
         processed_chunks += 1
+        if processed_chunks <= skip_chunks:
+            continue
+
         example = build_relation_trigger_candidate_example(
             chunk_rows,
             instruction=instruction,
@@ -292,7 +298,7 @@ def build_relation_trigger_candidate_pool_from_rows(
             chunk_key_text = example_chunk_key_text(example)
             if chunk_key_text in excluded_chunk_keys:
                 excluded_chunk_count += 1
-                if limit_chunks is not None and processed_chunks >= limit_chunks:
+                if limit_chunks is not None and (processed_chunks - skip_chunks) >= limit_chunks:
                     break
                 continue
 
@@ -309,13 +315,17 @@ def build_relation_trigger_candidate_pool_from_rows(
             elif target_candidate_count > 0 and rank > max_heap[0][0]:
                 heapq.heapreplace(max_heap, heap_item)
 
-        if limit_chunks is not None and processed_chunks >= limit_chunks:
+        if limit_chunks is not None and (processed_chunks - skip_chunks) >= limit_chunks:
             break
 
     selected_items = sorted(max_heap, key=lambda item: (-item[0][0], -item[0][1], item[0][2]))
     selected_examples = [example for _, example in selected_items]
+    skipped_chunks = min(skip_chunks, processed_chunks)
+    processed_after_skip_chunks = max(0, processed_chunks - skipped_chunks)
     report = {
         "processed_chunk_count": processed_chunks,
+        "skipped_chunk_count": skipped_chunks,
+        "processed_after_skip_chunk_count": processed_after_skip_chunks,
         "eligible_relation_trigger_chunk_count": eligible_trigger_chunk_count,
         "excluded_chunk_count": excluded_chunk_count,
         "sampled_relation_trigger_chunk_count": len(selected_examples),
@@ -336,6 +346,7 @@ def build_relation_trigger_candidate_pool(
     streaming: bool,
     limit_rows: int | None,
     limit_chunks: int | None,
+    skip_chunks: int = 0,
     target_candidate_count: int,
     exclude_chunk_key_texts: set[str],
     instruction: str = DEFAULT_INSTRUCTION,
@@ -345,6 +356,8 @@ def build_relation_trigger_candidate_pool(
     if target_candidate_count <= 0:
         return [], {
             "processed_chunk_count": 0,
+            "skipped_chunk_count": 0,
+            "processed_after_skip_chunk_count": 0,
             "eligible_relation_trigger_chunk_count": 0,
             "excluded_chunk_count": 0,
             "sampled_relation_trigger_chunk_count": 0,
@@ -367,6 +380,7 @@ def build_relation_trigger_candidate_pool(
         target_candidate_count=target_candidate_count,
         instruction=instruction,
         limit_chunks=limit_chunks,
+        skip_chunks=skip_chunks,
         min_word_count=min_word_count,
         min_char_count=min_char_count,
         exclude_chunk_keys=exclude_chunk_key_texts,
@@ -1151,6 +1165,7 @@ def build_additional_empty_pool(
     streaming: bool,
     limit_rows: int | None,
     limit_chunks: int | None,
+    skip_chunks: int = 0,
     target_empty_count: int,
     exclude_chunk_key_texts: set[str],
     min_word_count: int,
@@ -1170,6 +1185,7 @@ def build_additional_empty_pool(
         empty_ratio=None,
         positive_example_count=None,
         limit_chunks=limit_chunks,
+        skip_chunks=skip_chunks,
         min_word_count=min_word_count,
         min_char_count=min_char_count,
         exclude_chunk_keys=exclude_chunk_key_texts,
@@ -1190,6 +1206,7 @@ def refill_and_finalize_stage3_dataset(
     streaming: bool,
     limit_rows: int | None,
     limit_chunks: int | None,
+    skip_chunks: int = 0,
     min_word_count: int,
     min_char_count: int,
     max_retries: int,
@@ -1229,6 +1246,7 @@ def refill_and_finalize_stage3_dataset(
             streaming=streaming,
             limit_rows=limit_rows,
             limit_chunks=limit_chunks,
+            skip_chunks=skip_chunks,
             target_empty_count=candidate_target_count,
             exclude_chunk_key_texts=exclude_chunk_key_texts,
             min_word_count=min_word_count,
@@ -1256,7 +1274,7 @@ def refill_and_finalize_stage3_dataset(
             exclude_chunk_key_texts.add(example_chunk_key_text(example))
 
         new_augmented_candidates: list[dict[str, Any]] = []
-        for example in new_candidates:
+        for example in tqdm(new_candidates, desc=f"Stage 3 refill round {refill_round}", unit="example"):
             augmented_example, call_log = augmentor.augment_example(example, max_retries=max_retries)
             new_augmented_candidates.append(augmented_example)
             refill_logs.append(call_log)

@@ -330,11 +330,11 @@ def project_dataset_rows(
     progress = tqdm(iter_grouped_rows(rows), desc="Stage 1 projection", unit="chunk", total=total)
     for chunk_rows in progress:
         processed_chunks += 1
-        total_source_rows += len(chunk_rows)
 
         if processed_chunks <= skip_chunks:
             continue
 
+        total_source_rows += len(chunk_rows)
         example = build_projection_example(chunk_rows, instruction=instruction)
         if example is not None:
             examples.append(example)
@@ -347,11 +347,15 @@ def project_dataset_rows(
             break
     progress.close()
 
+    skipped_chunks = min(skip_chunks, processed_chunks)
+    processed_after_skip_chunks = max(0, processed_chunks - skipped_chunks)
     report = {
         "source_dataset": "domyn/FinReflectKG",
         "processed_chunk_count": processed_chunks,
+        "skipped_chunk_count": skipped_chunks,
+        "processed_after_skip_chunk_count": processed_after_skip_chunks,
         "kept_chunk_count": kept_chunks,
-        "dropped_chunk_count": processed_chunks - kept_chunks,
+        "dropped_chunk_count": processed_after_skip_chunks - kept_chunks,
         "total_source_row_count": total_source_rows,
         "total_kept_triple_count": total_kept_triples,
         "confidence_counts": dict(sorted(confidence_counts.items())),
@@ -366,6 +370,7 @@ def sample_empty_examples(
     empty_ratio: float = 0.3,
     instruction: str = DEFAULT_INSTRUCTION,
     limit_chunks: int | None = None,
+    skip_chunks: int = 0,
     min_word_count: int = 80,
     min_char_count: int = 400,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
@@ -377,6 +382,7 @@ def sample_empty_examples(
         empty_ratio=empty_ratio,
         instruction=instruction,
         limit_chunks=limit_chunks,
+        skip_chunks=skip_chunks,
         min_word_count=min_word_count,
         min_char_count=min_char_count,
     )
@@ -390,6 +396,7 @@ def sample_empty_examples_by_count(
     empty_ratio: float | None = None,
     instruction: str = DEFAULT_INSTRUCTION,
     limit_chunks: int | None = None,
+    skip_chunks: int = 0,
     min_word_count: int = 80,
     min_char_count: int = 400,
     exclude_chunk_keys: set[str] | None = None,
@@ -400,9 +407,13 @@ def sample_empty_examples_by_count(
     excluded_chunk_count = 0
     excluded_chunk_keys = exclude_chunk_keys or set()
 
-    progress = tqdm(iter_grouped_rows(rows), desc="Stage 2 empty sampling", unit="chunk", total=limit_chunks)
+    total = (skip_chunks + limit_chunks) if limit_chunks is not None else None
+    progress = tqdm(iter_grouped_rows(rows), desc="Stage 2 empty sampling", unit="chunk", total=total)
     for chunk_rows in progress:
         processed_chunks += 1
+        if processed_chunks <= skip_chunks:
+            continue
+
         example = build_empty_example(
             chunk_rows,
             instruction=instruction,
@@ -414,7 +425,7 @@ def sample_empty_examples_by_count(
             chunk_key_text = json.dumps(chunk_key_payload, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
             if chunk_key_text in excluded_chunk_keys:
                 excluded_chunk_count += 1
-                if limit_chunks is not None and processed_chunks >= limit_chunks:
+                if limit_chunks is not None and (processed_chunks - skip_chunks) >= limit_chunks:
                     break
                 continue
             eligible_empty_chunk_count += 1
@@ -425,14 +436,18 @@ def sample_empty_examples_by_count(
             elif target_empty_count > 0 and score < -max_heap[0][0]:
                 heapq.heapreplace(max_heap, heap_item)
 
-        if limit_chunks is not None and processed_chunks >= limit_chunks:
+        if limit_chunks is not None and (processed_chunks - skip_chunks) >= limit_chunks:
             break
     progress.close()
 
     sampled_items = sorted(((-score, example) for score, example in max_heap), key=lambda item: item[0])
     empty_examples = [example for _, example in sampled_items]
+    skipped_chunks = min(skip_chunks, processed_chunks)
+    processed_after_skip_chunks = max(0, processed_chunks - skipped_chunks)
     report = {
         "processed_chunk_count": processed_chunks,
+        "skipped_chunk_count": skipped_chunks,
+        "processed_after_skip_chunk_count": processed_after_skip_chunks,
         "positive_example_count": positive_example_count,
         "eligible_empty_chunk_count": eligible_empty_chunk_count,
         "excluded_chunk_count": excluded_chunk_count,

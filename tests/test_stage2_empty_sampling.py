@@ -94,6 +94,39 @@ class Stage2EmptySamplingTests(unittest.TestCase):
         self.assertEqual(report["excluded_chunk_count"], 1)
         self.assertTrue(all(example["metadata"]["chunk_key"]["chunk_id"] != "c0" for example in examples))
 
+    def test_sample_empty_examples_by_count_applies_skip_before_limit(self):
+        rows = []
+        for index in range(5):
+            rows.append(
+                {
+                    "ticker": "msft",
+                    "year": 2024,
+                    "source_file": "msft.pdf",
+                    "page_id": "1",
+                    "chunk_id": f"c{index}",
+                    "chunk_text": ("This chunk contains finance disclosures only and no ontology-aligned triples. " * 10),
+                    "entity": "Microsoft",
+                    "entity_type": "ORG",
+                    "relationship": "discloses",
+                    "target": "Revenue",
+                    "target_type": "FIN_METRIC",
+                }
+            )
+
+        examples, report = sample_empty_examples_by_count(
+            rows,
+            target_empty_count=5,
+            skip_chunks=2,
+            limit_chunks=2,
+            min_word_count=10,
+            min_char_count=50,
+        )
+
+        self.assertEqual({example["metadata"]["chunk_key"]["chunk_id"] for example in examples}, {"c2", "c3"})
+        self.assertEqual(report["processed_chunk_count"], 4)
+        self.assertEqual(report["skipped_chunk_count"], 2)
+        self.assertEqual(report["processed_after_skip_chunk_count"], 2)
+
 
 if __name__ == "__main__":
     unittest.main()

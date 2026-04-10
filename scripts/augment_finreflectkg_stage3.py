@@ -114,6 +114,7 @@ def main() -> int:
     parser.add_argument("--no-streaming", action="store_true", help="Disable streaming mode.")
     parser.add_argument("--limit-rows", type=int, default=None, help="Optional cap on raw rows read when sampling extra Stage-3 candidate pools.")
     parser.add_argument("--limit-chunks", type=int, default=None, help="Optional cap on processed chunks when sampling extra Stage-3 candidate pools.")
+    parser.add_argument("--skip-chunks", type=int, default=0, help="Number of grouped chunks to skip before sampling extra Stage-3 candidate pools.")
     parser.add_argument("--min-empty-words", type=int, default=80, help="Minimum words for an empty chunk candidate.")
     parser.add_argument("--min-empty-chars", type=int, default=400, help="Minimum chars for an empty chunk candidate.")
     parser.add_argument(
@@ -188,6 +189,8 @@ def main() -> int:
 
     relation_trigger_pool_report = {
         "processed_chunk_count": 0,
+        "skipped_chunk_count": 0,
+        "processed_after_skip_chunk_count": 0,
         "eligible_relation_trigger_chunk_count": 0,
         "excluded_chunk_count": 0,
         "sampled_relation_trigger_chunk_count": 0,
@@ -210,6 +213,7 @@ def main() -> int:
             streaming=not args.no_streaming,
             limit_rows=args.limit_rows,
             limit_chunks=args.limit_chunks,
+            skip_chunks=args.skip_chunks,
             target_candidate_count=args.relation_trigger_count,
             exclude_chunk_key_texts=exclude_chunk_key_texts,
             min_word_count=args.min_empty_words,
@@ -272,6 +276,7 @@ def main() -> int:
             streaming=not args.no_streaming,
             limit_rows=args.limit_rows,
             limit_chunks=args.limit_chunks,
+            skip_chunks=args.skip_chunks,
             min_word_count=args.min_empty_words,
             min_char_count=args.min_empty_chars,
             max_retries=args.max_retries,

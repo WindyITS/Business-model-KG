@@ -97,6 +97,7 @@ def run_stage2(
     empty_ratio: float,
     dataset_source_args: list[str],
 ) -> Path:
+    skip = (batch_num - 1) * chunks_per_batch
     out_dir = batch_dir(batch_num) / "stage2"
     output_jsonl = out_dir / "empty_examples.jsonl"
     merged_output = out_dir / "training_examples.jsonl"
@@ -108,12 +109,13 @@ def run_stage2(
             "--projected-jsonl", str(projected_jsonl),
             "--empty-ratio", str(empty_ratio),
             "--limit-chunks", str(chunks_per_batch),
+            "--skip-chunks", str(skip),
             "--output-jsonl", str(output_jsonl),
             "--merged-output-jsonl", str(merged_output),
             "--report-path", str(report_path),
             *dataset_source_args,
         ],
-        f"Batch {batch_num} — Stage 2: sample empty chunks",
+        f"Batch {batch_num} — Stage 2: sample empty chunks {skip:,}–{skip + chunks_per_batch:,}",
     )
     return output_jsonl
 
@@ -125,9 +127,11 @@ def run_stage3(
     model: str,
     prompt_profile: str,
     empty_ratio: float,
+    chunks_per_batch: int,
     dataset_source_args: list[str],
     max_completion_tokens: int = DEFAULT_MAX_COMPLETION_TOKENS,
 ) -> None:
+    skip = (batch_num - 1) * chunks_per_batch
     out_dir = batch_dir(batch_num) / "stage3"
 
     run_cmd(
@@ -139,6 +143,8 @@ def run_stage3(
             "--no-schema", "--no-think",
             "--model", model,
             "--empty-ratio", str(empty_ratio),
+            "--limit-chunks", str(chunks_per_batch),
+            "--skip-chunks", str(skip),
             "--max-completion-tokens", str(max_completion_tokens),
             "--augmented-positives-output", str(out_dir / "augmented_positive_examples.jsonl"),
             "--augmented-empty-output", str(out_dir / "augmented_empty_candidates.jsonl"),
@@ -341,6 +347,7 @@ def main() -> int:
         model=args.model,
         prompt_profile=args.prompt_profile,
         empty_ratio=args.empty_ratio,
+        chunks_per_batch=args.chunks_per_batch,
         dataset_source_args=dataset_source_args,
         max_completion_tokens=args.max_completion_tokens,
     )

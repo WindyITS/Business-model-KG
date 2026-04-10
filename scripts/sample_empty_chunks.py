@@ -35,6 +35,7 @@ def main() -> int:
     parser.add_argument("--no-streaming", action="store_true", help="Disable streaming mode.")
     parser.add_argument("--limit-rows", type=int, default=None, help="Optional cap on raw rows read.")
     parser.add_argument("--limit-chunks", type=int, default=None, help="Optional cap on processed chunks.")
+    parser.add_argument("--skip-chunks", type=int, default=0, help="Number of grouped chunks to skip before sampling.")
     parser.add_argument(
         "--projected-jsonl",
         type=str,
@@ -80,6 +81,7 @@ def main() -> int:
         positive_example_count=len(positive_examples),
         empty_ratio=args.empty_ratio,
         limit_chunks=args.limit_chunks,
+        skip_chunks=args.skip_chunks,
         min_word_count=args.min_empty_words,
         min_char_count=args.min_empty_chars,
     )

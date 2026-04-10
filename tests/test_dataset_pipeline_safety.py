@@ -43,6 +43,28 @@ class DatasetPipelineSafetyTests(unittest.TestCase):
         self.assertIn("--no-streaming", args)
         self.assertNotIn("--hf-dataset", args)
 
+    def test_batch_runner_passes_batch_window_to_stage2_and_stage3(self):
+        with patch.object(run_batch, "run_cmd") as run_cmd:
+            run_batch.run_stage2(2, Path("projected.jsonl"), 80000, 0.3, [])
+            stage2_args = run_cmd.call_args.args[0]
+            self.assertEqual(stage2_args[stage2_args.index("--limit-chunks") + 1], "80000")
+            self.assertEqual(stage2_args[stage2_args.index("--skip-chunks") + 1], "80000")
+
+            run_cmd.reset_mock()
+            run_batch.run_stage3(
+                2,
+                Path("projected.jsonl"),
+                Path("empty.jsonl"),
+                model="google/gemma-4-26b-a4b",
+                prompt_profile="default",
+                empty_ratio=0.3,
+                chunks_per_batch=80000,
+                dataset_source_args=[],
+            )
+            stage3_args = run_cmd.call_args.args[0]
+            self.assertEqual(stage3_args[stage3_args.index("--limit-chunks") + 1], "80000")
+            self.assertEqual(stage3_args[stage3_args.index("--skip-chunks") + 1], "80000")
+
     def test_merge_requires_all_batches_unless_partial_merge_is_explicit(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             temp_root = Path(tmpdir)

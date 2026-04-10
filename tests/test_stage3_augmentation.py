@@ -332,6 +332,41 @@ class Stage3AugmentationTests(unittest.TestCase):
         self.assertEqual(candidates[0]["metadata"]["stage3_candidate_source"], "relation_trigger")
         self.assertGreater(candidates[0]["metadata"]["relation_trigger_score"], 0)
 
+    def test_relation_trigger_pool_applies_skip_before_limit(self):
+        rows = []
+        for index in range(3):
+            rows.append(
+                {
+                    "ticker": "msft",
+                    "year": 2024,
+                    "source_file": "a",
+                    "page_id": "1",
+                    "chunk_id": f"c{index}",
+                    "chunk_text": (
+                        "The company serves enterprise customers through resellers and channel partners. "
+                        "It sells its offerings through distributors and direct sales teams. "
+                        * 8
+                    ).strip(),
+                    "entity": "Microsoft",
+                    "entity_type": "misc",
+                    "relationship": "unknown",
+                    "target": "Azure",
+                    "target_type": "misc",
+                }
+            )
+
+        candidates, report = build_relation_trigger_candidate_pool_from_rows(
+            rows,
+            target_candidate_count=5,
+            skip_chunks=1,
+            limit_chunks=1,
+        )
+
+        self.assertEqual([candidate["metadata"]["chunk_key"]["chunk_id"] for candidate in candidates], ["c1"])
+        self.assertEqual(report["processed_chunk_count"], 2)
+        self.assertEqual(report["skipped_chunk_count"], 1)
+        self.assertEqual(report["processed_after_skip_chunk_count"], 1)
+
     def test_relation_trigger_eligibility_rejects_table_and_disclosure_chunks(self):
         table_text = (
             "| Fiscal Year Ended | 2014 | 2013 | 2012 |\n"
