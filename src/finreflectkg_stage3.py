@@ -864,7 +864,7 @@ class Stage3TeacherAugmentor:
                     return {
                         "relation": relation,
                         "attempts_used": attempt,
-                        "raw_response": response.choices[0].message.content or "",
+                        "raw_response": content or "",
                         "parsed_triples": [],
                         "valid_triples": [],
                         "invalid_triple_count": 0,

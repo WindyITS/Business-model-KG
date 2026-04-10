@@ -27,6 +27,40 @@ class Stage3AugmentationTests(unittest.TestCase):
             "http://localhost:1234/api/v1/chat",
         )
 
+    def test_native_token_limit_report_does_not_require_openai_response_object(self):
+        class TokenLimitAugmentor(Stage3TeacherAugmentor):
+            def _native_chat_completion(self, *, system_prompt, user_prompt, temperature):
+                return '{"triples":[]}', True, {"total_output_tokens": 5}
+
+        augmentor = TokenLimitAugmentor(
+            base_url="http://localhost:1234/v1",
+            model="google/gemma-4-26b-a4b",
+            use_schema=False,
+            disable_thinking=True,
+            max_completion_tokens=5,
+        )
+        example = {
+            "instruction": "x",
+            "input": "Microsoft serves enterprise customers.",
+            "output": {"extraction_notes": "", "triples": []},
+            "metadata": {
+                "company_name": "Microsoft",
+                "chunk_key": {
+                    "ticker": "msft",
+                    "year": 2024,
+                    "source_file": "microsoft.pdf",
+                    "page_id": "1",
+                    "chunk_id": "c0",
+                },
+            },
+        }
+
+        report, raw_response = augmentor._call_relation(example=example, relation="SERVES", max_retries=1)
+
+        self.assertTrue(report["token_limit_exceeded"])
+        self.assertEqual(report["raw_response"], '{"triples":[]}')
+        self.assertEqual(raw_response, '{"triples":[]}')
+
     def test_build_stage3_prompt_includes_existing_graph_context(self):
         example = {
             "instruction": "x",
