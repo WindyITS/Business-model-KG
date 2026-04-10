@@ -216,6 +216,8 @@ def build_empty_example(
         return None
     if analysis["valid_triples"]:
         return None
+    if not analysis["metadata"]["chunk_quality"]["is_narrative_business_prose"]:
+        return None
 
     chunk_text = analysis["chunk_text"]
     word_count = len(chunk_text.split())

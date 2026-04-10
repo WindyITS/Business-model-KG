@@ -207,7 +207,7 @@ This writes:
 - `outputs/finreflectkg_stage2/training_examples.jsonl`
 - `outputs/finreflectkg_stage2/empty_sampling_report.json`
 
-The sampling is deterministic and keeps only chunks that pass basic quality filters such as minimum length.
+The sampling is deterministic and keeps only chunks that pass the same narrative-business-prose quality gate used by Stage 1 positives, plus basic minimum-length filters.
 
 Important: Stage 2 empties are only candidates. They are checked again in Stage 3, because some of them may become non-empty once the teacher recovers missing `SERVES`, `SELLS_THROUGH`, or `MONETIZES_VIA` triples.
 

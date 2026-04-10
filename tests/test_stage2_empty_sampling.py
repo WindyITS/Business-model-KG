@@ -16,7 +16,11 @@ class Stage2EmptySamplingTests(unittest.TestCase):
                 "source_file": "msft.pdf",
                 "page_id": "1",
                 "chunk_id": "c1",
-                "chunk_text": "Microsoft discusses general accounting policies and financial metrics. " * 12,
+                "chunk_text": (
+                    "Microsoft discusses its business strategy, customers, market positioning, service quality, "
+                    "and operating priorities without identifying a specific ontology-aligned relationship. "
+                    * 8
+                ),
                 "entity": "Microsoft",
                 "entity_type": "ORG",
                 "relationship": "discloses",
@@ -32,6 +36,31 @@ class Stage2EmptySamplingTests(unittest.TestCase):
         self.assertTrue(example["metadata"]["empty_target"])
         self.assertEqual(example["metadata"]["company_name"], "Microsoft")
 
+    def test_build_empty_example_rejects_non_narrative_chunks(self):
+        rows = [
+            {
+                "ticker": "msft",
+                "year": 2024,
+                "source_file": "msft.pdf",
+                "page_id": "1",
+                "chunk_id": "c1",
+                "chunk_text": (
+                    "| Named Executive Officer | Base Salary | Annual Incentive Award |\n"
+                    "|-------------------------|-------------|------------------------|\n"
+                    "| Jane Doe | $1,000,000 | 120% |\n"
+                    "| John Doe | $900,000 | 100% |\n"
+                    "| Alex Doe | $800,000 | 95% |"
+                ),
+                "entity": "Microsoft",
+                "entity_type": "ORG",
+                "relationship": "discloses",
+                "target": "Net Income",
+                "target_type": "FIN_METRIC",
+            }
+        ]
+
+        self.assertIsNone(build_empty_example(rows, min_word_count=10, min_char_count=50))
+
     def test_sample_empty_examples_respects_target_ratio(self):
         rows = []
         for index in range(10):
@@ -42,7 +71,11 @@ class Stage2EmptySamplingTests(unittest.TestCase):
                     "source_file": "msft.pdf",
                     "page_id": "1",
                     "chunk_id": f"c{index}",
-                    "chunk_text": ("This chunk contains finance disclosures only and no ontology-aligned triples. " * 10),
+                    "chunk_text": (
+                        "This business narrative discusses customers, market positioning, service quality, "
+                        "and operating priorities without identifying a specific ontology-aligned relationship. "
+                        * 8
+                    ),
                     "entity": "Microsoft",
                     "entity_type": "ORG",
                     "relationship": "discloses",
@@ -73,7 +106,11 @@ class Stage2EmptySamplingTests(unittest.TestCase):
                     "source_file": "msft.pdf",
                     "page_id": "1",
                     "chunk_id": f"c{index}",
-                    "chunk_text": ("This chunk contains finance disclosures only and no ontology-aligned triples. " * 10),
+                    "chunk_text": (
+                        "This business narrative discusses customers, market positioning, service quality, "
+                        "and operating priorities without identifying a specific ontology-aligned relationship. "
+                        * 8
+                    ),
                     "entity": "Microsoft",
                     "entity_type": "ORG",
                     "relationship": "discloses",
@@ -104,7 +141,11 @@ class Stage2EmptySamplingTests(unittest.TestCase):
                     "source_file": "msft.pdf",
                     "page_id": "1",
                     "chunk_id": f"c{index}",
-                    "chunk_text": ("This chunk contains finance disclosures only and no ontology-aligned triples. " * 10),
+                    "chunk_text": (
+                        "This business narrative discusses customers, market positioning, service quality, "
+                        "and operating priorities without identifying a specific ontology-aligned relationship. "
+                        * 8
+                    ),
                     "entity": "Microsoft",
                     "entity_type": "ORG",
                     "relationship": "discloses",
