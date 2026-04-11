@@ -2,6 +2,24 @@
 
 This ontology defines what the knowledge graph can contain. It is intentionally strict: the goal is a graph that is standardized across companies, useful for comparison across filings, compact enough for reliable extraction, and clean enough for supervised fine-tuning. It does not try to capture every financial fact in a 10-K but instead it captures the **business-model structure**: what a company offers, who it serves, how it sells, how it monetizes, how offerings relate to segments, and which companies it partners with.
 
+## Current Review Focus
+
+As of April 2026, ontology review is the active workstream for the project. The current ontology is usable, but it is still being reviewed before benchmark freeze and fine-tuning.
+
+The main review questions are:
+
+1. **Hierarchy and redundancy**
+   - When do we want `Company -> OFFERS -> Offering` in addition to `BusinessSegment -> OFFERS -> Offering` and `Offering -> PART_OF -> BusinessSegment`?
+   - When should company-level semantic facts be kept versus replaced by more specific segment-level or offering-level facts?
+2. **Relation coverage**
+   - Are the current eight relations sufficient for the business-model questions we care about?
+   - Are there missing relations we should add before freezing the ontology?
+3. **Relation strictness**
+   - Are some subject/object pairings too permissive?
+   - Are some current relations semantically too broad, especially `PARTNERS_WITH` and `OPERATES_IN`?
+
+Until that review is complete, this document should be treated as the current working ontology, not yet the final frozen one.
+
 ## Triple Shape
 
 Every fact in the graph is a triple:
@@ -100,6 +118,14 @@ The company, segment, or offering earns revenue through this canonical monetizat
 | `SELLS_THROUGH` | `Company`, `Offering`                      | `Channel`         |
 | `PARTNERS_WITH` | `Company`                                    | `Company`         |
 | `MONETIZES_VIA` | `Company`, `BusinessSegment`, `Offering` | `RevenueModel`    |
+
+### Review Notes On Validity
+
+These pairings are currently allowed, but some of them are under active review:
+
+- whether `Company -> OFFERS -> Offering` should always coexist with `BusinessSegment -> OFFERS -> Offering`
+- whether company-level `SERVES`, `SELLS_THROUGH`, and `MONETIZES_VIA` are sometimes too coarse when a more specific offering-level fact is available
+- whether broad macro-regions should remain valid `Place` nodes for `OPERATES_IN`
 
 ---
 

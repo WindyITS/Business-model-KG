@@ -14,14 +14,25 @@ A fine-tuned extractor that runs reliably over the full 10-K universe and produc
 
 ---
 
-This is `v0`: the extraction pipeline works end-to-end once provided with the Item 1 Business section of a company's 10-K, and the core dataset-building stages are implemented and validated. The pipeline is ready for production-scale dataset generation.
+This is `v0`: the extraction pipeline works end-to-end once provided with the Item 1 Business section of a company's 10-K, and the core dataset-building stages are implemented and validated. The project has now reached the point where prompt-only extraction, ontology design, benchmark design, dataset repair, and fine-tuning need to be aligned into one production path.
 
 Current milestone as of April 11, 2026:
 
+- the `chat-two-pass-reflection` prompt stack has been restored and is currently the most promising prompt-based KG pipeline
+- on the Microsoft case, the latest `chat-two-pass-reflection --no-schema` run completed with `74` kept triples, `0` malformed final-output triples, and `0` final-output ontology rejections
 - production batches `1` and `2` have completed successfully
 - raw combined dataset: `8,527` examples / `25,657` triples
 - after `OPERATES_IN` post-processing cleanup: `7,951` examples / `22,002` triples
 - the current cleanup pass keeps business-relevant geography while removing noisy market/global/city-level `OPERATES_IN` labels
+
+Active roadmap from here:
+
+1. review the ontology structure, especially hierarchy, allowed relation pairs, and possible missing relations
+2. build a benchmark that can compare KG pipelines reliably
+3. fix and regenerate the dataset pipeline where the benchmark and ontology review show weaknesses
+4. fine-tune the model on the cleaned dataset
+
+The current active workstream is `1`: ontology review.
 
 The dataset-building pipeline is based on:
 
@@ -69,6 +80,8 @@ It runs a structural first pass, an enrichment pass, and then a final independen
 1. Extract the structural skeleton: segments, offerings, geography, and partners
 2. Validate and enrich with normalized customers, channels, and revenue models
 3. Reconcile the full graph with a final review pass
+
+The most promising prompt-tuned pipeline right now is `chat-two-pass-reflection`, which keeps continuity across Pass 1, Pass 2, and Reflection 1 before running an independent final reflection pass.
 
 ## The Ontology
 
@@ -379,9 +392,29 @@ The batch runner applies the same chunk window to Stage 1, Stage 2, and Stage 3 
 
 | Mode            | How it works                                                                                                      |
 | --------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `chat-two-pass-reflection` | Same-chat Pass 1 -> Pass 2 -> Reflection 1, then an independent final reflection pass. Best prompt-tuned option for continuity-sensitive extraction. |
+| `chat-two-pass-reflection` | Same-chat Pass 1 -> Pass 2 -> Reflection 1, then an independent final reflection pass. Current best prompt-tuned option for continuity-sensitive extraction. |
 | `two-pass-reflection` | Two-pass extraction followed by a final graph-review reflection pass. Recommended when the full business section fits comfortably. |
 | `incremental-reflection` | Incremental document ingestion followed by a final graph-review reflection pass. Recommended when preserving cross-section context matters more than speed. |
+
+## Current Priorities
+
+The next project phase is organized around four tracks:
+
+1. **Ontology review**
+   - Review hierarchy between `Company`, `BusinessSegment`, and `Offering`
+   - Review whether current relation coverage is sufficient and whether some relation pairs are too permissive
+   - Decide where we want company-level facts versus segment/offering-level facts
+2. **Pipeline benchmark**
+   - Build a repeatable evaluation harness for Microsoft first, then expand
+   - Measure graph quality, formatting failures, ontology violations, and relation-level quality
+3. **Dataset fixing pipeline**
+   - Repair the training set under the revised ontology and benchmark findings
+   - Re-run affected generation steps where needed
+4. **Fine-tuning**
+   - Fine-tune only after ontology and benchmark criteria are stable
+   - Use the benchmark as the gate for model selection
+
+Roadmap details live in [`docs/plan.md`](./docs/plan.md).
 
 ---
 
