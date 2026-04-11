@@ -15,6 +15,7 @@ from chunk_quality import chunk_quality_report, is_narrative_business_prose
 from finreflectkg_projection import (
     DEFAULT_INSTRUCTION,
     build_empty_example,
+    discover_trusted_segments,
     iter_grouped_rows,
     load_finreflectkg_rows,
     sample_empty_examples_by_count,
@@ -1171,6 +1172,19 @@ def build_additional_empty_pool(
     min_word_count: int,
     min_char_count: int,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    discovery_rows = load_finreflectkg_rows(
+        hf_dataset=hf_dataset,
+        split=split,
+        cache_dir=cache_dir,
+        parquet_files=parquet_files,
+        streaming=streaming,
+        limit_rows=limit_rows,
+    )
+    trusted_segments_by_filing, trusted_segment_report = discover_trusted_segments(
+        discovery_rows,
+        limit_chunks=limit_chunks,
+        skip_chunks=skip_chunks,
+    )
     rows = load_finreflectkg_rows(
         hf_dataset=hf_dataset,
         split=split,
@@ -1179,7 +1193,7 @@ def build_additional_empty_pool(
         streaming=streaming,
         limit_rows=limit_rows,
     )
-    return sample_empty_examples_by_count(
+    examples, report = sample_empty_examples_by_count(
         rows,
         target_empty_count=target_empty_count,
         empty_ratio=None,
@@ -1189,7 +1203,10 @@ def build_additional_empty_pool(
         min_word_count=min_word_count,
         min_char_count=min_char_count,
         exclude_chunk_keys=exclude_chunk_key_texts,
+        trusted_segments_by_filing=trusted_segments_by_filing,
     )
+    report["trusted_segment_discovery"] = trusted_segment_report
+    return examples, report
 
 
 def refill_and_finalize_stage3_dataset(

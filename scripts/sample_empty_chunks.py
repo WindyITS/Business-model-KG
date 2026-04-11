@@ -9,6 +9,7 @@ if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
 from finreflectkg_projection import (
+    discover_trusted_segments,
     load_finreflectkg_rows,
     load_jsonl_records,
     sample_empty_examples,
@@ -67,6 +68,19 @@ def main() -> int:
 
     projected_jsonl = Path(args.projected_jsonl)
     positive_examples = load_jsonl_records(projected_jsonl)
+    discovery_rows = load_finreflectkg_rows(
+        hf_dataset=None if args.parquet_file else args.hf_dataset,
+        split=args.split,
+        cache_dir=args.cache_dir,
+        parquet_files=args.parquet_file or None,
+        streaming=not args.no_streaming,
+        limit_rows=args.limit_rows,
+    )
+    trusted_segments_by_filing, trusted_segment_report = discover_trusted_segments(
+        discovery_rows,
+        limit_chunks=args.limit_chunks,
+        skip_chunks=args.skip_chunks,
+    )
     rows = load_finreflectkg_rows(
         hf_dataset=None if args.parquet_file else args.hf_dataset,
         split=args.split,
@@ -84,6 +98,7 @@ def main() -> int:
         skip_chunks=args.skip_chunks,
         min_word_count=args.min_empty_words,
         min_char_count=args.min_empty_chars,
+        trusted_segments_by_filing=trusted_segments_by_filing,
     )
 
     output_jsonl = Path(args.output_jsonl)
@@ -96,6 +111,7 @@ def main() -> int:
         "source_dataset": "domyn/FinReflectKG",
         "projected_jsonl": str(projected_jsonl),
         "positive_example_count": len(positive_examples),
+        "trusted_segment_discovery": trusted_segment_report,
         **report,
         "merged_example_count": len(positive_examples) + len(empty_examples),
     }
