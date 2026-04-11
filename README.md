@@ -14,7 +14,14 @@ A fine-tuned extractor that runs reliably over the full 10-K universe and produc
 
 ---
 
-This is `v0`: the extraction pipeline works end-to-end once provided with the Item 1 Business section of a company's 10-K, and all four dataset-building stages are implemented and validated. The pipeline is ready for production-scale dataset generation targeting ~5,000 training examples across heterogeneous companies.
+This is `v0`: the extraction pipeline works end-to-end once provided with the Item 1 Business section of a company's 10-K, and the core dataset-building stages are implemented and validated. The pipeline is ready for production-scale dataset generation.
+
+Current milestone as of April 11, 2026:
+
+- production batches `1` and `2` have completed successfully
+- raw combined dataset: `8,527` examples / `25,657` triples
+- after `OPERATES_IN` post-processing cleanup: `7,951` examples / `22,002` triples
+- the current cleanup pass keeps business-relevant geography while removing noisy market/global/city-level `OPERATES_IN` labels
 
 The dataset-building pipeline is based on:
 
@@ -142,12 +149,13 @@ Neo4j Browser at `http://localhost:7474`, default credentials `neo4j / password`
 
 The prompt-based extractor is a baseline, not the end state. The broader goal is a fine-tuned extractor that is cheaper, more reliable, and more standardized. The data-building pipeline produces the training set for that extractor.
 
-It follows four stages:
+It follows four core stages plus an optional post-processing pass:
 
 1. **Project FinReflectKG** into this ontology with a deterministic mapping script, keep only triples that fit cleanly and discard everything else (~1.15% yield rate)
 2. **Sample candidate empty chunks** so the fine-tuned model can later learn to abstain when nothing relevant is present
 3. **Teacher augmentation** done by running Gemma 4 26B via LM Studio, only on the ontology slices FinReflectKG does not cover well: `SERVES`, `SELLS_THROUGH`, `MONETIZES_VIA`. Uses anti-inference prompt engineering to prevent the model from over-extracting (e.g. confusing organizational infrastructure with sales channels, or service descriptions with revenue models)
 4. **Finalize the merged dataset** by validating the teacher output, promoting empty chunks that are no longer empty, and rebalancing the final empty ratio
+5. **Optional `OPERATES_IN` cleanup** that normalizes approved geography labels and removes noisy `OPERATES_IN` triples such as market descriptors, city-level labels, and placeholder geography strings without touching the original dataset
 
 The pipeline runs in batches of 80k chunks via `scripts/run_batch.py`, targeting 5 batches for ~4,600 positive examples plus ~1,400 empties across heterogeneous companies.
 
@@ -262,6 +270,68 @@ Important Stage 3 behavior:
 - subject anchoring forces the model to use the company name instead of verbose descriptions from the text
 - outputs under `outputs/` are intentionally ignored by git
 
+## Post-processing: `OPERATES_IN` Cleanup
+
+After Stage 3, you can run an optional batch-wise cleanup pass that filters noisy `OPERATES_IN` triples while preserving the original dataset.
+
+Run it on a completed batch:
+
+```bash
+python scripts/filter_operates_in.py --batch 1
+python scripts/filter_operates_in.py --batch 2
+```
+
+This writes new files alongside the originals:
+
+- `outputs/batch_N/stage3/training_examples_operates_in_filtered.jsonl`
+- `outputs/batch_N/stage3/operates_in_filter_report.json`
+
+Behavior:
+
+- only `OPERATES_IN` triples are filtered
+- all non-`OPERATES_IN` triples are preserved
+- if a positive example becomes triple-less after cleanup, that example is dropped
+- original empty examples are preserved
+- the original Stage 3 dataset is never modified
+
+`OPERATES_IN` whitelist policy:
+
+- keep sovereign countries and standard business territories such as `United States`, `Canada`, `China`, `Taiwan`, `Hong Kong`, `Macau`, and `Puerto Rico`
+- keep all U.S. states plus `District of Columbia`
+- keep these macro-regions:
+  - `Africa`
+  - `APAC`
+  - `Americas`
+  - `Asia`
+  - `Asia Pacific`
+  - `Caribbean`
+  - `Central America`
+  - `EMEA`
+  - `Eastern Europe`
+  - `Europe`
+  - `European Union`
+  - `Latin America`
+  - `Middle East`
+  - `North America`
+  - `South America`
+  - `Southeast Asia`
+  - `Western Europe`
+
+Normalization examples:
+
+- `united state`, `u.s .`, `u.s.`, `usa` -> `United States`
+- `united kingdom`, `u.k .`, `u.k.`, `uk` -> `United Kingdom`
+- `asia-pacific`, `asia/pacific`, `asia-pacific region` -> `Asia Pacific`
+- `apac` -> `APAC`
+- `emea`, `eame` -> `EMEA`
+
+Explicitly dropped:
+
+- `Middle East and Africa`
+- `Great China`
+- city-level labels such as `New York City` or `San Francisco`
+- market/global/international placeholders such as `global`, `global market`, `international market`, `multiple country`, `multiple destination country`
+
 ## Smoke Tests
 
 Stage 3 includes 12 smoke cases (6 positive, 6 negative) covering edge cases like organizational infrastructure vs. sales channels, service descriptions vs. revenue models, and subject anchoring. Run them against a live model:
@@ -298,6 +368,9 @@ python scripts/run_batch.py --merge
 
 # Deliberately merge only completed batches
 python scripts/run_batch.py --merge --allow-partial-merge
+
+# Optional post-processing cleanup after a batch finishes
+python scripts/filter_operates_in.py --batch 2
 ```
 
 Each batch processes 80,000 chunks (configurable via `--chunks-per-batch`). Outputs are written to `outputs/batch_N/stage{1,2,3}/`. The merge step deduplicates by chunk key and writes the combined dataset to `outputs/merged/`. By default, merge fails if any expected batch is missing; use `--allow-partial-merge` only for intentional partial runs.
@@ -390,6 +463,7 @@ kg-v0/
 │   ├── load_manual_graph.py
 │   ├── augment_finreflectkg_stage3.py
 │   ├── evaluate_stage3_smoke.py
+│   ├── filter_operates_in.py       post-process noisy OPERATES_IN triples
 │   ├── project_finreflectkg_stage1.py
 │   ├── run_batch.py                batch runner for production pipeline
 │   └── sample_empty_chunks.py
@@ -400,6 +474,7 @@ kg-v0/
 │   ├── evaluate_graph.py       gold-set comparison and Neo4j dump
 │   ├── finreflectkg_projection.py   dataset projection + empty sampling helpers
 │   ├── finreflectkg_stage3.py  teacher augmentation + dataset finalization
+│   ├── operates_in_cleanup.py  batch-wise OPERATES_IN whitelist cleanup
 │   ├── stage3_prompt_profiles.py  prompt profile definitions
 │   ├── stage3_smoke_cases.py   smoke test cases for Stage 3
 │   ├── llm_extractor.py        all extraction modes
@@ -413,6 +488,7 @@ kg-v0/
 │   ├── test_stage3_augmentation.py
 │   ├── test_stage3_smoke_cases.py
 │   ├── test_stage2_empty_sampling.py
+│   ├── test_operates_in_cleanup.py
 │   └── test_pipeline_components.py
 ├── docker-compose.yml
 └── requirements.txt
