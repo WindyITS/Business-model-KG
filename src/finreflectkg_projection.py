@@ -27,20 +27,13 @@ SAFE_ENTITY_TYPE_MAP = {
 DIRECT_RELATION_MAP = {
     "operates_in": "OPERATES_IN",
     "partners_with": "PARTNERS_WITH",
-    "produce": "OFFERS",
-    "produces": "OFFERS",
-    "offer": "OFFERS",
-    "offers": "OFFERS",
-    "provide": "OFFERS",
-    "provides": "OFFERS",
-    "introduce": "OFFERS",
-    "introduces": "OFFERS",
 }
 
 FILE_KEY_FIELDS = ("ticker", "year", "source_file")
 CHUNK_KEY_FIELDS = ("ticker", "year", "source_file", "page_id", "chunk_id")
 SEGMENT_ANCHOR_RELATIONS = {"has_segment", "has_reportable_segment"}
 SEGMENT_REVERSE_RELATIONS = {"part_of", "is_part_of"}
+COMPANY_OFFERING_RELATIONS = {"produce", "produces", "introduce", "introduces"}
 SEGMENT_OFFERING_RELATIONS = {"produce", "produces", "offer", "offers", "provide", "provides", "introduce", "introduces"}
 PRODUCT_SEGMENT_RELATIONS = {"part_of", "is_part_of", "belongs_to"}
 EXCLUDED_SEGMENT_KEYS = {
@@ -157,6 +150,26 @@ def discover_trusted_segments(
     return trusted_segments_by_filing, report
 
 
+def load_trusted_segments_for_dataset(
+    *,
+    hf_dataset: str | None = None,
+    split: str = "train",
+    cache_dir: str | None = None,
+    parquet_files: list[str] | None = None,
+    streaming: bool = True,
+    limit_rows: int | None = None,
+) -> tuple[dict[tuple[Any, ...], set[str]], dict[str, Any]]:
+    rows = load_finreflectkg_rows(
+        hf_dataset=hf_dataset,
+        split=split,
+        cache_dir=cache_dir,
+        parquet_files=parquet_files,
+        streaming=streaming,
+        limit_rows=limit_rows,
+    )
+    return discover_trusted_segments(rows)
+
+
 def map_row_to_triples(
     row: dict[str, Any],
     *,
@@ -212,7 +225,7 @@ def map_row_to_triples(
     if relation in PRODUCT_SEGMENT_RELATIONS and subject_type == "Offering" and object_type == "BusinessSegment":
         if not is_plausible_business_segment(object_name):
             return [], "filtered_segment_label"
-        if trusted_segment_keys and object_key not in trusted_segment_keys:
+        if object_key not in trusted_segment_keys:
             return [], "untrusted_segment_object"
         return [
             {
@@ -231,22 +244,22 @@ def map_row_to_triples(
             },
         ], None
 
-    mapped_relation = map_relation(row.get("relationship"))
-    if not mapped_relation:
-        return [], "unmapped_relation"
+    if subject_type == "Company" and object_type == "Offering" and relation in COMPANY_OFFERING_RELATIONS:
+        return [
+            {
+                "subject": subject,
+                "subject_type": "Company",
+                "relation": "OFFERS",
+                "object": object_name,
+                "object_type": "Offering",
+            }
+        ], None
 
-    if subject_type == "BusinessSegment" and mapped_relation in {"OFFERS", "OPERATES_IN"}:
+    if subject_type == "BusinessSegment" and object_type == "Offering" and relation in SEGMENT_OFFERING_RELATIONS:
         if not is_plausible_business_segment(subject):
             return [], "filtered_segment_label"
         if subject_key not in trusted_segment_keys:
             return [], "untrusted_segment_subject"
-
-    if (
-        subject_type == "BusinessSegment"
-        and object_type == "Offering"
-        and relation in SEGMENT_OFFERING_RELATIONS
-        and mapped_relation == "OFFERS"
-    ):
         return [
             {
                 "subject": subject,
@@ -263,6 +276,16 @@ def map_row_to_triples(
                 "object_type": "BusinessSegment",
             },
         ], None
+
+    mapped_relation = map_relation(row.get("relationship"))
+    if not mapped_relation:
+        return [], "unmapped_relation"
+
+    if subject_type == "BusinessSegment" and mapped_relation in {"OFFERS", "OPERATES_IN"}:
+        if not is_plausible_business_segment(subject):
+            return [], "filtered_segment_label"
+        if subject_key not in trusted_segment_keys:
+            return [], "untrusted_segment_subject"
 
     return [
         {

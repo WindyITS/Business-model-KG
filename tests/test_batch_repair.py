@@ -182,6 +182,7 @@ class BatchRepairTests(unittest.TestCase):
 
         legacy_empty_c = make_example("c", [])
         legacy_empty_d = make_example("d", [])
+        legacy_refill_empty_f = make_example("f", [])
         repaired_empty_d = make_example("d", [])
         repaired_empty_e = make_example("e", [])
 
@@ -193,6 +194,7 @@ class BatchRepairTests(unittest.TestCase):
                 repaired_projected_c,
                 repaired_empty_d,
                 repaired_empty_e,
+                legacy_refill_empty_f,
             ]
         }
         window_chunk_keys.add(example_chunk_key_text(legacy_empty_d))
@@ -201,7 +203,8 @@ class BatchRepairTests(unittest.TestCase):
             repaired_projected_examples=[repaired_projected_a, repaired_projected_b, repaired_projected_c],
             repaired_sampled_empty_examples=[repaired_empty_d, repaired_empty_e],
             legacy_projected_examples=[legacy_projected_a, legacy_projected_b],
-            legacy_empty_examples=[legacy_empty_c, legacy_empty_d],
+            legacy_empty_origin_examples=[legacy_empty_c, legacy_empty_d, legacy_refill_empty_f],
+            legacy_verified_empty_examples=[legacy_empty_d, legacy_refill_empty_f],
             legacy_augmented_positive_examples=[legacy_augmented_positive_a, legacy_augmented_positive_b],
             legacy_teacher_logs=[teacher_log_a, teacher_log_b],
             window_chunk_key_texts=window_chunk_keys,
@@ -213,14 +216,20 @@ class BatchRepairTests(unittest.TestCase):
             "SERVES",
         )
         self.assertEqual(len(plan["positive_examples_to_rerun"]), 2)
-        self.assertEqual(len(plan["empty_examples_to_rerun"]), 2)
         self.assertEqual(
             plan["report"]["positive_rerun_reason_counts"],
             {"changed_deterministic_base": 1, "legacy_empty_now_positive": 1},
         )
-        self.assertEqual(plan["report"]["legacy_empty_recheck_count"], 1)
-        self.assertEqual(plan["report"]["new_empty_recheck_count"], 1)
-        self.assertEqual(plan["report"]["empty_pool_overlap_count"], 1)
+        # Legacy verified empties (d, f) are reused directly — no teacher rerun.
+        self.assertEqual(len(plan["reused_verified_empty_examples"]), 2)
+        self.assertIn(
+            example_chunk_key_text(legacy_refill_empty_f),
+            {example_chunk_key_text(e) for e in plan["reused_verified_empty_examples"]},
+        )
+        # Only new empty candidate (e) needs a teacher run; d is already in reused_verified.
+        self.assertEqual(len(plan["new_empty_candidates_to_run"]), 1)
+        self.assertEqual(plan["report"]["reused_verified_empty_count"], 2)
+        self.assertEqual(plan["report"]["new_empty_candidate_count"], 1)
 
 
 if __name__ == "__main__":

@@ -101,7 +101,8 @@ def build_repair_plan(
     repaired_projected_examples: list[dict[str, Any]],
     repaired_sampled_empty_examples: list[dict[str, Any]],
     legacy_projected_examples: list[dict[str, Any]],
-    legacy_empty_examples: list[dict[str, Any]],
+    legacy_empty_origin_examples: list[dict[str, Any]],
+    legacy_verified_empty_examples: list[dict[str, Any]],
     legacy_augmented_positive_examples: list[dict[str, Any]],
     legacy_teacher_logs: list[dict[str, Any]],
     window_chunk_key_texts: set[str],
@@ -110,8 +111,12 @@ def build_repair_plan(
         legacy_projected_examples,
         window_chunk_key_texts=window_chunk_key_texts,
     )
-    filtered_legacy_empty = filter_examples_to_window(
-        legacy_empty_examples,
+    filtered_legacy_empty_origin = filter_examples_to_window(
+        legacy_empty_origin_examples,
+        window_chunk_key_texts=window_chunk_key_texts,
+    )
+    filtered_legacy_verified_empty = filter_examples_to_window(
+        legacy_verified_empty_examples,
         window_chunk_key_texts=window_chunk_key_texts,
     )
     filtered_legacy_augmented_positive = filter_examples_to_window(
@@ -124,12 +129,12 @@ def build_repair_plan(
     )
 
     legacy_projected_map = index_examples_by_chunk_key(filtered_legacy_projected)
-    legacy_empty_map = index_examples_by_chunk_key(filtered_legacy_empty)
+    legacy_verified_empty_map = index_examples_by_chunk_key(filtered_legacy_verified_empty)
     legacy_augmented_positive_map = index_examples_by_chunk_key(filtered_legacy_augmented_positive)
     legacy_teacher_log_map = index_teacher_logs_by_chunk_key(filtered_legacy_teacher_logs)
 
     repaired_positive_keys = {example_chunk_key_text(example) for example in repaired_projected_examples}
-    legacy_empty_keys = set(legacy_empty_map)
+    legacy_empty_origin_keys = {example_chunk_key_text(example) for example in filtered_legacy_empty_origin}
 
     reused_augmented_positive_examples: list[dict[str, Any]] = []
     reused_teacher_logs: list[dict[str, Any]] = []
@@ -155,7 +160,7 @@ def build_repair_plan(
             continue
 
         if legacy_projected is None:
-            reason = "legacy_empty_now_positive" if chunk_key_text in legacy_empty_keys else "new_positive"
+            reason = "legacy_empty_now_positive" if chunk_key_text in legacy_empty_origin_keys else "new_positive"
         elif legacy_augmented_positive is None or legacy_teacher_log is None:
             reason = "missing_reusable_stage3_positive"
         else:
@@ -164,23 +169,25 @@ def build_repair_plan(
         positive_examples_to_rerun.append(example)
         positive_rerun_reason_counts[reason] += 1
 
-    new_empty_keys: set[str] = set()
-    legacy_recheck_empty_keys: set[str] = set()
-    candidate_empty_map: dict[str, dict[str, Any]] = {}
+    reused_verified_empty_examples: list[dict[str, Any]] = []
+    new_empty_candidate_map: dict[str, dict[str, Any]] = {}
+
+    for chunk_key_text, example in legacy_verified_empty_map.items():
+        if chunk_key_text in repaired_positive_keys:
+            continue
+        reused_verified_empty_examples.append(example)
+
+    reused_verified_empty_keys = {example_chunk_key_text(e) for e in reused_verified_empty_examples}
+
     for example in repaired_sampled_empty_examples:
         chunk_key_text = example_chunk_key_text(example)
         if chunk_key_text in repaired_positive_keys:
             continue
-        new_empty_keys.add(chunk_key_text)
-        candidate_empty_map[chunk_key_text] = example
-
-    for chunk_key_text, example in legacy_empty_map.items():
-        if chunk_key_text in repaired_positive_keys:
+        if chunk_key_text in reused_verified_empty_keys:
             continue
-        legacy_recheck_empty_keys.add(chunk_key_text)
-        candidate_empty_map.setdefault(chunk_key_text, example)
+        new_empty_candidate_map[chunk_key_text] = example
 
-    empty_examples_to_rerun = [candidate_empty_map[key] for key in sorted(candidate_empty_map)]
+    new_empty_candidates_to_run = [new_empty_candidate_map[key] for key in sorted(new_empty_candidate_map)]
 
     filtered_out_legacy_positive_keys = set(legacy_projected_map) - repaired_positive_keys
     report = {
@@ -188,22 +195,22 @@ def build_repair_plan(
         "repaired_positive_count": len(repaired_projected_examples),
         "repaired_sampled_empty_count": len(repaired_sampled_empty_examples),
         "legacy_positive_count_in_window": len(filtered_legacy_projected),
-        "legacy_empty_count_in_window": len(filtered_legacy_empty),
+        "legacy_empty_origin_count_in_window": len(legacy_empty_origin_keys),
+        "legacy_verified_empty_count_in_window": len(legacy_verified_empty_map),
         "legacy_augmented_positive_count_in_window": len(filtered_legacy_augmented_positive),
         "legacy_teacher_log_count_in_window": len(filtered_legacy_teacher_logs),
         "reused_positive_count": len(reused_augmented_positive_examples),
         "rerun_positive_count": len(positive_examples_to_rerun),
         "positive_rerun_reason_counts": dict(sorted(positive_rerun_reason_counts.items())),
-        "rerun_empty_count": len(empty_examples_to_rerun),
-        "legacy_empty_recheck_count": len(legacy_recheck_empty_keys),
-        "new_empty_recheck_count": len(new_empty_keys - legacy_recheck_empty_keys),
-        "empty_pool_overlap_count": len(new_empty_keys & legacy_recheck_empty_keys),
+        "reused_verified_empty_count": len(reused_verified_empty_examples),
+        "new_empty_candidate_count": len(new_empty_candidates_to_run),
         "legacy_positive_filtered_out_count": len(filtered_out_legacy_positive_keys),
     }
     return {
         "reused_augmented_positive_examples": reused_augmented_positive_examples,
         "reused_teacher_logs": reused_teacher_logs,
         "positive_examples_to_rerun": positive_examples_to_rerun,
-        "empty_examples_to_rerun": empty_examples_to_rerun,
+        "reused_verified_empty_examples": reused_verified_empty_examples,
+        "new_empty_candidates_to_run": new_empty_candidates_to_run,
         "report": report,
     }

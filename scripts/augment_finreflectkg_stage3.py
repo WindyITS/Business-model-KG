@@ -56,8 +56,8 @@ def ensure_teacher_call_succeeded(call_log: dict) -> None:
 
 def record_teacher_log_or_raise(call_log: dict, teacher_logs: list[dict], teacher_log_path: Path) -> None:
     teacher_logs.append(call_log)
+    write_jsonl(teacher_log_path, teacher_logs)
     if teacher_error_relations(call_log):
-        write_jsonl(teacher_log_path, teacher_logs)
         ensure_teacher_call_succeeded(call_log)
 
 

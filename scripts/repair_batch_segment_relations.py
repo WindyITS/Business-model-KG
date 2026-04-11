@@ -1,5 +1,6 @@
 import argparse
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -63,10 +64,10 @@ def teacher_error_relations(call_log: dict) -> list[str]:
 
 def record_teacher_log_or_raise(call_log: dict, teacher_logs: list[dict], teacher_log_path: Path) -> None:
     teacher_logs.append(call_log)
+    write_jsonl(teacher_log_path, teacher_logs)
     failed_relations = teacher_error_relations(call_log)
     if not failed_relations:
         return
-    write_jsonl(teacher_log_path, teacher_logs)
     relation_list = ", ".join(failed_relations)
     chunk_key = json.dumps(call_log.get("chunk_key", {}), ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     raise RepairTeacherError(f"Teacher augmentation failed for {chunk_key}: {relation_list}")
@@ -78,8 +79,9 @@ def load_legacy_artifacts(source_batch_dir: Path) -> dict[str, list[dict] | dict
     stage3_dir = source_batch_dir / "stage3"
     return {
         "projected_examples": require_jsonl(stage1_dir / "projected_examples.jsonl"),
-        "empty_examples": require_jsonl(stage2_dir / "empty_examples.jsonl"),
+        "stage2_empty_examples": require_jsonl(stage2_dir / "empty_examples.jsonl"),
         "augmented_positive_examples": require_jsonl(stage3_dir / "augmented_positive_examples.jsonl"),
+        "augmented_empty_candidates": require_jsonl(stage3_dir / "augmented_empty_candidates.jsonl"),
         "teacher_logs": require_jsonl(stage3_dir / "teacher_logs.jsonl"),
         "stage3_report": require_json(stage3_dir / "stage3_report.json"),
     }
@@ -204,18 +206,25 @@ def main() -> int:
         repaired_projected_examples=repaired_projected_examples,
         repaired_sampled_empty_examples=repaired_empty_examples,
         legacy_projected_examples=legacy["projected_examples"],
-        legacy_empty_examples=legacy["empty_examples"],
+        legacy_empty_origin_examples=legacy["stage2_empty_examples"] + legacy["augmented_empty_candidates"],
+        legacy_verified_empty_examples=[
+            example
+            for example in legacy["augmented_empty_candidates"]
+            if not example.get("output", {}).get("triples")
+        ],
         legacy_augmented_positive_examples=legacy["augmented_positive_examples"],
         legacy_teacher_logs=legacy["teacher_logs"],
         window_chunk_key_texts=window_chunk_key_texts,
     )
 
     reused_augmented_positive_examples = sort_examples(repair_plan["reused_augmented_positive_examples"])
+    reused_verified_empty_examples = sort_examples(repair_plan["reused_verified_empty_examples"])
     positive_examples_to_rerun = sort_examples(repair_plan["positive_examples_to_rerun"])
-    empty_examples_to_rerun = sort_examples(repair_plan["empty_examples_to_rerun"])
+    new_empty_candidates_to_run = sort_examples(repair_plan["new_empty_candidates_to_run"])
     write_jsonl(stage3_dir / "reused_augmented_positive_examples.jsonl", reused_augmented_positive_examples)
+    write_jsonl(stage3_dir / "reused_verified_empty_examples.jsonl", reused_verified_empty_examples)
     write_jsonl(stage3_dir / "pending_positive_examples.jsonl", positive_examples_to_rerun)
-    write_jsonl(stage3_dir / "pending_empty_candidates.jsonl", empty_examples_to_rerun)
+    write_jsonl(stage3_dir / "pending_empty_candidates.jsonl", new_empty_candidates_to_run)
 
     repair_plan_payload = {
         "batch": args.batch,
@@ -236,7 +245,8 @@ def main() -> int:
         print(f"  Repaired positives: {len(repaired_projected_examples)}")
         print(f"  Reused Stage 3 positives: {len(reused_augmented_positive_examples)}")
         print(f"  Positive reruns needed: {len(positive_examples_to_rerun)}")
-        print(f"  Empty reruns needed: {len(empty_examples_to_rerun)}")
+        print(f"  Reused verified empties (no rerun): {len(reused_verified_empty_examples)}")
+        print(f"  New empty candidates to run: {len(new_empty_candidates_to_run)}")
         return 0
 
     augmentor = Stage3TeacherAugmentor(
@@ -262,14 +272,25 @@ def main() -> int:
             continue
         augmented_positive_examples.append(augmented_example)
 
-    initial_augmented_empty_candidates = []
-    for example in tqdm(empty_examples_to_rerun, desc="Repair empties", unit="example"):
+    # Run teacher on new empty candidates until we reach the target empty count.
+    # Legacy verified empties are carried forward as-is and count toward the target.
+    target_empty_count = math.ceil(len(repaired_projected_examples) * args.empty_ratio / (1 - args.empty_ratio))
+    verified_empty_count = len(reused_verified_empty_examples)
+    new_augmented_empty_candidates = []
+    for example in tqdm(new_empty_candidates_to_run, desc="Verify new empties", unit="example"):
+        if verified_empty_count >= target_empty_count:
+            break
         augmented_example, call_log = augmentor.augment_example(example, relations=STAGE3_RELATIONS, max_retries=args.max_retries)
         record_teacher_log_or_raise(call_log, teacher_logs, teacher_log_path)
         if call_log.get("token_limit_exceeded"):
             token_limit_exceeded_count += 1
             continue
-        initial_augmented_empty_candidates.append(augmented_example)
+        new_augmented_empty_candidates.append(augmented_example)
+        if not augmented_example.get("output", {}).get("triples"):
+            verified_empty_count += 1
+
+    # Combine reused verified empties with newly verified candidates for finalization.
+    initial_augmented_empty_candidates = reused_verified_empty_examples + new_augmented_empty_candidates
 
     augmented_positive_examples = sort_examples(augmented_positive_examples)
     if args.skip_refill:
@@ -301,6 +322,8 @@ def main() -> int:
             max_retries=args.max_retries,
             refill_pool_multiplier=2.0,
             max_refill_rounds=5,
+            trusted_segments_by_filing=trusted_segments_by_filing,
+            trusted_segment_report=trusted_segment_report,
         )
     teacher_logs.extend(refill_logs)
     write_jsonl(teacher_log_path, teacher_logs)
@@ -321,7 +344,7 @@ def main() -> int:
         "batch": args.batch,
         "source_batch_dir": str(source_batch_dir),
         "output_root": str(output_root),
-        "repair_mode": "legacy-empty-union",
+        "repair_mode": "legacy-verified-empty-union",
         "trusted_segment_discovery": trusted_segment_report,
         "repair_plan": repair_plan["report"],
         "token_limit_exceeded_count": token_limit_exceeded_count,

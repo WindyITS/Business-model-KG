@@ -212,6 +212,20 @@ class FinReflectKGProjectionTests(unittest.TestCase):
             ],
         )
 
+    def test_product_segment_row_without_trusted_anchor_is_dropped(self):
+        row = {
+            "entity": "S3",
+            "entity_type": "PRODUCT",
+            "relationship": "belongs_to",
+            "target": "AWS Segment",
+            "target_type": "SEGMENT",
+        }
+
+        triples, reason = map_row_to_triples(row)
+
+        self.assertEqual(triples, [])
+        self.assertEqual(reason, "untrusted_segment_object")
+
     def test_untrusted_segment_product_row_is_dropped(self):
         row = {
             "entity": "Business Segment",
@@ -225,6 +239,45 @@ class FinReflectKGProjectionTests(unittest.TestCase):
 
         self.assertEqual(triples, [])
         self.assertEqual(reason, "untrusted_segment_subject")
+
+    def test_company_produce_row_still_maps_to_offers(self):
+        row = {
+            "entity": "Amazon",
+            "entity_type": "ORG",
+            "relationship": "produce",
+            "target": "Kindle",
+            "target_type": "PRODUCT",
+        }
+
+        triples, reason = map_row_to_triples(row)
+
+        self.assertIsNone(reason)
+        self.assertEqual(
+            triples,
+            [
+                {
+                    "subject": "Amazon",
+                    "subject_type": "Company",
+                    "relation": "OFFERS",
+                    "object": "Kindle",
+                    "object_type": "Offering",
+                }
+            ],
+        )
+
+    def test_company_provide_row_is_dropped_as_noisy_offer(self):
+        row = {
+            "entity": "Cintas",
+            "entity_type": "ORG",
+            "relationship": "provide",
+            "target": "mentor program",
+            "target_type": "PRODUCT",
+        }
+
+        triples, reason = map_row_to_triples(row)
+
+        self.assertEqual(triples, [])
+        self.assertEqual(reason, "unmapped_relation")
 
     def test_empty_builder_treats_untrusted_segment_only_chunk_as_empty(self):
         rows = [
