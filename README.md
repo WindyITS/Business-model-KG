@@ -46,11 +46,8 @@ A full extraction pipeline that takes a `.txt` 10-K filing and produces a valida
 10-K .txt file
       │
       ▼
-chunker.py          -> (if chunking-mode is selected) heading-aware passage splitting with token budgets
-      │
-      ▼
-llm_extractor.py    two-pass LLM extraction (default), plus chunked, zero-shot,
-      │             incremental, and reflection modes
+llm_extractor.py    chat-two-pass-reflection, two-pass-reflection,
+      │             and incremental-reflection extraction
       ▼
 entity_resolver.py  surface-form cleanup and canonical basic deduplication
       │
@@ -65,12 +62,13 @@ resolved_triples.json
       └──▶ neo4j_loader.py ──▶ Neo4j
 ```
 
-**The default mode is `two-pass`:**
+**The default mode is `two-pass-reflection`:**
 
-It is also the only extraction mode whose prompts have been optimized enough to produce relatively good output without any fine-tuning. The other modes are still useful for experimentation, but they should be treated as exploratory baselines rather than equally tuned production paths.
+It runs a structural first pass, an enrichment pass, and then a final independent reflection pass before deterministic cleanup and validation.
 
 1. Extract the structural skeleton: segments, offerings, geography, and partners
 2. Validate and enrich with normalized customers, channels, and revenue models
+3. Reconcile the full graph with a final review pass
 
 ## The Ontology
 
@@ -381,11 +379,9 @@ The batch runner applies the same chunk window to Stage 1, Stage 2, and Stage 3 
 
 | Mode            | How it works                                                                                                      |
 | --------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `two-pass`    | **Default.** Pass 1 builds the structural skeleton. Pass 2 validates and enriches with normalized concepts. |
-| `chunked`     | Processes the document chunk by chunk with rolling memory.                                                        |
-| `zero-shot`   | Single prompt over the full document. Simpler, less controlled.                                                   |
-| `incremental` | Cursor-based multi-turn extraction. Experimental.                                                                 |
-| `reflection`  | Two-pass followed by a graph-completion review pass. Experimental.                                                |
+| `chat-two-pass-reflection` | Same-chat Pass 1 -> Pass 2 -> Reflection 1, then an independent final reflection pass. Best prompt-tuned option for continuity-sensitive extraction. |
+| `two-pass-reflection` | Two-pass extraction followed by a final graph-review reflection pass. Recommended when the full business section fits comfortably. |
+| `incremental-reflection` | Incremental document ingestion followed by a final graph-review reflection pass. Recommended when preserving cross-section context matters more than speed. |
 
 ---
 
@@ -394,12 +390,12 @@ The batch runner applies the same chunk window to Stage 1, Stage 2, and Stage 3 
 | Argument             | Default                      | Description                                   |
 | -------------------- | ---------------------------- | --------------------------------------------- |
 | `file_path`        | required                     | Path to the 10-K `.txt` file                |
-| `--chunked`        | off                          | Chunk-by-chunk extraction with rolling memory |
-| `--zero-shot`      | off                          | Single-prompt full-document extraction        |
-| `--incremental`    | off                          | Cursor-based iterative extraction             |
-| `--reflection`     | off                          | Two-pass + final review pass                  |
+| `--chat-two-pass-reflection` | off                 | Same-chat two-pass + dual reflection pipeline |
+| `--incremental-reflection` | off                   | Incremental extraction + final review pass    |
+| `--two-pass-reflection` | off                     | Two-pass extraction + final review pass       |
+| `--no-schema`      | off                          | Disable `response_format` schema enforcement and rely on prompt-only JSON |
 | `--max-retries`    | `3`                        | LLM retries per call                          |
-| `--max-iterations` | `20`                       | Iteration cap for incremental mode            |
+| `--max-iterations` | `20`                       | Iteration cap for `incremental-reflection`    |
 | `--skip-neo4j`     | off                          | Write artifacts only, skip graph loading      |
 | `--clear-neo4j`    | off                          | Clear the whole Neo4j database before loading |
 | `--output-dir`     | `outputs`                  | Root directory for run artifacts              |
@@ -477,7 +473,7 @@ kg-v0/
 │   ├── operates_in_cleanup.py  batch-wise OPERATES_IN whitelist cleanup
 │   ├── stage3_prompt_profiles.py  prompt profile definitions
 │   ├── stage3_smoke_cases.py   smoke test cases for Stage 3
-│   ├── llm_extractor.py        all extraction modes
+│   ├── llm_extractor.py        chat, two-pass, and incremental reflection logic
 │   ├── main.py                 pipeline entry point
 │   ├── neo4j_loader.py         graph loading
 │   ├── ontology_config.py      structured ontology config

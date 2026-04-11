@@ -1,8 +1,11 @@
 import json
 import logging
+import re
+from collections import Counter
 from typing import Any, List, Literal
 
 from ontology_config import canonical_labels
+from ontology_validator import validate_triples
 from pydantic import AliasChoices, BaseModel, ConfigDict, Field, ValidationError
 
 logger = logging.getLogger(__name__)
@@ -62,10 +65,15 @@ class TwoPassExtractionResult(BaseModel):
     success: bool
     skeleton_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     final_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
+    skeleton_audit: dict[str, Any] = Field(default_factory=dict)
+    final_audit: dict[str, Any] = Field(default_factory=dict)
+    reflection_audit: dict[str, Any] = Field(default_factory=dict)
     raw_skeleton_response: str | None = None
     raw_final_response: str | None = None
+    raw_reflection_response: str | None = None
     skeleton_attempts_used: int = 0
     final_attempts_used: int = 0
+    reflection_attempts_used: int = 0
     error: str | None = None
 
     @property
@@ -73,25 +81,137 @@ class TwoPassExtractionResult(BaseModel):
         return self.final_extraction
 
 
-class ChunkExtractionResult(BaseModel):
-    success: bool
-    extraction: KnowledgeGraphExtraction
-    raw_response: str | None = None
-    error: str | None = None
-    attempts_used: int = 0
-
-
 class IncrementalExtractionResult(BaseModel):
     success: bool
     extractions: List[KnowledgeGraphExtraction] = Field(default_factory=list)
+    audits: List[dict[str, Any]] = Field(default_factory=list)
     raw_responses: List[str] = Field(default_factory=list)
     iterations: int = 0
     error: str | None = None
     failed_iteration: int | None = None
 
 
+class ChatTwoPassReflectionResult(BaseModel):
+    success: bool
+    skeleton_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
+    pass2_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
+    reflection1_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
+    final_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
+    skeleton_audit: dict[str, Any] = Field(default_factory=dict)
+    pass2_audit: dict[str, Any] = Field(default_factory=dict)
+    reflection1_audit: dict[str, Any] = Field(default_factory=dict)
+    final_reflection_audit: dict[str, Any] = Field(default_factory=dict)
+    raw_skeleton_response: str | None = None
+    raw_pass2_response: str | None = None
+    raw_reflection1_response: str | None = None
+    raw_final_reflection_response: str | None = None
+    skeleton_attempts_used: int = 0
+    pass2_attempts_used: int = 0
+    reflection1_attempts_used: int = 0
+    final_reflection_attempts_used: int = 0
+    error: str | None = None
+
+
 class ExtractionError(RuntimeError):
     pass
+
+
+TRIPLE_REQUIRED_KEYS = ("subject", "subject_type", "relation", "object", "object_type")
+FORMAT_ISSUE_CODES = {"empty_subject", "empty_object"}
+JSON_OBJECT_RE = re.compile(r"\{.*\}", re.DOTALL)
+
+
+def normalize_lenient_payload(payload: Any) -> dict[str, Any]:
+    if isinstance(payload, list):
+        return {"triples": payload}
+    if isinstance(payload, dict):
+        if "triples" in payload:
+            return payload
+        if all(key in payload for key in TRIPLE_REQUIRED_KEYS):
+            return {"triples": [payload]}
+        return payload
+    return {}
+
+
+def audit_knowledge_graph_payload(payload: Any, *, payload_parse_recovered: bool = False) -> tuple[list[dict[str, str]], dict[str, Any]]:
+    normalized_payload = normalize_lenient_payload(payload)
+    raw_triples = normalized_payload.get("triples", [])
+    payload_triples_is_list = isinstance(raw_triples, list)
+    if not payload_triples_is_list:
+        raw_triples = []
+
+    candidate_triples: list[dict[str, Any]] = []
+    non_dict_triple_count = 0
+    missing_key_triple_count = 0
+
+    for triple in raw_triples:
+        if not isinstance(triple, dict):
+            non_dict_triple_count += 1
+            continue
+        if any(key not in triple for key in TRIPLE_REQUIRED_KEYS):
+            missing_key_triple_count += 1
+            continue
+        candidate_triples.append({key: triple.get(key) for key in TRIPLE_REQUIRED_KEYS})
+
+    validation_report = validate_triples(candidate_triples, dedupe=True)
+    invalid_issue_counts: Counter[str] = Counter()
+    malformed_from_validation = 0
+    ontology_rejected_triple_count = 0
+
+    for invalid in validation_report["invalid_triples"]:
+        issue_codes = {issue["code"] for issue in invalid["issues"]}
+        invalid_issue_counts.update(issue_codes)
+        if issue_codes & FORMAT_ISSUE_CODES:
+            malformed_from_validation += 1
+        else:
+            ontology_rejected_triple_count += 1
+
+    malformed_triple_count = non_dict_triple_count + missing_key_triple_count + malformed_from_validation
+    audit = {
+        "payload_parse_recovered": payload_parse_recovered,
+        "payload_triples_is_list": payload_triples_is_list,
+        "raw_triple_count": len(raw_triples),
+        "non_dict_triple_count": non_dict_triple_count,
+        "missing_key_triple_count": missing_key_triple_count,
+        "malformed_triple_count": malformed_triple_count,
+        "ontology_rejected_triple_count": ontology_rejected_triple_count,
+        "invalid_triple_count": validation_report["summary"]["invalid_triple_count"],
+        "duplicate_triple_count": validation_report["summary"]["duplicate_triple_count"],
+        "kept_triple_count": len(validation_report["valid_triples"]),
+        "invalid_issue_counts": dict(sorted(invalid_issue_counts.items())),
+    }
+    return validation_report["valid_triples"], audit
+
+
+def aggregate_extraction_audits(audits: list[dict[str, Any]]) -> dict[str, Any]:
+    aggregated = {
+        "raw_triple_count": 0,
+        "non_dict_triple_count": 0,
+        "missing_key_triple_count": 0,
+        "malformed_triple_count": 0,
+        "ontology_rejected_triple_count": 0,
+        "invalid_triple_count": 0,
+        "duplicate_triple_count": 0,
+        "kept_triple_count": 0,
+        "payload_parse_recovered_count": 0,
+        "invalid_issue_counts": {},
+    }
+    issue_counts: Counter[str] = Counter()
+
+    for audit in audits:
+        aggregated["raw_triple_count"] += int(audit.get("raw_triple_count", 0))
+        aggregated["non_dict_triple_count"] += int(audit.get("non_dict_triple_count", 0))
+        aggregated["missing_key_triple_count"] += int(audit.get("missing_key_triple_count", 0))
+        aggregated["malformed_triple_count"] += int(audit.get("malformed_triple_count", 0))
+        aggregated["ontology_rejected_triple_count"] += int(audit.get("ontology_rejected_triple_count", 0))
+        aggregated["invalid_triple_count"] += int(audit.get("invalid_triple_count", 0))
+        aggregated["duplicate_triple_count"] += int(audit.get("duplicate_triple_count", 0))
+        aggregated["kept_triple_count"] += int(audit.get("kept_triple_count", 0))
+        aggregated["payload_parse_recovered_count"] += 1 if audit.get("payload_parse_recovered") else 0
+        issue_counts.update(audit.get("invalid_issue_counts", {}))
+
+    aggregated["invalid_issue_counts"] = dict(sorted(issue_counts.items()))
+    return aggregated
 
 
 def _json_list(values: list[str]) -> str:
@@ -134,52 +254,6 @@ GLOBAL RULES:
 - If a customer, channel, or monetization phrase does not map clearly to one canonical label, omit it.
 - Precision and standardization are more important than recall.
 - Output only explicit, text-grounded facts.
-"""
-
-
-CHUNKED_SYSTEM_PROMPT = f"""You extract a strict business-model knowledge graph from a single SEC 10-K chunk.
-
-{PROMPT_ONTOLOGY}
-
-TASK:
-- Extract only explicit triples supported by this chunk.
-- Prefer structural business-model facts first: HAS_SEGMENT, OFFERS, PART_OF.
-- Then extract explicit OPERATES_IN, PARTNERS_WITH, SERVES, SELLS_THROUGH, and MONETIZES_VIA facts.
-
-RULES:
-- Ignore generic offerings like "software", "solutions", or "cloud services".
-- Normalize CustomerType, Channel, and RevenueModel to canonical labels only.
-- If a canonical mapping is not clear, omit the fact.
-- Return an empty triple list when the chunk contains nothing relevant.
-
-OUTPUT:
-Return ONLY valid JSON matching the KnowledgeGraphExtraction schema.
-"""
-
-
-ZERO_SHOT_SYSTEM_PROMPT = f"""You extract a strict, standardized business-model knowledge graph from a full SEC 10-K filing.
-
-{PROMPT_ONTOLOGY}
-
-WORK ORDER:
-1. Identify all named BusinessSegments.
-2. Identify all named Offerings.
-3. Build the structural graph skeleton:
-   - Company -> HAS_SEGMENT -> BusinessSegment
-   - BusinessSegment -> OFFERS -> Offering
-   - Offering -> PART_OF -> BusinessSegment
-4. Add explicit OPERATES_IN and PARTNERS_WITH facts.
-5. Add SERVES, SELLS_THROUGH, and MONETIZES_VIA only when a canonical label can be assigned unambiguously.
-
-RULES:
-- Build the business-model skeleton before enrichment.
-- For every offering that clearly belongs to a named segment, emit BOTH OFFERS and PART_OF.
-- Search go-to-market sections for company-level channels.
-- Search demand/revenue descriptions for monetization only when the mapping is clear.
-- If a fact is ambiguous or outside the ontology, omit it.
-
-OUTPUT:
-Return ONLY valid JSON matching the KnowledgeGraphExtraction schema.
 """
 
 
@@ -270,23 +344,68 @@ Return ONLY valid JSON matching the KnowledgeGraphExtraction schema.
 """
 
 
-REFLECTION_SYSTEM_PROMPT = f"""You are reviewing an existing business-model knowledge graph extraction from a SEC 10-K filing.
+REFLECTION_SYSTEM_PROMPT = f"""You are an independent, expert reviewer reconciling a business-model knowledge graph extracted from a SEC 10-K filing.
+
+=== MANDATORY DATA CONTRACT (CRITICAL) ===
+You must output ONLY a valid JSON object.
+Every single fact in the graph MUST be serialized as a strict 5-field triple.
+If you omit `subject_type` or `object_type`, the pipeline will crash.
+
+REQUIRED JSON STRUCTURE:
+{{
+  "extraction_notes": "Summarize your reconciliation: what you pruned, added, or consolidated.",
+  "triples": [
+    {{
+      "subject": "Name of subject",
+      "subject_type": "EXACT_NODE_TYPE",
+      "relation": "EXACT_RELATION",
+      "object": "Name of object or canonical label",
+      "object_type": "EXACT_NODE_TYPE"
+    }}
+  ]
+}}
+
+=== EXAMPLES OF VALID VS. INVALID TRIPLES ===
+CORRECT (All 5 fields present):
+{{
+  "subject": "Microsoft",
+  "subject_type": "Company",
+  "relation": "HAS_SEGMENT",
+  "object": "Intelligent Cloud",
+  "object_type": "BusinessSegment"
+}}
+
+FATAL ERROR (Shorthand / missing types - NEVER DO THIS):
+{{
+  "subject": "Microsoft",
+  "relation": "HAS_SEGMENT",
+  "object": "Intelligent Cloud"
+}}
+
+=== BUSINESS-MODEL ONTOLOGY ===
 
 {PROMPT_ONTOLOGY}
 
-INPUTS:
-- <current_triples>: the current extracted graph
-- <text_to_analyze>: the source filing text
+=== YOUR TASK ===
 
-TASK:
-- Keep correct triples.
-- Remove weak or unsupported triples.
-- Add clearly missing triples supported by the text.
-- Preserve the structural graph skeleton before enrichment.
-- Use canonical labels only for CustomerType, Channel, and RevenueModel.
+INPUTS PROVIDED IN THE USER MESSAGE:
+- <current_triples>: the draft extracted graph from previous steps.
+- <text_to_analyze>: the source SEC filing text.
 
-OUTPUT:
-Return ONLY valid JSON matching the KnowledgeGraphExtraction schema.
+RECONCILIATION RULES:
+1. Keep correct triples; remove weak or unsupported triples.
+2. Add clearly missing triples explicitly supported by the text.
+3. Preserve the structural graph skeleton (HAS_SEGMENT, OFFERS, PART_OF) before enrichment.
+4. Enforce Canonical Labels ONLY for CustomerType, Channel, and RevenueModel.
+5. Reconcile the graph globally across the full document, including links whose evidence is distributed across different sections.
+6. Remove duplicates, generic placeholders, and triples that are less specific than a clearly better-supported alternative.
+7. Prefer a coherent, highly accurate final graph over preserving every extraction decision from the draft <current_triples>.
+
+OUTPUT RULES:
+- Return the ENTIRE reconciled graph. Do not output deltas or diffs.
+- Return ONLY raw JSON starting with `{{` and ending with `}}`.
+- Do not use markdown code blocks (e.g. ```json).
+- Do not output any conversational text outside the JSON.
 """
 
 
@@ -296,12 +415,103 @@ INCREMENTAL_SYSTEM_PROMPT = f"""You progressively extract a strict business-mode
 
 RULES:
 - Analyze one section at a time.
-- Build structural triples first, then enrich when explicit.
+- Build the graph cumulatively across sections.
+- Extract only NEW triples from the section currently under review.
+- Do not repeat triples already emitted in prior turns.
+- Keep section-local claims conservative when supporting context is incomplete; the final review pass will reconcile the full graph.
+- Prefer structural triples first, then enrich when explicit in the current section.
 - Use canonical labels only for CustomerType, Channel, and RevenueModel.
 - If a canonical mapping is unclear, omit it.
+- Use the anchored reporting-company name when the text refers to the filer as "the company", "we", or "our".
+- When a section contains no relevant new facts, return an empty triple list and still identify the next section.
 
 OUTPUT:
 Return ONLY valid JSON matching the IncrementalKnowledgeGraphExtraction schema.
+"""
+
+
+CHAT_TWO_PASS_SYSTEM_PROMPT = """You are executing a multi-step business-model knowledge graph workflow for a SEC 10-K filing.
+
+=== MANDATORY DATA CONTRACT (CRITICAL) ===
+You must output ONLY a valid JSON object.
+Every single fact you extract MUST be serialized as a strict 5-field triple.
+If you omit `subject_type` or `object_type`, the pipeline will crash.
+
+REQUIRED JSON STRUCTURE:
+{
+  "extraction_notes": "Step-by-step reasoning about what you found and why you mapped it.",
+  "triples": [
+    {
+      "subject": "Name of subject",
+      "subject_type": "EXACT_NODE_TYPE",
+      "relation": "EXACT_RELATION",
+      "object": "Name of object or canonical label",
+      "object_type": "EXACT_NODE_TYPE"
+    }
+  ]
+}
+
+=== EXAMPLES OF VALID VS. INVALID TRIPLES ===
+CORRECT (All 5 fields present):
+{
+  "subject": "Microsoft",
+  "subject_type": "Company",
+  "relation": "HAS_SEGMENT",
+  "object": "Intelligent Cloud",
+  "object_type": "BusinessSegment"
+}
+
+FATAL ERROR (Shorthand / missing types - NEVER DO THIS):
+{
+  "subject": "Microsoft",
+  "relation": "HAS_SEGMENT",
+  "object": "Intelligent Cloud"
+}
+
+=== BUSINESS-MODEL ONTOLOGY ===
+
+NODE TYPES:
+- Company: reporting company or named external commercial company
+- BusinessSegment: formally named internal segment or line of business
+- Offering: specific named product, service, platform, subscription, application, or brand
+- CustomerType: canonical label only
+- Channel: canonical label only
+- Place: explicit named geography
+- RevenueModel: canonical label only
+
+CANONICAL CustomerType LABELS:
+["consumers", "small businesses", "mid-market companies", "large enterprises", "developers", "IT professionals", "government agencies", "educational institutions", "healthcare organizations", "financial services firms", "manufacturers", "retailers"]
+
+CANONICAL Channel LABELS:
+["direct sales", "online", "retail", "distributors", "resellers", "OEMs", "system integrators", "managed service providers", "marketplaces"]
+
+CANONICAL RevenueModel LABELS:
+["subscription", "advertising", "licensing", "consumption-based", "hardware sales", "service fees", "royalties", "transaction fees"]
+
+ALLOWED RELATIONS:
+- HAS_SEGMENT: Company -> BusinessSegment
+- OFFERS: Company -> Offering | BusinessSegment -> Offering
+- PART_OF: Offering -> BusinessSegment
+- SERVES: Company -> CustomerType | Offering -> CustomerType
+- OPERATES_IN: Company -> Place | BusinessSegment -> Place
+- SELLS_THROUGH: Company -> Channel | Offering -> Channel
+- PARTNERS_WITH: Company -> Company
+- MONETIZES_VIA: Company -> RevenueModel | BusinessSegment -> RevenueModel | Offering -> RevenueModel
+
+GLOBAL RULES:
+- Closed ontology: output only these node types and relations.
+- Closed labels: CustomerType, Channel, and RevenueModel must use only canonical labels.
+- If a customer, channel, or monetization phrase does not map clearly to one canonical label, omit it. No free invention of labels.
+- Precision and standardization are more important than recall. Extract ONLY text-grounded facts.
+
+WORKFLOW RULES:
+- You will receive one workflow step at a time.
+- Preserve continuity across turns inside this chat.
+- Follow ONLY the scope requested in the current step.
+- Reuse the same filing provided earlier unless a new text block is supplied.
+- Return ONLY raw JSON starting with `{` and ending with `}`.
+- Do not output markdown code blocks (e.g., no ```json ... ```).
+- Do not output explanations outside the JSON payload.
 """
 
 
@@ -327,20 +537,109 @@ class LLMExtractor:
         return json.dumps(value, ensure_ascii=False, separators=(",", ":"))
 
     @staticmethod
-    def _load_json_payload(content: str, fallback_payload: str) -> dict:
+    def _load_json_payload(content: str, fallback_payload: str) -> tuple[dict, bool]:
         content = content.strip()
         if not content:
             raise ExtractionError("Empty response from model.")
 
-        if not content.endswith("}"):
+        candidates = [content]
+        match = JSON_OBJECT_RE.search(content)
+        if match:
+            json_object_text = match.group(0)
+            if json_object_text != content:
+                candidates.append(json_object_text)
+
+        if not content.endswith(("}", "]")):
             logger.warning("Truncated JSON detected. Attempting to salvage...")
             last_object_end = content.rfind("}")
-            content = content[: last_object_end + 1] if last_object_end != -1 else fallback_payload
+            last_array_end = content.rfind("]")
+            last_json_end = max(last_object_end, last_array_end)
+            truncated_candidate = content[: last_json_end + 1] if last_json_end != -1 else fallback_payload
+            if truncated_candidate not in candidates:
+                candidates.append(truncated_candidate)
 
-        try:
-            return json.loads(content)
-        except json.JSONDecodeError:
-            return json.loads(fallback_payload)
+        for index, candidate in enumerate(candidates):
+            try:
+                return json.loads(candidate), index > 0
+            except json.JSONDecodeError:
+                continue
+
+        return json.loads(fallback_payload), True
+
+    @staticmethod
+    def _lenient_model_from_payload(schema_model: type[BaseModel], payload: Any) -> tuple[BaseModel, dict[str, Any]]:
+        normalized_payload = normalize_lenient_payload(payload)
+        valid_triples, audit = audit_knowledge_graph_payload(normalized_payload)
+        extraction_notes = str(
+            normalized_payload.get("extraction_notes", normalized_payload.get("chain_of_thought_reasoning", "")) or ""
+        )
+        triple_objects = [Triple(**triple) for triple in valid_triples]
+        raw_end_flag = normalized_payload.get("has_reached_end_of_document", False)
+        if isinstance(raw_end_flag, str):
+            end_of_document = raw_end_flag.strip().casefold() in {"true", "1", "yes"}
+        else:
+            end_of_document = bool(raw_end_flag)
+
+        if schema_model is KnowledgeGraphExtraction:
+            model = KnowledgeGraphExtraction(
+                extraction_notes=extraction_notes,
+                triples=triple_objects,
+            )
+            return model, audit
+
+        if schema_model is IncrementalKnowledgeGraphExtraction:
+            model = IncrementalKnowledgeGraphExtraction(
+                current_section_analyzed=str(normalized_payload.get("current_section_analyzed", "") or ""),
+                next_section_to_analyze=str(normalized_payload.get("next_section_to_analyze", "") or ""),
+                extraction_notes=extraction_notes,
+                triples=triple_objects,
+                has_reached_end_of_document=end_of_document,
+            )
+            return model, audit
+
+        raise TypeError(f"Unsupported schema model for lenient payload parsing: {schema_model!r}")
+
+    def _call_structured_messages(
+        self,
+        *,
+        messages: list[dict[str, str]],
+        schema_name: str,
+        schema_model: type[BaseModel],
+        fallback_payload: str,
+        max_retries: int,
+        temperature: float = 0.0,
+        use_schema: bool = True,
+    ) -> tuple[BaseModel, str | None, int, dict[str, Any]]:
+        schema_def = self._schema_def(schema_name, schema_model)
+
+        for attempt in range(1, max_retries + 1):
+            try:
+                call_kwargs: dict[str, Any] = {
+                    "model": self.model,
+                    "messages": messages,
+                    "temperature": temperature,
+                }
+                if use_schema:
+                    call_kwargs["response_format"] = schema_def
+                response = self.client.chat.completions.create(**call_kwargs)
+                content = response.choices[0].message.content
+                parsed_payload, payload_parse_recovered = self._load_json_payload(content or "", fallback_payload)
+                if use_schema:
+                    parsed_model = schema_model(**parsed_payload)
+                    _, audit = audit_knowledge_graph_payload(
+                        parsed_payload,
+                        payload_parse_recovered=payload_parse_recovered,
+                    )
+                else:
+                    parsed_model, audit = self._lenient_model_from_payload(schema_model, parsed_payload)
+                    audit["payload_parse_recovered"] = payload_parse_recovered
+                return parsed_model, content, attempt, audit
+            except (json.JSONDecodeError, ValidationError, ExtractionError) as exc:
+                logger.warning("Structured call failed on attempt %s/%s: %s", attempt, max_retries, exc)
+            except Exception as exc:
+                logger.warning("LLM API error on attempt %s/%s: %s", attempt, max_retries, exc)
+
+        raise ExtractionError(f"Failed after {max_retries} attempts")
 
     def _call_structured(
         self,
@@ -352,96 +651,20 @@ class LLMExtractor:
         fallback_payload: str,
         max_retries: int,
         temperature: float = 0.0,
-    ) -> tuple[BaseModel, str | None, int]:
-        schema_def = self._schema_def(schema_name, schema_model)
-
-        for attempt in range(1, max_retries + 1):
-            try:
-                response = self.client.chat.completions.create(
-                    model=self.model,
-                    messages=[
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": user_prompt},
-                    ],
-                    temperature=temperature,
-                    response_format=schema_def,
-                )
-                content = response.choices[0].message.content
-                parsed = self._load_json_payload(content or "", fallback_payload)
-                return schema_model(**parsed), content, attempt
-            except (json.JSONDecodeError, ValidationError, ExtractionError) as exc:
-                logger.warning("Structured call failed on attempt %s/%s: %s", attempt, max_retries, exc)
-            except Exception as exc:
-                logger.warning("LLM API error on attempt %s/%s: %s", attempt, max_retries, exc)
-
-        raise ExtractionError(f"Failed after {max_retries} attempts")
-
-    def _get_system_prompt(self, extraction_mode: str) -> str:
-        if extraction_mode == "zero_shot":
-            return ZERO_SHOT_SYSTEM_PROMPT
-        if extraction_mode == "incremental":
-            return INCREMENTAL_SYSTEM_PROMPT
-        return CHUNKED_SYSTEM_PROMPT
-
-    def extract_from_chunk_detailed(
-        self,
-        chunk_text: str,
-        company_name: str | None = None,
-        memory: dict[str, Any] | None = None,
-        extraction_mode: str = "chunked",
-        max_retries: int = 2,
-        strict: bool = True,
-    ) -> ChunkExtractionResult:
-        prompt_parts: list[str] = []
-        if company_name:
-            prompt_parts.append(f"<company_name>\n{company_name}\n</company_name>")
-        if memory:
-            prompt_parts.append(f"<memory>\n{self._compact_json(memory)}\n</memory>")
-        prompt_parts.append(f"<text_to_analyze>\n{chunk_text}\n</text_to_analyze>")
-        prompt = "\n\n".join(prompt_parts)
-
-        try:
-            extraction, raw_response, attempts_used = self._call_structured(
-                system_prompt=self._get_system_prompt(extraction_mode),
-                user_prompt=prompt,
-                schema_name="KnowledgeGraphExtraction",
-                schema_model=KnowledgeGraphExtraction,
-                fallback_payload='{"extraction_notes":"Truncated before extractions.","triples":[]}',
-                max_retries=max_retries,
-            )
-            return ChunkExtractionResult(
-                success=True,
-                extraction=extraction,
-                raw_response=raw_response,
-                attempts_used=attempts_used,
-            )
-        except ExtractionError as exc:
-            if strict:
-                raise
-            return ChunkExtractionResult(
-                success=False,
-                extraction=KnowledgeGraphExtraction(extraction_notes="", triples=[]),
-                raw_response=None,
-                error=str(exc),
-                attempts_used=max_retries,
-            )
-
-    def extract_from_chunk(
-        self,
-        chunk_text: str,
-        company_name: str | None = None,
-        memory: dict[str, Any] | None = None,
-        extraction_mode: str = "chunked",
-        max_retries: int = 2,
-    ) -> KnowledgeGraphExtraction:
-        return self.extract_from_chunk_detailed(
-            chunk_text=chunk_text,
-            company_name=company_name,
-            memory=memory,
-            extraction_mode=extraction_mode,
+        use_schema: bool = True,
+    ) -> tuple[BaseModel, str | None, int, dict[str, Any]]:
+        return self._call_structured_messages(
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            schema_name=schema_name,
+            schema_model=schema_model,
+            fallback_payload=fallback_payload,
             max_retries=max_retries,
-            strict=True,
-        ).extraction
+            temperature=temperature,
+            use_schema=use_schema,
+        )
 
     def extract_two_pass_detailed(
         self,
@@ -449,6 +672,7 @@ class LLMExtractor:
         company_name: str | None = None,
         max_retries: int = 2,
         strict: bool = True,
+        use_schema: bool = True,
     ) -> TwoPassExtractionResult:
         prompt_parts: list[str] = []
         if company_name:
@@ -457,19 +681,21 @@ class LLMExtractor:
         base_prompt = "\n\n".join(prompt_parts)
 
         try:
-            skeleton_extraction, raw_skeleton_response, skeleton_attempts_used = self._call_structured(
+            skeleton_extraction, raw_skeleton_response, skeleton_attempts_used, skeleton_audit = self._call_structured(
                 system_prompt=SKELETON_SYSTEM_PROMPT,
                 user_prompt=base_prompt,
                 schema_name="KnowledgeGraphExtraction",
                 schema_model=KnowledgeGraphExtraction,
                 fallback_payload='{"extraction_notes":"Truncated skeleton extraction.","triples":[]}',
                 max_retries=max_retries,
+                use_schema=use_schema,
             )
         except ExtractionError as exc:
             if strict:
                 raise
             return TwoPassExtractionResult(
                 success=False,
+                skeleton_audit={},
                 error=str(exc),
             )
 
@@ -480,13 +706,14 @@ class LLMExtractor:
         )
 
         try:
-            final_extraction, raw_final_response, final_attempts_used = self._call_structured(
+            final_extraction, raw_final_response, final_attempts_used, final_audit = self._call_structured(
                 system_prompt=ENRICHMENT_SYSTEM_PROMPT,
                 user_prompt=enrichment_prompt,
                 schema_name="KnowledgeGraphExtraction",
                 schema_model=KnowledgeGraphExtraction,
                 fallback_payload='{"extraction_notes":"Truncated final extraction.","triples":[]}',
                 max_retries=max_retries,
+                use_schema=use_schema,
             )
         except ExtractionError as exc:
             if strict:
@@ -494,6 +721,7 @@ class LLMExtractor:
             return TwoPassExtractionResult(
                 success=False,
                 skeleton_extraction=skeleton_extraction,
+                skeleton_audit=skeleton_audit,
                 raw_skeleton_response=raw_skeleton_response,
                 skeleton_attempts_used=skeleton_attempts_used,
                 error=str(exc),
@@ -507,73 +735,98 @@ class LLMExtractor:
             success=True,
             skeleton_extraction=skeleton_extraction,
             final_extraction=final_extraction,
+            skeleton_audit=skeleton_audit,
+            final_audit=final_audit,
             raw_skeleton_response=raw_skeleton_response,
             raw_final_response=raw_final_response,
             skeleton_attempts_used=skeleton_attempts_used,
             final_attempts_used=final_attempts_used,
         )
 
-    def extract_two_pass(
-        self,
-        full_text: str,
-        company_name: str | None = None,
-        max_retries: int = 2,
-    ) -> KnowledgeGraphExtraction:
-        result = self.extract_two_pass_detailed(
-            full_text=full_text,
-            company_name=company_name,
-            max_retries=max_retries,
-            strict=True,
-        )
-        return result.final_extraction
-
     def extract_with_reflection(
         self,
         full_text: str,
         company_name: str | None = None,
         max_retries: int = 2,
+        use_schema: bool = True,
     ) -> tuple[TwoPassExtractionResult, KnowledgeGraphExtraction]:
         two_pass_result = self.extract_two_pass_detailed(
             full_text=full_text,
             company_name=company_name,
             max_retries=max_retries,
             strict=True,
+            use_schema=use_schema,
         )
+        final_extraction, raw_reflection_response, reflection_attempts_used, reflection_audit = self.reflect_extraction(
+            full_text=full_text,
+            current_extraction=two_pass_result.final_extraction,
+            company_name=company_name,
+            max_retries=max_retries,
+            strict=False,
+            use_schema=use_schema,
+        )
+        two_pass_result.raw_reflection_response = raw_reflection_response
+        two_pass_result.reflection_attempts_used = reflection_attempts_used
+        two_pass_result.reflection_audit = reflection_audit
+        return two_pass_result, final_extraction
 
+    def reflect_extraction(
+        self,
+        *,
+        full_text: str,
+        current_extraction: KnowledgeGraphExtraction,
+        company_name: str | None = None,
+        max_retries: int = 2,
+        strict: bool = True,
+        use_schema: bool = True,
+    ) -> tuple[KnowledgeGraphExtraction, str | None, int, dict[str, Any]]:
         reflection_prompt = (
+            "WORKFLOW STEP: REFLECTION 2 - FINAL RECONCILIATION (INDEPENDENT REVIEW)\n\n"
             f"<company_name>\n{company_name or ''}\n</company_name>\n\n"
-            f"<current_triples>\n{self._compact_json(two_pass_result.final_extraction.model_dump())}\n</current_triples>\n\n"
-            f"<text_to_analyze>\n{full_text}\n</text_to_analyze>"
+            f"<current_triples>\n{self._compact_json(current_extraction.model_dump())}\n</current_triples>\n\n"
+            f"<text_to_analyze>\n{full_text}\n</text_to_analyze>\n\n"
+            "=== FINAL INSTRUCTIONS ===\n"
+            "Review the draft <current_triples> against the original <text_to_analyze> for <company_name>.\n\n"
+            "Remember your critical constraints:\n"
+            "1. Reconcile, prune, and enrich to create the most accurate final graph.\n"
+            "2. Ensure ALL triples have EXACTLY 5 fields (`subject`, `subject_type`, `relation`, `object`, `object_type`). Do NOT revert to 3-field shorthand.\n"
+            "3. Output the ENTIRE updated graph, not just deltas.\n\n"
+            'Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array. Do not use markdown code blocks (```json).'
         )
 
         try:
-            final_extraction, _, _ = self._call_structured(
+            final_extraction, raw_response, attempts_used, audit = self._call_structured(
                 system_prompt=REFLECTION_SYSTEM_PROMPT,
                 user_prompt=reflection_prompt,
                 schema_name="KnowledgeGraphExtraction",
                 schema_model=KnowledgeGraphExtraction,
                 fallback_payload='{"extraction_notes":"Reflection failed.","triples":[]}',
                 max_retries=max_retries,
+                use_schema=use_schema,
             )
-            if not final_extraction.triples:
-                logger.warning("Reflection returned no triples. Falling back to two-pass output.")
-                return two_pass_result, two_pass_result.final_extraction
-            return two_pass_result, final_extraction
+            if not final_extraction.triples and current_extraction.triples:
+                logger.warning("Reflection returned no triples. Falling back to pre-reflection extraction.")
+                return current_extraction, raw_response, attempts_used, audit
+            return final_extraction, raw_response, attempts_used, audit
         except ExtractionError:
-            logger.warning("Reflection failed. Falling back to two-pass output.")
-            return two_pass_result, two_pass_result.final_extraction
+            if strict:
+                raise
+            logger.warning("Reflection failed. Falling back to pre-reflection extraction.")
+            return current_extraction, None, max_retries, {}
 
     def extract_incremental_detailed(
         self,
         full_text: str,
+        company_name: str | None = None,
         max_iterations: int = 10,
         max_retries: int = 2,
         strict: bool = True,
+        use_schema: bool = True,
     ) -> IncrementalExtractionResult:
         all_extractions: List[KnowledgeGraphExtraction] = []
+        audits: List[dict[str, Any]] = []
         raw_responses: List[str] = []
         messages = [{"role": "system", "content": INCREMENTAL_SYSTEM_PROMPT}]
-        schema_def = self._schema_def("IncrementalKnowledgeGraphExtraction", IncrementalKnowledgeGraphExtraction)
         fallback_payload = (
             '{"extraction_notes":"Truncated before extractions.","triples":[],"has_reached_end_of_document":false}'
         )
@@ -582,63 +835,63 @@ class LLMExtractor:
             if iteration == 0:
                 prompt = (
                     "Here is the complete document. For this first response, extract triples only from the first section.\n\n"
+                    f"<company_name>\n{company_name or ''}\n</company_name>\n\n"
                     f"<text_to_analyze>\n{full_text}\n</text_to_analyze>"
                 )
             else:
                 prompt = (
                     "Continue from the next section named in your previous response. "
-                    "Extract only new triples from that section."
+                    "Extract only new triples from that section. "
+                    "Do not repeat earlier triples."
                 )
 
             messages.append({"role": "user", "content": prompt})
 
-            for attempt in range(1, max_retries + 1):
-                try:
-                    response = self.client.chat.completions.create(
-                        model=self.model,
-                        messages=messages,
-                        temperature=0.0,
-                        response_format=schema_def,
-                    )
-                    content = response.choices[0].message.content
-                    parsed_data = self._load_json_payload(content or "", fallback_payload)
-                    raw_extraction = IncrementalKnowledgeGraphExtraction(**parsed_data)
-                    raw_responses.append(content or "")
-                    messages.append(
-                        {
-                            "role": "assistant",
-                            "content": json.dumps(raw_extraction.model_dump(mode="json"), ensure_ascii=False),
-                        }
-                    )
-                    all_extractions.append(
-                        KnowledgeGraphExtraction(
-                            extraction_notes=raw_extraction.extraction_notes,
-                            triples=raw_extraction.triples,
-                        )
-                    )
-                    if raw_extraction.has_reached_end_of_document:
-                        return IncrementalExtractionResult(
-                            success=True,
-                            extractions=all_extractions,
-                            raw_responses=raw_responses,
-                            iterations=iteration + 1,
-                        )
-                    break
-                except (json.JSONDecodeError, ValidationError, ExtractionError) as exc:
-                    logger.warning("Incremental iteration %s attempt %s failed: %s", iteration + 1, attempt, exc)
-                except Exception as exc:
-                    logger.warning("LLM API error on iteration %s attempt %s: %s", iteration + 1, attempt, exc)
-            else:
+            try:
+                raw_extraction, content, _, audit = self._call_structured_messages(
+                    messages=messages,
+                    schema_name="IncrementalKnowledgeGraphExtraction",
+                    schema_model=IncrementalKnowledgeGraphExtraction,
+                    fallback_payload=fallback_payload,
+                    max_retries=max_retries,
+                    temperature=0.0,
+                    use_schema=use_schema,
+                )
+            except ExtractionError:
                 error_message = f"Failed iteration {iteration + 1} after {max_retries} attempts"
                 if strict:
                     raise ExtractionError(error_message)
                 return IncrementalExtractionResult(
                     success=False,
                     extractions=all_extractions,
+                    audits=audits,
                     raw_responses=raw_responses,
                     iterations=iteration + 1,
                     error=error_message,
                     failed_iteration=iteration + 1,
+                )
+
+            raw_responses.append(content or "")
+            audits.append(audit)
+            messages.append(
+                {
+                    "role": "assistant",
+                    "content": content or json.dumps(raw_extraction.model_dump(mode="json"), ensure_ascii=False),
+                }
+            )
+            all_extractions.append(
+                KnowledgeGraphExtraction(
+                    extraction_notes=raw_extraction.extraction_notes,
+                    triples=raw_extraction.triples,
+                )
+            )
+            if raw_extraction.has_reached_end_of_document:
+                return IncrementalExtractionResult(
+                    success=True,
+                    extractions=all_extractions,
+                    audits=audits,
+                    raw_responses=raw_responses,
+                    iterations=iteration + 1,
                 )
 
         error_message = f"Hit max iterations ({max_iterations}) without reaching end of document"
@@ -647,21 +900,204 @@ class LLMExtractor:
         return IncrementalExtractionResult(
             success=False,
             extractions=all_extractions,
+            audits=audits,
             raw_responses=raw_responses,
             iterations=max_iterations,
             error=error_message,
             failed_iteration=max_iterations,
         )
 
-    def extract_incremental(
+    def extract_incremental_with_reflection(
         self,
+        *,
         full_text: str,
+        company_name: str | None = None,
         max_iterations: int = 10,
         max_retries: int = 2,
-    ) -> List[KnowledgeGraphExtraction]:
-        return self.extract_incremental_detailed(
+        use_schema: bool = True,
+    ) -> tuple[IncrementalExtractionResult, KnowledgeGraphExtraction, str | None, int, dict[str, Any]]:
+        incremental_result = self.extract_incremental_detailed(
             full_text=full_text,
+            company_name=company_name,
             max_iterations=max_iterations,
             max_retries=max_retries,
             strict=True,
-        ).extractions
+            use_schema=use_schema,
+        )
+        merged_incremental_extraction = KnowledgeGraphExtraction(
+            extraction_notes="Merged incremental section extractions before final reflection.",
+            triples=[triple for extraction in incremental_result.extractions for triple in extraction.triples],
+        )
+        final_extraction, raw_response, attempts_used, audit = self.reflect_extraction(
+            full_text=full_text,
+            current_extraction=merged_incremental_extraction,
+            company_name=company_name,
+            max_retries=max_retries,
+            strict=False,
+            use_schema=use_schema,
+        )
+        return incremental_result, final_extraction, raw_response, attempts_used, audit
+
+    def extract_chat_two_pass_reflection(
+        self,
+        *,
+        full_text: str,
+        company_name: str | None = None,
+        max_retries: int = 2,
+        use_schema: bool = True,
+    ) -> ChatTwoPassReflectionResult:
+        messages = [{"role": "system", "content": CHAT_TWO_PASS_SYSTEM_PROMPT}]
+
+        pass1_prompt = (
+            "WORKFLOW STEP: PASS 1 - STRUCTURAL SKELETON\n\n"
+            "OBJECTIVE:\n"
+            "Extract the core business structure of the company.\n"
+            "Focus ONLY on the following relations:\n"
+            "- HAS_SEGMENT\n"
+            "- OFFERS\n"
+            "- PART_OF\n"
+            "- OPERATES_IN\n"
+            "- PARTNERS_WITH\n"
+            "Ignore SERVES, SELLS_THROUGH, and MONETIZES_VIA in this step.\n\n"
+            "RULES FOR THIS PASS:\n"
+            "1. Anchor all company-level facts exactly to the <company_name> provided below.\n"
+            "2. In the `extraction_notes` string, briefly step-by-step list the segments, offerings, geographies, and partners you found in the text.\n"
+            "3. CRITICAL FORMATTING: You must output the full 5-field triple for every fact. Do not drop `subject_type` or `object_type`. Shorthand 3-field triples will crash the system.\n\n"
+            f"<company_name>\n{company_name or ''}\n</company_name>\n\n"
+            f"<text_to_analyze>\n{full_text}\n</text_to_analyze>\n\n"
+            'Remember: Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array. '
+            "Do not use markdown code blocks (```json)."
+        )
+        messages.append({"role": "user", "content": pass1_prompt})
+        try:
+            skeleton_extraction, raw_skeleton_response, skeleton_attempts_used, skeleton_audit = self._call_structured_messages(
+                messages=messages,
+                schema_name="KnowledgeGraphExtraction",
+                schema_model=KnowledgeGraphExtraction,
+                fallback_payload='{"extraction_notes":"Truncated skeleton extraction.","triples":[]}',
+                max_retries=max_retries,
+                use_schema=use_schema,
+            )
+        except ExtractionError as exc:
+            return ChatTwoPassReflectionResult(success=False, error=str(exc))
+        messages.append(
+            {
+                "role": "assistant",
+                "content": raw_skeleton_response or json.dumps(skeleton_extraction.model_dump(mode="json"), ensure_ascii=False),
+            }
+        )
+
+        pass2_prompt = (
+            "WORKFLOW STEP: PASS 2 - ENRICHMENT AND FULL GRAPH\n\n"
+            "OBJECTIVE:\n"
+            "Using the <text_to_analyze> provided in PASS 1 and your previous extraction, return the COMPLETE, enriched business-model graph.\n\n"
+            "TASKS FOR THIS PASS:\n"
+            "1. KEEP & FIX SKELETON: Retain correct HAS_SEGMENT, OFFERS, PART_OF, OPERATES_IN, and PARTNERS_WITH triples from Pass 1. Add any that you missed.\n"
+            "2. ADD ENRICHMENT: Extract SERVES, SELLS_THROUGH, and MONETIZES_VIA relations.\n"
+            "   - ONLY add these if explicitly stated in the text. DO NOT guess.\n"
+            "   - For these three relations, the `object` MUST be one of the EXACT CANONICAL LABELS defined in the system prompt.\n\n"
+            "CRITICAL RULES FOR PASS 2:\n"
+            '- NO DELTAS: You must output the entire combined graph (Pass 1 skeleton + Pass 2 enrichments). Do not just output the new additions.\n'
+            '- ZERO FORMAT DEGRADATION: Every single triple in the "triples" array MUST have all 5 fields (`subject`, `subject_type`, `relation`, `object`, `object_type`). Do not revert to 3-field shorthand.\n'
+            '- CHAIN OF THOUGHT: In "extraction_notes", briefly explain which exact sentences justify your mapping to the canonical CustomerType, Channel, and RevenueModel labels.\n\n'
+            'Remember: Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array. Do not use markdown code blocks (```json).'
+        )
+        messages.append({"role": "user", "content": pass2_prompt})
+        try:
+            pass2_extraction, raw_pass2_response, pass2_attempts_used, pass2_audit = self._call_structured_messages(
+                messages=messages,
+                schema_name="KnowledgeGraphExtraction",
+                schema_model=KnowledgeGraphExtraction,
+                fallback_payload='{"extraction_notes":"Truncated pass-2 extraction.","triples":[]}',
+                max_retries=max_retries,
+                use_schema=use_schema,
+            )
+        except ExtractionError as exc:
+            return ChatTwoPassReflectionResult(
+                success=False,
+                skeleton_extraction=skeleton_extraction,
+                skeleton_audit=skeleton_audit,
+                raw_skeleton_response=raw_skeleton_response,
+                skeleton_attempts_used=skeleton_attempts_used,
+                error=str(exc),
+            )
+        if not pass2_extraction.triples and skeleton_extraction.triples:
+            logger.warning("Chat PASS 2 returned no triples. Falling back to PASS 1 skeleton.")
+            pass2_extraction = skeleton_extraction
+        messages.append(
+            {
+                "role": "assistant",
+                "content": raw_pass2_response or json.dumps(pass2_extraction.model_dump(mode="json"), ensure_ascii=False),
+            }
+        )
+
+        reflection1_prompt = (
+            "WORKFLOW STEP: REFLECTION 1 - CRITIQUE AND REPAIR\n\n"
+            "OBJECTIVE:\n"
+            "Act as a critical auditor. Review your COMPLETE graph from PASS 2 against the original <text_to_analyze> provided in PASS 1.\n\n"
+            "TASKS FOR THIS PASS:\n"
+            "1. PRUNE WEAK TRIPLES: Remove any triples that are not explicitly supported by the text.\n"
+            "2. FIX ONTOLOGY & LABELS: Ensure all CustomerType, Channel, and RevenueModel objects use ONLY the exact canonical labels from the system prompt. Remove or correct invalid labels.\n"
+            "3. ADD MISSING FACTS: Add any obvious facts from the text that were missed in earlier passes.\n"
+            "4. PRESERVE SKELETON: Ensure the core structure (HAS_SEGMENT, OFFERS, PART_OF) remains coherent.\n\n"
+            "CRITICAL RULES FOR REFLECTION 1:\n"
+            '- AUDIT TRAIL: In the "extraction_notes" string, document your corrections. Explicitly state: "Removed X because..." or "Added Y because..." or "Corrected label Z to...".\n'
+            "- NO DELTAS: You must output the ENTIRE updated graph. Do not output just the changes.\n"
+            '- STRICT 5-FIELD FORMAT: Every single triple must retain all 5 fields (`subject`, `subject_type`, `relation`, `object`, `object_type`). Do not truncate to 3 fields under any circumstances.\n\n'
+            'Remember: Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array. Do not use markdown code blocks (```json).'
+        )
+        messages.append({"role": "user", "content": reflection1_prompt})
+        try:
+            reflection1_extraction, raw_reflection1_response, reflection1_attempts_used, reflection1_audit = self._call_structured_messages(
+                messages=messages,
+                schema_name="KnowledgeGraphExtraction",
+                schema_model=KnowledgeGraphExtraction,
+                fallback_payload='{"extraction_notes":"Truncated reflection extraction.","triples":[]}',
+                max_retries=max_retries,
+                use_schema=use_schema,
+            )
+        except ExtractionError as exc:
+            return ChatTwoPassReflectionResult(
+                success=False,
+                skeleton_extraction=skeleton_extraction,
+                pass2_extraction=pass2_extraction,
+                skeleton_audit=skeleton_audit,
+                pass2_audit=pass2_audit,
+                raw_skeleton_response=raw_skeleton_response,
+                raw_pass2_response=raw_pass2_response,
+                skeleton_attempts_used=skeleton_attempts_used,
+                pass2_attempts_used=pass2_attempts_used,
+                error=str(exc),
+            )
+        if not reflection1_extraction.triples and pass2_extraction.triples:
+            logger.warning("Chat reflection 1 returned no triples. Falling back to PASS 2 extraction.")
+            reflection1_extraction = pass2_extraction
+
+        final_extraction, raw_final_reflection_response, final_reflection_attempts_used, final_reflection_audit = self.reflect_extraction(
+            full_text=full_text,
+            current_extraction=reflection1_extraction,
+            company_name=company_name,
+            max_retries=max_retries,
+            strict=False,
+            use_schema=use_schema,
+        )
+
+        return ChatTwoPassReflectionResult(
+            success=True,
+            skeleton_extraction=skeleton_extraction,
+            pass2_extraction=pass2_extraction,
+            reflection1_extraction=reflection1_extraction,
+            final_extraction=final_extraction,
+            skeleton_audit=skeleton_audit,
+            pass2_audit=pass2_audit,
+            reflection1_audit=reflection1_audit,
+            final_reflection_audit=final_reflection_audit,
+            raw_skeleton_response=raw_skeleton_response,
+            raw_pass2_response=raw_pass2_response,
+            raw_reflection1_response=raw_reflection1_response,
+            raw_final_reflection_response=raw_final_reflection_response,
+            skeleton_attempts_used=skeleton_attempts_used,
+            pass2_attempts_used=pass2_attempts_used,
+            reflection1_attempts_used=reflection1_attempts_used,
+            final_reflection_attempts_used=final_reflection_attempts_used,
+        )
