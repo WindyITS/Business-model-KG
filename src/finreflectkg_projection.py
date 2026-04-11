@@ -350,10 +350,34 @@ def _subject_company_candidates(rows: list[dict[str, Any]]) -> list[str]:
     )
 
 
+def local_trusted_segment_keys(rows: list[dict[str, Any]]) -> set[str]:
+    trusted_segment_keys: set[str] = set()
+    for row in rows:
+        relation = normalize_source_label(row.get("relationship"))
+        subject_type = map_entity_type(row.get("entity_type"))
+        object_type = map_entity_type(row.get("target_type"))
+        subject = str(row.get("entity") or "").strip()
+        object_name = str(row.get("target") or "").strip()
+
+        if (
+            relation in SEGMENT_ANCHOR_RELATIONS
+            and subject_type == "Company"
+            and object_type == "BusinessSegment"
+            and is_plausible_business_segment(object_name)
+        ):
+            trusted_segment_keys.add(canonical_entity_key(object_name))
+        elif (
+            relation in SEGMENT_REVERSE_RELATIONS
+            and subject_type == "BusinessSegment"
+            and object_type == "Company"
+            and is_plausible_business_segment(subject)
+        ):
+            trusted_segment_keys.add(canonical_entity_key(subject))
+    return trusted_segment_keys
+
+
 def _analyze_chunk_rows(
     rows: list[dict[str, Any]],
-    *,
-    trusted_segments_by_filing: dict[tuple[Any, ...], set[str]] | None = None,
 ) -> dict[str, Any] | None:
     if not rows:
         return None
@@ -365,7 +389,7 @@ def _analyze_chunk_rows(
 
     mapped_triples: list[dict[str, str]] = []
     dropped_reason_counts: Counter[str] = Counter()
-    trusted_segment_keys = (trusted_segments_by_filing or {}).get(filing_key_from_row(rows[0]), set())
+    trusted_segment_keys = local_trusted_segment_keys(rows)
 
     for row in rows:
         triples, reason = map_row_to_triples(row, trusted_segment_keys=trusted_segment_keys)
@@ -419,10 +443,8 @@ def _analyze_chunk_rows(
 def build_projection_example(
     rows: list[dict[str, Any]],
     instruction: str = DEFAULT_INSTRUCTION,
-    *,
-    trusted_segments_by_filing: dict[tuple[Any, ...], set[str]] | None = None,
 ) -> dict[str, Any] | None:
-    analysis = _analyze_chunk_rows(rows, trusted_segments_by_filing=trusted_segments_by_filing)
+    analysis = _analyze_chunk_rows(rows)
     if analysis is None or not analysis["valid_triples"]:
         return None
     if not analysis["metadata"]["chunk_quality"]["is_narrative_business_prose"]:
@@ -445,9 +467,8 @@ def build_empty_example(
     instruction: str = DEFAULT_INSTRUCTION,
     min_word_count: int = 80,
     min_char_count: int = 400,
-    trusted_segments_by_filing: dict[tuple[Any, ...], set[str]] | None = None,
 ) -> dict[str, Any] | None:
-    analysis = _analyze_chunk_rows(rows, trusted_segments_by_filing=trusted_segments_by_filing)
+    analysis = _analyze_chunk_rows(rows)
     if analysis is None:
         return None
     if analysis["valid_triples"]:
@@ -556,7 +577,6 @@ def project_dataset_rows(
     instruction: str = DEFAULT_INSTRUCTION,
     limit_chunks: int | None = None,
     skip_chunks: int = 0,
-    trusted_segments_by_filing: dict[tuple[Any, ...], set[str]] | None = None,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     examples: list[dict[str, Any]] = []
     processed_chunks = 0
@@ -578,7 +598,6 @@ def project_dataset_rows(
         example = build_projection_example(
             chunk_rows,
             instruction=instruction,
-            trusted_segments_by_filing=trusted_segments_by_filing,
         )
         if example is not None:
             examples.append(example)
@@ -622,7 +641,6 @@ def sample_empty_examples(
     skip_chunks: int = 0,
     min_word_count: int = 80,
     min_char_count: int = 400,
-    trusted_segments_by_filing: dict[tuple[Any, ...], set[str]] | None = None,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     target_empty_count = max(0, int(round(positive_example_count * empty_ratio)))
     return sample_empty_examples_by_count(
@@ -635,7 +653,6 @@ def sample_empty_examples(
         skip_chunks=skip_chunks,
         min_word_count=min_word_count,
         min_char_count=min_char_count,
-        trusted_segments_by_filing=trusted_segments_by_filing,
     )
 
 
@@ -651,7 +668,6 @@ def sample_empty_examples_by_count(
     min_word_count: int = 80,
     min_char_count: int = 400,
     exclude_chunk_keys: set[str] | None = None,
-    trusted_segments_by_filing: dict[tuple[Any, ...], set[str]] | None = None,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     max_heap: list[tuple[int, dict[str, Any]]] = []
     processed_chunks = 0
@@ -671,7 +687,6 @@ def sample_empty_examples_by_count(
             instruction=instruction,
             min_word_count=min_word_count,
             min_char_count=min_char_count,
-            trusted_segments_by_filing=trusted_segments_by_filing,
         )
         if example is not None:
             chunk_key_payload = example["metadata"]["chunk_key"]

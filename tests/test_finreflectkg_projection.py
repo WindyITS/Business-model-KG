@@ -7,7 +7,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from finreflectkg_projection import (
     build_empty_example,
     build_projection_example,
-    discover_trusted_segments,
     iter_grouped_rows,
     map_row_to_triple,
     map_row_to_triples,
@@ -304,30 +303,58 @@ class FinReflectKGProjectionTests(unittest.TestCase):
             rows,
             min_word_count=10,
             min_char_count=50,
-            trusted_segments_by_filing={("vz", 2024, "verizon.pdf"): {"consumer segment"}},
         )
 
         self.assertIsNotNone(example)
         self.assertEqual(example["output"]["triples"], [])
 
-    def test_projection_uses_filing_level_trusted_segments_for_part_of(self):
-        discovery_rows = [
+    def test_projection_uses_chunk_local_trusted_segments_for_part_of(self):
+        rows = [
             {
                 "ticker": "pom",
                 "year": 2024,
                 "source_file": "pom.pdf",
                 "page_id": "1",
                 "chunk_id": "c1",
-                "chunk_text": "POM has reportable segments including Pepco Energy Service.",
+                "chunk_text": (
+                    "POM has reportable segments including Pepco Energy Service. "
+                    "Pepco Energy Service produces steam and chill water for commercial customers across the region. "
+                    * 4
+                ),
                 "entity": "POM",
                 "entity_type": "ORG",
                 "relationship": "has_reportable_segment",
                 "target": "Pepco Energy Service",
                 "target_type": "SEGMENT",
+            },
+            {
+                "ticker": "pom",
+                "year": 2024,
+                "source_file": "pom.pdf",
+                "page_id": "1",
+                "chunk_id": "c1",
+                "chunk_text": (
+                    "POM has reportable segments including Pepco Energy Service. "
+                    "Pepco Energy Service produces steam and chill water for commercial customers across the region. "
+                    * 4
+                ),
+                "entity": "Pepco Energy Service",
+                "entity_type": "SEGMENT",
+                "relationship": "produce",
+                "target": "steam and chill water",
+                "target_type": "PRODUCT",
             }
         ]
-        trusted_segments_by_filing, _ = discover_trusted_segments(discovery_rows)
 
+        example = build_projection_example(rows)
+
+        self.assertIsNotNone(example)
+        self.assertEqual(
+            {triple["relation"] for triple in example["output"]["triples"]},
+            {"HAS_SEGMENT", "OFFERS", "PART_OF"},
+        )
+
+    def test_projection_drops_segment_part_of_without_chunk_local_anchor(self):
         rows = [
             {
                 "ticker": "pom",
@@ -348,13 +375,9 @@ class FinReflectKGProjectionTests(unittest.TestCase):
             }
         ]
 
-        example = build_projection_example(rows, trusted_segments_by_filing=trusted_segments_by_filing)
+        example = build_projection_example(rows)
 
-        self.assertIsNotNone(example)
-        self.assertEqual(
-            {triple["relation"] for triple in example["output"]["triples"]},
-            {"OFFERS", "PART_OF"},
-        )
+        self.assertIsNone(example)
 
 
 if __name__ == "__main__":

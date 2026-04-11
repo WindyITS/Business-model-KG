@@ -1,6 +1,5 @@
 import argparse
 import json
-import math
 import sys
 from pathlib import Path
 
@@ -13,7 +12,6 @@ if str(SRC_DIR) not in sys.path:
 
 from batch_repair import build_repair_plan, collect_window_chunk_key_texts, example_chunk_key_text
 from finreflectkg_projection import (
-    discover_trusted_segments,
     load_finreflectkg_rows,
     load_jsonl_records,
     project_dataset_rows,
@@ -156,22 +154,14 @@ def main() -> int:
         skip_chunks=skip_chunks,
     )
 
-    discovery_rows = load_rows()
-    trusted_segments_by_filing, trusted_segment_report = discover_trusted_segments(
-        discovery_rows,
-        limit_chunks=args.chunks_per_batch,
-        skip_chunks=skip_chunks,
-    )
-
     stage1_rows = load_rows()
     repaired_projected_examples, stage1_report = project_dataset_rows(
         stage1_rows,
         limit_chunks=args.chunks_per_batch,
         skip_chunks=skip_chunks,
-        trusted_segments_by_filing=trusted_segments_by_filing,
     )
     repaired_projected_examples = sort_examples(repaired_projected_examples)
-    stage1_report["trusted_segment_discovery"] = trusted_segment_report
+    stage1_report["segment_grounding_mode"] = "chunk_local"
     write_jsonl(stage1_dir / "projected_examples.jsonl", repaired_projected_examples)
     (stage1_dir / "projection_report.json").write_text(
         json.dumps(stage1_report, indent=2, ensure_ascii=False),
@@ -185,14 +175,13 @@ def main() -> int:
         empty_ratio=args.empty_ratio,
         limit_chunks=args.chunks_per_batch,
         skip_chunks=skip_chunks,
-        trusted_segments_by_filing=trusted_segments_by_filing,
     )
     repaired_empty_examples = sort_examples(repaired_empty_examples)
     write_jsonl(stage2_dir / "empty_examples.jsonl", repaired_empty_examples)
     write_jsonl(stage2_dir / "training_examples.jsonl", repaired_projected_examples + repaired_empty_examples)
     stage2_report_payload = {
         "source_dataset": "domyn/FinReflectKG",
-        "trusted_segment_discovery": trusted_segment_report,
+        "segment_grounding_mode": "chunk_local",
         "positive_example_count": len(repaired_projected_examples),
         **stage2_report,
         "merged_example_count": len(repaired_projected_examples) + len(repaired_empty_examples),
@@ -232,7 +221,7 @@ def main() -> int:
         "output_root": str(output_root),
         "chunks_per_batch": args.chunks_per_batch,
         "skip_chunks": skip_chunks,
-        "trusted_segment_discovery": trusted_segment_report,
+        "segment_grounding_mode": "chunk_local",
         **repair_plan["report"],
     }
     (stage3_dir / "repair_plan.json").write_text(
@@ -272,22 +261,14 @@ def main() -> int:
             continue
         augmented_positive_examples.append(augmented_example)
 
-    # Run teacher on new empty candidates until we reach the target empty count.
-    # Legacy verified empties are carried forward as-is and count toward the target.
-    target_empty_count = math.ceil(len(repaired_projected_examples) * args.empty_ratio / (1 - args.empty_ratio))
-    verified_empty_count = len(reused_verified_empty_examples)
     new_augmented_empty_candidates = []
     for example in tqdm(new_empty_candidates_to_run, desc="Verify new empties", unit="example"):
-        if verified_empty_count >= target_empty_count:
-            break
         augmented_example, call_log = augmentor.augment_example(example, relations=STAGE3_RELATIONS, max_retries=args.max_retries)
         record_teacher_log_or_raise(call_log, teacher_logs, teacher_log_path)
         if call_log.get("token_limit_exceeded"):
             token_limit_exceeded_count += 1
             continue
         new_augmented_empty_candidates.append(augmented_example)
-        if not augmented_example.get("output", {}).get("triples"):
-            verified_empty_count += 1
 
     # Combine reused verified empties with newly verified candidates for finalization.
     initial_augmented_empty_candidates = reused_verified_empty_examples + new_augmented_empty_candidates
@@ -322,8 +303,6 @@ def main() -> int:
             max_retries=args.max_retries,
             refill_pool_multiplier=2.0,
             max_refill_rounds=5,
-            trusted_segments_by_filing=trusted_segments_by_filing,
-            trusted_segment_report=trusted_segment_report,
         )
     teacher_logs.extend(refill_logs)
     write_jsonl(teacher_log_path, teacher_logs)
@@ -345,7 +324,7 @@ def main() -> int:
         "source_batch_dir": str(source_batch_dir),
         "output_root": str(output_root),
         "repair_mode": "legacy-verified-empty-union",
-        "trusted_segment_discovery": trusted_segment_report,
+        "segment_grounding_mode": "chunk_local",
         "repair_plan": repair_plan["report"],
         "token_limit_exceeded_count": token_limit_exceeded_count,
         **final_report,

@@ -10,7 +10,6 @@ if str(SRC_DIR) not in sys.path:
 
 from finreflectkg_projection import (
     load_finreflectkg_rows,
-    load_trusted_segments_for_dataset,
     project_dataset_rows,
     write_jsonl,
 )
@@ -50,14 +49,6 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    trusted_segments_by_filing, trusted_segment_report = load_trusted_segments_for_dataset(
-        hf_dataset=None if args.parquet_file else args.hf_dataset,
-        split=args.split,
-        cache_dir=args.cache_dir,
-        parquet_files=args.parquet_file or None,
-        streaming=not args.no_streaming,
-        limit_rows=args.limit_rows,
-    )
     rows = load_finreflectkg_rows(
         hf_dataset=None if args.parquet_file else args.hf_dataset,
         split=args.split,
@@ -70,9 +61,7 @@ def main() -> int:
         rows,
         limit_chunks=args.limit_chunks,
         skip_chunks=args.skip_chunks,
-        trusted_segments_by_filing=trusted_segments_by_filing,
     )
-    report["trusted_segment_discovery"] = trusted_segment_report
 
     output_jsonl = Path(args.output_jsonl)
     report_path = Path(args.report_path)

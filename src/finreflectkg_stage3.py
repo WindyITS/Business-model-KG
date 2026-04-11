@@ -17,7 +17,6 @@ from finreflectkg_projection import (
     build_empty_example,
     iter_grouped_rows,
     load_finreflectkg_rows,
-    load_trusted_segments_for_dataset,
     sample_empty_examples_by_count,
 )
 from stage3_prompt_profiles import DEFAULT_PROMPT_PROFILE, get_prompt_profile
@@ -1171,18 +1170,7 @@ def build_additional_empty_pool(
     exclude_chunk_key_texts: set[str],
     min_word_count: int,
     min_char_count: int,
-    trusted_segments_by_filing: dict[tuple[Any, ...], set[str]] | None = None,
-    trusted_segment_report: dict[str, Any] | None = None,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
-    if trusted_segments_by_filing is None or trusted_segment_report is None:
-        trusted_segments_by_filing, trusted_segment_report = load_trusted_segments_for_dataset(
-            hf_dataset=hf_dataset,
-            split=split,
-            cache_dir=cache_dir,
-            parquet_files=parquet_files,
-            streaming=streaming,
-            limit_rows=limit_rows,
-        )
     rows = load_finreflectkg_rows(
         hf_dataset=hf_dataset,
         split=split,
@@ -1201,9 +1189,7 @@ def build_additional_empty_pool(
         min_word_count=min_word_count,
         min_char_count=min_char_count,
         exclude_chunk_keys=exclude_chunk_key_texts,
-        trusted_segments_by_filing=trusted_segments_by_filing,
     )
-    report["trusted_segment_discovery"] = trusted_segment_report
     return examples, report
 
 
@@ -1227,15 +1213,11 @@ def refill_and_finalize_stage3_dataset(
     max_retries: int,
     refill_pool_multiplier: float,
     max_refill_rounds: int,
-    trusted_segments_by_filing: dict[tuple[Any, ...], set[str]] | None = None,
-    trusted_segment_report: dict[str, Any] | None = None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]], dict[str, Any], list[dict[str, Any]]]:
     all_augmented_empty_candidates = list(initial_augmented_empty_candidates)
     relation_trigger_candidates = augmented_relation_trigger_candidates or []
     refill_reports: list[dict[str, Any]] = []
     refill_logs: list[dict[str, Any]] = []
-    trusted_segments_cache = trusted_segments_by_filing
-    trusted_segment_report_cache = trusted_segment_report
 
     final_positive_examples, selected_empty_examples, training_examples, report = finalize_stage3_dataset(
         augmented_positive_examples,
@@ -1257,16 +1239,6 @@ def refill_and_finalize_stage3_dataset(
         if candidate_target_count <= 0:
             break
 
-        if trusted_segments_cache is None or trusted_segment_report_cache is None:
-            trusted_segments_cache, trusted_segment_report_cache = load_trusted_segments_for_dataset(
-                hf_dataset=hf_dataset,
-                split=split,
-                cache_dir=cache_dir,
-                parquet_files=parquet_files,
-                streaming=streaming,
-                limit_rows=limit_rows,
-            )
-
         new_candidates, pool_report = build_additional_empty_pool(
             hf_dataset=hf_dataset,
             split=split,
@@ -1280,8 +1252,6 @@ def refill_and_finalize_stage3_dataset(
             exclude_chunk_key_texts=exclude_chunk_key_texts,
             min_word_count=min_word_count,
             min_char_count=min_char_count,
-            trusted_segments_by_filing=trusted_segments_cache,
-            trusted_segment_report=trusted_segment_report_cache,
         )
         if not new_candidates:
             refill_reports.append(
