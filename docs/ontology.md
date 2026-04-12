@@ -1,196 +1,265 @@
 # Business Model Ontology
 
-This ontology defines what the knowledge graph can contain. It is intentionally strict: the goal is a graph that is standardized across companies, useful for comparison across filings, compact enough for reliable extraction, and clean enough for supervised fine-tuning. It does not try to capture every financial fact in a 10-K but instead it captures the **business-model structure**: what a company offers, who it serves, how it sells, how it monetizes, how offerings relate to segments, and which companies it partners with.
+Final segment-centered ontology used by the canonical extraction pipeline.
 
-## Current Review Focus
+This version prioritizes:
+- canonical structure
+- higher standardization across companies
+- conservative extraction from sparse 10-K text
+- downstream recovery of convenience rollups in Neo4j rather than during extraction
 
-As of April 2026, ontology review is the active workstream for the project. The current ontology is usable, but it is still being reviewed before benchmark freeze and fine-tuning.
+## Design Principles
 
-The main review questions are:
+### 1. Scope-first modeling
 
-1. **Hierarchy and redundancy**
-   - When do we want `Company -> OFFERS -> Offering` in addition to `BusinessSegment -> OFFERS -> Offering` and `Offering -> PART_OF -> BusinessSegment`?
-   - When should company-level semantic facts be kept versus replaced by more specific segment-level or offering-level facts?
-2. **Relation coverage**
-   - Are the current eight relations sufficient for the business-model questions we care about?
-   - Are there missing relations we should add before freezing the ontology?
-3. **Relation strictness**
-   - Are some subject/object pairings too permissive?
-   - Are some current relations semantically too broad, especially `PARTNERS_WITH` and `OPERATES_IN`?
+The graph is organized around three scopes:
+- `Company`: the corporate shell
+- `BusinessSegment`: the primary semantic anchor
+- `Offering`: the inventory layer
 
-Until that review is complete, this document should be treated as the current working ontology, not yet the final frozen one.
+### 2. Canonical extraction over convenience duplication
 
-## Triple Shape
+The extractor should emit only canonical facts that are justified directly by the filing.
 
-Every fact in the graph is a triple:
+Do not:
+- duplicate facts upward automatically
+- push segment facts down to offerings automatically
+- materialize inherited convenience triples during extraction
 
-```
-(subject, subject_type, relation, object, object_type)
-```
+Those behaviors belong in downstream Neo4j querying.
 
-All five fields must be valid. Subject and object types must be allowed node types. The relation must be allowed for that subject-type → object-type pair. Canonical labels must be used for `CustomerType`, `Channel`, and `RevenueModel`.
+### 3. Sparse-text honesty
+
+If the filing only states a fact at a broad level, do not force a more granular triple just to make the graph denser.
+
+### 4. Closed-label discipline
+
+`CustomerType`, `Channel`, and `RevenueModel` are closed canonical vocabularies.
+
+If a phrase does not map clearly to one canonical label, omit it.
 
 ## Node Types
 
 ### `Company`
 
-A legally distinct commercial organization: the reporting company itself or any named external company (partner, customer, subsidiary, competitor) when it appears as a company in the described relationship.
-
-**Not for:** internal business units (`BusinessSegment`), named products or platforms (`Offering`), government bodies, people, or metrics.
+A legally distinct commercial organization referenced in the filing, including the reporting company itself and named external companies such as partners, distributors, resellers, competitors, subsidiaries, or marketplace operators when they act as companies.
 
 ### `BusinessSegment`
 
-A formally named internal segment, division, or reporting unit used by the company to organize operations or external reporting.
-
-**Not for:** the company as a whole, general themes or market categories, informal groupings.
+A formally named internal business segment, reporting segment, division, or line of business. In this ontology variant, `BusinessSegment` is the primary semantic anchor for business-model logic.
 
 ### `Offering`
 
-A specific named product, service, platform, application, brand, subscription, or solution the company provides commercially.
-
-**Not for:** generic categories like "software" or "cloud services", internal business units, markets, or customer groups.
+A specific named product, service, platform, application, subscription, brand, solution, or explicitly named product family offered commercially. Offerings are usually inventory leaves, but an offering may also act as an umbrella for other offerings when the filing explicitly states that hierarchy.
 
 ### `CustomerType`
 
-A standardized category for the kind of customer the company or offering serves. **Must use only the canonical labels defined below.**
+A standardized category representing the kind of customer or user targeted by a business segment.
 
 ### `Channel`
 
-A standardized category for how the company or offering reaches customers. **Must use only the canonical labels defined below.**
+A standardized category representing how a business segment or offering reaches customers commercially.
 
 ### `Place`
 
-A named geographic location or market area where the company or a segment operates.
-
-**Not for:** jurisdictions mentioned only in legal boilerplate, customer segments with geographic adjectives, individual facilities.
+A normalized business-relevant geography in which the company operates, conducts business, or has meaningful market presence.
 
 ### `RevenueModel`
 
-A standardized category for how the company, segment, or offering earns revenue. **Must use only the canonical labels defined below.**
-
----
+A standardized category representing how an offering earns revenue.
 
 ## Relations
 
-### `HAS_SEGMENT` - `Company` → `BusinessSegment`
+### `HAS_SEGMENT`
 
-The company has, includes, or reports through this segment.
+`Company -> BusinessSegment`
 
-### `OFFERS` - `Company` or `BusinessSegment` → `Offering`
+Links a company to a formally named internal business segment that is part of the company’s organizational or reporting structure.
 
-The company or segment provides this offering commercially.
+### `OFFERS`
 
-### `PART_OF` - `Offering` → `BusinessSegment`
+`Company -> Offering | BusinessSegment -> Offering | Offering -> Offering`
 
-This offering belongs to, is managed by, or is reported within this segment.
+Links:
+- a business segment to its offerings
+- a fallback company subject to an offering when no segment anchor exists
+- an explicit umbrella offering to a child offering when the filing directly states that family relationship
 
-### `SERVES` - `Company` or `Offering` → `CustomerType`
+Rules:
+- `BusinessSegment -> OFFERS -> Offering` is primary
+- `Company -> OFFERS -> Offering` is fallback only when no segment anchor exists or the offering is presented as universal
+- `Offering -> OFFERS -> Offering` is allowed only when the filing explicitly states the umbrella / family / suite / parent relationship
+- a child `Offering` may have at most one offering parent
 
-The company or offering targets or serves this canonical customer category. Prefer `Offering → CustomerType` when the customer group is tied to a specific offering.
+### `SERVES`
 
-### `OPERATES_IN` - `Company` or `BusinessSegment` → `Place`
+`BusinessSegment -> CustomerType`
 
-The company or segment has operational presence, sales activity, or meaningful market activity in this place.
+Links a business segment to a canonical customer category that it targets, supports, or serves commercially.
 
-### `SELLS_THROUGH` - `Company` or `Offering` → `Channel`
+Rules:
+- `SERVES` is canonical only at `BusinessSegment` scope
+- if a customer type is universal across the company, attach it to each reported `BusinessSegment` rather than to `Company`
+- do not attach `SERVES` to `Offering`
 
-The company or offering reaches customers via this canonical sales or distribution channel. Prefer `Offering → Channel` when the channel is clearly tied to a specific offering.
+### `OPERATES_IN`
 
-### `PARTNERS_WITH` - `Company` → `Company`
+`Company -> Place`
 
-The company has a named strategic, commercial, distribution, technology, or go-to-market partnership with this company. Not for incidental mentions or relationships that are not framed as partnerships.
+Links a company to a normalized, business-relevant geography in which it operates, conducts business, or has meaningful market presence.
 
-### `MONETIZES_VIA` - `Company`, `BusinessSegment`, or `Offering` → `RevenueModel`
+Rules:
+- strictly company-level
+- do not attach to `BusinessSegment` or `Offering`
 
-The company, segment, or offering earns revenue through this canonical monetization model. Prefer the most specific level supported by the text.
+### `SELLS_THROUGH`
 
----
+`BusinessSegment -> Channel | Offering -> Channel`
+
+Links a business segment or, only when no segment anchor exists, an offering to a canonical sales or distribution channel through which it reaches customers.
+
+Rules:
+- `BusinessSegment` is the primary anchor
+- `Offering` is a fallback only for offerings without a business segment
+- `Company` is not a valid subject
+- if the filing states a channel universally across a company that has reported segments, attach that channel to each reported `BusinessSegment`
+
+### `PARTNERS_WITH`
+
+`Company -> Company`
+
+Links a company to another company with which it has a named strategic, commercial, distribution, technology, integration, or go-to-market partnership.
+
+Rules:
+- strictly company-level
+- excludes incidental mentions and ordinary supplier or customer relationships
+
+### `MONETIZES_VIA`
+
+`Offering -> RevenueModel`
+
+Links an offering to the canonical revenue model through which it earns money.
+
+Rules:
+- `MONETIZES_VIA` is canonical only at `Offering` scope
+- do not attach directly to `BusinessSegment` or `Company`
+- if an offering family hierarchy exists, attach `MONETIZES_VIA` to the family parent rather than to its child offerings
+- if the filing states monetization broadly at segment level, do not force a segment-level triple; recover rollups downstream from offering-level facts
 
 ## Relation Validity Matrix
 
-| Relation          | Subject types                                  | Object type         |
-| ----------------- | ---------------------------------------------- | ------------------- |
-| `HAS_SEGMENT`   | `Company`                                    | `BusinessSegment` |
-| `OFFERS`        | `Company`, `BusinessSegment`               | `Offering`        |
-| `PART_OF`       | `Offering`                                   | `BusinessSegment` |
-| `SERVES`        | `Company`, `Offering`                      | `CustomerType`    |
-| `OPERATES_IN`   | `Company`, `BusinessSegment`               | `Place`           |
-| `SELLS_THROUGH` | `Company`, `Offering`                      | `Channel`         |
-| `PARTNERS_WITH` | `Company`                                    | `Company`         |
-| `MONETIZES_VIA` | `Company`, `BusinessSegment`, `Offering` | `RevenueModel`    |
+| Relation | Subject types | Object type |
+| --- | --- | --- |
+| `HAS_SEGMENT` | `Company` | `BusinessSegment` |
+| `OFFERS` | `Company`, `BusinessSegment`, `Offering` | `Offering` |
+| `SERVES` | `BusinessSegment` | `CustomerType` |
+| `OPERATES_IN` | `Company` | `Place` |
+| `SELLS_THROUGH` | `BusinessSegment`, `Offering` | `Channel` |
+| `PARTNERS_WITH` | `Company` | `Company` |
+| `MONETIZES_VIA` | `Offering` | `RevenueModel` |
 
-### Review Notes On Validity
-
-These pairings are currently allowed, but some of them are under active review:
-
-- whether `Company -> OFFERS -> Offering` should always coexist with `BusinessSegment -> OFFERS -> Offering`
-- whether company-level `SERVES`, `SELLS_THROUGH`, and `MONETIZES_VIA` are sometimes too coarse when a more specific offering-level fact is available
-- whether broad macro-regions should remain valid `Place` nodes for `OPERATES_IN`
-
----
-
-## Canonical Vocabularies
-
-These are closed. No new labels are allowed. If a concept doesn't map cleanly, omit it.
+## Canonical Label Definitions
 
 ### `CustomerType`
 
-| Label                        | Who it covers                                                        |
-| ---------------------------- | -------------------------------------------------------------------- |
-| `consumers`                | Individual end users buying for personal or household use            |
-| `small businesses`         | Clearly described as small business, SMB, or equivalent              |
-| `mid-market companies`     | Mid-market or midsize, explicitly signaled — not generic businesses |
-| `large enterprises`        | Enterprise-scale, large account, or global enterprise                |
-| `developers`               | Software builders creating or deploying applications on a platform   |
-| `IT professionals`         | Admins, infrastructure teams, security teams, operations staff       |
-| `government agencies`      | Federal, state, local, or supranational governmental bodies          |
-| `educational institutions` | Schools, colleges, universities, and comparable educational bodies   |
-| `healthcare organizations` | Hospitals, clinics, health systems delivering or administering care  |
-| `financial services firms` | Banks, insurers, asset managers, payment processors, and similar     |
-| `manufacturers`            | Businesses transforming materials into physical products             |
-| `retailers`                | Businesses selling goods in small quantities to end customers        |
+- `consumers`: Individual end users buying or using a product or service for personal, household, or non-business use.
+- `small businesses`: Commercial organizations clearly described as small business, SMB, or an equivalent small-scale business segment.
+- `mid-market companies`: Commercial organizations explicitly described as mid-market, midsize, or an equivalent segment between SMB and enterprise scale.
+- `large enterprises`: Large organizations with enterprise-scale procurement, operations, compliance, or IT needs.
+- `developers`: Software builders who create, test, extend, integrate, or deploy applications, code, or technical solutions.
+- `IT professionals`: Technical staff primarily responsible for operating, administering, securing, supporting, or governing information systems and infrastructure.
+- `government agencies`: Public-sector bodies with governmental authority or administrative responsibility at federal, state, regional, local, or supranational level.
+- `educational institutions`: Organizations whose primary function is formal instruction, training, or education, including schools, colleges, and universities.
+- `healthcare organizations`: Organizations whose primary function is delivering, administering, financing, or coordinating health care services.
+- `financial services firms`: Organizations primarily engaged in financial transactions, intermediation, insurance, investment, payments, lending, brokerage, or related financial services.
+- `manufacturers`: Businesses primarily engaged in transforming materials, components, or substances into physical products.
+- `retailers`: Businesses primarily engaged in selling goods in relatively small quantities to end customers through physical or digital retail operations.
 
 ### `Channel`
 
-| Label                         | What it covers                                                           |
-| ----------------------------- | ------------------------------------------------------------------------ |
-| `direct sales`              | Company's own sales force or account teams selling directly to customers |
-| `online`                    | Company's own website, app, or self-service digital storefront           |
-| `retail`                    | Physical retail stores or consumer-facing store locations                |
-| `distributors`              | Intermediaries buying and supplying products for onward resale           |
-| `resellers`                 | Third parties reselling the company's products to end customers          |
-| `OEMs`                      | Manufacturers embedding or bundling the offering in their own hardware   |
-| `system integrators`        | Partners combining or implementing multiple technologies for customers   |
-| `managed service providers` | Third parties operating or administering solutions for customers         |
-| `marketplaces`              | Third-party digital platforms through which customers transact           |
+- `direct sales`: Sales where the company sells directly to the end customer through its own sales force, account teams, or direct contracting process.
+- `online`: Sales transacted through the company's own website, app, digital storefront, or self-service online purchasing experience.
+- `retail`: Sales through physical retail stores or store-like consumer-facing locations that sell directly to end customers.
+- `distributors`: Intermediaries that purchase, hold, allocate, or supply products for onward sale through other partners rather than primarily selling to end customers themselves.
+- `resellers`: Third parties that resell the company's products or services to end customers without being the original manufacturer or the primary long-term operator of the solution.
+- `OEMs`: Original equipment manufacturers that embed, bundle, preinstall, or incorporate the company's offering into their own hardware or integrated systems before sale.
+- `system integrators`: Partners whose primary role is combining, customizing, implementing, or integrating multiple technologies into a customer-specific solution.
+- `managed service providers`: Third parties that operate, administer, monitor, maintain, or support technology solutions for customers on an ongoing service basis.
+- `marketplaces`: Third-party digital platforms through which customers discover, procure, subscribe to, or transact for products or services.
 
 ### `RevenueModel`
 
-| Label                 | What it covers                                                               |
-| --------------------- | ---------------------------------------------------------------------------- |
-| `subscription`      | Recurring payments for ongoing access — monthly, annual, or term-based      |
-| `advertising`       | Selling ad inventory, placements, or audience access to advertisers          |
-| `licensing`         | Granting rights to use software, IP, content, or trademarks                  |
-| `consumption-based` | Pay-as-you-go or metered usage billing                                       |
-| `hardware sales`    | Selling physical devices, equipment, or components                           |
-| `service fees`      | Implementation, consulting, support, maintenance, or managed services        |
-| `royalties`         | Recurring payments from another party's authorized use of IP                 |
-| `transaction fees`  | Per-transaction charges for payments, trades, or platform-mediated exchanges |
+- `subscription`: Revenue earned from recurring payments for ongoing access to a product or service over time.
+- `advertising`: Revenue earned by selling advertising inventory, sponsored visibility, promotional placement, or audience access to third-party advertisers.
+- `licensing`: Revenue earned by granting another party the right to use software, technology, content, trademarks, patents, or other protected assets without transferring ownership.
+- `consumption-based`: Revenue earned according to measured customer usage, volume, metering, or pay-as-you-go consumption rather than a fixed recurring amount alone.
+- `hardware sales`: Revenue earned from selling physical devices, equipment, components, appliances, or other tangible hardware products.
+- `service fees`: Revenue earned from performing services for customers, such as implementation, consulting, support, maintenance, training, professional services, or managed services.
+- `royalties`: Revenue earned as recurring or usage-linked payments from another party's authorized use of the company's intellectual property, content, brand, or technology.
+- `transaction fees`: Revenue earned by charging a fee each time a payment, trade, booking, exchange, or other platform-mediated transaction is processed or facilitated.
 
----
+## `Place` Constraints
 
-## Extraction Rules
+`OPERATES_IN` is limited to:
+- sovereign countries
+- U.S. states
+- `District of Columbia`
+- approved macro-regions
 
-- Use exact company, segment, offering, and place names from the text.
-- Use only canonical labels for `CustomerType`, `Channel`, and `RevenueModel`.
-- Do not create a triple unless the relation is clearly supported by the text.
-- If the text contains nothing relevant to this ontology, return an empty list.
-- If a fact doesn't fit cleanly, omit it -> precision over recall.
+Approved macro-regions:
+- `Africa`
+- `APAC`
+- `Americas`
+- `Asia`
+- `Asia Pacific`
+- `Caribbean`
+- `Central America`
+- `EMEA`
+- `Eastern Europe`
+- `Europe`
+- `European Union`
+- `Latin America`
+- `Middle East`
+- `North America`
+- `South America`
+- `Southeast Asia`
+- `Western Europe`
 
-**Out of scope** (do not extract unless required as context for a valid triple): people, regulations, risk factors, ESG topics, financial metrics, stock movements, litigation, macroeconomic concepts.
+Normalization examples:
+- `U.S.`, `USA` -> `United States`
+- `U.K.`, `UK` -> `United Kingdom`
+- `asia-pacific` -> `Asia Pacific`
+- `emea` -> `EMEA`
 
----
+Do not use:
+- cities
+- office sites
+- vague global placeholders
+- synthetic geography strings
 
-## Implementation
+## Canonical Extraction Rules
 
-The ontology is encoded as structured config in [`configs/ontology.json`](../configs/ontology.json) and enforced by the validator in [`src/ontology_validator.py`](../src/ontology_validator.py).
+### Rule 1: Segment-anchored offerings first
+
+If an offering is clearly tied to a segment, emit `BusinessSegment -> OFFERS -> Offering`.
+
+Do not automatically emit `Company -> OFFERS -> Offering`.
+
+### Rule 2: Family hierarchies are explicit, not inferred
+
+Use `Offering -> OFFERS -> Offering` only when the filing explicitly states that hierarchy.
+
+An umbrella offering does not replace its explicit named child offerings.
+
+### Rule 3: No derivation during extraction
+
+Do not derive:
+- company-level facts from segment or offering facts
+- offering-level facts from segment facts
+- inherited convenience triples for analytics
+
+### Rule 4: Precision over recall
+
+If a fact is ambiguous, omit it.
+
+The ontology is designed so downstream Neo4j traversal can recover convenience rollups later.

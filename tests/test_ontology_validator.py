@@ -24,8 +24,8 @@ class OntologyValidatorTests(unittest.TestCase):
 
     def test_rejects_non_canonical_customer_type(self):
         triple = {
-            "subject": "Azure",
-            "subject_type": "Offering",
+            "subject": "Intelligent Cloud",
+            "subject_type": "BusinessSegment",
             "relation": "SERVES",
             "object": "enterprise customers",
             "object_type": "CustomerType",
@@ -50,7 +50,7 @@ class OntologyValidatorTests(unittest.TestCase):
         self.assertFalse(result["is_valid"])
         self.assertTrue(any(issue["code"] == "invalid_relation_schema" for issue in result["issues"]))
 
-    def test_v2_accepts_business_segment_serves_relation(self):
+    def test_accepts_business_segment_serves_relation(self):
         triple = {
             "subject": "Intelligent Cloud",
             "subject_type": "BusinessSegment",
@@ -59,38 +59,11 @@ class OntologyValidatorTests(unittest.TestCase):
             "object_type": "CustomerType",
         }
 
-        result = validate_triple(triple, ontology_version="v2")
+        result = validate_triple(triple)
 
         self.assertTrue(result["is_valid"])
 
-    def test_v2_segment_serves_accepts_business_segment_serves_relation(self):
-        triple = {
-            "subject": "Intelligent Cloud",
-            "subject_type": "BusinessSegment",
-            "relation": "SERVES",
-            "object": "large enterprises",
-            "object_type": "CustomerType",
-        }
-
-        result = validate_triple(triple, ontology_version="v2_segment_serves")
-
-        self.assertTrue(result["is_valid"])
-
-    def test_v1_rejects_business_segment_serves_relation(self):
-        triple = {
-            "subject": "Intelligent Cloud",
-            "subject_type": "BusinessSegment",
-            "relation": "SERVES",
-            "object": "large enterprises",
-            "object_type": "CustomerType",
-        }
-
-        result = validate_triple(triple, ontology_version="v1")
-
-        self.assertFalse(result["is_valid"])
-        self.assertTrue(any(issue["code"] == "invalid_relation_schema" for issue in result["issues"]))
-
-    def test_v2_segment_serves_rejects_offering_serves_relation(self):
+    def test_rejects_offering_serves_relation(self):
         triple = {
             "subject": "Azure",
             "subject_type": "Offering",
@@ -99,12 +72,12 @@ class OntologyValidatorTests(unittest.TestCase):
             "object_type": "CustomerType",
         }
 
-        result = validate_triple(triple, ontology_version="v2_segment_serves")
+        result = validate_triple(triple)
 
         self.assertFalse(result["is_valid"])
         self.assertTrue(any(issue["code"] == "invalid_relation_schema" for issue in result["issues"]))
 
-    def test_v2_segment_serves_rejects_company_serves_relation(self):
+    def test_rejects_company_serves_relation(self):
         triple = {
             "subject": "Microsoft",
             "subject_type": "Company",
@@ -113,12 +86,12 @@ class OntologyValidatorTests(unittest.TestCase):
             "object_type": "CustomerType",
         }
 
-        result = validate_triple(triple, ontology_version="v2_segment_serves")
+        result = validate_triple(triple)
 
         self.assertFalse(result["is_valid"])
         self.assertTrue(any(issue["code"] == "invalid_relation_schema" for issue in result["issues"]))
 
-    def test_v2_segment_serves_rejects_company_sells_through_relation(self):
+    def test_rejects_company_sells_through_relation(self):
         triple = {
             "subject": "Microsoft",
             "subject_type": "Company",
@@ -127,12 +100,12 @@ class OntologyValidatorTests(unittest.TestCase):
             "object_type": "Channel",
         }
 
-        result = validate_triple(triple, ontology_version="v2_segment_serves")
+        result = validate_triple(triple)
 
         self.assertFalse(result["is_valid"])
         self.assertTrue(any(issue["code"] == "invalid_relation_schema" for issue in result["issues"]))
 
-    def test_v2_segment_serves_rejects_business_segment_monetizes_via_relation(self):
+    def test_rejects_business_segment_monetizes_via_relation(self):
         triple = {
             "subject": "Intelligent Cloud",
             "subject_type": "BusinessSegment",
@@ -141,26 +114,12 @@ class OntologyValidatorTests(unittest.TestCase):
             "object_type": "RevenueModel",
         }
 
-        result = validate_triple(triple, ontology_version="v2_segment_serves")
+        result = validate_triple(triple)
 
         self.assertFalse(result["is_valid"])
         self.assertTrue(any(issue["code"] == "invalid_relation_schema" for issue in result["issues"]))
 
-    def test_v2_segment_serves_rejects_company_monetizes_via_relation(self):
-        triple = {
-            "subject": "Microsoft",
-            "subject_type": "Company",
-            "relation": "MONETIZES_VIA",
-            "object": "subscription",
-            "object_type": "RevenueModel",
-        }
-
-        result = validate_triple(triple, ontology_version="v2_segment_serves")
-
-        self.assertFalse(result["is_valid"])
-        self.assertTrue(any(issue["code"] == "invalid_relation_schema" for issue in result["issues"]))
-
-    def test_v2_segment_serves_accepts_offering_monetizes_via_relation(self):
+    def test_accepts_offering_monetizes_via_relation(self):
         triple = {
             "subject": "Azure",
             "subject_type": "Offering",
@@ -169,11 +128,11 @@ class OntologyValidatorTests(unittest.TestCase):
             "object_type": "RevenueModel",
         }
 
-        result = validate_triple(triple, ontology_version="v2_segment_serves")
+        result = validate_triple(triple)
 
         self.assertTrue(result["is_valid"])
 
-    def test_v2_segment_serves_rejects_child_offering_monetizes_via_relation(self):
+    def test_rejects_child_offering_monetizes_via_relation(self):
         triples = [
             {
                 "subject": "Microsoft 365 Commercial",
@@ -191,7 +150,7 @@ class OntologyValidatorTests(unittest.TestCase):
             },
         ]
 
-        report = validate_triples(triples, ontology_version="v2_segment_serves")
+        report = validate_triples(triples)
 
         self.assertEqual(report["summary"]["valid_triple_count"], 1)
         self.assertEqual(report["summary"]["invalid_triple_count"], 1)
@@ -203,7 +162,7 @@ class OntologyValidatorTests(unittest.TestCase):
             )
         )
 
-    def test_v2_segment_serves_rejects_segment_anchored_offering_sells_through_relation(self):
+    def test_rejects_segment_anchored_offering_sells_through_relation(self):
         triples = [
             {
                 "subject": "Intelligent Cloud",
@@ -221,7 +180,7 @@ class OntologyValidatorTests(unittest.TestCase):
             },
         ]
 
-        report = validate_triples(triples, ontology_version="v2_segment_serves")
+        report = validate_triples(triples)
 
         self.assertEqual(report["summary"]["valid_triple_count"], 1)
         self.assertEqual(report["summary"]["invalid_triple_count"], 1)
@@ -232,47 +191,6 @@ class OntologyValidatorTests(unittest.TestCase):
                 for issue in invalid["issues"]
             )
         )
-
-    def test_v2_rejects_business_segment_operates_in_relation(self):
-        triple = {
-            "subject": "Intelligent Cloud",
-            "subject_type": "BusinessSegment",
-            "relation": "OPERATES_IN",
-            "object": "United States",
-            "object_type": "Place",
-        }
-
-        result = validate_triple(triple, ontology_version="v2")
-
-        self.assertFalse(result["is_valid"])
-        self.assertTrue(any(issue["code"] == "invalid_relation_schema" for issue in result["issues"]))
-
-    def test_v2_accepts_explicit_offering_family_relation(self):
-        triple = {
-            "subject": "Windows",
-            "subject_type": "Offering",
-            "relation": "OFFERS",
-            "object": "Windows 11",
-            "object_type": "Offering",
-        }
-
-        result = validate_triple(triple, ontology_version="v2")
-
-        self.assertTrue(result["is_valid"])
-
-    def test_v2_rejects_part_of_relation(self):
-        triple = {
-            "subject": "Azure",
-            "subject_type": "Offering",
-            "relation": "PART_OF",
-            "object": "Intelligent Cloud",
-            "object_type": "BusinessSegment",
-        }
-
-        result = validate_triple(triple, ontology_version="v2")
-
-        self.assertFalse(result["is_valid"])
-        self.assertTrue(any(issue["code"] == "invalid_relation" for issue in result["issues"]))
 
     def test_deduplicates_valid_payload(self):
         payload = {
@@ -299,7 +217,7 @@ class OntologyValidatorTests(unittest.TestCase):
         self.assertEqual(report["summary"]["valid_triple_count"], 1)
         self.assertEqual(report["summary"]["duplicate_triple_count"], 1)
 
-    def test_v2_segment_serves_rejects_multiple_offering_parents(self):
+    def test_rejects_multiple_offering_parents(self):
         triples = [
             {
                 "subject": "Microsoft 365 Commercial products and cloud services",
@@ -317,7 +235,7 @@ class OntologyValidatorTests(unittest.TestCase):
             },
         ]
 
-        report = validate_triples(triples, ontology_version="v2_segment_serves")
+        report = validate_triples(triples)
 
         self.assertEqual(report["summary"]["valid_triple_count"], 1)
         self.assertEqual(report["summary"]["invalid_triple_count"], 1)

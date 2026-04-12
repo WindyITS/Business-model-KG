@@ -65,7 +65,7 @@ def validate_triple(
     triple: dict[str, Any],
     source_text: str | None = None,
     require_text_grounding: bool = False,
-    ontology_version: str = "v1",
+    ontology_version: str = "canonical",
 ) -> dict[str, Any]:
     issues: list[dict[str, str]] = []
     normalized = {
@@ -144,7 +144,7 @@ def validate_triples(
     source_text: str | None = None,
     require_text_grounding: bool = False,
     dedupe: bool = True,
-    ontology_version: str = "v1",
+    ontology_version: str = "canonical",
 ) -> dict[str, Any]:
     provisional_valid_records: list[dict[str, Any]] = []
     invalid_triples: list[dict[str, Any]] = []
@@ -190,8 +190,7 @@ def validate_triples(
             continue
 
         if (
-            ontology_version == "v2_segment_serves"
-            and normalized["relation"] == "OFFERS"
+            normalized["relation"] == "OFFERS"
             and normalized["subject_type"] == "Offering"
             and normalized["object_type"] == "Offering"
         ):
@@ -226,65 +225,64 @@ def validate_triples(
             }
         )
 
-    if ontology_version == "v2_segment_serves":
-        offering_parent_children = {
-            canonical_entity_key(record["normalized_triple"]["object"])
-            for record in provisional_valid_records
-            if record["normalized_triple"]["relation"] == "OFFERS"
-            and record["normalized_triple"]["subject_type"] == "Offering"
-            and record["normalized_triple"]["object_type"] == "Offering"
-        }
+    offering_parent_children = {
+        canonical_entity_key(record["normalized_triple"]["object"])
+        for record in provisional_valid_records
+        if record["normalized_triple"]["relation"] == "OFFERS"
+        and record["normalized_triple"]["subject_type"] == "Offering"
+        and record["normalized_triple"]["object_type"] == "Offering"
+    }
 
-        direct_segment_children = {
-            canonical_entity_key(record["normalized_triple"]["object"])
-            for record in provisional_valid_records
-            if record["normalized_triple"]["relation"] == "OFFERS"
-            and record["normalized_triple"]["subject_type"] == "BusinessSegment"
-            and record["normalized_triple"]["object_type"] == "Offering"
-        }
+    direct_segment_children = {
+        canonical_entity_key(record["normalized_triple"]["object"])
+        for record in provisional_valid_records
+        if record["normalized_triple"]["relation"] == "OFFERS"
+        and record["normalized_triple"]["subject_type"] == "BusinessSegment"
+        and record["normalized_triple"]["object_type"] == "Offering"
+    }
 
-        kept_records: list[dict[str, Any]] = []
-        for record in provisional_valid_records:
-            normalized = record["normalized_triple"]
-            subject_key = canonical_entity_key(normalized["subject"])
-            if normalized["relation"] == "MONETIZES_VIA" and subject_key in offering_parent_children:
-                invalid_triples.append(
-                    {
-                        "index": record["index"],
-                        "triple": record["triple"],
-                        "normalized_triple": normalized,
-                        "issues": [
-                            {
-                                "code": "child_offering_monetizes_via",
-                                "message": (
-                                    f"Offering {normalized['subject']!r} has an explicit offering parent and cannot carry "
-                                    "MONETIZES_VIA in this ontology variant."
-                                ),
-                            }
-                        ],
-                    }
-                )
-                continue
-            if normalized["relation"] == "SELLS_THROUGH" and normalized["subject_type"] == "Offering" and subject_key in direct_segment_children:
-                invalid_triples.append(
-                    {
-                        "index": record["index"],
-                        "triple": record["triple"],
-                        "normalized_triple": normalized,
-                        "issues": [
-                            {
-                                "code": "segment_anchored_offering_sells_through",
-                                "message": (
-                                    f"Offering {normalized['subject']!r} has a BusinessSegment anchor and cannot carry "
-                                    "SELLS_THROUGH in this ontology variant."
-                                ),
-                            }
-                        ],
-                    }
-                )
-                continue
-            kept_records.append(record)
-        provisional_valid_records = kept_records
+    kept_records: list[dict[str, Any]] = []
+    for record in provisional_valid_records:
+        normalized = record["normalized_triple"]
+        subject_key = canonical_entity_key(normalized["subject"])
+        if normalized["relation"] == "MONETIZES_VIA" and subject_key in offering_parent_children:
+            invalid_triples.append(
+                {
+                    "index": record["index"],
+                    "triple": record["triple"],
+                    "normalized_triple": normalized,
+                    "issues": [
+                        {
+                            "code": "child_offering_monetizes_via",
+                            "message": (
+                                f"Offering {normalized['subject']!r} has an explicit offering parent and cannot carry "
+                                "MONETIZES_VIA in the canonical ontology."
+                            ),
+                        }
+                    ],
+                }
+            )
+            continue
+        if normalized["relation"] == "SELLS_THROUGH" and normalized["subject_type"] == "Offering" and subject_key in direct_segment_children:
+            invalid_triples.append(
+                {
+                    "index": record["index"],
+                    "triple": record["triple"],
+                    "normalized_triple": normalized,
+                    "issues": [
+                        {
+                            "code": "segment_anchored_offering_sells_through",
+                            "message": (
+                                f"Offering {normalized['subject']!r} has a BusinessSegment anchor and cannot carry "
+                                "SELLS_THROUGH in the canonical ontology."
+                            ),
+                        }
+                    ],
+                }
+            )
+            continue
+        kept_records.append(record)
+    provisional_valid_records = kept_records
 
     valid_triples = [record["normalized_triple"] for record in provisional_valid_records]
 
@@ -309,7 +307,7 @@ def validate_payload(
     source_text: str | None = None,
     require_text_grounding: bool = False,
     dedupe: bool = True,
-    ontology_version: str = "v1",
+    ontology_version: str = "canonical",
 ) -> dict[str, Any]:
     return validate_triples(
         _extract_triples(payload),
@@ -325,7 +323,7 @@ def validate_file(
     source_text_path: Path | None = None,
     require_text_grounding: bool = False,
     dedupe: bool = True,
-    ontology_version: str = "v1",
+    ontology_version: str = "canonical",
 ) -> dict[str, Any]:
     payload = json.loads(triples_path.read_text(encoding="utf-8"))
     source_text = source_text_path.read_text(encoding="utf-8") if source_text_path else None
@@ -349,7 +347,7 @@ def main() -> int:
     parser.add_argument("--source-text-path", type=Path, default=None, help="Optional path to the source filing text.")
     parser.add_argument("--require-text-grounding", action="store_true", help="Require non-canonical entity names to appear in the source text.")
     parser.add_argument("--no-dedupe", action="store_true", help="Disable duplicate filtering.")
-    parser.add_argument("--ontology-version", choices=["v1", "v2", "v2_segment_serves"], default="v1", help="Ontology version to validate against.")
+    parser.add_argument("--ontology-version", choices=["canonical", "default"], default="canonical", help="Ontology version to validate against.")
     parser.add_argument("--report-path", type=Path, default=None, help="Optional path to write the full JSON validation report.")
     parser.add_argument("--show-invalid", type=int, default=5, help="How many invalid triples to print in the CLI summary.")
     args = parser.parse_args()
