@@ -150,6 +150,7 @@ def validate_triples(
     invalid_triples: list[dict[str, Any]] = []
     duplicate_triples: list[dict[str, Any]] = []
     seen: set[tuple[str, str, str, str, str]] = set()
+    offering_parents: dict[str, tuple[int, dict[str, str]]] = {}
 
     for index, triple in enumerate(triples):
         result = validate_triple(
@@ -187,6 +188,34 @@ def validate_triples(
                 }
             )
             continue
+
+        if (
+            ontology_version == "v2_segment_serves"
+            and normalized["relation"] == "OFFERS"
+            and normalized["subject_type"] == "Offering"
+            and normalized["object_type"] == "Offering"
+        ):
+            child_key = canonical_entity_key(normalized["object"])
+            existing_parent = offering_parents.get(child_key)
+            if existing_parent is not None and canonical_entity_key(existing_parent[1]["subject"]) != canonical_entity_key(normalized["subject"]):
+                invalid_triples.append(
+                    {
+                        "index": index,
+                        "triple": triple,
+                        "normalized_triple": normalized,
+                        "issues": [
+                            {
+                                "code": "multiple_offering_parents",
+                                "message": (
+                                    f"Offering {normalized['object']!r} already has offering parent "
+                                    f"{existing_parent[1]['subject']!r}; a child offering may have at most one offering parent."
+                                ),
+                            }
+                        ],
+                    }
+                )
+                continue
+            offering_parents[child_key] = (index, normalized)
 
         seen.add(triple_key)
         valid_triples.append(normalized)
@@ -252,7 +281,7 @@ def main() -> int:
     parser.add_argument("--source-text-path", type=Path, default=None, help="Optional path to the source filing text.")
     parser.add_argument("--require-text-grounding", action="store_true", help="Require non-canonical entity names to appear in the source text.")
     parser.add_argument("--no-dedupe", action="store_true", help="Disable duplicate filtering.")
-    parser.add_argument("--ontology-version", choices=["v1", "v2"], default="v1", help="Ontology version to validate against.")
+    parser.add_argument("--ontology-version", choices=["v1", "v2", "v2_segment_serves"], default="v1", help="Ontology version to validate against.")
     parser.add_argument("--report-path", type=Path, default=None, help="Optional path to write the full JSON validation report.")
     parser.add_argument("--show-invalid", type=int, default=5, help="How many invalid triples to print in the CLI summary.")
     args = parser.parse_args()

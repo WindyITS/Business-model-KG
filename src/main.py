@@ -27,6 +27,8 @@ def _write_json(path: Path, payload: Any) -> None:
 
 
 def _mode_name(args: argparse.Namespace) -> str:
+    if getattr(args, "chat_two_pass_reflection_v2_segment_serves", False):
+        return "chat_two_pass_reflection_v2_segment_serves"
     if getattr(args, "chat_two_pass_reflection_v2", False):
         return "chat_two_pass_reflection_v2"
     if getattr(args, "chat_two_pass_reflection", False):
@@ -95,6 +97,11 @@ def main() -> int:
         help="Same-chat pass1 -> pass2 -> reflection using ontology-v2 scope rules, then an independent final reflection pass.",
     )
     parser.add_argument(
+        "--chat-two-pass-reflection-v2-segment-serves",
+        action="store_true",
+        help="Same-chat four-pass extraction with tighter commercial scope and SERVES restricted to BusinessSegment or Company, then an independent final reflection pass.",
+    )
+    parser.add_argument(
         "--no-schema",
         action="store_true",
         help="Disable response_format JSON Schema enforcement and rely on prompt-only JSON output.",
@@ -108,7 +115,11 @@ def main() -> int:
 
     source_file = Path(args.file_path)
     mode = _mode_name(args)
-    ontology_version = "v2" if mode == "chat_two_pass_reflection_v2" else "v1"
+    ontology_version = "v1"
+    if mode == "chat_two_pass_reflection_v2":
+        ontology_version = "v2"
+    elif mode == "chat_two_pass_reflection_v2_segment_serves":
+        ontology_version = "v2_segment_serves"
     run_dir = _build_run_dir(Path(args.output_dir), source_file, mode)
     summary: dict[str, Any] = {
         "status": "running",
@@ -152,15 +163,24 @@ def main() -> int:
         extractor = LLMExtractor(base_url=args.base_url, api_key=args.api_key, model=args.model)
         logger.info("Starting LLM extraction in %s mode...", mode)
 
-        if mode == "chat_two_pass_reflection_v2":
-            chat_result: ChatTwoPassReflectionResult = extractor.extract_chat_two_pass_reflection_v2(
-                full_text=full_text,
-                company_name=company_name,
-                max_retries=args.max_retries,
-                use_schema=not args.no_schema,
-            )
+        if mode in {"chat_two_pass_reflection_v2", "chat_two_pass_reflection_v2_segment_serves"}:
+            if mode == "chat_two_pass_reflection_v2_segment_serves":
+                chat_result = extractor.extract_chat_two_pass_reflection_v2_segment_serves(
+                    full_text=full_text,
+                    company_name=company_name,
+                    max_retries=args.max_retries,
+                    use_schema=not args.no_schema,
+                )
+            else:
+                chat_result = extractor.extract_chat_two_pass_reflection_v2(
+                    full_text=full_text,
+                    company_name=company_name,
+                    max_retries=args.max_retries,
+                    use_schema=not args.no_schema,
+                )
+            chat_result: ChatTwoPassReflectionResult
             if not chat_result.success:
-                raise ExtractionError(chat_result.error or "Chat two-pass reflection v2 failed.")
+                raise ExtractionError(chat_result.error or f"{mode} failed.")
             _write_json(
                 run_dir / "skeleton_extraction.json",
                 {

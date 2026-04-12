@@ -8,6 +8,7 @@ CONFIG_DIR = Path(__file__).resolve().parents[1] / "configs"
 ONTOLOGY_PATHS = {
     "v1": CONFIG_DIR / "ontology.json",
     "v2": CONFIG_DIR / "ontology_v2.json",
+    "v2_segment_serves": CONFIG_DIR / "ontology_v2_segment_serves.json",
 }
 
 

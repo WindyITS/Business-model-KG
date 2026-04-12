@@ -95,11 +95,15 @@ class PipelineComponentTests(unittest.TestCase):
 
     def test_mode_name_prefers_explicit_reflection_pipelines(self):
         args = SimpleNamespace(
+            chat_two_pass_reflection_v2_segment_serves=True,
             chat_two_pass_reflection_v2=True,
             chat_two_pass_reflection=True,
             incremental_reflection=True,
             two_pass_reflection=False,
         )
+        self.assertEqual(_mode_name(args), "chat_two_pass_reflection_v2_segment_serves")
+
+        args.chat_two_pass_reflection_v2_segment_serves = False
         self.assertEqual(_mode_name(args), "chat_two_pass_reflection_v2")
 
         args.chat_two_pass_reflection_v2 = False
@@ -114,6 +118,7 @@ class PipelineComponentTests(unittest.TestCase):
 
     def test_mode_name_defaults_to_two_pass_reflection(self):
         args = SimpleNamespace(
+            chat_two_pass_reflection_v2_segment_serves=False,
             chat_two_pass_reflection_v2=False,
             chat_two_pass_reflection=False,
             incremental_reflection=False,
@@ -156,16 +161,17 @@ class PipelineComponentTests(unittest.TestCase):
         self.assertEqual(audit["kept_triple_count"], 1)
 
     def test_v2_schema_def_excludes_part_of(self):
-        schema_def = LLMExtractor._schema_def(
-            "KnowledgeGraphExtraction",
-            KnowledgeGraphExtraction,
-            ontology_version="v2",
-        )
-        relation_enum = (
-            schema_def["json_schema"]["schema"]["$defs"]["Triple"]["properties"]["relation"]["enum"]
-        )
+        for ontology_version in ("v2", "v2_segment_serves"):
+            schema_def = LLMExtractor._schema_def(
+                "KnowledgeGraphExtraction",
+                KnowledgeGraphExtraction,
+                ontology_version=ontology_version,
+            )
+            relation_enum = (
+                schema_def["json_schema"]["schema"]["$defs"]["Triple"]["properties"]["relation"]["enum"]
+            )
 
-        self.assertNotIn("PART_OF", relation_enum)
+            self.assertNotIn("PART_OF", relation_enum)
 
     def test_merge_relation_subset_into_base_replaces_only_allowed_relations(self):
         base = KnowledgeGraphExtraction(
