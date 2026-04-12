@@ -1,597 +1,754 @@
 {
-  "company": "Microsoft",
-  "source_file": "data/microsoft_10k.txt",
-  "extraction_policy": "precision_over_recall",
-  "notes": [
-    "This gold set is intentionally conservative and only includes explicit, text-supported triples.",
-    "Offerings use the repo's ontology and may omit broader products if the filing language is ambiguous.",
-    "Evidence strings are included for human review; the evaluation harness should compare only the five structural fields."
-  ],
-  "triple_count": 73,
+  "extraction_notes": "Audited graph against ontology v2. Extracted comprehensive lists of explicit offerings mapped to the three stated reporting segments (Productivity and Business Processes, Intelligent Cloud, More Personal Computing). Added enterprise and partner service offerings to Intelligent Cloud. Added explicit partnerships with Dell, Hewlett-Packard, and Lenovo. Updated customer types, channels, and revenue models to perfectly reflect the exact language used in the text (e.g., 'frontline workers', 'individual consumers', 'public-sector institutions', 'digital marketplaces', 'managed services providers'). Maintained strict 5-field structure.",
   "triples": [
     {
       "subject": "Microsoft",
       "subject_type": "Company",
       "relation": "HAS_SEGMENT",
       "object": "Productivity and Business Processes",
-      "object_type": "BusinessSegment",
-      "evidence": "We operate our business and report our financial performance using three segments: Productivity and Business Processes, Intelligent Cloud, and More Personal Computing."
+      "object_type": "BusinessSegment"
     },
     {
       "subject": "Microsoft",
       "subject_type": "Company",
       "relation": "HAS_SEGMENT",
       "object": "Intelligent Cloud",
-      "object_type": "BusinessSegment",
-      "evidence": "We operate our business and report our financial performance using three segments: Productivity and Business Processes, Intelligent Cloud, and More Personal Computing."
+      "object_type": "BusinessSegment"
     },
     {
       "subject": "Microsoft",
       "subject_type": "Company",
       "relation": "HAS_SEGMENT",
       "object": "More Personal Computing",
-      "object_type": "BusinessSegment",
-      "evidence": "We operate our business and report our financial performance using three segments: Productivity and Business Processes, Intelligent Cloud, and More Personal Computing."
+      "object_type": "BusinessSegment"
     },
     {
       "subject": "Productivity and Business Processes",
       "subject_type": "BusinessSegment",
       "relation": "OFFERS",
       "object": "Microsoft 365 Commercial",
-      "object_type": "Offering",
-      "evidence": "Microsoft 365 Commercial products and cloud services... comprising Microsoft 365 Commercial..."
-    },
-    {
-      "subject": "Microsoft 365 Commercial",
-      "subject_type": "Offering",
-      "relation": "PART_OF",
-      "object": "Productivity and Business Processes",
-      "object_type": "BusinessSegment",
-      "evidence": "Microsoft 365 Commercial products and cloud services... comprising Microsoft 365 Commercial..."
+      "object_type": "Offering"
     },
     {
       "subject": "Productivity and Business Processes",
       "subject_type": "BusinessSegment",
       "relation": "OFFERS",
       "object": "Microsoft 365 Consumer",
-      "object_type": "Offering",
-      "evidence": "Microsoft 365 Consumer products and cloud services, including Microsoft 365 Consumer subscriptions..."
-    },
-    {
-      "subject": "Microsoft 365 Consumer",
-      "subject_type": "Offering",
-      "relation": "PART_OF",
-      "object": "Productivity and Business Processes",
-      "object_type": "BusinessSegment",
-      "evidence": "Microsoft 365 Consumer products and cloud services, including Microsoft 365 Consumer subscriptions..."
+      "object_type": "Offering"
     },
     {
       "subject": "Productivity and Business Processes",
       "subject_type": "BusinessSegment",
       "relation": "OFFERS",
       "object": "LinkedIn",
-      "object_type": "Offering",
-      "evidence": "LinkedIn, including Talent Solutions, Marketing Solutions, Premium Subscriptions, and Sales Solutions."
+      "object_type": "Offering"
     },
     {
-      "subject": "LinkedIn",
-      "subject_type": "Offering",
-      "relation": "PART_OF",
-      "object": "Productivity and Business Processes",
-      "object_type": "BusinessSegment",
-      "evidence": "LinkedIn, including Talent Solutions, Marketing Solutions, Premium Subscriptions, and Sales Solutions."
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Dynamics",
+      "object_type": "Offering"
     },
     {
       "subject": "Productivity and Business Processes",
       "subject_type": "BusinessSegment",
       "relation": "OFFERS",
       "object": "Dynamics 365",
-      "object_type": "Offering",
-      "evidence": "Dynamics products and cloud services, including Dynamics 365..."
+      "object_type": "Offering"
     },
     {
-      "subject": "Dynamics 365",
-      "subject_type": "Offering",
-      "relation": "PART_OF",
-      "object": "Productivity and Business Processes",
-      "object_type": "BusinessSegment",
-      "evidence": "Dynamics products and cloud services, including Dynamics 365..."
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Power Apps",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Power Automate",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Microsoft Teams",
+      "object_type": "Offering"
     },
     {
       "subject": "Productivity and Business Processes",
       "subject_type": "BusinessSegment",
       "relation": "OFFERS",
       "object": "Microsoft 365 Copilot",
-      "object_type": "Offering",
-      "evidence": "Microsoft 365 Commercial cloud... comprising ... Microsoft 365 Copilot"
+      "object_type": "Offering"
     },
     {
-      "subject": "Microsoft 365 Copilot",
-      "subject_type": "Offering",
-      "relation": "PART_OF",
-      "object": "Productivity and Business Processes",
-      "object_type": "BusinessSegment",
-      "evidence": "Microsoft 365 Commercial cloud... comprising ... Microsoft 365 Copilot"
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Enterprise Mobility + Security",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Exchange",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "SharePoint",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Power BI",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Office",
+      "object_type": "Offering"
     },
     {
       "subject": "Intelligent Cloud",
       "subject_type": "BusinessSegment",
       "relation": "OFFERS",
       "object": "Azure",
-      "object_type": "Offering",
-      "evidence": "Server products and cloud services, including Azure and other cloud services..."
-    },
-    {
-      "subject": "Azure",
-      "subject_type": "Offering",
-      "relation": "PART_OF",
-      "object": "Intelligent Cloud",
-      "object_type": "BusinessSegment",
-      "evidence": "Server products and cloud services, including Azure and other cloud services..."
-    },
-    {
-      "subject": "Intelligent Cloud",
-      "subject_type": "BusinessSegment",
-      "relation": "OFFERS",
-      "object": "Azure AI Foundry",
-      "object_type": "Offering",
-      "evidence": "Azure AI Foundry is a unified platform for developers to design, customize, and manage AI applications and agents."
-    },
-    {
-      "subject": "Azure AI Foundry",
-      "subject_type": "Offering",
-      "relation": "PART_OF",
-      "object": "Intelligent Cloud",
-      "object_type": "BusinessSegment",
-      "evidence": "Azure AI Foundry is a unified platform for developers to design, customize, and manage AI applications and agents."
+      "object_type": "Offering"
     },
     {
       "subject": "Intelligent Cloud",
       "subject_type": "BusinessSegment",
       "relation": "OFFERS",
       "object": "GitHub",
-      "object_type": "Offering",
-      "evidence": "GitHub and Nuance Healthcare include both cloud and on-premises offerings."
-    },
-    {
-      "subject": "GitHub",
-      "subject_type": "Offering",
-      "relation": "PART_OF",
-      "object": "Intelligent Cloud",
-      "object_type": "BusinessSegment",
-      "evidence": "GitHub and Nuance Healthcare include both cloud and on-premises offerings."
+      "object_type": "Offering"
     },
     {
       "subject": "Intelligent Cloud",
       "subject_type": "BusinessSegment",
       "relation": "OFFERS",
       "object": "Nuance Healthcare",
-      "object_type": "Offering",
-      "evidence": "GitHub and Nuance Healthcare include both cloud and on-premises offerings."
+      "object_type": "Offering"
     },
     {
-      "subject": "Nuance Healthcare",
-      "subject_type": "Offering",
-      "relation": "PART_OF",
-      "object": "Intelligent Cloud",
-      "object_type": "BusinessSegment",
-      "evidence": "GitHub and Nuance Healthcare include both cloud and on-premises offerings."
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "SQL Server",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Windows Server",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Visual Studio",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "System Center",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Enterprise Support Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Industry Solutions",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Nuance professional services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Microsoft Partner Network",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Learning Experience",
+      "object_type": "Offering"
     },
     {
       "subject": "More Personal Computing",
       "subject_type": "BusinessSegment",
       "relation": "OFFERS",
       "object": "Windows",
-      "object_type": "Offering",
-      "evidence": "Windows and Devices, including Windows OEM licensing..."
-    },
-    {
-      "subject": "Windows",
-      "subject_type": "Offering",
-      "relation": "PART_OF",
-      "object": "More Personal Computing",
-      "object_type": "BusinessSegment",
-      "evidence": "Windows and Devices, including Windows OEM licensing..."
+      "object_type": "Offering"
     },
     {
       "subject": "More Personal Computing",
       "subject_type": "BusinessSegment",
       "relation": "OFFERS",
       "object": "Surface",
-      "object_type": "Offering",
-      "evidence": "Devices, comprising Surface and PC accessories."
+      "object_type": "Offering"
     },
     {
-      "subject": "Surface",
-      "subject_type": "Offering",
-      "relation": "PART_OF",
-      "object": "More Personal Computing",
-      "object_type": "BusinessSegment",
-      "evidence": "Devices, comprising Surface and PC accessories."
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "PC accessories",
+      "object_type": "Offering"
     },
     {
       "subject": "More Personal Computing",
       "subject_type": "BusinessSegment",
       "relation": "OFFERS",
       "object": "Xbox",
-      "object_type": "Offering",
-      "evidence": "Gaming, including Xbox hardware and Xbox content and services..."
-    },
-    {
-      "subject": "Xbox",
-      "subject_type": "Offering",
-      "relation": "PART_OF",
-      "object": "More Personal Computing",
-      "object_type": "BusinessSegment",
-      "evidence": "Gaming, including Xbox hardware and Xbox content and services..."
+      "object_type": "Offering"
     },
     {
       "subject": "More Personal Computing",
       "subject_type": "BusinessSegment",
       "relation": "OFFERS",
       "object": "Xbox Game Pass",
-      "object_type": "Offering",
-      "evidence": "Gaming, including ... Xbox Game Pass and other subscriptions..."
+      "object_type": "Offering"
     },
     {
-      "subject": "Xbox Game Pass",
-      "subject_type": "Offering",
-      "relation": "PART_OF",
-      "object": "More Personal Computing",
-      "object_type": "BusinessSegment",
-      "evidence": "Gaming, including ... Xbox Game Pass and other subscriptions..."
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Xbox Cloud Gaming",
+      "object_type": "Offering"
     },
     {
       "subject": "More Personal Computing",
       "subject_type": "BusinessSegment",
       "relation": "OFFERS",
       "object": "Bing",
-      "object_type": "Offering",
-      "evidence": "Search and news advertising, comprising Bing and Copilot, Microsoft News, Microsoft Edge, and third-party affiliates."
+      "object_type": "Offering"
     },
     {
-      "subject": "Bing",
-      "subject_type": "Offering",
-      "relation": "PART_OF",
-      "object": "More Personal Computing",
-      "object_type": "BusinessSegment",
-      "evidence": "Search and news advertising, comprising Bing and Copilot, Microsoft News, Microsoft Edge, and third-party affiliates."
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Copilot",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Microsoft News",
+      "object_type": "Offering"
     },
     {
       "subject": "More Personal Computing",
       "subject_type": "BusinessSegment",
       "relation": "OFFERS",
       "object": "Microsoft Edge",
-      "object_type": "Offering",
-      "evidence": "Search and news advertising, comprising Bing and Copilot, Microsoft News, Microsoft Edge, and third-party affiliates."
-    },
-    {
-      "subject": "Microsoft Edge",
-      "subject_type": "Offering",
-      "relation": "PART_OF",
-      "object": "More Personal Computing",
-      "object_type": "BusinessSegment",
-      "evidence": "Search and news advertising, comprising Bing and Copilot, Microsoft News, Microsoft Edge, and third-party affiliates."
-    },
-    {
-      "subject": "More Personal Computing",
-      "subject_type": "BusinessSegment",
-      "relation": "OFFERS",
-      "object": "Microsoft Copilot",
-      "object_type": "Offering",
-      "evidence": "Microsoft Copilot is a digital companion designed to inform, entertain, and inspire."
-    },
-    {
-      "subject": "Microsoft Copilot",
-      "subject_type": "Offering",
-      "relation": "PART_OF",
-      "object": "More Personal Computing",
-      "object_type": "BusinessSegment",
-      "evidence": "Microsoft Copilot is a digital companion designed to inform, entertain, and inspire."
-    },
-    {
-      "subject": "Microsoft 365 Commercial",
-      "subject_type": "Offering",
-      "relation": "SERVES",
-      "object": "organizations",
-      "object_type": "CustomerType",
-      "evidence": "Microsoft 365 Commercial ... help organizations empower their employees."
-    },
-    {
-      "subject": "Microsoft 365 Commercial",
-      "subject_type": "Offering",
-      "relation": "SERVES",
-      "object": "frontline workers",
-      "object_type": "CustomerType",
-      "evidence": "Growth depends on our ability to reach new users in new markets such as frontline workers..."
-    },
-    {
-      "subject": "Microsoft 365 Commercial",
-      "subject_type": "Offering",
-      "relation": "SERVES",
-      "object": "small and medium businesses",
-      "object_type": "CustomerType",
-      "evidence": "Growth depends on our ability to reach new users in new markets such as ... small and medium businesses..."
-    },
-    {
-      "subject": "LinkedIn",
-      "subject_type": "Offering",
-      "relation": "SERVES",
-      "object": "professionals",
-      "object_type": "CustomerType",
-      "evidence": "LinkedIn connects the world’s professionals..."
-    },
-    {
-      "subject": "LinkedIn",
-      "subject_type": "Offering",
-      "relation": "SERVES",
-      "object": "companies",
-      "object_type": "CustomerType",
-      "evidence": "LinkedIn ... transforms the way companies hire, market, sell, and learn."
-    },
-    {
-      "subject": "Azure",
-      "subject_type": "Offering",
-      "relation": "SERVES",
-      "object": "developers",
-      "object_type": "CustomerType",
-      "evidence": "Azure ... offer developers, IT professionals, and enterprises freedom to build, deploy, and manage applications..."
-    },
-    {
-      "subject": "Azure",
-      "subject_type": "Offering",
-      "relation": "SERVES",
-      "object": "IT professionals",
-      "object_type": "CustomerType",
-      "evidence": "Azure ... offer developers, IT professionals, and enterprises freedom to build, deploy, and manage applications..."
-    },
-    {
-      "subject": "Azure",
-      "subject_type": "Offering",
-      "relation": "SERVES",
-      "object": "enterprises",
-      "object_type": "CustomerType",
-      "evidence": "Azure ... offer developers, IT professionals, and enterprises freedom to build, deploy, and manage applications..."
-    },
-    {
-      "subject": "GitHub",
-      "subject_type": "Offering",
-      "relation": "SERVES",
-      "object": "developers",
-      "object_type": "CustomerType",
-      "evidence": "GitHub provides a collaboration platform for developers..."
-    },
-    {
-      "subject": "Nuance Healthcare",
-      "subject_type": "Offering",
-      "relation": "SERVES",
-      "object": "healthcare industry",
-      "object_type": "CustomerType",
-      "evidence": "Nuance Healthcare provides AI solutions to the healthcare industry."
-    },
-    {
-      "subject": "Surface",
-      "subject_type": "Offering",
-      "relation": "SERVES",
-      "object": "organizations",
-      "object_type": "CustomerType",
-      "evidence": "Surface is designed to help organizations, students, and consumers be more productive."
-    },
-    {
-      "subject": "Surface",
-      "subject_type": "Offering",
-      "relation": "SERVES",
-      "object": "students",
-      "object_type": "CustomerType",
-      "evidence": "Surface is designed to help organizations, students, and consumers be more productive."
-    },
-    {
-      "subject": "Surface",
-      "subject_type": "Offering",
-      "relation": "SERVES",
-      "object": "consumers",
-      "object_type": "CustomerType",
-      "evidence": "Surface is designed to help organizations, students, and consumers be more productive."
-    },
-    {
-      "subject": "Xbox",
-      "subject_type": "Offering",
-      "relation": "SERVES",
-      "object": "gamers",
-      "object_type": "CustomerType",
-      "evidence": "We are identifying new opportunities to attract gamers..."
-    },
-    {
-      "subject": "Microsoft",
-      "subject_type": "Company",
-      "relation": "SERVES",
-      "object": "individual consumers",
-      "object_type": "CustomerType",
-      "evidence": "Our customers include individual consumers..."
-    },
-    {
-      "subject": "Microsoft",
-      "subject_type": "Company",
-      "relation": "SERVES",
-      "object": "small and medium organizations",
-      "object_type": "CustomerType",
-      "evidence": "Our customers include ... small and medium organizations..."
-    },
-    {
-      "subject": "Microsoft",
-      "subject_type": "Company",
-      "relation": "SERVES",
-      "object": "large global enterprises",
-      "object_type": "CustomerType",
-      "evidence": "Our customers include ... large global enterprises..."
-    },
-    {
-      "subject": "Microsoft",
-      "subject_type": "Company",
-      "relation": "SERVES",
-      "object": "public-sector institutions",
-      "object_type": "CustomerType",
-      "evidence": "Our customers include ... public-sector institutions..."
-    },
-    {
-      "subject": "Microsoft",
-      "subject_type": "Company",
-      "relation": "SERVES",
-      "object": "service providers",
-      "object_type": "CustomerType",
-      "evidence": "Our customers include ... service providers..."
-    },
-    {
-      "subject": "Microsoft",
-      "subject_type": "Company",
-      "relation": "SERVES",
-      "object": "application developers",
-      "object_type": "CustomerType",
-      "evidence": "Our customers include ... application developers..."
-    },
-    {
-      "subject": "Microsoft",
-      "subject_type": "Company",
-      "relation": "SERVES",
-      "object": "OEMs",
-      "object_type": "CustomerType",
-      "evidence": "Our customers include ... OEMs."
-    },
-    {
-      "subject": "Microsoft",
-      "subject_type": "Company",
-      "relation": "SELLS_THROUGH",
-      "object": "direct",
-      "object_type": "Channel",
-      "evidence": "We market and distribute our products and services through the following channels: direct, distributors and resellers, and OEMs."
-    },
-    {
-      "subject": "Microsoft",
-      "subject_type": "Company",
-      "relation": "SELLS_THROUGH",
-      "object": "distributors and resellers",
-      "object_type": "Channel",
-      "evidence": "We market and distribute our products and services through the following channels: direct, distributors and resellers, and OEMs."
-    },
-    {
-      "subject": "Microsoft",
-      "subject_type": "Company",
-      "relation": "SELLS_THROUGH",
-      "object": "OEMs",
-      "object_type": "Channel",
-      "evidence": "We market and distribute our products and services through the following channels: direct, distributors and resellers, and OEMs."
-    },
-    {
-      "subject": "Microsoft",
-      "subject_type": "Company",
-      "relation": "SELLS_THROUGH",
-      "object": "digital marketplaces",
-      "object_type": "Channel",
-      "evidence": "We also sell commercial and consumer products and services directly to customers ... through our digital marketplaces and online stores."
-    },
-    {
-      "subject": "Microsoft",
-      "subject_type": "Company",
-      "relation": "SELLS_THROUGH",
-      "object": "online stores",
-      "object_type": "Channel",
-      "evidence": "We also sell commercial and consumer products and services directly to customers ... through our digital marketplaces and online stores."
-    },
-    {
-      "subject": "Microsoft",
-      "subject_type": "Company",
-      "relation": "OPERATES_IN",
-      "object": "U.S.",
-      "object_type": "Place",
-      "evidence": "As of June 30, 2025, we employed approximately 228,000 people on a full-time basis, 125,000 in the U.S...."
+      "object_type": "Offering"
     },
     {
       "subject": "Microsoft",
       "subject_type": "Company",
       "relation": "OPERATES_IN",
       "object": "Americas",
-      "object_type": "Place",
-      "evidence": "We have regional operations service centers in the Americas..."
+      "object_type": "Place"
     },
     {
       "subject": "Microsoft",
       "subject_type": "Company",
       "relation": "OPERATES_IN",
       "object": "Asia Pacific",
-      "object_type": "Place",
-      "evidence": "We have regional operations service centers in the ... Asia Pacific..."
+      "object_type": "Place"
     },
     {
       "subject": "Microsoft",
       "subject_type": "Company",
       "relation": "OPERATES_IN",
       "object": "Europe",
-      "object_type": "Place",
-      "evidence": "We have regional operations service centers in ... Europe..."
+      "object_type": "Place"
     },
     {
       "subject": "Microsoft",
       "subject_type": "Company",
       "relation": "OPERATES_IN",
       "object": "Middle East",
-      "object_type": "Place",
-      "evidence": "We have regional operations service centers in ... the Middle East..."
+      "object_type": "Place"
     },
     {
       "subject": "Microsoft",
       "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "United States",
+      "object_type": "Place"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "PARTNERS_WITH",
+      "object": "Dell",
+      "object_type": "Company"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "PARTNERS_WITH",
+      "object": "Hewlett-Packard",
+      "object_type": "Company"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "PARTNERS_WITH",
+      "object": "Lenovo",
+      "object_type": "Company"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "SERVES",
+      "object": "individual consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "SERVES",
+      "object": "small and medium organizations",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "SERVES",
+      "object": "large global enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "SERVES",
+      "object": "public-sector institutions",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "SERVES",
+      "object": "service providers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "SERVES",
+      "object": "application developers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "SERVES",
+      "object": "OEMs",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "SELLS_THROUGH",
+      "object": "direct",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "SELLS_THROUGH",
+      "object": "distributors",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "SELLS_THROUGH",
+      "object": "resellers",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "SELLS_THROUGH",
+      "object": "OEMs",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "SELLS_THROUGH",
+      "object": "retailers",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "SELLS_THROUGH",
+      "object": "system integrators",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "SELLS_THROUGH",
+      "object": "independent software vendors",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "SELLS_THROUGH",
+      "object": "digital marketplaces",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "SELLS_THROUGH",
+      "object": "online stores",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "SELLS_THROUGH",
+      "object": "managed services providers",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "SELLS_THROUGH",
+      "object": "cloud resellers",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Microsoft 365 Commercial",
+      "subject_type": "Offering",
+      "relation": "SERVES",
+      "object": "frontline workers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Microsoft 365 Commercial",
+      "subject_type": "Offering",
+      "relation": "SERVES",
+      "object": "small and medium businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Microsoft 365 Commercial",
+      "subject_type": "Offering",
       "relation": "MONETIZES_VIA",
-      "object": "advertising",
-      "object_type": "RevenueModel",
-      "evidence": "We also deliver relevant online advertising to a global audience."
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Microsoft 365 Commercial",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
     },
     {
       "subject": "Microsoft 365 Consumer",
       "subject_type": "Offering",
       "relation": "MONETIZES_VIA",
       "object": "subscription",
-      "object_type": "RevenueModel",
-      "evidence": "Microsoft 365 Consumer products and cloud services, including Microsoft 365 Consumer subscriptions..."
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Microsoft 365 Consumer",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Microsoft 365 Consumer",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "LinkedIn",
+      "subject_type": "Offering",
+      "relation": "SERVES",
+      "object": "enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "LinkedIn",
+      "subject_type": "Offering",
+      "relation": "SERVES",
+      "object": "professionals",
+      "object_type": "CustomerType"
     },
     {
       "subject": "LinkedIn",
       "subject_type": "Offering",
       "relation": "MONETIZES_VIA",
       "object": "subscription",
-      "object_type": "RevenueModel",
-      "evidence": "LinkedIn revenue is mainly affected by demand ... for subscriptions to Talent Solutions, Sales Solutions, and Premium Subscriptions offerings..."
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "LinkedIn",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Dynamics",
+      "subject_type": "Offering",
+      "relation": "SERVES",
+      "object": "small and medium businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Dynamics",
+      "subject_type": "Offering",
+      "relation": "SERVES",
+      "object": "large organizations",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Dynamics",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Dynamics",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Azure",
+      "subject_type": "Offering",
+      "relation": "SERVES",
+      "object": "developers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Azure",
+      "subject_type": "Offering",
+      "relation": "SERVES",
+      "object": "IT professionals",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Azure",
+      "subject_type": "Offering",
+      "relation": "SERVES",
+      "object": "enterprises",
+      "object_type": "CustomerType"
     },
     {
       "subject": "Azure",
       "subject_type": "Offering",
       "relation": "MONETIZES_VIA",
       "object": "consumption-based",
-      "object_type": "RevenueModel",
-      "evidence": "Azure revenue is mainly affected by infrastructure-as-a-service and platform-as-a-service consumption-based services."
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Nuance Healthcare",
+      "subject_type": "Offering",
+      "relation": "SERVES",
+      "object": "healthcare industry",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "SQL Server",
+      "subject_type": "Offering",
+      "relation": "SERVES",
+      "object": "IT professionals",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "SQL Server",
+      "subject_type": "Offering",
+      "relation": "SERVES",
+      "object": "developers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "SQL Server",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Windows Server",
+      "subject_type": "Offering",
+      "relation": "SERVES",
+      "object": "IT professionals",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Windows Server",
+      "subject_type": "Offering",
+      "relation": "SERVES",
+      "object": "developers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Windows Server",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Windows",
+      "subject_type": "Offering",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Windows",
+      "subject_type": "Offering",
+      "relation": "SERVES",
+      "object": "small and medium businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Windows",
+      "subject_type": "Offering",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
     },
     {
       "subject": "Windows",
       "subject_type": "Offering",
       "relation": "MONETIZES_VIA",
       "object": "licensing",
-      "object_type": "RevenueModel",
-      "evidence": "Windows and Devices, including Windows OEM licensing..."
+      "object_type": "RevenueModel"
     },
     {
-      "subject": "Xbox Game Pass",
+      "subject": "Windows",
+      "subject_type": "Offering",
+      "relation": "SELLS_THROUGH",
+      "object": "OEMs",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Surface",
+      "subject_type": "Offering",
+      "relation": "SERVES",
+      "object": "organizations",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Surface",
+      "subject_type": "Offering",
+      "relation": "SERVES",
+      "object": "students",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Surface",
+      "subject_type": "Offering",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Surface",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Xbox",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Xbox",
       "subject_type": "Offering",
       "relation": "MONETIZES_VIA",
       "object": "subscription",
-      "object_type": "RevenueModel",
-      "evidence": "Xbox Game Pass, a subscription service and gaming community..."
+      "object_type": "RevenueModel"
     },
     {
       "subject": "Xbox",
       "subject_type": "Offering",
       "relation": "MONETIZES_VIA",
       "object": "advertising",
-      "object_type": "RevenueModel",
-      "evidence": "Xbox revenue is mainly affected by subscriptions and sales of first- and third-party content, as well as advertising."
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Xbox Game Pass",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Bing",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Microsoft News",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Microsoft Edge",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
     }
   ]
 }

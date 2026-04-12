@@ -50,6 +50,74 @@ class OntologyValidatorTests(unittest.TestCase):
         self.assertFalse(result["is_valid"])
         self.assertTrue(any(issue["code"] == "invalid_relation_schema" for issue in result["issues"]))
 
+    def test_v2_accepts_business_segment_serves_relation(self):
+        triple = {
+            "subject": "Intelligent Cloud",
+            "subject_type": "BusinessSegment",
+            "relation": "SERVES",
+            "object": "large enterprises",
+            "object_type": "CustomerType",
+        }
+
+        result = validate_triple(triple, ontology_version="v2")
+
+        self.assertTrue(result["is_valid"])
+
+    def test_v1_rejects_business_segment_serves_relation(self):
+        triple = {
+            "subject": "Intelligent Cloud",
+            "subject_type": "BusinessSegment",
+            "relation": "SERVES",
+            "object": "large enterprises",
+            "object_type": "CustomerType",
+        }
+
+        result = validate_triple(triple, ontology_version="v1")
+
+        self.assertFalse(result["is_valid"])
+        self.assertTrue(any(issue["code"] == "invalid_relation_schema" for issue in result["issues"]))
+
+    def test_v2_rejects_business_segment_operates_in_relation(self):
+        triple = {
+            "subject": "Intelligent Cloud",
+            "subject_type": "BusinessSegment",
+            "relation": "OPERATES_IN",
+            "object": "United States",
+            "object_type": "Place",
+        }
+
+        result = validate_triple(triple, ontology_version="v2")
+
+        self.assertFalse(result["is_valid"])
+        self.assertTrue(any(issue["code"] == "invalid_relation_schema" for issue in result["issues"]))
+
+    def test_v2_accepts_explicit_offering_family_relation(self):
+        triple = {
+            "subject": "Windows",
+            "subject_type": "Offering",
+            "relation": "OFFERS",
+            "object": "Windows 11",
+            "object_type": "Offering",
+        }
+
+        result = validate_triple(triple, ontology_version="v2")
+
+        self.assertTrue(result["is_valid"])
+
+    def test_v2_rejects_part_of_relation(self):
+        triple = {
+            "subject": "Azure",
+            "subject_type": "Offering",
+            "relation": "PART_OF",
+            "object": "Intelligent Cloud",
+            "object_type": "BusinessSegment",
+        }
+
+        result = validate_triple(triple, ontology_version="v2")
+
+        self.assertFalse(result["is_valid"])
+        self.assertTrue(any(issue["code"] == "invalid_relation" for issue in result["issues"]))
+
     def test_deduplicates_valid_payload(self):
         payload = {
             "triples": [

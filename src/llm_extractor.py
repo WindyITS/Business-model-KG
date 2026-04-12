@@ -95,18 +95,28 @@ class ChatTwoPassReflectionResult(BaseModel):
     success: bool
     skeleton_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     pass2_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
+    pass3_serves_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
+    pass4_corporate_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
+    pre_reflection_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     reflection1_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     final_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     skeleton_audit: dict[str, Any] = Field(default_factory=dict)
     pass2_audit: dict[str, Any] = Field(default_factory=dict)
+    pass3_serves_audit: dict[str, Any] = Field(default_factory=dict)
+    pass4_corporate_audit: dict[str, Any] = Field(default_factory=dict)
+    pre_reflection_audit: dict[str, Any] = Field(default_factory=dict)
     reflection1_audit: dict[str, Any] = Field(default_factory=dict)
     final_reflection_audit: dict[str, Any] = Field(default_factory=dict)
     raw_skeleton_response: str | None = None
     raw_pass2_response: str | None = None
+    raw_pass3_serves_response: str | None = None
+    raw_pass4_corporate_response: str | None = None
     raw_reflection1_response: str | None = None
     raw_final_reflection_response: str | None = None
     skeleton_attempts_used: int = 0
     pass2_attempts_used: int = 0
+    pass3_serves_attempts_used: int = 0
+    pass4_corporate_attempts_used: int = 0
     reflection1_attempts_used: int = 0
     final_reflection_attempts_used: int = 0
     error: str | None = None
@@ -133,7 +143,12 @@ def normalize_lenient_payload(payload: Any) -> dict[str, Any]:
     return {}
 
 
-def audit_knowledge_graph_payload(payload: Any, *, payload_parse_recovered: bool = False) -> tuple[list[dict[str, str]], dict[str, Any]]:
+def audit_knowledge_graph_payload(
+    payload: Any,
+    *,
+    payload_parse_recovered: bool = False,
+    ontology_version: str = "v1",
+) -> tuple[list[dict[str, str]], dict[str, Any]]:
     normalized_payload = normalize_lenient_payload(payload)
     raw_triples = normalized_payload.get("triples", [])
     payload_triples_is_list = isinstance(raw_triples, list)
@@ -153,7 +168,7 @@ def audit_knowledge_graph_payload(payload: Any, *, payload_parse_recovered: bool
             continue
         candidate_triples.append({key: triple.get(key) for key in TRIPLE_REQUIRED_KEYS})
 
-    validation_report = validate_triples(candidate_triples, dedupe=True)
+    validation_report = validate_triples(candidate_triples, dedupe=True, ontology_version=ontology_version)
     invalid_issue_counts: Counter[str] = Counter()
     malformed_from_validation = 0
     ontology_rejected_triple_count = 0
@@ -179,6 +194,7 @@ def audit_knowledge_graph_payload(payload: Any, *, payload_parse_recovered: bool
         "duplicate_triple_count": validation_report["summary"]["duplicate_triple_count"],
         "kept_triple_count": len(validation_report["valid_triples"]),
         "invalid_issue_counts": dict(sorted(invalid_issue_counts.items())),
+        "ontology_version": ontology_version,
     }
     return validation_report["valid_triples"], audit
 
@@ -515,6 +531,296 @@ WORKFLOW RULES:
 """
 
 
+V2_APPROVED_MACRO_REGIONS = [
+    "Africa",
+    "APAC",
+    "Americas",
+    "Asia",
+    "Asia Pacific",
+    "Caribbean",
+    "Central America",
+    "EMEA",
+    "Eastern Europe",
+    "Europe",
+    "European Union",
+    "Latin America",
+    "Middle East",
+    "North America",
+    "South America",
+    "Southeast Asia",
+    "Western Europe",
+]
+
+
+def _v2_same_chat_system_prompt(full_text: str) -> str:
+    return f"""<system_role>
+You are an expert information extraction engine for SEC 10-K business-model analysis.
+Your task is to build a canonical business-model knowledge graph from the filing.
+You must follow the ontology exactly and output only valid JSON when a workflow step asks for output.
+</system_role>
+
+<data_contract>
+You must output ONLY one valid JSON object.
+
+The required output shape is:
+{{
+  "extraction_notes": "Brief reasoning summary",
+  "triples": [
+    {{
+      "subject": "Name of subject",
+      "subject_type": "EXACT_NODE_TYPE",
+      "relation": "EXACT_RELATION",
+      "object": "Name of object or canonical label",
+      "object_type": "EXACT_NODE_TYPE"
+    }}
+  ]
+}}
+
+Every triple MUST contain exactly these 5 fields:
+- subject
+- subject_type
+- relation
+- object
+- object_type
+
+If subject_type or object_type is missing, the output is invalid.
+Do not output markdown code blocks.
+Do not output commentary outside the JSON object.
+The response must start with {{ and end with }}.
+</data_contract>
+
+<validity_examples>
+<valid_triple>
+{{
+  "subject": "Microsoft",
+  "subject_type": "Company",
+  "relation": "HAS_SEGMENT",
+  "object": "Intelligent Cloud",
+  "object_type": "BusinessSegment"
+}}
+</valid_triple>
+
+<invalid_triple>
+{{
+  "subject": "Microsoft",
+  "relation": "HAS_SEGMENT",
+  "object": "Intelligent Cloud"
+}}
+</invalid_triple>
+</validity_examples>
+
+<ontology>
+<node_types>
+- Company: reporting company or named external commercial company
+- BusinessSegment: formally named internal segment or line of business
+- Offering: specific named product, service, platform, subscription, application, brand, solution, or explicitly named product family
+- CustomerType: canonical label only
+- Channel: canonical label only
+- Place: normalized business-relevant geography
+- RevenueModel: canonical label only
+</node_types>
+
+<canonical_labels>
+<customer_types>
+{_json_list(CANONICAL_CUSTOMER_TYPES)}
+</customer_types>
+<channels>
+{_json_list(CANONICAL_CHANNELS)}
+</channels>
+<revenue_models>
+{_json_list(CANONICAL_REVENUE_MODELS)}
+</revenue_models>
+</canonical_labels>
+
+<allowed_relations>
+- HAS_SEGMENT: Company -> BusinessSegment
+- OFFERS: Company -> Offering | BusinessSegment -> Offering | Offering -> Offering
+- SERVES: Company -> CustomerType | BusinessSegment -> CustomerType | Offering -> CustomerType
+- OPERATES_IN: Company -> Place
+- SELLS_THROUGH: Company -> Channel | BusinessSegment -> Channel | Offering -> Channel
+- PARTNERS_WITH: Company -> Company
+- MONETIZES_VIA: Company -> RevenueModel | BusinessSegment -> RevenueModel | Offering -> RevenueModel
+</allowed_relations>
+</ontology>
+
+<canonical_graph_policy>
+<scope_hierarchy>
+- Company = corporate shell
+- BusinessSegment = primary semantic anchor
+- Offering = inventory leaf, except when the filing explicitly states that one offering is an umbrella or family for another offering
+</scope_hierarchy>
+
+<scope_rules>
+- Prefer BusinessSegment for SERVES, SELLS_THROUGH, and MONETIZES_VIA when the filing describes the business logic at segment level.
+- Use Offering for semantic relations only when the filing explicitly and exclusively isolates the fact to that product.
+- Use Company for semantic relations only when the company has no reported segments or the filing explicitly states the fact universally across the company.
+- Do not automatically duplicate facts upward across scopes.
+- Do not derive company-level facts from lower-level facts during extraction.
+- Do not derive offering-level facts from segment-level facts during extraction.
+</scope_rules>
+
+<structure_rules>
+- BusinessSegment -> OFFERS -> Offering is the primary segment-offering edge.
+- Company -> OFFERS -> Offering is allowed only as fallback when no segment anchor exists, or when the filing explicitly presents the offering at company level.
+- Offering -> OFFERS -> Offering is allowed only when the filing explicitly states that one offering is a suite, family, umbrella, or parent offering for another offering.
+</structure_rules>
+</canonical_graph_policy>
+
+<entity_normalization_rules>
+<offering_rules>
+- When the filing enumerates products, services, platforms, brands, applications, or solutions, extract each explicit named offering separately.
+- Do not compress a list of named offerings into a broader umbrella label.
+- Do not merge similar but distinct offering names.
+- If both a family label and specific named offerings are explicit, keep the specific named offerings as separate Offering nodes.
+- Use an umbrella Offering -> OFFERS -> Offering relation only when the filing directly states that hierarchy.
+</offering_rules>
+
+<label_rules>
+- CustomerType, Channel, and RevenueModel must use only canonical labels.
+- If a phrase does not map clearly to a canonical label, omit it.
+- Do not invent new labels.
+</label_rules>
+
+<place_rules>
+- OPERATES_IN is strictly company-level.
+- Valid Place objects are countries, U.S. states, District of Columbia, or these approved macro-regions: {_json_list(V2_APPROVED_MACRO_REGIONS)}.
+- Normalize aliases such as U.S. -> United States, U.K. -> United Kingdom, asia-pacific -> Asia Pacific, emea -> EMEA.
+- Do not use cities, office sites, vague global labels, or market placeholders.
+</place_rules>
+
+<partnership_rules>
+- PARTNERS_WITH is strictly company-level.
+- Use PARTNERS_WITH only when the filing explicitly describes a named partnership.
+- Do not use it for suppliers, customers, competitors, ecosystem mentions, or channel relationships.
+</partnership_rules>
+</entity_normalization_rules>
+
+<inference_policy>
+- Precision is more important than recall.
+- Extract only text-grounded facts.
+- Conservative inference is allowed only for SERVES.
+- A SERVES inference is valid only when the product or segment description clearly implies the customer type.
+- Do not make weak guesses from vague proximity or broad context.
+</inference_policy>
+
+<workflow_rules>
+- You will receive one workflow step at a time.
+- Follow only the instructions of the current step.
+- Preserve continuity within the current chat.
+- Later steps MUST treat earlier outputs as fixed context unless the current step explicitly says otherwise.
+</workflow_rules>
+
+<source_filing>
+{full_text}
+</source_filing>
+
+<startup_instruction>
+Do not output anything now.
+Wait for the first user instruction.
+</startup_instruction>"""
+
+
+def _v2_reflection_system_prompt(full_text: str) -> str:
+    return f"""<system_role>
+You are an independent expert reviewer reconciling a business-model knowledge graph extracted from an SEC 10-K filing.
+Your role is Reviewer, not first extractor.
+You must start from the draft graph provided by the user, audit it against the filing and the ontology, and return one final canonical graph.
+Do not ignore the draft graph and rebuild blindly from zero.
+Think primarily about whether the provided triples are correct, missing, malformed, redundant, or wrongly scoped.
+</system_role>
+
+<data_contract>
+You must output ONLY one valid JSON object.
+
+The required output shape is:
+{{
+  "extraction_notes": "Summarize what you pruned, added, or consolidated.",
+  "triples": [
+    {{
+      "subject": "Name of subject",
+      "subject_type": "EXACT_NODE_TYPE",
+      "relation": "EXACT_RELATION",
+      "object": "Name of object or canonical label",
+      "object_type": "EXACT_NODE_TYPE"
+    }}
+  ]
+}}
+
+Every triple MUST contain exactly these 5 fields:
+- subject
+- subject_type
+- relation
+- object
+- object_type
+
+If subject_type or object_type is missing, the output is invalid.
+Output ONLY JSON object.
+</data_contract>
+
+<review_rules>
+- Keep the scope hierarchy clear: Company = corporate shell, BusinessSegment = primary semantic anchor, Offering = inventory leaf unless the filing explicitly states an umbrella offering hierarchy.
+- Remove unsupported higher-level duplicates created from lower-level facts.
+- Preserve BusinessSegment -> OFFERS -> Offering as the primary extracted structure when a segment anchor exists.
+- Company -> OFFERS -> Offering is allowed only as a fallback or explicit company-level fact.
+- Offering -> OFFERS -> Offering is allowed only when the filing explicitly states that one offering is a suite, family, umbrella, or parent offering for another offering.
+- SERVES, SELLS_THROUGH, and MONETIZES_VIA may attach to Company, BusinessSegment, or Offering, but should default to BusinessSegment when the filing states the business logic at segment level.
+- Use Offering for semantic relations only when the filing explicitly and exclusively isolates the fact to that product.
+- Use Company for semantic relations only when the company has no reported segments or the filing explicitly states the fact universally across the company.
+- For SERVES only, conservative text-grounded inference is allowed when the product or segment description clearly implies a primary customer type.
+- Remove SERVES triples that depend on vague adjacency, weak guesswork, or unsupported inheritance from a broader scope.
+- Audit explicit product and service enumerations carefully. Add every named offering that is stated in the filing.
+- Do not replace a list of named offerings with one summary label such as a generic product family.
+- If both a family label and distinct named offerings are explicit, preserve the distinct named offerings as separate Offering nodes.
+- Do not merge similar but distinct offering names when both appear explicitly in the filing.
+- OPERATES_IN is strictly company-level and limited to countries, U.S. states, District of Columbia, and approved macro-regions: {_json_list(V2_APPROVED_MACRO_REGIONS)}.
+- Remove cities, office locations, vague global placeholders, and market descriptors from OPERATES_IN.
+- PARTNERS_WITH requires explicit named partnership framing and must remain strictly company-level.
+</review_rules>
+
+<ontology>
+<node_types>
+- Company: reporting company or named external commercial company
+- BusinessSegment: formally named internal segment or line of business
+- Offering: specific named product, service, platform, subscription, application, brand, solution, or explicitly named product family
+- CustomerType: canonical label only
+- Channel: canonical label only
+- Place: normalized business-relevant geography
+- RevenueModel: canonical label only
+</node_types>
+
+<canonical_labels>
+<customer_types>
+{_json_list(CANONICAL_CUSTOMER_TYPES)}
+</customer_types>
+<channels>
+{_json_list(CANONICAL_CHANNELS)}
+</channels>
+<revenue_models>
+{_json_list(CANONICAL_REVENUE_MODELS)}
+</revenue_models>
+</canonical_labels>
+
+<allowed_relations>
+- HAS_SEGMENT: Company -> BusinessSegment
+- OFFERS: Company -> Offering | BusinessSegment -> Offering | Offering -> Offering
+- SERVES: Company -> CustomerType | BusinessSegment -> CustomerType | Offering -> CustomerType
+- OPERATES_IN: Company -> Place
+- SELLS_THROUGH: Company -> Channel | BusinessSegment -> Channel | Offering -> Channel
+- PARTNERS_WITH: Company -> Company
+- MONETIZES_VIA: Company -> RevenueModel | BusinessSegment -> RevenueModel | Offering -> RevenueModel
+</allowed_relations>
+</ontology>
+
+<source_filing>
+{full_text}
+</source_filing>
+
+<startup_instruction>
+Do not output anything now.
+Wait for the user instruction.
+</startup_instruction>"""
+
+
 class LLMExtractor:
     def __init__(self, base_url: str = "http://localhost:1234/v1", api_key: str = "lm-studio", model: str = "local-model"):
         from openai import OpenAI
@@ -523,18 +829,75 @@ class LLMExtractor:
         self.model = model
 
     @staticmethod
-    def _schema_def(name: str, model_schema: type[BaseModel]) -> dict:
+    def _schema_def(name: str, model_schema: type[BaseModel], *, ontology_version: str = "v1") -> dict:
+        schema = model_schema.model_json_schema(by_alias=True)
+        if ontology_version == "v2":
+            relation_enum = (
+                schema.get("$defs", {})
+                .get("Triple", {})
+                .get("properties", {})
+                .get("relation", {})
+                .get("enum")
+            )
+            if isinstance(relation_enum, list):
+                schema["$defs"]["Triple"]["properties"]["relation"]["enum"] = [
+                    value for value in relation_enum if value != "PART_OF"
+                ]
         return {
             "type": "json_schema",
             "json_schema": {
                 "name": name,
-                "schema": model_schema.model_json_schema(by_alias=True),
+                "schema": schema,
             },
         }
 
     @staticmethod
     def _compact_json(value: Any) -> str:
         return json.dumps(value, ensure_ascii=False, separators=(",", ":"))
+
+    @staticmethod
+    def _merge_serves_into_base(
+        base_extraction: KnowledgeGraphExtraction,
+        serves_extraction: KnowledgeGraphExtraction,
+    ) -> KnowledgeGraphExtraction:
+        return LLMExtractor._merge_relation_subset_into_base(
+            base_extraction,
+            serves_extraction,
+            allowed_relations={"SERVES"},
+        )
+
+    @staticmethod
+    def _merge_relation_subset_into_base(
+        base_extraction: KnowledgeGraphExtraction,
+        subset_extraction: KnowledgeGraphExtraction,
+        *,
+        allowed_relations: set[str],
+    ) -> KnowledgeGraphExtraction:
+        merged_triples: list[Triple] = []
+        seen: set[tuple[str, str, str, str, str]] = set()
+
+        for triple in base_extraction.triples:
+            if triple.relation in allowed_relations:
+                continue
+            key = (triple.subject, triple.subject_type, triple.relation, triple.object, triple.object_type)
+            if key in seen:
+                continue
+            seen.add(key)
+            merged_triples.append(triple)
+
+        for triple in subset_extraction.triples:
+            if triple.relation not in allowed_relations:
+                continue
+            key = (triple.subject, triple.subject_type, triple.relation, triple.object, triple.object_type)
+            if key in seen:
+                continue
+            seen.add(key)
+            merged_triples.append(triple)
+
+        return KnowledgeGraphExtraction(
+            extraction_notes=subset_extraction.extraction_notes,
+            triples=merged_triples,
+        )
 
     @staticmethod
     def _load_json_payload(content: str, fallback_payload: str) -> tuple[dict, bool]:
@@ -567,9 +930,14 @@ class LLMExtractor:
         return json.loads(fallback_payload), True
 
     @staticmethod
-    def _lenient_model_from_payload(schema_model: type[BaseModel], payload: Any) -> tuple[BaseModel, dict[str, Any]]:
+    def _lenient_model_from_payload(
+        schema_model: type[BaseModel],
+        payload: Any,
+        *,
+        ontology_version: str = "v1",
+    ) -> tuple[BaseModel, dict[str, Any]]:
         normalized_payload = normalize_lenient_payload(payload)
-        valid_triples, audit = audit_knowledge_graph_payload(normalized_payload)
+        valid_triples, audit = audit_knowledge_graph_payload(normalized_payload, ontology_version=ontology_version)
         extraction_notes = str(
             normalized_payload.get("extraction_notes", normalized_payload.get("chain_of_thought_reasoning", "")) or ""
         )
@@ -609,8 +977,9 @@ class LLMExtractor:
         max_retries: int,
         temperature: float = 0.0,
         use_schema: bool = True,
+        ontology_version: str = "v1",
     ) -> tuple[BaseModel, str | None, int, dict[str, Any]]:
-        schema_def = self._schema_def(schema_name, schema_model)
+        schema_def = self._schema_def(schema_name, schema_model, ontology_version=ontology_version)
 
         for attempt in range(1, max_retries + 1):
             try:
@@ -629,9 +998,14 @@ class LLMExtractor:
                     _, audit = audit_knowledge_graph_payload(
                         parsed_payload,
                         payload_parse_recovered=payload_parse_recovered,
+                        ontology_version=ontology_version,
                     )
                 else:
-                    parsed_model, audit = self._lenient_model_from_payload(schema_model, parsed_payload)
+                    parsed_model, audit = self._lenient_model_from_payload(
+                        schema_model,
+                        parsed_payload,
+                        ontology_version=ontology_version,
+                    )
                     audit["payload_parse_recovered"] = payload_parse_recovered
                 return parsed_model, content, attempt, audit
             except (json.JSONDecodeError, ValidationError, ExtractionError) as exc:
@@ -652,6 +1026,7 @@ class LLMExtractor:
         max_retries: int,
         temperature: float = 0.0,
         use_schema: bool = True,
+        ontology_version: str = "v1",
     ) -> tuple[BaseModel, str | None, int, dict[str, Any]]:
         return self._call_structured_messages(
             messages=[
@@ -664,6 +1039,7 @@ class LLMExtractor:
             max_retries=max_retries,
             temperature=temperature,
             use_schema=use_schema,
+            ontology_version=ontology_version,
         )
 
     def extract_two_pass_detailed(
@@ -779,8 +1155,11 @@ class LLMExtractor:
         max_retries: int = 2,
         strict: bool = True,
         use_schema: bool = True,
+        system_prompt: str = REFLECTION_SYSTEM_PROMPT,
+        user_prompt: str | None = None,
+        ontology_version: str = "v1",
     ) -> tuple[KnowledgeGraphExtraction, str | None, int, dict[str, Any]]:
-        reflection_prompt = (
+        reflection_prompt = user_prompt or (
             "WORKFLOW STEP: REFLECTION 2 - FINAL RECONCILIATION (INDEPENDENT REVIEW)\n\n"
             f"<company_name>\n{company_name or ''}\n</company_name>\n\n"
             f"<current_triples>\n{self._compact_json(current_extraction.model_dump())}\n</current_triples>\n\n"
@@ -796,13 +1175,14 @@ class LLMExtractor:
 
         try:
             final_extraction, raw_response, attempts_used, audit = self._call_structured(
-                system_prompt=REFLECTION_SYSTEM_PROMPT,
+                system_prompt=system_prompt,
                 user_prompt=reflection_prompt,
                 schema_name="KnowledgeGraphExtraction",
                 schema_model=KnowledgeGraphExtraction,
                 fallback_payload='{"extraction_notes":"Reflection failed.","triples":[]}',
                 max_retries=max_retries,
                 use_schema=use_schema,
+                ontology_version=ontology_version,
             )
             if not final_extraction.triples and current_extraction.triples:
                 logger.warning("Reflection returned no triples. Falling back to pre-reflection extraction.")
@@ -1099,5 +1479,258 @@ class LLMExtractor:
             skeleton_attempts_used=skeleton_attempts_used,
             pass2_attempts_used=pass2_attempts_used,
             reflection1_attempts_used=reflection1_attempts_used,
+            final_reflection_attempts_used=final_reflection_attempts_used,
+        )
+
+    def extract_chat_two_pass_reflection_v2(
+        self,
+        *,
+        full_text: str,
+        company_name: str | None = None,
+        max_retries: int = 2,
+        use_schema: bool = True,
+    ) -> ChatTwoPassReflectionResult:
+        messages = [{"role": "system", "content": _v2_same_chat_system_prompt(full_text)}]
+
+        pass1_prompt = (
+            "<workflow_step>\nPASS 1 - STRUCTURAL SKELETON\n</workflow_step>\n\n"
+            "<objective>\nBuild the structural inventory of the business.\n</objective>\n\n"
+            f"<company_name>\n{company_name or ''}\n</company_name>\n\n"
+            "<extract_only>\n- HAS_SEGMENT\n- OFFERS\n</extract_only>\n\n"
+            "<pass_specific_focus>\n"
+            "- capture all explicit named segments\n"
+            "- capture all explicit named offerings\n"
+            "- capture explicit offering-family hierarchies when the filing directly states them\n"
+            "</pass_specific_focus>\n\n"
+            "<ontology_reminder>\n"
+            "- follow the ontology rules for Company, BusinessSegment, and Offering\n"
+            "- remember that OFFERS may be BusinessSegment -> Offering, Company -> Offering, or Offering -> Offering only when the ontology conditions are satisfied\n"
+            "</ontology_reminder>\n\n"
+            "<output_scope>\nReturn only HAS_SEGMENT and OFFERS triples for this pass.\n</output_scope>"
+        )
+        messages.append({"role": "user", "content": pass1_prompt})
+        try:
+            skeleton_extraction, raw_skeleton_response, skeleton_attempts_used, skeleton_audit = self._call_structured_messages(
+                messages=messages,
+                schema_name="KnowledgeGraphExtraction",
+                schema_model=KnowledgeGraphExtraction,
+                fallback_payload='{"extraction_notes":"Truncated skeleton extraction.","triples":[]}',
+                max_retries=max_retries,
+                use_schema=use_schema,
+                ontology_version="v2",
+            )
+        except ExtractionError as exc:
+            return ChatTwoPassReflectionResult(success=False, error=str(exc))
+        messages.append(
+            {
+                "role": "assistant",
+                "content": raw_skeleton_response or json.dumps(skeleton_extraction.model_dump(mode="json"), ensure_ascii=False),
+            }
+        )
+
+        pass2_prompt = (
+            "<workflow_step>\nPASS 2 - CHANNELS AND REVENUE MODELS\n</workflow_step>\n\n"
+            "<objective>\nUsing the current graph as fixed context, extract commercial logic.\n</objective>\n\n"
+            "<extract_only>\n- SELLS_THROUGH\n- MONETIZES_VIA\n</extract_only>\n\n"
+            "<pass_specific_focus>\n"
+            "- add only channel and revenue-model facts\n"
+            "- keep structure unchanged\n"
+            "- use product-level facts only when the filing isolates them explicitly\n"
+            "</pass_specific_focus>\n\n"
+            "<ontology_reminder>\n"
+            "- follow the ontology rules for BusinessSegment, Offering, Company, Channel, and RevenueModel\n"
+            "- remember the allowed subject scopes and canonical labels for SELLS_THROUGH and MONETIZES_VIA\n"
+            "</ontology_reminder>\n\n"
+            "<output_scope>\nReturn only SELLS_THROUGH and MONETIZES_VIA triples for this pass.\n</output_scope>"
+        )
+        messages.append({"role": "user", "content": pass2_prompt})
+        try:
+            pass2_extraction, raw_pass2_response, pass2_attempts_used, pass2_audit = self._call_structured_messages(
+                messages=messages,
+                schema_name="KnowledgeGraphExtraction",
+                schema_model=KnowledgeGraphExtraction,
+                fallback_payload='{"extraction_notes":"Truncated pass-2 extraction.","triples":[]}',
+                max_retries=max_retries,
+                use_schema=use_schema,
+                ontology_version="v2",
+            )
+        except ExtractionError as exc:
+            return ChatTwoPassReflectionResult(
+                success=False,
+                skeleton_extraction=skeleton_extraction,
+                skeleton_audit=skeleton_audit,
+                raw_skeleton_response=raw_skeleton_response,
+                skeleton_attempts_used=skeleton_attempts_used,
+                error=str(exc),
+            )
+        pass2_effective_extraction = self._merge_relation_subset_into_base(
+            skeleton_extraction,
+            pass2_extraction,
+            allowed_relations={"SELLS_THROUGH", "MONETIZES_VIA"},
+        )
+        messages.append(
+            {
+                "role": "assistant",
+                "content": raw_pass2_response or json.dumps(pass2_extraction.model_dump(mode="json"), ensure_ascii=False),
+            }
+        )
+
+        pass3_serves_prompt = (
+            "<workflow_step>\nPASS 3 - CUSTOMER TYPES\n</workflow_step>\n\n"
+            "<objective>\nUsing the current graph as fixed context, extract customer-type relations.\n</objective>\n\n"
+            "<extract_only>\n- SERVES\n</extract_only>\n\n"
+            "<pass_specific_focus>\n"
+            "- add only SERVES facts\n"
+            "- use conservative text-grounded inference when justified\n"
+            "- separate explicit SERVES facts from inferred SERVES facts in extraction_notes\n"
+            "</pass_specific_focus>\n\n"
+            "<ontology_reminder>\n"
+            "- follow the ontology rules for BusinessSegment, Offering, Company, and CustomerType\n"
+            "- remember the allowed subject scopes and canonical labels for SERVES\n"
+            "</ontology_reminder>\n\n"
+            "<output_scope>\nReturn only SERVES triples for this pass.\n</output_scope>"
+        )
+        messages.append({"role": "user", "content": pass3_serves_prompt})
+        try:
+            pass3_serves_extraction, raw_pass3_serves_response, pass3_serves_attempts_used, pass3_serves_audit = (
+                self._call_structured_messages(
+                    messages=messages,
+                    schema_name="KnowledgeGraphExtraction",
+                    schema_model=KnowledgeGraphExtraction,
+                    fallback_payload='{"extraction_notes":"Truncated serves extraction.","triples":[]}',
+                    max_retries=max_retries,
+                    use_schema=use_schema,
+                    ontology_version="v2",
+                )
+            )
+        except ExtractionError as exc:
+            return ChatTwoPassReflectionResult(
+                success=False,
+                skeleton_extraction=skeleton_extraction,
+                pass2_extraction=pass2_extraction,
+                skeleton_audit=skeleton_audit,
+                pass2_audit=pass2_audit,
+                raw_skeleton_response=raw_skeleton_response,
+                raw_pass2_response=raw_pass2_response,
+                skeleton_attempts_used=skeleton_attempts_used,
+                pass2_attempts_used=pass2_attempts_used,
+                error=str(exc),
+            )
+        pass3_effective_extraction = self._merge_serves_into_base(pass2_effective_extraction, pass3_serves_extraction)
+        messages.append(
+            {
+                "role": "assistant",
+                "content": raw_pass3_serves_response
+                or json.dumps(pass3_serves_extraction.model_dump(mode="json"), ensure_ascii=False),
+            }
+        )
+
+        pass4_corporate_prompt = (
+            "<workflow_step>\nPASS 4 - CORPORATE SHELL FACTS\n</workflow_step>\n\n"
+            "<objective>\nUsing the current graph as fixed context, extract corporate geography and partnerships.\n</objective>\n\n"
+            "<extract_only>\n- OPERATES_IN\n- PARTNERS_WITH\n</extract_only>\n\n"
+            "<pass_specific_focus>\n"
+            "- add only company-level geography\n"
+            "- add only explicit named partnerships\n"
+            "- keep all non-corporate facts unchanged\n"
+            "</pass_specific_focus>\n\n"
+            "<ontology_reminder>\n"
+            "- follow the ontology rules for Company, Place, and Company-to-Company partnerships\n"
+            "- remember that OPERATES_IN and PARTNERS_WITH are company-level only in ontology v2\n"
+            "</ontology_reminder>\n\n"
+            "<output_scope>\nReturn only OPERATES_IN and PARTNERS_WITH triples for this pass.\n</output_scope>"
+        )
+        messages.append({"role": "user", "content": pass4_corporate_prompt})
+        try:
+            pass4_corporate_extraction, raw_pass4_corporate_response, pass4_corporate_attempts_used, pass4_corporate_audit = self._call_structured_messages(
+                messages=messages,
+                schema_name="KnowledgeGraphExtraction",
+                schema_model=KnowledgeGraphExtraction,
+                fallback_payload='{"extraction_notes":"Truncated corporate-shell extraction.","triples":[]}',
+                max_retries=max_retries,
+                use_schema=use_schema,
+                ontology_version="v2",
+            )
+        except ExtractionError as exc:
+            return ChatTwoPassReflectionResult(
+                success=False,
+                skeleton_extraction=skeleton_extraction,
+                pass2_extraction=pass2_extraction,
+                pass3_serves_extraction=pass3_serves_extraction,
+                pre_reflection_extraction=pass3_effective_extraction,
+                skeleton_audit=skeleton_audit,
+                pass2_audit=pass2_audit,
+                pass3_serves_audit=pass3_serves_audit,
+                pre_reflection_audit=pass3_serves_audit,
+                raw_skeleton_response=raw_skeleton_response,
+                raw_pass2_response=raw_pass2_response,
+                raw_pass3_serves_response=raw_pass3_serves_response,
+                reflection1_extraction=pass3_effective_extraction,
+                skeleton_attempts_used=skeleton_attempts_used,
+                pass2_attempts_used=pass2_attempts_used,
+                pass3_serves_attempts_used=pass3_serves_attempts_used,
+                error=str(exc),
+            )
+        pass4_effective_extraction = self._merge_relation_subset_into_base(
+            pass3_effective_extraction,
+            pass4_corporate_extraction,
+            allowed_relations={"OPERATES_IN", "PARTNERS_WITH"},
+        )
+
+        final_reflection_prompt = (
+            "WORKFLOW STEP: REFLECTION - FINAL RECONCILIATION (INDEPENDENT REVIEW, ONTOLOGY V2)\n\n"
+            "<workflow_step>\n"
+            "REFLECTION - FINAL RECONCILIATION\n"
+            "</workflow_step>\n\n"
+            "<objective>\n"
+            "Review the draft graph and return the final canonical graph.\n"
+            "</objective>\n\n"
+            f"<company_name>\n{company_name or ''}\n</company_name>\n\n"
+            f"<current_graph>\n{self._compact_json(pass4_effective_extraction.model_dump())}\n</current_graph>\n\n"
+            "<review_instruction>\n"
+            "Act exactly as the system prompt instructs.\n"
+            "Audit the draft graph against the filing and the ontology.\n"
+            "Correct, remove, keep, and add triples only as needed to produce the final canonical graph.\n"
+            "</review_instruction>"
+        )
+        final_extraction, raw_final_reflection_response, final_reflection_attempts_used, final_reflection_audit = self.reflect_extraction(
+            full_text=full_text,
+            current_extraction=pass4_effective_extraction,
+            company_name=company_name,
+            max_retries=max_retries,
+            strict=False,
+            use_schema=use_schema,
+            system_prompt=_v2_reflection_system_prompt(full_text),
+            user_prompt=final_reflection_prompt,
+            ontology_version="v2",
+        )
+
+        return ChatTwoPassReflectionResult(
+            success=True,
+            skeleton_extraction=skeleton_extraction,
+            pass2_extraction=pass2_extraction,
+            pass3_serves_extraction=pass3_serves_extraction,
+            pass4_corporate_extraction=pass4_corporate_extraction,
+            pre_reflection_extraction=pass4_effective_extraction,
+            reflection1_extraction=pass4_effective_extraction,
+            final_extraction=final_extraction,
+            skeleton_audit=skeleton_audit,
+            pass2_audit=pass2_audit,
+            pass3_serves_audit=pass3_serves_audit,
+            pass4_corporate_audit=pass4_corporate_audit,
+            pre_reflection_audit=pass4_corporate_audit,
+            reflection1_audit=pass4_corporate_audit,
+            final_reflection_audit=final_reflection_audit,
+            raw_skeleton_response=raw_skeleton_response,
+            raw_pass2_response=raw_pass2_response,
+            raw_pass3_serves_response=raw_pass3_serves_response,
+            raw_pass4_corporate_response=raw_pass4_corporate_response,
+            raw_reflection1_response=raw_pass4_corporate_response,
+            raw_final_reflection_response=raw_final_reflection_response,
+            skeleton_attempts_used=skeleton_attempts_used,
+            pass2_attempts_used=pass2_attempts_used,
+            pass3_serves_attempts_used=pass3_serves_attempts_used,
+            pass4_corporate_attempts_used=pass4_corporate_attempts_used,
+            reflection1_attempts_used=pass4_corporate_attempts_used,
             final_reflection_attempts_used=final_reflection_attempts_used,
         )

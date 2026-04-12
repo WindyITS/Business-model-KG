@@ -5,50 +5,55 @@ from typing import Any
 
 
 CONFIG_DIR = Path(__file__).resolve().parents[1] / "configs"
-ONTOLOGY_PATH = CONFIG_DIR / "ontology.json"
+ONTOLOGY_PATHS = {
+    "v1": CONFIG_DIR / "ontology.json",
+    "v2": CONFIG_DIR / "ontology_v2.json",
+}
 
 
-@lru_cache(maxsize=1)
-def load_ontology_config() -> dict[str, Any]:
-    return json.loads(ONTOLOGY_PATH.read_text(encoding="utf-8"))
+@lru_cache(maxsize=None)
+def load_ontology_config(ontology_version: str = "v1") -> dict[str, Any]:
+    if ontology_version not in ONTOLOGY_PATHS:
+        raise ValueError(f"Unsupported ontology version: {ontology_version}")
+    return json.loads(ONTOLOGY_PATHS[ontology_version].read_text(encoding="utf-8"))
 
 
-def canonical_labels(label_group: str) -> list[str]:
-    ontology = load_ontology_config()
+def canonical_labels(label_group: str, ontology_version: str = "v1") -> list[str]:
+    ontology = load_ontology_config(ontology_version)
     labels = ontology["canonical_labels"][label_group]
     return list(labels.keys())
 
 
-def relation_names() -> list[str]:
-    ontology = load_ontology_config()
+def relation_names(ontology_version: str = "v1") -> list[str]:
+    ontology = load_ontology_config(ontology_version)
     return list(ontology["relations"].keys())
 
 
-def node_type_names() -> list[str]:
-    ontology = load_ontology_config()
+def node_type_names(ontology_version: str = "v1") -> list[str]:
+    ontology = load_ontology_config(ontology_version)
     return list(ontology["node_types"].keys())
 
 
-def allowed_subject_types(relation: str) -> list[str]:
-    ontology = load_ontology_config()
+def allowed_subject_types(relation: str, ontology_version: str = "v1") -> list[str]:
+    ontology = load_ontology_config(ontology_version)
     return list(ontology["relations"][relation]["subject_types"])
 
 
-def allowed_object_types(relation: str) -> list[str]:
-    ontology = load_ontology_config()
+def allowed_object_types(relation: str, ontology_version: str = "v1") -> list[str]:
+    ontology = load_ontology_config(ontology_version)
     return list(ontology["relations"][relation]["object_types"])
 
 
-def is_valid_relation_schema(subject_type: str, relation: str, object_type: str) -> bool:
-    ontology = load_ontology_config()
+def is_valid_relation_schema(subject_type: str, relation: str, object_type: str, ontology_version: str = "v1") -> bool:
+    ontology = load_ontology_config(ontology_version)
     if relation not in ontology["relations"]:
         return False
     relation_payload = ontology["relations"][relation]
     return subject_type in relation_payload["subject_types"] and object_type in relation_payload["object_types"]
 
 
-def build_strict_ontology_prompt() -> str:
-    ontology = load_ontology_config()
+def build_strict_ontology_prompt(ontology_version: str = "v1") -> str:
+    ontology = load_ontology_config(ontology_version)
 
     lines: list[str] = ["=== STRICT BUSINESS-MODEL ONTOLOGY (Closed Schema, Closed Labels) ===", ""]
     lines.append("NODE TYPE DEFINITIONS:")
@@ -65,13 +70,13 @@ def build_strict_ontology_prompt() -> str:
         [
             "",
             "CANONICAL CUSTOMER LABELS (exact match only):",
-            json.dumps(canonical_labels("CustomerType"), ensure_ascii=False),
+            json.dumps(canonical_labels("CustomerType", ontology_version), ensure_ascii=False),
             "",
             "CANONICAL CHANNEL LABELS (exact match only):",
-            json.dumps(canonical_labels("Channel"), ensure_ascii=False),
+            json.dumps(canonical_labels("Channel", ontology_version), ensure_ascii=False),
             "",
             "CANONICAL REVENUE MODEL LABELS (exact match only):",
-            json.dumps(canonical_labels("RevenueModel"), ensure_ascii=False),
+            json.dumps(canonical_labels("RevenueModel", ontology_version), ensure_ascii=False),
             "",
             "GLOBAL RULES:",
         ]

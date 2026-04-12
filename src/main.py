@@ -27,6 +27,8 @@ def _write_json(path: Path, payload: Any) -> None:
 
 
 def _mode_name(args: argparse.Namespace) -> str:
+    if getattr(args, "chat_two_pass_reflection_v2", False):
+        return "chat_two_pass_reflection_v2"
     if getattr(args, "chat_two_pass_reflection", False):
         return "chat_two_pass_reflection"
     if getattr(args, "incremental_reflection", False):
@@ -88,6 +90,11 @@ def main() -> int:
         help="Same-chat pass1 -> pass2 -> reflection, then an independent final reflection pass.",
     )
     parser.add_argument(
+        "--chat-two-pass-reflection-v2",
+        action="store_true",
+        help="Same-chat pass1 -> pass2 -> reflection using ontology-v2 scope rules, then an independent final reflection pass.",
+    )
+    parser.add_argument(
         "--no-schema",
         action="store_true",
         help="Disable response_format JSON Schema enforcement and rely on prompt-only JSON output.",
@@ -101,10 +108,12 @@ def main() -> int:
 
     source_file = Path(args.file_path)
     mode = _mode_name(args)
+    ontology_version = "v2" if mode == "chat_two_pass_reflection_v2" else "v1"
     run_dir = _build_run_dir(Path(args.output_dir), source_file, mode)
     summary: dict[str, Any] = {
         "status": "running",
         "mode": mode,
+        "ontology_version": ontology_version,
         "source_file": str(source_file),
         "run_dir": str(run_dir),
         "use_schema": not args.no_schema,
@@ -143,7 +152,78 @@ def main() -> int:
         extractor = LLMExtractor(base_url=args.base_url, api_key=args.api_key, model=args.model)
         logger.info("Starting LLM extraction in %s mode...", mode)
 
-        if mode == "chat_two_pass_reflection":
+        if mode == "chat_two_pass_reflection_v2":
+            chat_result: ChatTwoPassReflectionResult = extractor.extract_chat_two_pass_reflection_v2(
+                full_text=full_text,
+                company_name=company_name,
+                max_retries=args.max_retries,
+                use_schema=not args.no_schema,
+            )
+            if not chat_result.success:
+                raise ExtractionError(chat_result.error or "Chat two-pass reflection v2 failed.")
+            _write_json(
+                run_dir / "skeleton_extraction.json",
+                {
+                    "triples": [t.model_dump() for t in chat_result.skeleton_extraction.triples],
+                    "extraction_notes": chat_result.skeleton_extraction.extraction_notes,
+                },
+            )
+            _write_json(
+                run_dir / "pass2_commercial_extraction.json",
+                {
+                    "triples": [t.model_dump() for t in chat_result.pass2_extraction.triples],
+                    "extraction_notes": chat_result.pass2_extraction.extraction_notes,
+                },
+            )
+            _write_json(
+                run_dir / "pass3_serves_extraction.json",
+                {
+                    "triples": [t.model_dump() for t in chat_result.pass3_serves_extraction.triples],
+                    "extraction_notes": chat_result.pass3_serves_extraction.extraction_notes,
+                },
+            )
+            _write_json(
+                run_dir / "pass4_corporate_extraction.json",
+                {
+                    "triples": [t.model_dump() for t in chat_result.pass4_corporate_extraction.triples],
+                    "extraction_notes": chat_result.pass4_corporate_extraction.extraction_notes,
+                },
+            )
+            _write_json(
+                run_dir / "pre_reflection_extraction.json",
+                {
+                    "triples": [t.model_dump() for t in chat_result.pre_reflection_extraction.triples],
+                    "extraction_notes": chat_result.pre_reflection_extraction.extraction_notes,
+                },
+            )
+            _write_json(
+                run_dir / "reflection2_extraction.json",
+                {
+                    "triples": [t.model_dump() for t in chat_result.final_extraction.triples],
+                    "extraction_notes": chat_result.final_extraction.extraction_notes,
+                    "attempts_used": chat_result.final_reflection_attempts_used,
+                    "raw_response": chat_result.raw_final_reflection_response,
+                },
+            )
+            extractions = [chat_result.final_extraction]
+            extraction_payload = {
+                "skeleton_extraction": chat_result.skeleton_extraction.model_dump(),
+                "pass2_extraction": chat_result.pass2_extraction.model_dump(),
+                "pass3_serves_extraction": chat_result.pass3_serves_extraction.model_dump(),
+                "pass4_corporate_extraction": chat_result.pass4_corporate_extraction.model_dump(),
+                "pre_reflection_extraction": chat_result.pre_reflection_extraction.model_dump(),
+                "final_extraction": chat_result.final_extraction.model_dump(),
+            }
+            stage_audits = {
+                "skeleton": chat_result.skeleton_audit,
+                "pass2_commercial": chat_result.pass2_audit,
+                "pass3_serves": chat_result.pass3_serves_audit,
+                "pass4_corporate": chat_result.pass4_corporate_audit,
+                "pre_reflection": chat_result.pre_reflection_audit,
+                "reflection": chat_result.final_reflection_audit,
+            }
+            final_output_audit = chat_result.final_reflection_audit
+        elif mode == "chat_two_pass_reflection":
             chat_result: ChatTwoPassReflectionResult = extractor.extract_chat_two_pass_reflection(
                 full_text=full_text,
                 company_name=company_name,
@@ -285,6 +365,7 @@ def main() -> int:
             source_text=full_text,
             require_text_grounding=False,
             dedupe=True,
+            ontology_version=ontology_version,
         )
         _write_json(run_dir / "validation_report.json", validation_report)
 

@@ -10,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from chunker import read_and_chunk_file
 from entity_resolver import resolve_entities
 from evaluate_graph import _load_triples_from_json, evaluate
-from llm_extractor import KnowledgeGraphExtraction, Triple, aggregate_extraction_audits, audit_knowledge_graph_payload
+from llm_extractor import LLMExtractor, KnowledgeGraphExtraction, Triple, aggregate_extraction_audits, audit_knowledge_graph_payload
 from main import _mode_name
 
 
@@ -95,10 +95,14 @@ class PipelineComponentTests(unittest.TestCase):
 
     def test_mode_name_prefers_explicit_reflection_pipelines(self):
         args = SimpleNamespace(
+            chat_two_pass_reflection_v2=True,
             chat_two_pass_reflection=True,
             incremental_reflection=True,
             two_pass_reflection=False,
         )
+        self.assertEqual(_mode_name(args), "chat_two_pass_reflection_v2")
+
+        args.chat_two_pass_reflection_v2 = False
         self.assertEqual(_mode_name(args), "chat_two_pass_reflection")
 
         args.chat_two_pass_reflection = False
@@ -110,6 +114,7 @@ class PipelineComponentTests(unittest.TestCase):
 
     def test_mode_name_defaults_to_two_pass_reflection(self):
         args = SimpleNamespace(
+            chat_two_pass_reflection_v2=False,
             chat_two_pass_reflection=False,
             incremental_reflection=False,
             two_pass_reflection=False,
@@ -149,6 +154,69 @@ class PipelineComponentTests(unittest.TestCase):
         self.assertEqual(len(valid_triples), 1)
         self.assertEqual(audit["raw_triple_count"], 1)
         self.assertEqual(audit["kept_triple_count"], 1)
+
+    def test_v2_schema_def_excludes_part_of(self):
+        schema_def = LLMExtractor._schema_def(
+            "KnowledgeGraphExtraction",
+            KnowledgeGraphExtraction,
+            ontology_version="v2",
+        )
+        relation_enum = (
+            schema_def["json_schema"]["schema"]["$defs"]["Triple"]["properties"]["relation"]["enum"]
+        )
+
+        self.assertNotIn("PART_OF", relation_enum)
+
+    def test_merge_relation_subset_into_base_replaces_only_allowed_relations(self):
+        base = KnowledgeGraphExtraction(
+            extraction_notes="base",
+            triples=[
+                Triple(
+                    subject="Microsoft",
+                    subject_type="Company",
+                    relation="HAS_SEGMENT",
+                    object="Intelligent Cloud",
+                    object_type="BusinessSegment",
+                ),
+                Triple(
+                    subject="Intelligent Cloud",
+                    subject_type="BusinessSegment",
+                    relation="SERVES",
+                    object="large enterprises",
+                    object_type="CustomerType",
+                ),
+            ],
+        )
+        subset = KnowledgeGraphExtraction(
+            extraction_notes="subset",
+            triples=[
+                Triple(
+                    subject="Intelligent Cloud",
+                    subject_type="BusinessSegment",
+                    relation="SERVES",
+                    object="developers",
+                    object_type="CustomerType",
+                ),
+                Triple(
+                    subject="Microsoft",
+                    subject_type="Company",
+                    relation="OPERATES_IN",
+                    object="United States",
+                    object_type="Place",
+                ),
+            ],
+        )
+
+        merged = LLMExtractor._merge_relation_subset_into_base(
+            base,
+            subset,
+            allowed_relations={"SERVES"},
+        )
+
+        self.assertEqual(
+            [(triple.relation, triple.object) for triple in merged.triples],
+            [("HAS_SEGMENT", "Intelligent Cloud"), ("SERVES", "developers")],
+        )
 
     def test_aggregate_extraction_audits_sums_counts(self):
         aggregated = aggregate_extraction_audits(

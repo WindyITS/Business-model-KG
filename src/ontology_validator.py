@@ -65,6 +65,7 @@ def validate_triple(
     triple: dict[str, Any],
     source_text: str | None = None,
     require_text_grounding: bool = False,
+    ontology_version: str = "v1",
 ) -> dict[str, Any]:
     issues: list[dict[str, str]] = []
     normalized = {
@@ -80,8 +81,8 @@ def validate_triple(
     if not normalized["object"]:
         issues.append({"code": "empty_object", "message": "Object is empty after normalization."})
 
-    valid_node_types = set(node_type_names())
-    valid_relations = set(relation_names())
+    valid_node_types = set(node_type_names(ontology_version))
+    valid_relations = set(relation_names(ontology_version))
 
     if normalized["subject_type"] not in valid_node_types:
         issues.append({"code": "invalid_subject_type", "message": f"Invalid subject_type: {normalized['subject_type']}"})
@@ -94,6 +95,7 @@ def validate_triple(
         normalized["subject_type"],
         normalized["relation"],
         normalized["object_type"],
+        ontology_version,
     ):
         issues.append(
             {
@@ -108,7 +110,7 @@ def validate_triple(
     for node_field, type_field in (("subject", "subject_type"), ("object", "object_type")):
         node_type = normalized[type_field]
         if node_type in CANONICAL_LABEL_NODE_TYPES:
-            allowed = set(canonical_labels(node_type))
+            allowed = set(canonical_labels(node_type, ontology_version))
             if normalized[node_field] not in allowed:
                 issues.append(
                     {
@@ -142,6 +144,7 @@ def validate_triples(
     source_text: str | None = None,
     require_text_grounding: bool = False,
     dedupe: bool = True,
+    ontology_version: str = "v1",
 ) -> dict[str, Any]:
     valid_triples: list[dict[str, str]] = []
     invalid_triples: list[dict[str, Any]] = []
@@ -149,7 +152,12 @@ def validate_triples(
     seen: set[tuple[str, str, str, str, str]] = set()
 
     for index, triple in enumerate(triples):
-        result = validate_triple(triple, source_text=source_text, require_text_grounding=require_text_grounding)
+        result = validate_triple(
+            triple,
+            source_text=source_text,
+            require_text_grounding=require_text_grounding,
+            ontology_version=ontology_version,
+        )
         normalized = result["normalized_triple"]
         if not result["is_valid"]:
             invalid_triples.append(
@@ -191,6 +199,7 @@ def validate_triples(
             "duplicate_triple_count": len(duplicate_triples),
             "output_triple_count": len(valid_triples),
             "require_text_grounding": require_text_grounding,
+            "ontology_version": ontology_version,
         },
         "valid_triples": valid_triples,
         "invalid_triples": invalid_triples,
@@ -203,12 +212,14 @@ def validate_payload(
     source_text: str | None = None,
     require_text_grounding: bool = False,
     dedupe: bool = True,
+    ontology_version: str = "v1",
 ) -> dict[str, Any]:
     return validate_triples(
         _extract_triples(payload),
         source_text=source_text,
         require_text_grounding=require_text_grounding,
         dedupe=dedupe,
+        ontology_version=ontology_version,
     )
 
 
@@ -217,6 +228,7 @@ def validate_file(
     source_text_path: Path | None = None,
     require_text_grounding: bool = False,
     dedupe: bool = True,
+    ontology_version: str = "v1",
 ) -> dict[str, Any]:
     payload = json.loads(triples_path.read_text(encoding="utf-8"))
     source_text = source_text_path.read_text(encoding="utf-8") if source_text_path else None
@@ -225,6 +237,7 @@ def validate_file(
         source_text=source_text,
         require_text_grounding=require_text_grounding,
         dedupe=dedupe,
+        ontology_version=ontology_version,
     )
     report["source"] = {
         "triples_path": str(triples_path),
@@ -239,6 +252,7 @@ def main() -> int:
     parser.add_argument("--source-text-path", type=Path, default=None, help="Optional path to the source filing text.")
     parser.add_argument("--require-text-grounding", action="store_true", help="Require non-canonical entity names to appear in the source text.")
     parser.add_argument("--no-dedupe", action="store_true", help="Disable duplicate filtering.")
+    parser.add_argument("--ontology-version", choices=["v1", "v2"], default="v1", help="Ontology version to validate against.")
     parser.add_argument("--report-path", type=Path, default=None, help="Optional path to write the full JSON validation report.")
     parser.add_argument("--show-invalid", type=int, default=5, help="How many invalid triples to print in the CLI summary.")
     args = parser.parse_args()
@@ -248,6 +262,7 @@ def main() -> int:
         source_text_path=args.source_text_path,
         require_text_grounding=args.require_text_grounding,
         dedupe=not args.no_dedupe,
+        ontology_version=args.ontology_version,
     )
 
     summary = report["summary"]

@@ -58,7 +58,7 @@ A full extraction pipeline that takes a `.txt` 10-K filing and produces a valida
       │
       ▼
 llm_extractor.py    chat-two-pass-reflection, two-pass-reflection,
-      │             and incremental-reflection extraction
+      │             chat-two-pass-reflection-v2, and incremental-reflection extraction
       ▼
 entity_resolver.py  surface-form cleanup and canonical basic deduplication
       │
@@ -101,12 +101,11 @@ Seven node types, eight relations, three closed vocabularies.
 | ----------------- | --------------------------------------------------------------------- |
 | `HAS_SEGMENT`   | `Company` → `BusinessSegment`                                    |
 | `OFFERS`        | `Company` or `BusinessSegment` → `Offering`                    |
-| `PART_OF`       | `Offering` → `BusinessSegment`                                   |
-| `SERVES`        | `Company` or `Offering` → `CustomerType`                       |
-| `OPERATES_IN`   | `Company` or `BusinessSegment` → `Place`                       |
-| `SELLS_THROUGH` | `Company` or `Offering` → `Channel`                            |
+| `SERVES`        | `BusinessSegment` (primary), `Offering`, or `Company` → `CustomerType` |
+| `OPERATES_IN`   | `Company` → `Place`                                             |
+| `SELLS_THROUGH` | `BusinessSegment` (primary), `Offering`, or `Company` → `Channel` |
 | `PARTNERS_WITH` | `Company` → `Company`                                            |
-| `MONETIZES_VIA` | `Company`, `BusinessSegment`, or `Offering` → `RevenueModel` |
+| `MONETIZES_VIA` | `BusinessSegment` (primary), `Offering`, or `Company` → `RevenueModel` |
 
 Canonical `CustomerType` labels: `consumers`, `small businesses`, `mid-market companies`, `large enterprises`, `developers`, `IT professionals`, `government agencies`, `educational institutions`, `healthcare organizations`, `financial services firms`, `manufacturers`, `retailers`.
 
@@ -116,7 +115,7 @@ Canonical `RevenueModel` labels: `subscription`, `advertising`, `licensing`, `co
 
 No labels outside these vocabularies are allowed. If a concept doesn't fit, it gets dropped.
 
-Full ontology spec: [`docs/ontology.md`](./docs/ontology.md)
+Current ontology-v2 draft: [`docs/ontology_v2.md`](./docs/ontology_v2.md)
 
 ## Quickstart
 
@@ -393,6 +392,7 @@ The batch runner applies the same chunk window to Stage 1, Stage 2, and Stage 3 
 | Mode            | How it works                                                                                                      |
 | --------------- | ----------------------------------------------------------------------------------------------------------------- |
 | `chat-two-pass-reflection` | Same-chat Pass 1 -> Pass 2 -> Reflection 1, then an independent final reflection pass. Current best prompt-tuned option for continuity-sensitive extraction. |
+| `chat-two-pass-reflection-v2` | Same-chat Pass 1 -> Pass 2 -> Pass 3 (`SERVES`) -> Reflection 1, then an independent final reflection pass using ontology-v2 segment-centric scope rules. |
 | `two-pass-reflection` | Two-pass extraction followed by a final graph-review reflection pass. Recommended when the full business section fits comfortably. |
 | `incremental-reflection` | Incremental document ingestion followed by a final graph-review reflection pass. Recommended when preserving cross-section context matters more than speed. |
 
@@ -424,6 +424,7 @@ Roadmap details live in [`docs/plan.md`](./docs/plan.md).
 | -------------------- | ---------------------------- | --------------------------------------------- |
 | `file_path`        | required                     | Path to the 10-K `.txt` file                |
 | `--chat-two-pass-reflection` | off                 | Same-chat two-pass + dual reflection pipeline |
+| `--chat-two-pass-reflection-v2` | off              | Same-chat Pass 1 + Pass 2 + Pass 3 (`SERVES`) + dual reflection pipeline aligned to ontology v2 |
 | `--incremental-reflection` | off                   | Incremental extraction + final review pass    |
 | `--two-pass-reflection` | off                     | Two-pass extraction + final review pass       |
 | `--no-schema`      | off                          | Disable `response_format` schema enforcement and rely on prompt-only JSON |
