@@ -33,6 +33,18 @@ def _xml_definition_lines(definitions: dict[str, str]) -> str:
     return "\n".join(f'- "{label}": {definition}' for label, definition in definitions.items())
 
 
+def _v2_source_context_user_prompt(full_text: str, company_name: str | None = None) -> str:
+    return (
+        "<source_context>\n"
+        f"<company_name>\n{company_name or ''}\n</company_name>\n\n"
+        f"<source_filing>\n{full_text}\n</source_filing>\n"
+        "</source_context>\n\n"
+        "<context_instruction>\n"
+        "This is context only. Do not answer this message. Wait for the workflow step.\n"
+        "</context_instruction>"
+    )
+
+
 class Triple(BaseModel):
     subject: str
     subject_type: NodeType
@@ -597,30 +609,8 @@ Every triple MUST contain exactly these 5 fields:
 - object_type
 
 If subject_type or object_type is missing, the output is invalid.
-Do not output markdown code blocks.
-Do not output commentary outside the JSON object.
 The response must start with {{ and end with }}.
 </data_contract>
-
-<validity_examples>
-<valid_triple>
-{{
-  "subject": "Microsoft",
-  "subject_type": "Company",
-  "relation": "HAS_SEGMENT",
-  "object": "Intelligent Cloud",
-  "object_type": "BusinessSegment"
-}}
-</valid_triple>
-
-<invalid_triple>
-{{
-  "subject": "Microsoft",
-  "relation": "HAS_SEGMENT",
-  "object": "Intelligent Cloud"
-}}
-</invalid_triple>
-</validity_examples>
 
 <ontology>
 <node_types>
@@ -844,7 +834,7 @@ You must follow the ontology exactly and output only valid JSON when a workflow 
 <data_contract>
 You must output ONLY one valid JSON object.
 
-The required output shape is:
+Required shape:
 {{
   "extraction_notes": "Brief reasoning summary",
   "triples": [
@@ -858,7 +848,7 @@ The required output shape is:
   ]
 }}
 
-Every triple MUST contain exactly these 5 fields:
+Every triple must contain exactly:
 - subject
 - subject_type
 - relation
@@ -866,30 +856,8 @@ Every triple MUST contain exactly these 5 fields:
 - object_type
 
 If subject_type or object_type is missing, the output is invalid.
-Do not output markdown code blocks.
-Do not output commentary outside the JSON object.
 The response must start with {{ and end with }}.
 </data_contract>
-
-<validity_examples>
-<valid_triple>
-{{
-  "subject": "Microsoft",
-  "subject_type": "Company",
-  "relation": "HAS_SEGMENT",
-  "object": "Intelligent Cloud",
-  "object_type": "BusinessSegment"
-}}
-</valid_triple>
-
-<invalid_triple>
-{{
-  "subject": "Microsoft",
-  "relation": "HAS_SEGMENT",
-  "object": "Intelligent Cloud"
-}}
-</invalid_triple>
-</validity_examples>
 
 <ontology>
 <node_types>
@@ -933,16 +901,8 @@ The response must start with {{ and end with }}.
 </scope_hierarchy>
 
 <scope_rules>
-- Keep SERVES on BusinessSegment by default.
-- Do not attach SERVES directly to Company in this ontology variant.
-- If a customer type is stated universally across the company, attach it to each reported BusinessSegment instead of to Company.
-- Do not attach SERVES directly to Offering in this ontology variant.
-- Keep SELLS_THROUGH on BusinessSegment by default.
-- Do not attach SELLS_THROUGH directly to Company in this ontology variant.
-- If the filing states a channel universally across a company that has reported segments, attach that channel to each reported BusinessSegment instead of to Company.
-- Use Offering for SELLS_THROUGH only when that offering has no BusinessSegment anchor.
-- Keep MONETIZES_VIA on Offering only in this ontology variant.
-- Do not attach MONETIZES_VIA directly to BusinessSegment or Company.
+- SELLS_THROUGH should default to BusinessSegment.
+- SELLS_THROUGH may attach to Offering only when that offering has no BusinessSegment anchor.
 - If an offering family hierarchy exists, attach MONETIZES_VIA to the family parent rather than to its child offerings.
 - Do not automatically duplicate facts upward across scopes.
 - Do not derive company-level facts from lower-level facts during extraction.
@@ -957,42 +917,27 @@ The response must start with {{ and end with }}.
 </structure_rules>
 </canonical_graph_policy>
 
-<entity_normalization_rules>
-<offering_rules>
-- When the filing enumerates products, services, platforms, brands, applications, or solutions, extract each explicit named offering separately.
-- Do not compress a list of named offerings into a broader umbrella label.
-- Do not merge similar but distinct offering names.
-- If both a family label and specific named offerings are explicit, keep the specific named offerings as separate Offering nodes.
-- Use an umbrella Offering -> OFFERS -> Offering relation only when the filing directly states that hierarchy.
-</offering_rules>
-
-<label_rules>
+<normalization_rules>
 - CustomerType, Channel, and RevenueModel must use only canonical labels.
 - If a phrase does not map clearly to a canonical label, omit it.
-- Do not invent new labels.
-</label_rules>
+- Extract explicit named offerings individually and as written.
+- Do not compress explicit offering lists into summary labels.
+- Do not merge similar but distinct offering names.
+</normalization_rules>
 
-<place_rules>
-- OPERATES_IN is strictly company-level.
-- Valid Place objects are countries, U.S. states, District of Columbia, or these approved macro-regions: {_json_list(V2_APPROVED_MACRO_REGIONS)}.
+<corporate_shell_rules>
+- Valid Place objects are countries, U.S. states, District of Columbia, and these macro-regions: {_json_list(V2_APPROVED_MACRO_REGIONS)}.
 - Normalize aliases such as U.S. -> United States, U.K. -> United Kingdom, asia-pacific -> Asia Pacific, emea -> EMEA.
 - Do not use cities, office sites, vague global labels, or market placeholders.
-</place_rules>
-
-<partnership_rules>
-- PARTNERS_WITH is strictly company-level.
 - Use PARTNERS_WITH only when the filing explicitly describes a named partnership.
 - Do not use it for suppliers, customers, competitors, ecosystem mentions, or channel relationships.
-</partnership_rules>
-</entity_normalization_rules>
+</corporate_shell_rules>
 
 <inference_policy>
 - Precision is more important than recall.
 - Extract only text-grounded facts.
 - Conservative inference is allowed only for SERVES.
-- A SERVES inference is valid only when the segment description clearly implies the customer type.
-- Do not attach inferred SERVES facts to Offering in this ontology variant.
-- Evaluate SERVES segment by segment rather than globally across the whole company.
+- SERVES inference must be segment-specific, not global.
 - Do not spread one customer type across multiple segments unless each segment has its own supporting evidence.
 - Do not make weak guesses from vague proximity or broad context.
 </inference_policy>
@@ -1026,7 +971,7 @@ Think primarily about whether the provided triples are correct, missing, malform
 <data_contract>
 You must output ONLY one valid JSON object.
 
-The required output shape is:
+Required shape:
 {{
   "extraction_notes": "Summarize what you pruned, added, or consolidated.",
   "triples": [
@@ -1040,7 +985,7 @@ The required output shape is:
   ]
 }}
 
-Every triple MUST contain exactly these 5 fields:
+Every triple must contain exactly:
 - subject
 - subject_type
 - relation
@@ -1051,33 +996,18 @@ If subject_type or object_type is missing, the output is invalid.
 Output ONLY JSON object.
 </data_contract>
 
-<review_rules>
-- Keep the scope hierarchy clear: Company = corporate shell, BusinessSegment = primary semantic anchor, Offering = inventory leaf unless the filing explicitly states an umbrella offering hierarchy.
-- Remove unsupported higher-level duplicates created from lower-level facts.
+<review_policy>
+- Correct only if facts are text-grounded in the filing and consistent with the ontology.
 - Preserve BusinessSegment -> OFFERS -> Offering as the primary extracted structure when a segment anchor exists.
-- Company -> OFFERS -> Offering is allowed only as a fallback or explicit company-level fact.
-- Offering -> OFFERS -> Offering is allowed only when the filing explicitly states that one offering is a suite, family, umbrella, or parent offering for another offering.
-- A child Offering may have at most one Offering parent in Offering -> OFFERS -> Offering hierarchy.
-- SERVES may attach only to BusinessSegment in this ontology variant.
-- Keep SERVES on BusinessSegment only in this ontology variant.
-- Do not keep any Company-level SERVES triple.
-- Remove any Offering-level or Company-level SERVES triple unless the filing and ontology require relocating it to BusinessSegment.
+- Preserve explicit offering-family hierarchy only when the filing states it clearly.
+- For offering structure specifically, change an offering's parent only when the current parent-child assignment is clearly wrong and not supported by the filing text.
+- A child Offering may have at most one Offering parent.
+- If an offering family hierarchy exists, keep MONETIZES_VIA on the family parent rather than on its child offerings.
+- Add missing named offerings when the filing states them.
+- Do not merge similar but distinct offering names.
 - Do not fan out a rare or specialized customer type across multiple segments unless each segment has its own support in the filing.
-- SELLS_THROUGH may attach only to BusinessSegment or Offering in this ontology variant and should default to BusinessSegment.
-- Do not keep any Company-level SELLS_THROUGH triple.
-- If the filing states a channel universally across a company that has reported segments, attach that channel to each reported BusinessSegment instead of to Company.
-- Use Offering for SELLS_THROUGH only when that offering has no BusinessSegment anchor.
-- MONETIZES_VIA may attach only to Offering in this ontology variant.
-- Do not keep any Company-level or BusinessSegment-level MONETIZES_VIA triple.
-- Do not keep a child-offering MONETIZES_VIA triple when that offering already has an explicit Offering parent.
-- Audit explicit product and service enumerations carefully. Add every named offering that is stated in the filing.
-- Do not replace a list of named offerings with one summary label such as a generic product family.
-- If both a family label and distinct named offerings are explicit, preserve the distinct named offerings as separate Offering nodes.
-- Do not merge similar but distinct offering names when both appear explicitly in the filing.
-- OPERATES_IN is strictly company-level and limited to countries, U.S. states, District of Columbia, and approved macro-regions: {_json_list(V2_APPROVED_MACRO_REGIONS)}.
-- Remove cities, office locations, vague global placeholders, and market descriptors from OPERATES_IN.
-- PARTNERS_WITH requires explicit named partnership framing and must remain strictly company-level.
-</review_rules>
+- Remove unsupported duplicates, malformed scope choices, and very weakly supported semantic edges.
+</review_policy>
 
 <ontology>
 <node_types>
@@ -1112,6 +1042,14 @@ Output ONLY JSON object.
 - MONETIZES_VIA: Offering -> RevenueModel
 </allowed_relations>
 </ontology>
+
+<corporate_shell_rules>
+- Valid Place objects are countries, U.S. states, District of Columbia, and these macro-regions: {_json_list(V2_APPROVED_MACRO_REGIONS)}.
+- Normalize aliases such as U.S. -> United States, U.K. -> United Kingdom, asia-pacific -> Asia Pacific, emea -> EMEA.
+- Do not use cities, office sites, vague global labels, or market placeholders.
+- Use PARTNERS_WITH only when the filing explicitly describes a named partnership.
+- Do not use it for suppliers, customers, competitors, ecosystem mentions, or channel relationships.
+</corporate_shell_rules>
 
 <source_filing>
 {full_text}
@@ -2056,17 +1994,22 @@ class LLMExtractor:
             "<extract_only>\n- HAS_SEGMENT\n- OFFERS\n</extract_only>\n\n"
             "<pass_specific_focus>\n"
             "- capture all explicit named segments\n"
-            "- capture all explicit named offerings\n"
-            "- capture explicit offering-family hierarchies when the filing directly states them\n"
             "- build the offering inventory segment by segment\n"
-            "- after drafting the graph, audit each BusinessSegment and each umbrella Offering for missing explicit named children before returning\n"
-            "- missing explicit named offerings are errors in this pass\n"
+            "- capture all explicit named offerings\n"
+            "- first identify the direct offering children stated under each BusinessSegment\n"
+            "- use Offering -> OFFERS -> Offering only when the text explicitly states that an offering is a family, suite, umbrella, parent, or grouped subcategory for another offering\n"
+            "- do not invent intermediate umbrella offerings or extra nesting just to organize the graph more neatly\n"
+            "- each child offering may have at most one Offering parent\n"
+            "- if the filing states both an umbrella offering and its explicit named children, keep both\n"
+            "- before returning, check that no explicit named offering has been omitted\n"
             "</pass_specific_focus>\n\n"
             "<ontology_reminder>\n"
             "- follow the ontology rules for Company, BusinessSegment, and Offering\n"
-            "- remember that OFFERS may be BusinessSegment -> Offering, Company -> Offering, or Offering -> Offering only when the ontology conditions are satisfied\n"
             "- an explicit umbrella offering does not replace its explicitly named child offerings; keep both when the filing states both\n"
             "</ontology_reminder>\n\n"
+            "<format_reminder>\n"
+            "Return strictly one JSON object in the exact format defined by the system prompt.\n"
+            "</format_reminder>\n\n"
             "<output_scope>\nReturn only HAS_SEGMENT and OFFERS triples for this pass.\n</output_scope>"
         )
         same_chat_messages.append({"role": "user", "content": pass1_prompt})
@@ -2098,16 +2041,14 @@ class LLMExtractor:
             "</channel_definitions>\n\n"
             "<pass_specific_focus>\n"
             "- reason about channels first, before any monetization logic\n"
-            "- keep SELLS_THROUGH on BusinessSegment by default\n"
-            "- if a channel is stated at company-wide scope and the company has reported segments, attach that channel to each relevant BusinessSegment rather than to Company\n"
+            "- evaluate channels segment by segment\n"
+            "- if a channel is stated at company-wide scope and the company has reported segments, translate that evidence into segment-level channel triples rather than company-level ones\n"
             "- use Offering for SELLS_THROUGH only when the offering has no BusinessSegment anchor\n"
             "- keep structure unchanged\n"
             "</pass_specific_focus>\n\n"
-            "<ontology_reminder>\n"
-            "- follow the ontology rules for BusinessSegment, Offering, and Channel\n"
-            "- remember that Company -> SELLS_THROUGH is not allowed in this ontology variant\n"
-            "- broad go-to-market language should stay on BusinessSegment, even when the filing states it broadly across the company\n"
-            "</ontology_reminder>\n\n"
+            "<format_reminder>\n"
+            "Return strictly one JSON object in the exact format defined by the system prompt.\n"
+            "</format_reminder>\n\n"
             "<output_scope>\nReturn only SELLS_THROUGH triples for this pass.\n</output_scope>"
         )
         same_chat_messages.append({"role": "user", "content": pass2_channels_prompt})
@@ -2151,18 +2092,14 @@ class LLMExtractor:
             f"{_xml_definition_lines(V2_SEGMENT_SERVES_CANONICAL_DEFINITIONS['RevenueModel'])}\n"
             "</revenue_model_definitions>\n\n"
             "<pass_specific_focus>\n"
-            "- reason about revenue models only after channels have already been handled\n"
-            "- keep MONETIZES_VIA on Offering only in this ontology variant\n"
-            "- do not emit BusinessSegment-level or Company-level MONETIZES_VIA\n"
+            "- evaluate monetization offering by offering\n"
             "- if an offering family hierarchy exists, attach MONETIZES_VIA to the family parent rather than to its child offerings\n"
             "- do not attach MONETIZES_VIA to a child offering that already has an explicit Offering parent\n"
             "- only add MONETIZES_VIA when the filing supports that offering-level monetization clearly enough\n"
             "</pass_specific_focus>\n\n"
-            "<ontology_reminder>\n"
-            "- follow the ontology rules for Offering and RevenueModel\n"
-            "- remember that MONETIZES_VIA may attach only to Offering in this ontology variant\n"
-            "- when a family parent and child offerings both appear, prefer the family parent for MONETIZES_VIA\n"
-            "</ontology_reminder>\n\n"
+            "<format_reminder>\n"
+            "Return strictly one JSON object in the exact format defined by the system prompt.\n"
+            "</format_reminder>\n\n"
             "<output_scope>\nReturn only MONETIZES_VIA triples for this pass.\n</output_scope>"
         )
         same_chat_messages.append({"role": "user", "content": pass2_revenue_prompt})
@@ -2222,29 +2159,27 @@ class LLMExtractor:
             "</customer_type_definitions>\n\n"
             "<pass_specific_focus>\n"
             "- add only SERVES facts\n"
-            "- use only the PASS 1 structure as fixed context; ignore channels and revenue models for this pass\n"
-            "- keep SERVES at BusinessSegment only in this ontology variant\n"
-            "- if a customer type is stated universally across the company, attach it to each reported BusinessSegment rather than to Company\n"
-            "- do not attach SERVES to Offerings in this variant\n"
             "- use conservative text-grounded inference when justified\n"
-            "- reason segment-wise across the offerings inside each BusinessSegment\n"
-            "- link a BusinessSegment to every customer type clearly supported by one or more of its offerings and the segment description\n"
-            "- for each BusinessSegment, review the canonical customer types one by one rather than stopping after the first few obvious ones\n"
+            "- use only the PASS 1 structure as fixed context\n"
+            "- reason segment by segment from the offerings and descriptions inside each BusinessSegment\n"
+            "- for each BusinessSegment, check the canonical customer types against it and keep every clearly stated or clearly implied one\n"
             "- do not fan out a rare or specialized customer type like government agencies, educational institutions, healthcare organizations, financial services firms, manufacturers, or retailers unless that segment has its own support\n"
-            "- separate explicit SERVES facts from inferred SERVES facts in extraction_notes\n"
             "</pass_specific_focus>\n\n"
             "<ontology_reminder>\n"
             "- follow the ontology rules for BusinessSegment and CustomerType\n"
-            "- remember that SERVES may attach only to BusinessSegment in this ontology variant\n"
             "- when several offerings inside the same segment point to the same customer type, attach that customer type to the BusinessSegment\n"
-            f"- compare each BusinessSegment against this full canonical customer-type set: {_json_list(CANONICAL_CUSTOMER_TYPES)}\n"
             "</ontology_reminder>\n\n"
+            "<format_reminder>\n"
+            "Return strictly one JSON object in the exact format defined by the system prompt.\n"
+            "</format_reminder>\n\n"
             "<output_scope>\nReturn only SERVES triples for this pass.\n</output_scope>"
         )
         try:
-            pass3_serves_extraction, raw_pass3_serves_response, pass3_serves_attempts_used, pass3_serves_audit = self._call_structured(
-                system_prompt=_v2_segment_serves_same_chat_system_prompt(full_text),
-                user_prompt=pass3_serves_prompt,
+            pass3_serves_extraction, raw_pass3_serves_response, pass3_serves_attempts_used, pass3_serves_audit = self._call_structured_messages(
+                messages=[
+                    {"role": "system", "content": _v2_segment_serves_same_chat_system_prompt(full_text)},
+                    {"role": "user", "content": pass3_serves_prompt},
+                ],
                 schema_name="KnowledgeGraphExtraction",
                 schema_model=KnowledgeGraphExtraction,
                 fallback_payload='{"extraction_notes":"Truncated serves extraction.","triples":[]}',
@@ -2278,24 +2213,22 @@ class LLMExtractor:
         pass4_corporate_prompt = (
             "<workflow_step>\nPASS 4 - CORPORATE SHELL FACTS\n</workflow_step>\n\n"
             "<objective>\nUsing the filing directly, extract corporate geography and partnerships.\n</objective>\n\n"
-            f"<company_name>\n{company_name or ''}\n</company_name>\n\n"
             "<extract_only>\n- OPERATES_IN\n- PARTNERS_WITH\n</extract_only>\n\n"
             "<pass_specific_focus>\n"
-            "- run this as a separate corporate-shell review\n"
             "- add only company-level geography\n"
             "- add only explicit named partnerships\n"
-            "- ignore channels, customers, and revenue models in this pass\n"
             "</pass_specific_focus>\n\n"
-            "<ontology_reminder>\n"
-            "- follow the ontology rules for Company, Place, and Company-to-Company partnerships\n"
-            "- remember that OPERATES_IN and PARTNERS_WITH are company-level only in this ontology variant\n"
-            "</ontology_reminder>\n\n"
+            "<format_reminder>\n"
+            "Return strictly one JSON object in the exact format defined by the system prompt.\n"
+            "</format_reminder>\n\n"
             "<output_scope>\nReturn only OPERATES_IN and PARTNERS_WITH triples for this pass.\n</output_scope>"
         )
         try:
-            pass4_corporate_extraction, raw_pass4_corporate_response, pass4_corporate_attempts_used, pass4_corporate_audit = self._call_structured(
-                system_prompt=_v2_segment_serves_same_chat_system_prompt(full_text),
-                user_prompt=pass4_corporate_prompt,
+            pass4_corporate_extraction, raw_pass4_corporate_response, pass4_corporate_attempts_used, pass4_corporate_audit = self._call_structured_messages(
+                messages=[
+                    {"role": "system", "content": _v2_segment_serves_same_chat_system_prompt(full_text)},
+                    {"role": "user", "content": pass4_corporate_prompt},
+                ],
                 schema_name="KnowledgeGraphExtraction",
                 schema_model=KnowledgeGraphExtraction,
                 fallback_payload='{"extraction_notes":"Truncated corporate-shell extraction.","triples":[]}',
@@ -2364,7 +2297,10 @@ class LLMExtractor:
             "Act exactly as the system prompt instructs.\n"
             "Audit the draft graph against the filing and the ontology.\n"
             "Correct, remove, keep, and add triples only as needed to produce the final canonical graph.\n"
-            "</review_instruction>"
+            "</review_instruction>\n\n"
+            "<format_reminder>\n"
+            "Return strictly one JSON object in the exact format defined by the system prompt.\n"
+            "</format_reminder>"
         )
         final_extraction, raw_final_reflection_response, final_reflection_attempts_used, final_reflection_audit = self.reflect_extraction(
             full_text=full_text,
