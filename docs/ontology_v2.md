@@ -143,6 +143,7 @@ Links an offering to the canonical revenue model through which it earns money.
 Rules:
 - `MONETIZES_VIA` is canonical only at `Offering` scope
 - do not attach directly to `BusinessSegment` or `Company`
+- if an offering family hierarchy exists, attach `MONETIZES_VIA` to the family parent rather than to its child offerings
 - if the filing states monetization broadly at segment level, do not force a segment-level triple; recover rollups downstream from offering-level facts
 
 ## Relation Validity Matrix

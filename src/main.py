@@ -189,6 +189,20 @@ def main() -> int:
                 },
             )
             _write_json(
+                run_dir / "pass2_channels_extraction.json",
+                {
+                    "triples": [t.model_dump() for t in chat_result.pass2_channels_extraction.triples],
+                    "extraction_notes": chat_result.pass2_channels_extraction.extraction_notes,
+                },
+            )
+            _write_json(
+                run_dir / "pass2_revenue_extraction.json",
+                {
+                    "triples": [t.model_dump() for t in chat_result.pass2_revenue_extraction.triples],
+                    "extraction_notes": chat_result.pass2_revenue_extraction.extraction_notes,
+                },
+            )
+            _write_json(
                 run_dir / "pass2_commercial_extraction.json",
                 {
                     "triples": [t.model_dump() for t in chat_result.pass2_extraction.triples],
@@ -228,6 +242,8 @@ def main() -> int:
             extractions = [chat_result.final_extraction]
             extraction_payload = {
                 "skeleton_extraction": chat_result.skeleton_extraction.model_dump(),
+                "pass2_channels_extraction": chat_result.pass2_channels_extraction.model_dump(),
+                "pass2_revenue_extraction": chat_result.pass2_revenue_extraction.model_dump(),
                 "pass2_extraction": chat_result.pass2_extraction.model_dump(),
                 "pass3_serves_extraction": chat_result.pass3_serves_extraction.model_dump(),
                 "pass4_corporate_extraction": chat_result.pass4_corporate_extraction.model_dump(),
@@ -236,6 +252,8 @@ def main() -> int:
             }
             stage_audits = {
                 "skeleton": chat_result.skeleton_audit,
+                "pass2_channels": chat_result.pass2_channels_audit,
+                "pass2_revenue": chat_result.pass2_revenue_audit,
                 "pass2_commercial": chat_result.pass2_audit,
                 "pass3_serves": chat_result.pass3_serves_audit,
                 "pass4_corporate": chat_result.pass4_corporate_audit,

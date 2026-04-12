@@ -99,6 +99,8 @@ class IncrementalExtractionResult(BaseModel):
 class ChatTwoPassReflectionResult(BaseModel):
     success: bool
     skeleton_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
+    pass2_channels_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
+    pass2_revenue_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     pass2_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     pass3_serves_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     pass4_corporate_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
@@ -106,6 +108,8 @@ class ChatTwoPassReflectionResult(BaseModel):
     reflection1_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     final_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     skeleton_audit: dict[str, Any] = Field(default_factory=dict)
+    pass2_channels_audit: dict[str, Any] = Field(default_factory=dict)
+    pass2_revenue_audit: dict[str, Any] = Field(default_factory=dict)
     pass2_audit: dict[str, Any] = Field(default_factory=dict)
     pass3_serves_audit: dict[str, Any] = Field(default_factory=dict)
     pass4_corporate_audit: dict[str, Any] = Field(default_factory=dict)
@@ -113,12 +117,16 @@ class ChatTwoPassReflectionResult(BaseModel):
     reflection1_audit: dict[str, Any] = Field(default_factory=dict)
     final_reflection_audit: dict[str, Any] = Field(default_factory=dict)
     raw_skeleton_response: str | None = None
+    raw_pass2_channels_response: str | None = None
+    raw_pass2_revenue_response: str | None = None
     raw_pass2_response: str | None = None
     raw_pass3_serves_response: str | None = None
     raw_pass4_corporate_response: str | None = None
     raw_reflection1_response: str | None = None
     raw_final_reflection_response: str | None = None
     skeleton_attempts_used: int = 0
+    pass2_channels_attempts_used: int = 0
+    pass2_revenue_attempts_used: int = 0
     pass2_attempts_used: int = 0
     pass3_serves_attempts_used: int = 0
     pass4_corporate_attempts_used: int = 0
@@ -935,6 +943,7 @@ The response must start with {{ and end with }}.
 - Use Offering for SELLS_THROUGH only when that offering has no BusinessSegment anchor.
 - Keep MONETIZES_VIA on Offering only in this ontology variant.
 - Do not attach MONETIZES_VIA directly to BusinessSegment or Company.
+- If an offering family hierarchy exists, attach MONETIZES_VIA to the family parent rather than to its child offerings.
 - Do not automatically duplicate facts upward across scopes.
 - Do not derive company-level facts from lower-level facts during extraction.
 - Do not derive offering-level facts from segment-level facts during extraction.
@@ -1060,6 +1069,7 @@ Output ONLY JSON object.
 - Use Offering for SELLS_THROUGH only when that offering has no BusinessSegment anchor.
 - MONETIZES_VIA may attach only to Offering in this ontology variant.
 - Do not keep any Company-level or BusinessSegment-level MONETIZES_VIA triple.
+- Do not keep a child-offering MONETIZES_VIA triple when that offering already has an explicit Offering parent.
 - Audit explicit product and service enumerations carefully. Add every named offering that is stated in the filing.
 - Do not replace a list of named offerings with one summary label such as a generic product family.
 - If both a family label and distinct named offerings are explicit, preserve the distinct named offerings as separate Offering nodes.
@@ -2037,7 +2047,7 @@ class LLMExtractor:
         max_retries: int = 2,
         use_schema: bool = True,
     ) -> ChatTwoPassReflectionResult:
-        messages = [{"role": "system", "content": _v2_segment_serves_same_chat_system_prompt(full_text)}]
+        same_chat_messages = [{"role": "system", "content": _v2_segment_serves_same_chat_system_prompt(full_text)}]
 
         pass1_prompt = (
             "<workflow_step>\nPASS 1 - STRUCTURAL SKELETON\n</workflow_step>\n\n"
@@ -2059,10 +2069,10 @@ class LLMExtractor:
             "</ontology_reminder>\n\n"
             "<output_scope>\nReturn only HAS_SEGMENT and OFFERS triples for this pass.\n</output_scope>"
         )
-        messages.append({"role": "user", "content": pass1_prompt})
+        same_chat_messages.append({"role": "user", "content": pass1_prompt})
         try:
             skeleton_extraction, raw_skeleton_response, skeleton_attempts_used, skeleton_audit = self._call_structured_messages(
-                messages=messages,
+                messages=same_chat_messages,
                 schema_name="KnowledgeGraphExtraction",
                 schema_model=KnowledgeGraphExtraction,
                 fallback_payload='{"extraction_notes":"Truncated skeleton extraction.","triples":[]}',
@@ -2072,48 +2082,41 @@ class LLMExtractor:
             )
         except ExtractionError as exc:
             return ChatTwoPassReflectionResult(success=False, error=str(exc))
-        messages.append(
+        same_chat_messages.append(
             {
                 "role": "assistant",
                 "content": raw_skeleton_response or json.dumps(skeleton_extraction.model_dump(mode="json"), ensure_ascii=False),
             }
         )
 
-        pass2_prompt = (
-            "<workflow_step>\nPASS 2 - CHANNELS AND REVENUE MODELS\n</workflow_step>\n\n"
-            "<objective>\nUsing the current graph as fixed context, extract commercial logic.\n</objective>\n\n"
-            "<extract_only>\n- SELLS_THROUGH\n- MONETIZES_VIA\n</extract_only>\n\n"
+        pass2_channels_prompt = (
+            "<workflow_step>\nPASS 2A - CHANNELS\n</workflow_step>\n\n"
+            "<objective>\nUsing the current graph as fixed context, extract only sales and distribution channels.\n</objective>\n\n"
+            "<extract_only>\n- SELLS_THROUGH\n</extract_only>\n\n"
             "<channel_definitions>\n"
             f"{_xml_definition_lines(V2_SEGMENT_SERVES_CANONICAL_DEFINITIONS['Channel'])}\n"
             "</channel_definitions>\n\n"
-            "<revenue_model_definitions>\n"
-            f"{_xml_definition_lines(V2_SEGMENT_SERVES_CANONICAL_DEFINITIONS['RevenueModel'])}\n"
-            "</revenue_model_definitions>\n\n"
             "<pass_specific_focus>\n"
-            "- add only channel and revenue-model facts\n"
-            "- keep structure unchanged\n"
+            "- reason about channels first, before any monetization logic\n"
             "- keep SELLS_THROUGH on BusinessSegment by default\n"
             "- if a channel is stated at company-wide scope and the company has reported segments, attach that channel to each relevant BusinessSegment rather than to Company\n"
             "- use Offering for SELLS_THROUGH only when the offering has no BusinessSegment anchor\n"
-            "- keep MONETIZES_VIA on Offering only in this ontology variant\n"
-            "- do not emit BusinessSegment-level or Company-level MONETIZES_VIA\n"
-            "- only add MONETIZES_VIA when the filing supports that offering-level monetization clearly enough\n"
+            "- keep structure unchanged\n"
             "</pass_specific_focus>\n\n"
             "<ontology_reminder>\n"
-            "- follow the ontology rules for BusinessSegment, Offering, Channel, and RevenueModel\n"
+            "- follow the ontology rules for BusinessSegment, Offering, and Channel\n"
             "- remember that Company -> SELLS_THROUGH is not allowed in this ontology variant\n"
-            "- remember that MONETIZES_VIA may attach only to Offering in this ontology variant\n"
             "- broad go-to-market language should stay on BusinessSegment, even when the filing states it broadly across the company\n"
             "</ontology_reminder>\n\n"
-            "<output_scope>\nReturn only SELLS_THROUGH and MONETIZES_VIA triples for this pass.\n</output_scope>"
+            "<output_scope>\nReturn only SELLS_THROUGH triples for this pass.\n</output_scope>"
         )
-        messages.append({"role": "user", "content": pass2_prompt})
+        same_chat_messages.append({"role": "user", "content": pass2_channels_prompt})
         try:
-            pass2_extraction, raw_pass2_response, pass2_attempts_used, pass2_audit = self._call_structured_messages(
-                messages=messages,
+            pass2_channels_extraction, raw_pass2_channels_response, pass2_channels_attempts_used, pass2_channels_audit = self._call_structured_messages(
+                messages=same_chat_messages,
                 schema_name="KnowledgeGraphExtraction",
                 schema_model=KnowledgeGraphExtraction,
-                fallback_payload='{"extraction_notes":"Truncated pass-2 extraction.","triples":[]}',
+                fallback_payload='{"extraction_notes":"Truncated pass-2 channels extraction.","triples":[]}',
                 max_retries=max_retries,
                 use_schema=use_schema,
                 ontology_version="v2_segment_serves",
@@ -2127,27 +2130,99 @@ class LLMExtractor:
                 skeleton_attempts_used=skeleton_attempts_used,
                 error=str(exc),
             )
-        pass2_effective_extraction = self._merge_relation_subset_into_base(
+        channels_effective_extraction = self._merge_relation_subset_into_base(
             skeleton_extraction,
-            pass2_extraction,
-            allowed_relations={"SELLS_THROUGH", "MONETIZES_VIA"},
+            pass2_channels_extraction,
+            allowed_relations={"SELLS_THROUGH"},
         )
-        messages.append(
+        same_chat_messages.append(
             {
                 "role": "assistant",
-                "content": raw_pass2_response or json.dumps(pass2_extraction.model_dump(mode="json"), ensure_ascii=False),
+                "content": raw_pass2_channels_response
+                or json.dumps(pass2_channels_extraction.model_dump(mode="json"), ensure_ascii=False),
             }
         )
 
+        pass2_revenue_prompt = (
+            "<workflow_step>\nPASS 2B - REVENUE MODELS\n</workflow_step>\n\n"
+            "<objective>\nUsing the current graph as fixed context, extract only offering-level revenue models.\n</objective>\n\n"
+            "<extract_only>\n- MONETIZES_VIA\n</extract_only>\n\n"
+            "<revenue_model_definitions>\n"
+            f"{_xml_definition_lines(V2_SEGMENT_SERVES_CANONICAL_DEFINITIONS['RevenueModel'])}\n"
+            "</revenue_model_definitions>\n\n"
+            "<pass_specific_focus>\n"
+            "- reason about revenue models only after channels have already been handled\n"
+            "- keep MONETIZES_VIA on Offering only in this ontology variant\n"
+            "- do not emit BusinessSegment-level or Company-level MONETIZES_VIA\n"
+            "- if an offering family hierarchy exists, attach MONETIZES_VIA to the family parent rather than to its child offerings\n"
+            "- do not attach MONETIZES_VIA to a child offering that already has an explicit Offering parent\n"
+            "- only add MONETIZES_VIA when the filing supports that offering-level monetization clearly enough\n"
+            "</pass_specific_focus>\n\n"
+            "<ontology_reminder>\n"
+            "- follow the ontology rules for Offering and RevenueModel\n"
+            "- remember that MONETIZES_VIA may attach only to Offering in this ontology variant\n"
+            "- when a family parent and child offerings both appear, prefer the family parent for MONETIZES_VIA\n"
+            "</ontology_reminder>\n\n"
+            "<output_scope>\nReturn only MONETIZES_VIA triples for this pass.\n</output_scope>"
+        )
+        same_chat_messages.append({"role": "user", "content": pass2_revenue_prompt})
+        try:
+            pass2_revenue_extraction, raw_pass2_revenue_response, pass2_revenue_attempts_used, pass2_revenue_audit = self._call_structured_messages(
+                messages=same_chat_messages,
+                schema_name="KnowledgeGraphExtraction",
+                schema_model=KnowledgeGraphExtraction,
+                fallback_payload='{"extraction_notes":"Truncated pass-2 revenue extraction.","triples":[]}',
+                max_retries=max_retries,
+                use_schema=use_schema,
+                ontology_version="v2_segment_serves",
+            )
+        except ExtractionError as exc:
+            return ChatTwoPassReflectionResult(
+                success=False,
+                skeleton_extraction=skeleton_extraction,
+                pass2_channels_extraction=pass2_channels_extraction,
+                pass2_extraction=channels_effective_extraction,
+                skeleton_audit=skeleton_audit,
+                pass2_channels_audit=pass2_channels_audit,
+                pass2_audit=aggregate_extraction_audits([pass2_channels_audit]),
+                raw_skeleton_response=raw_skeleton_response,
+                raw_pass2_channels_response=raw_pass2_channels_response,
+                raw_pass2_response=raw_pass2_channels_response,
+                skeleton_attempts_used=skeleton_attempts_used,
+                pass2_channels_attempts_used=pass2_channels_attempts_used,
+                pass2_attempts_used=pass2_channels_attempts_used,
+                error=str(exc),
+            )
+        pass2_effective_extraction = self._merge_relation_subset_into_base(
+            channels_effective_extraction,
+            pass2_revenue_extraction,
+            allowed_relations={"MONETIZES_VIA"},
+        )
+        same_chat_messages.append(
+            {
+                "role": "assistant",
+                "content": raw_pass2_revenue_response
+                or json.dumps(pass2_revenue_extraction.model_dump(mode="json"), ensure_ascii=False),
+            }
+        )
+        pass2_merged_extraction = KnowledgeGraphExtraction(
+            extraction_notes="Merged channel and revenue-model passes.",
+            triples=pass2_effective_extraction.triples,
+        )
+        pass2_aggregate_audit = aggregate_extraction_audits([pass2_channels_audit, pass2_revenue_audit])
+
         pass3_serves_prompt = (
             "<workflow_step>\nPASS 3 - CUSTOMER TYPES\n</workflow_step>\n\n"
-            "<objective>\nUsing the current graph as fixed context, extract customer-type relations.\n</objective>\n\n"
+            "<objective>\nUsing the structural graph from PASS 1 as fixed context, extract customer-type relations.\n</objective>\n\n"
+            f"<company_name>\n{company_name or ''}\n</company_name>\n\n"
+            f"<current_structure>\n{self._compact_json(skeleton_extraction.model_dump())}\n</current_structure>\n\n"
             "<extract_only>\n- SERVES\n</extract_only>\n\n"
             "<customer_type_definitions>\n"
             f"{_xml_definition_lines(V2_SEGMENT_SERVES_CANONICAL_DEFINITIONS['CustomerType'])}\n"
             "</customer_type_definitions>\n\n"
             "<pass_specific_focus>\n"
             "- add only SERVES facts\n"
+            "- use only the PASS 1 structure as fixed context; ignore channels and revenue models for this pass\n"
             "- keep SERVES at BusinessSegment only in this ontology variant\n"
             "- if a customer type is stated universally across the company, attach it to each reported BusinessSegment rather than to Company\n"
             "- do not attach SERVES to Offerings in this variant\n"
@@ -2166,49 +2241,50 @@ class LLMExtractor:
             "</ontology_reminder>\n\n"
             "<output_scope>\nReturn only SERVES triples for this pass.\n</output_scope>"
         )
-        messages.append({"role": "user", "content": pass3_serves_prompt})
         try:
-            pass3_serves_extraction, raw_pass3_serves_response, pass3_serves_attempts_used, pass3_serves_audit = (
-                self._call_structured_messages(
-                    messages=messages,
-                    schema_name="KnowledgeGraphExtraction",
-                    schema_model=KnowledgeGraphExtraction,
-                    fallback_payload='{"extraction_notes":"Truncated serves extraction.","triples":[]}',
-                    max_retries=max_retries,
-                    use_schema=use_schema,
-                    ontology_version="v2_segment_serves",
-                )
+            pass3_serves_extraction, raw_pass3_serves_response, pass3_serves_attempts_used, pass3_serves_audit = self._call_structured(
+                system_prompt=_v2_segment_serves_same_chat_system_prompt(full_text),
+                user_prompt=pass3_serves_prompt,
+                schema_name="KnowledgeGraphExtraction",
+                schema_model=KnowledgeGraphExtraction,
+                fallback_payload='{"extraction_notes":"Truncated serves extraction.","triples":[]}',
+                max_retries=max_retries,
+                use_schema=use_schema,
+                ontology_version="v2_segment_serves",
             )
         except ExtractionError as exc:
             return ChatTwoPassReflectionResult(
                 success=False,
                 skeleton_extraction=skeleton_extraction,
-                pass2_extraction=pass2_extraction,
+                pass2_channels_extraction=pass2_channels_extraction,
+                pass2_revenue_extraction=pass2_revenue_extraction,
+                pass2_extraction=pass2_merged_extraction,
                 skeleton_audit=skeleton_audit,
-                pass2_audit=pass2_audit,
+                pass2_channels_audit=pass2_channels_audit,
+                pass2_revenue_audit=pass2_revenue_audit,
+                pass2_audit=pass2_aggregate_audit,
                 raw_skeleton_response=raw_skeleton_response,
-                raw_pass2_response=raw_pass2_response,
+                raw_pass2_channels_response=raw_pass2_channels_response,
+                raw_pass2_revenue_response=raw_pass2_revenue_response,
+                raw_pass2_response=raw_pass2_revenue_response,
                 skeleton_attempts_used=skeleton_attempts_used,
-                pass2_attempts_used=pass2_attempts_used,
+                pass2_channels_attempts_used=pass2_channels_attempts_used,
+                pass2_revenue_attempts_used=pass2_revenue_attempts_used,
+                pass2_attempts_used=pass2_channels_attempts_used + pass2_revenue_attempts_used,
                 error=str(exc),
             )
         pass3_effective_extraction = self._merge_serves_into_base(pass2_effective_extraction, pass3_serves_extraction)
-        messages.append(
-            {
-                "role": "assistant",
-                "content": raw_pass3_serves_response
-                or json.dumps(pass3_serves_extraction.model_dump(mode="json"), ensure_ascii=False),
-            }
-        )
 
         pass4_corporate_prompt = (
             "<workflow_step>\nPASS 4 - CORPORATE SHELL FACTS\n</workflow_step>\n\n"
-            "<objective>\nUsing the current graph as fixed context, extract corporate geography and partnerships.\n</objective>\n\n"
+            "<objective>\nUsing the filing directly, extract corporate geography and partnerships.\n</objective>\n\n"
+            f"<company_name>\n{company_name or ''}\n</company_name>\n\n"
             "<extract_only>\n- OPERATES_IN\n- PARTNERS_WITH\n</extract_only>\n\n"
             "<pass_specific_focus>\n"
+            "- run this as a separate corporate-shell review\n"
             "- add only company-level geography\n"
             "- add only explicit named partnerships\n"
-            "- keep all non-corporate facts unchanged\n"
+            "- ignore channels, customers, and revenue models in this pass\n"
             "</pass_specific_focus>\n\n"
             "<ontology_reminder>\n"
             "- follow the ontology rules for Company, Place, and Company-to-Company partnerships\n"
@@ -2216,10 +2292,10 @@ class LLMExtractor:
             "</ontology_reminder>\n\n"
             "<output_scope>\nReturn only OPERATES_IN and PARTNERS_WITH triples for this pass.\n</output_scope>"
         )
-        messages.append({"role": "user", "content": pass4_corporate_prompt})
         try:
-            pass4_corporate_extraction, raw_pass4_corporate_response, pass4_corporate_attempts_used, pass4_corporate_audit = self._call_structured_messages(
-                messages=messages,
+            pass4_corporate_extraction, raw_pass4_corporate_response, pass4_corporate_attempts_used, pass4_corporate_audit = self._call_structured(
+                system_prompt=_v2_segment_serves_same_chat_system_prompt(full_text),
+                user_prompt=pass4_corporate_prompt,
                 schema_name="KnowledgeGraphExtraction",
                 schema_model=KnowledgeGraphExtraction,
                 fallback_payload='{"extraction_notes":"Truncated corporate-shell extraction.","triples":[]}',
@@ -2231,19 +2307,33 @@ class LLMExtractor:
             return ChatTwoPassReflectionResult(
                 success=False,
                 skeleton_extraction=skeleton_extraction,
-                pass2_extraction=pass2_extraction,
+                pass2_channels_extraction=pass2_channels_extraction,
+                pass2_revenue_extraction=pass2_revenue_extraction,
+                pass2_extraction=pass2_merged_extraction,
                 pass3_serves_extraction=pass3_serves_extraction,
-                pre_reflection_extraction=pass3_effective_extraction,
+                pre_reflection_extraction=KnowledgeGraphExtraction(
+                    extraction_notes="Merged structure, channels, revenue models, and customer types before corporate-shell extraction.",
+                    triples=pass3_effective_extraction.triples,
+                ),
                 skeleton_audit=skeleton_audit,
-                pass2_audit=pass2_audit,
+                pass2_channels_audit=pass2_channels_audit,
+                pass2_revenue_audit=pass2_revenue_audit,
+                pass2_audit=pass2_aggregate_audit,
                 pass3_serves_audit=pass3_serves_audit,
                 pre_reflection_audit=pass3_serves_audit,
                 raw_skeleton_response=raw_skeleton_response,
-                raw_pass2_response=raw_pass2_response,
+                raw_pass2_channels_response=raw_pass2_channels_response,
+                raw_pass2_revenue_response=raw_pass2_revenue_response,
+                raw_pass2_response=raw_pass2_revenue_response,
                 raw_pass3_serves_response=raw_pass3_serves_response,
-                reflection1_extraction=pass3_effective_extraction,
+                reflection1_extraction=KnowledgeGraphExtraction(
+                    extraction_notes="Merged structure, channels, revenue models, and customer types before corporate-shell extraction.",
+                    triples=pass3_effective_extraction.triples,
+                ),
                 skeleton_attempts_used=skeleton_attempts_used,
-                pass2_attempts_used=pass2_attempts_used,
+                pass2_channels_attempts_used=pass2_channels_attempts_used,
+                pass2_revenue_attempts_used=pass2_revenue_attempts_used,
+                pass2_attempts_used=pass2_channels_attempts_used + pass2_revenue_attempts_used,
                 pass3_serves_attempts_used=pass3_serves_attempts_used,
                 error=str(exc),
             )
@@ -2251,6 +2341,14 @@ class LLMExtractor:
             pass3_effective_extraction,
             pass4_corporate_extraction,
             allowed_relations={"OPERATES_IN", "PARTNERS_WITH"},
+        )
+        pre_reflection_extraction = KnowledgeGraphExtraction(
+            extraction_notes="Merged structure, channels, revenue models, customer types, and corporate-shell facts before final reflection.",
+            triples=pass4_effective_extraction.triples,
+        )
+        _, pre_reflection_audit = audit_knowledge_graph_payload(
+            pre_reflection_extraction.model_dump(mode="json"),
+            ontology_version="v2_segment_serves",
         )
 
         final_reflection_prompt = (
@@ -2261,7 +2359,7 @@ class LLMExtractor:
             "Review the draft graph and return the final canonical graph.\n"
             "</objective>\n\n"
             f"<company_name>\n{company_name or ''}\n</company_name>\n\n"
-            f"<current_graph>\n{self._compact_json(pass4_effective_extraction.model_dump())}\n</current_graph>\n\n"
+            f"<current_graph>\n{self._compact_json(pre_reflection_extraction.model_dump())}\n</current_graph>\n\n"
             "<review_instruction>\n"
             "Act exactly as the system prompt instructs.\n"
             "Audit the draft graph against the filing and the ontology.\n"
@@ -2270,7 +2368,7 @@ class LLMExtractor:
         )
         final_extraction, raw_final_reflection_response, final_reflection_attempts_used, final_reflection_audit = self.reflect_extraction(
             full_text=full_text,
-            current_extraction=pass4_effective_extraction,
+            current_extraction=pre_reflection_extraction,
             company_name=company_name,
             max_retries=max_retries,
             strict=False,
@@ -2283,27 +2381,35 @@ class LLMExtractor:
         return ChatTwoPassReflectionResult(
             success=True,
             skeleton_extraction=skeleton_extraction,
-            pass2_extraction=pass2_extraction,
+            pass2_channels_extraction=pass2_channels_extraction,
+            pass2_revenue_extraction=pass2_revenue_extraction,
+            pass2_extraction=pass2_merged_extraction,
             pass3_serves_extraction=pass3_serves_extraction,
             pass4_corporate_extraction=pass4_corporate_extraction,
-            pre_reflection_extraction=pass4_effective_extraction,
-            reflection1_extraction=pass4_effective_extraction,
+            pre_reflection_extraction=pre_reflection_extraction,
+            reflection1_extraction=pre_reflection_extraction,
             final_extraction=final_extraction,
             skeleton_audit=skeleton_audit,
-            pass2_audit=pass2_audit,
+            pass2_channels_audit=pass2_channels_audit,
+            pass2_revenue_audit=pass2_revenue_audit,
+            pass2_audit=pass2_aggregate_audit,
             pass3_serves_audit=pass3_serves_audit,
             pass4_corporate_audit=pass4_corporate_audit,
-            pre_reflection_audit=pass4_corporate_audit,
-            reflection1_audit=pass4_corporate_audit,
+            pre_reflection_audit=pre_reflection_audit,
+            reflection1_audit=pre_reflection_audit,
             final_reflection_audit=final_reflection_audit,
             raw_skeleton_response=raw_skeleton_response,
-            raw_pass2_response=raw_pass2_response,
+            raw_pass2_channels_response=raw_pass2_channels_response,
+            raw_pass2_revenue_response=raw_pass2_revenue_response,
+            raw_pass2_response=raw_pass2_revenue_response,
             raw_pass3_serves_response=raw_pass3_serves_response,
             raw_pass4_corporate_response=raw_pass4_corporate_response,
             raw_reflection1_response=raw_pass4_corporate_response,
             raw_final_reflection_response=raw_final_reflection_response,
             skeleton_attempts_used=skeleton_attempts_used,
-            pass2_attempts_used=pass2_attempts_used,
+            pass2_channels_attempts_used=pass2_channels_attempts_used,
+            pass2_revenue_attempts_used=pass2_revenue_attempts_used,
+            pass2_attempts_used=pass2_channels_attempts_used + pass2_revenue_attempts_used,
             pass3_serves_attempts_used=pass3_serves_attempts_used,
             pass4_corporate_attempts_used=pass4_corporate_attempts_used,
             reflection1_attempts_used=pass4_corporate_attempts_used,

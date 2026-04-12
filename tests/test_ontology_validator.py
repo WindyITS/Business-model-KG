@@ -173,6 +173,66 @@ class OntologyValidatorTests(unittest.TestCase):
 
         self.assertTrue(result["is_valid"])
 
+    def test_v2_segment_serves_rejects_child_offering_monetizes_via_relation(self):
+        triples = [
+            {
+                "subject": "Microsoft 365 Commercial",
+                "subject_type": "Offering",
+                "relation": "OFFERS",
+                "object": "Microsoft Teams",
+                "object_type": "Offering",
+            },
+            {
+                "subject": "Microsoft Teams",
+                "subject_type": "Offering",
+                "relation": "MONETIZES_VIA",
+                "object": "subscription",
+                "object_type": "RevenueModel",
+            },
+        ]
+
+        report = validate_triples(triples, ontology_version="v2_segment_serves")
+
+        self.assertEqual(report["summary"]["valid_triple_count"], 1)
+        self.assertEqual(report["summary"]["invalid_triple_count"], 1)
+        self.assertTrue(
+            any(
+                issue["code"] == "child_offering_monetizes_via"
+                for invalid in report["invalid_triples"]
+                for issue in invalid["issues"]
+            )
+        )
+
+    def test_v2_segment_serves_rejects_segment_anchored_offering_sells_through_relation(self):
+        triples = [
+            {
+                "subject": "Intelligent Cloud",
+                "subject_type": "BusinessSegment",
+                "relation": "OFFERS",
+                "object": "Azure",
+                "object_type": "Offering",
+            },
+            {
+                "subject": "Azure",
+                "subject_type": "Offering",
+                "relation": "SELLS_THROUGH",
+                "object": "online",
+                "object_type": "Channel",
+            },
+        ]
+
+        report = validate_triples(triples, ontology_version="v2_segment_serves")
+
+        self.assertEqual(report["summary"]["valid_triple_count"], 1)
+        self.assertEqual(report["summary"]["invalid_triple_count"], 1)
+        self.assertTrue(
+            any(
+                issue["code"] == "segment_anchored_offering_sells_through"
+                for invalid in report["invalid_triples"]
+                for issue in invalid["issues"]
+            )
+        )
+
     def test_v2_rejects_business_segment_operates_in_relation(self):
         triple = {
             "subject": "Intelligent Cloud",

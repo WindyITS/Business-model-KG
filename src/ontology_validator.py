@@ -146,7 +146,7 @@ def validate_triples(
     dedupe: bool = True,
     ontology_version: str = "v1",
 ) -> dict[str, Any]:
-    valid_triples: list[dict[str, str]] = []
+    provisional_valid_records: list[dict[str, Any]] = []
     invalid_triples: list[dict[str, Any]] = []
     duplicate_triples: list[dict[str, Any]] = []
     seen: set[tuple[str, str, str, str, str]] = set()
@@ -218,7 +218,75 @@ def validate_triples(
             offering_parents[child_key] = (index, normalized)
 
         seen.add(triple_key)
-        valid_triples.append(normalized)
+        provisional_valid_records.append(
+            {
+                "index": index,
+                "triple": triple,
+                "normalized_triple": normalized,
+            }
+        )
+
+    if ontology_version == "v2_segment_serves":
+        offering_parent_children = {
+            canonical_entity_key(record["normalized_triple"]["object"])
+            for record in provisional_valid_records
+            if record["normalized_triple"]["relation"] == "OFFERS"
+            and record["normalized_triple"]["subject_type"] == "Offering"
+            and record["normalized_triple"]["object_type"] == "Offering"
+        }
+
+        direct_segment_children = {
+            canonical_entity_key(record["normalized_triple"]["object"])
+            for record in provisional_valid_records
+            if record["normalized_triple"]["relation"] == "OFFERS"
+            and record["normalized_triple"]["subject_type"] == "BusinessSegment"
+            and record["normalized_triple"]["object_type"] == "Offering"
+        }
+
+        kept_records: list[dict[str, Any]] = []
+        for record in provisional_valid_records:
+            normalized = record["normalized_triple"]
+            subject_key = canonical_entity_key(normalized["subject"])
+            if normalized["relation"] == "MONETIZES_VIA" and subject_key in offering_parent_children:
+                invalid_triples.append(
+                    {
+                        "index": record["index"],
+                        "triple": record["triple"],
+                        "normalized_triple": normalized,
+                        "issues": [
+                            {
+                                "code": "child_offering_monetizes_via",
+                                "message": (
+                                    f"Offering {normalized['subject']!r} has an explicit offering parent and cannot carry "
+                                    "MONETIZES_VIA in this ontology variant."
+                                ),
+                            }
+                        ],
+                    }
+                )
+                continue
+            if normalized["relation"] == "SELLS_THROUGH" and normalized["subject_type"] == "Offering" and subject_key in direct_segment_children:
+                invalid_triples.append(
+                    {
+                        "index": record["index"],
+                        "triple": record["triple"],
+                        "normalized_triple": normalized,
+                        "issues": [
+                            {
+                                "code": "segment_anchored_offering_sells_through",
+                                "message": (
+                                    f"Offering {normalized['subject']!r} has a BusinessSegment anchor and cannot carry "
+                                    "SELLS_THROUGH in this ontology variant."
+                                ),
+                            }
+                        ],
+                    }
+                )
+                continue
+            kept_records.append(record)
+        provisional_valid_records = kept_records
+
+    valid_triples = [record["normalized_triple"] for record in provisional_valid_records]
 
     return {
         "summary": {

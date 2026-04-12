@@ -91,7 +91,7 @@
       "object_types": ["Company"]
     },
     "MONETIZES_VIA": {
-      "definition": "Links an offering to the canonical revenue model through which it earns money. Company- and segment-level revenue models should be recovered downstream from offering-level facts rather than extracted directly in this ontology variant.",
+      "definition": "Links an offering to the canonical revenue model through which it earns money. If an offering family hierarchy exists, attach the revenue model to the family parent rather than to its child offerings. Company- and segment-level revenue models should be recovered downstream from offering-level facts rather than extracted directly in this ontology variant.",
       "subject_types": ["Offering"],
       "object_types": ["RevenueModel"]
     }
@@ -110,6 +110,7 @@
     "If the filing states a channel universally across a company that has reported segments, attach that channel to each reported BusinessSegment rather than to Company.",
     "For MONETIZES_VIA, attach the relation only to Offering.",
     "Do not attach MONETIZES_VIA directly to BusinessSegment or Company in this ontology variant.",
+    "If an offering has an Offering parent in the explicit family hierarchy, do not attach MONETIZES_VIA to the child offering; attach it to the relevant family parent instead.",
     "If the filing states monetization broadly at segment level, do not force a segment-level triple; keep extraction canonical and recover rollups downstream from offering-level facts.",
     "Do not automatically duplicate a fact upward across scopes.",
     "For segment-anchored offerings, use BusinessSegment -> OFFERS -> Offering as the canonical structure.",
