@@ -97,6 +97,7 @@ class ExtractionError(RuntimeError):
 TRIPLE_REQUIRED_KEYS = ("subject", "subject_type", "relation", "object", "object_type")
 FORMAT_ISSUE_CODES = {"empty_subject", "empty_object"}
 JSON_OBJECT_RE = re.compile(r"\{.*\}", re.DOTALL)
+CODE_FENCE_RE = re.compile(r"^```(?:json)?\s*(.*?)\s*```$", re.DOTALL | re.IGNORECASE)
 
 
 def normalize_lenient_payload(payload: Any) -> dict[str, Any]:
@@ -256,6 +257,7 @@ Every triple must contain exactly:
 
 If subject_type or object_type is missing, the output is invalid.
 The response must start with {{ and end with }}.
+Do not wrap the JSON in markdown code fences.
 </data_contract>
 
 <ontology>
@@ -393,6 +395,7 @@ Every triple must contain exactly:
 
 If subject_type or object_type is missing, the output is invalid.
 Output ONLY JSON object.
+Do not wrap the JSON in markdown code fences.
 </data_contract>
 
 <review_policy>
@@ -483,6 +486,17 @@ class LLMExtractor:
         return json.dumps(value, ensure_ascii=False, separators=(",", ":"))
 
     @staticmethod
+    def _strip_code_fence(content: str) -> str:
+        match = CODE_FENCE_RE.match(content.strip())
+        if match:
+            return match.group(1).strip()
+        return content.strip()
+
+    @staticmethod
+    def _assistant_history_content(extraction: KnowledgeGraphExtraction) -> str:
+        return json.dumps(extraction.model_dump(mode="json"), ensure_ascii=False)
+
+    @staticmethod
     def _merge_serves_into_base(
         base_extraction: KnowledgeGraphExtraction,
         serves_extraction: KnowledgeGraphExtraction,
@@ -532,52 +546,46 @@ class LLMExtractor:
         if not content:
             raise ExtractionError("Empty response from model.")
 
-        candidates = [content]
+        try:
+            return json.loads(content), False
+        except json.JSONDecodeError:
+            pass
+
+        fenced_content = LLMExtractor._strip_code_fence(content)
+        if fenced_content != content:
+            try:
+                return json.loads(fenced_content), True
+            except json.JSONDecodeError:
+                pass
+
         match = JSON_OBJECT_RE.search(content)
         if match:
             json_object_text = match.group(0)
             if json_object_text != content:
-                candidates.append(json_object_text)
+                try:
+                    return json.loads(json_object_text), True
+                except json.JSONDecodeError:
+                    pass
 
-        if not content.endswith(("}", "]")):
-            logger.warning("Truncated JSON detected. Attempting to salvage...")
+        likely_truncated = (
+            content.count("{") > content.count("}")
+            or content.count("[") > content.count("]")
+            or not content.endswith(("}", "]"))
+        )
+        if likely_truncated:
+            logger.warning("Model response may be truncated. Attempting to salvage JSON prefix...")
             last_object_end = content.rfind("}")
             last_array_end = content.rfind("]")
             last_json_end = max(last_object_end, last_array_end)
-            truncated_candidate = content[: last_json_end + 1] if last_json_end != -1 else fallback_payload
-            if truncated_candidate not in candidates:
-                candidates.append(truncated_candidate)
+            truncated_candidate = content[: last_json_end + 1] if last_json_end != -1 else ""
+            if truncated_candidate:
+                try:
+                    return json.loads(truncated_candidate), True
+                except json.JSONDecodeError:
+                    pass
 
-        for index, candidate in enumerate(candidates):
-            try:
-                return json.loads(candidate), index > 0
-            except json.JSONDecodeError:
-                continue
-
+        logger.warning("Model response was not exact raw JSON. Falling back to the recovery payload.")
         return json.loads(fallback_payload), True
-
-    @staticmethod
-    def _lenient_model_from_payload(
-        schema_model: type[BaseModel],
-        payload: Any,
-        *,
-        ontology_version: str = "canonical",
-    ) -> tuple[BaseModel, dict[str, Any]]:
-        normalized_payload = normalize_lenient_payload(payload)
-        valid_triples, audit = audit_knowledge_graph_payload(normalized_payload, ontology_version=ontology_version)
-        extraction_notes = str(
-            normalized_payload.get("extraction_notes", normalized_payload.get("chain_of_thought_reasoning", "")) or ""
-        )
-        triple_objects = [Triple(**triple) for triple in valid_triples]
-
-        if schema_model is KnowledgeGraphExtraction:
-            model = KnowledgeGraphExtraction(
-                extraction_notes=extraction_notes,
-                triples=triple_objects,
-            )
-            return model, audit
-
-        raise TypeError(f"Unsupported schema model for lenient payload parsing: {schema_model!r}")
 
     def _call_structured_messages(
         self,
@@ -655,6 +663,29 @@ class LLMExtractor:
                 logger.warning("LLM API error for %s on attempt %s/%s: %s", call_label, attempt, max_retries, exc)
 
         raise ExtractionError(f"Failed after {max_retries} attempts")
+
+    @staticmethod
+    def _lenient_model_from_payload(
+        schema_model: type[BaseModel],
+        payload: Any,
+        *,
+        ontology_version: str = "canonical",
+    ) -> tuple[BaseModel, dict[str, Any]]:
+        normalized_payload = normalize_lenient_payload(payload)
+        valid_triples, audit = audit_knowledge_graph_payload(normalized_payload, ontology_version=ontology_version)
+        extraction_notes = str(
+            normalized_payload.get("extraction_notes", normalized_payload.get("chain_of_thought_reasoning", "")) or ""
+        )
+        triple_objects = [Triple(**triple) for triple in valid_triples]
+
+        if schema_model is KnowledgeGraphExtraction:
+            model = KnowledgeGraphExtraction(
+                extraction_notes=extraction_notes,
+                triples=triple_objects,
+            )
+            return model, audit
+
+        raise TypeError(f"Unsupported schema model for lenient payload parsing: {schema_model!r}")
 
     def _call_structured(
         self,
@@ -763,7 +794,8 @@ class LLMExtractor:
             "- an explicit umbrella offering does not replace its explicitly named child offerings; keep both when the filing states both\n"
             "</ontology_reminder>\n\n"
             "<format_reminder>\n"
-            "Return strictly one JSON object in the exact format defined by the system prompt.\n"
+            'Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array.\n'
+            "Do not use markdown code blocks (```json).\n"
             "</format_reminder>\n\n"
             "<output_scope>\nReturn only HAS_SEGMENT and OFFERS triples for this pass.\n</output_scope>"
         )
@@ -783,7 +815,7 @@ class LLMExtractor:
         same_chat_messages.append(
             {
                 "role": "assistant",
-                "content": raw_skeleton_response or json.dumps(skeleton_extraction.model_dump(mode="json"), ensure_ascii=False),
+                "content": self._assistant_history_content(skeleton_extraction),
             }
         )
 
@@ -802,7 +834,8 @@ class LLMExtractor:
             "- keep structure unchanged\n"
             "</pass_specific_focus>\n\n"
             "<format_reminder>\n"
-            "Return strictly one JSON object in the exact format defined by the system prompt.\n"
+            'Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array.\n'
+            "Do not use markdown code blocks (```json).\n"
             "</format_reminder>\n\n"
             "<output_scope>\nReturn only SELLS_THROUGH triples for this pass.\n</output_scope>"
         )
@@ -834,8 +867,7 @@ class LLMExtractor:
         same_chat_messages.append(
             {
                 "role": "assistant",
-                "content": raw_pass2_channels_response
-                or json.dumps(pass2_channels_extraction.model_dump(mode="json"), ensure_ascii=False),
+                "content": self._assistant_history_content(pass2_channels_extraction),
             }
         )
 
@@ -853,7 +885,8 @@ class LLMExtractor:
             "- only add MONETIZES_VIA when the filing supports that offering-level monetization clearly enough\n"
             "</pass_specific_focus>\n\n"
             "<format_reminder>\n"
-            "Return strictly one JSON object in the exact format defined by the system prompt.\n"
+            'Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array.\n'
+            "Do not use markdown code blocks (```json).\n"
             "</format_reminder>\n\n"
             "<output_scope>\nReturn only MONETIZES_VIA triples for this pass.\n</output_scope>"
         )
@@ -893,8 +926,7 @@ class LLMExtractor:
         same_chat_messages.append(
             {
                 "role": "assistant",
-                "content": raw_pass2_revenue_response
-                or json.dumps(pass2_revenue_extraction.model_dump(mode="json"), ensure_ascii=False),
+                "content": self._assistant_history_content(pass2_revenue_extraction),
             }
         )
         pass2_merged_extraction = KnowledgeGraphExtraction(
@@ -925,7 +957,8 @@ class LLMExtractor:
             "- when several offerings inside the same segment point to the same customer type, attach that customer type to the BusinessSegment\n"
             "</ontology_reminder>\n\n"
             "<format_reminder>\n"
-            "Return strictly one JSON object in the exact format defined by the system prompt.\n"
+            'Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array.\n'
+            "Do not use markdown code blocks (```json).\n"
             "</format_reminder>\n\n"
             "<output_scope>\nReturn only SERVES triples for this pass.\n</output_scope>"
         )
@@ -974,7 +1007,8 @@ class LLMExtractor:
             "- add only explicit named partnerships\n"
             "</pass_specific_focus>\n\n"
             "<format_reminder>\n"
-            "Return strictly one JSON object in the exact format defined by the system prompt.\n"
+            'Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array.\n'
+            "Do not use markdown code blocks (```json).\n"
             "</format_reminder>\n\n"
             "<output_scope>\nReturn only OPERATES_IN and PARTNERS_WITH triples for this pass.\n</output_scope>"
         )
@@ -1054,7 +1088,8 @@ class LLMExtractor:
             "Correct, remove, keep, and add triples only as needed to produce the final canonical graph.\n"
             "</review_instruction>\n\n"
             "<format_reminder>\n"
-            "Return strictly one JSON object in the exact format defined by the system prompt.\n"
+            'Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array.\n'
+            "Do not use markdown code blocks (```json).\n"
             "</format_reminder>"
         )
         final_extraction, raw_final_reflection_response, final_reflection_attempts_used, final_reflection_audit = self.reflect_extraction(

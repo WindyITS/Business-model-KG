@@ -4,13 +4,23 @@ import tempfile
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
+import llm_extractor as llm_extractor_module
 from chunker import read_and_chunk_file
 from entity_resolver import resolve_entities
 from evaluate_graph import _load_triples_from_json, evaluate
-from llm_extractor import LLMExtractor, KnowledgeGraphExtraction, Triple, aggregate_extraction_audits, audit_knowledge_graph_payload
+from llm_extractor import (
+    LLMExtractor,
+    KnowledgeGraphExtraction,
+    Triple,
+    _canonical_pipeline_system_prompt,
+    _canonical_reflection_system_prompt,
+    aggregate_extraction_audits,
+    audit_knowledge_graph_payload,
+)
 from main import _mode_name
 
 
@@ -131,6 +141,34 @@ class PipelineComponentTests(unittest.TestCase):
         self.assertEqual(audit["raw_triple_count"], 1)
         self.assertEqual(audit["kept_triple_count"], 1)
 
+    def test_load_json_payload_accepts_markdown_fenced_json_without_truncation_warning(self):
+        payload_text = '```json\n{"extraction_notes":"ok","triples":[]}\n```'
+
+        with patch.object(llm_extractor_module.logger, "warning") as mock_warning:
+            payload, recovered = LLMExtractor._load_json_payload(
+                payload_text,
+                '{"extraction_notes":"fallback","triples":[]}',
+            )
+
+        self.assertEqual(payload["extraction_notes"], "ok")
+        self.assertEqual(payload["triples"], [])
+        self.assertTrue(recovered)
+        mock_warning.assert_not_called()
+
+    def test_load_json_payload_warns_for_likely_truncation(self):
+        payload_text = '{"extraction_notes":"ok","triples":[]'
+
+        with patch.object(llm_extractor_module.logger, "warning") as mock_warning:
+            payload, recovered = LLMExtractor._load_json_payload(
+                payload_text,
+                '{"extraction_notes":"fallback","triples":[]}',
+            )
+
+        self.assertEqual(payload["extraction_notes"], "fallback")
+        self.assertEqual(payload["triples"], [])
+        self.assertTrue(recovered)
+        mock_warning.assert_any_call("Model response may be truncated. Attempting to salvage JSON prefix...")
+
     def test_canonical_schema_def_excludes_part_of(self):
         schema_def = LLMExtractor._schema_def(
             "KnowledgeGraphExtraction",
@@ -204,6 +242,10 @@ class PipelineComponentTests(unittest.TestCase):
         self.assertEqual(aggregated["ontology_rejected_triple_count"], 2)
         self.assertEqual(aggregated["duplicate_triple_count"], 1)
         self.assertEqual(aggregated["payload_parse_recovered_count"], 1)
+
+    def test_canonical_system_prompts_explicitly_forbid_markdown_fences(self):
+        self.assertIn("Do not wrap the JSON in markdown code fences.", _canonical_pipeline_system_prompt("x"))
+        self.assertIn("Do not wrap the JSON in markdown code fences.", _canonical_reflection_system_prompt("x"))
 
 
 if __name__ == "__main__":
