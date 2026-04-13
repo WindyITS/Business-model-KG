@@ -2,12 +2,11 @@
 
 A local pipeline for turning SEC 10-K business sections into a standardized business-model knowledge graph.
 
-The repo now has:
+The repo now contains only the canonical runtime stack:
 - one canonical extraction pipeline
 - one canonical ontology
 - one validator aligned to that ontology
-
-The dataset-building pipeline is intentionally still present and intentionally still separate. It has not been cleaned up in this pass.
+- optional Neo4j loading and graph evaluation utilities
 
 ## What The Pipeline Extracts
 
@@ -69,7 +68,6 @@ docs/
 tests/
   test_pipeline_components.py
   test_ontology_validator.py
-  ...
 ```
 
 ## Quickstart
@@ -129,21 +127,5 @@ Each run writes a timestamped directory under `outputs/` with artifacts such as:
 Extraction/runtime tests:
 
 ```bash
-./venv/bin/python -m unittest tests.test_pipeline_components tests.test_ontology_validator
+./venv/bin/python -m pytest -q tests/test_pipeline_components.py tests/test_ontology_validator.py
 ```
-
-## Dataset Pipeline Status
-
-The dataset-building code remains in the repo and has not been cleaned up in this pass.
-
-That was intentional:
-- the extraction/runtime stack has been simplified first
-- the dataset pipeline will be cleaned in a later pass
-
-So if you see files related to:
-- FinReflectKG projection
-- stage 2 empty sampling
-- stage 3 teacher augmentation
-- batch repair
-
-they are still present by design.

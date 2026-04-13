@@ -163,14 +163,25 @@ class PipelineComponentTests(unittest.TestCase):
         self.assertTrue(recovered)
         mock_warning.assert_any_call("Model response may be truncated. Attempting to salvage JSON prefix...")
 
-    def test_canonical_schema_def_excludes_part_of(self):
+    def test_canonical_schema_def_lists_only_supported_relations(self):
         schema_def = LLMExtractor._schema_def(
             "KnowledgeGraphExtraction",
             KnowledgeGraphExtraction,
         )
         relation_enum = schema_def["json_schema"]["schema"]["$defs"]["Triple"]["properties"]["relation"]["enum"]
 
-        self.assertNotIn("PART_OF", relation_enum)
+        self.assertEqual(
+            set(relation_enum),
+            {
+                "HAS_SEGMENT",
+                "OFFERS",
+                "SERVES",
+                "OPERATES_IN",
+                "SELLS_THROUGH",
+                "PARTNERS_WITH",
+                "MONETIZES_VIA",
+            },
+        )
 
     def test_merge_relation_subset_into_base_replaces_only_allowed_relations(self):
         base = KnowledgeGraphExtraction(

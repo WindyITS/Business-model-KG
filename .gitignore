@@ -19,14 +19,6 @@ venv/
 # Outputs / scratch
 outputs/
 
-# External / downloaded datasets
-data/external/*
-!data/external/.gitkeep
-
-# Local manual comparison artifacts
-data/manual/*
-!data/manual/.gitkeep
-
 # OS
 .DS_Store
 

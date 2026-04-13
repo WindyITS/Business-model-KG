@@ -1,6 +1,3 @@
 openai==2.30.0
 neo4j==6.1.0
 pydantic==2.12.5
-tiktoken==0.12.0
-tqdm==4.67.3
-datasets==3.6.0
