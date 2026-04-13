@@ -1,8 +1,0 @@
-Item 1. Business
-
-Overview
-ExampleCorp is a leading provider of cloud infrastructure and artificial intelligence platforms. It offers the CloudCompute platform to enterprise customers and a direct-to-consumer software-as-a-service application known as AICopilot. 
-
-The CloudCompute platform serves large enterprise developers, while AICopilot is primarily targeted at individual consumers. ExampleCorp monetizes the CloudCompute platform via a usage-based licensing revenue model. In contrast, AICopilot is monetized via a monthly subscription revenue model.
-
-ExampleCorp operates primarily in the United States, but also operates in Europe through its ExampleEurope subsidiary. ExampleCorp partners with Microsoft and OpenAI to deliver state-of-the-art models inside AICopilot.

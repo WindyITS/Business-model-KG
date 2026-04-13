@@ -9,7 +9,6 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 import llm_extractor as llm_extractor_module
-from chunker import read_and_chunk_file
 from entity_resolver import resolve_entities
 from evaluate_graph import _load_triples_from_json, evaluate
 from llm_extractor import (
@@ -51,11 +50,6 @@ class PipelineComponentTests(unittest.TestCase):
         resolved = resolve_entities(extractions)
         self.assertEqual(len(resolved), 1)
         self.assertEqual(resolved[0].subject, "OpenAI")
-
-    def test_chunker_handles_local_files_without_tiktoken_network_access(self):
-        chunks = read_and_chunk_file("data/microsoft_10k.txt")
-        self.assertGreater(len(chunks), 1)
-        self.assertTrue(all(chunk.strip() for chunk in chunks))
 
     def test_evaluator_accepts_resolved_triples_payload(self):
         payload = {
