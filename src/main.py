@@ -12,7 +12,7 @@ from llm_extractor import (
     ExtractionError,
     LLMExtractor,
 )
-from neo4j_loader import Neo4jLoader
+from model_provider import resolve_model_settings
 from ontology_validator import validate_triples
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
@@ -28,11 +28,38 @@ def _mode_name(args: argparse.Namespace) -> str:
     return f"{args.pipeline}_pipeline"
 
 
+def _effective_use_schema(args: argparse.Namespace) -> bool:
+    return bool(getattr(args, "use_schema", False))
+
+
 def _build_run_dir(output_dir: Path, source_file: Path, mode: str) -> Path:
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     run_dir = output_dir / f"{source_file.stem}_{mode}_{timestamp}"
     run_dir.mkdir(parents=True, exist_ok=True)
     return run_dir
+
+
+def _looks_like_company_name(candidate: str) -> bool:
+    candidate = candidate.strip(" ,.-")
+    if not candidate or len(candidate) > 80:
+        return False
+
+    tokens = [token.strip("()[]{}\"'.,") for token in candidate.split()]
+    tokens = [token for token in tokens if token]
+    if not 1 <= len(tokens) <= 8:
+        return False
+
+    connector_words = {"&", "and", "of", "the"}
+    signal_tokens = 0
+    for token in tokens:
+        if token.casefold() in connector_words:
+            continue
+        if token[0].isupper() or "." in token or any(char.isdigit() for char in token):
+            signal_tokens += 1
+            continue
+        return False
+
+    return signal_tokens > 0
 
 
 def _infer_company_name(source_file: Path, full_text: str) -> str:
@@ -46,7 +73,7 @@ def _infer_company_name(source_file: Path, full_text: str) -> str:
         marker = " is "
         if marker in lowered:
             company = stripped[: lowered.index(marker)].strip(" ,.-")
-            if company:
+            if _looks_like_company_name(company):
                 return company
 
     stem = source_file.stem.replace("_10k", "").replace("_", " ").strip()
@@ -56,9 +83,31 @@ def _infer_company_name(source_file: Path, full_text: str) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Extract a business-model knowledge graph from SEC 10-K filings.")
     parser.add_argument("file_path", type=str, help="Path to the .txt file containing the 10-K business section.")
-    parser.add_argument("--base-url", type=str, default="http://localhost:1234/v1", help="Base URL for the LM Studio API.")
-    parser.add_argument("--model", type=str, default="local-model", help="Model name required by the local LLM endpoint.")
-    parser.add_argument("--api-key", type=str, default="lm-studio", help="API key for the local LLM service.")
+    parser.add_argument(
+        "--provider",
+        choices=["local", "opencode-go"],
+        default="local",
+        help="Provider preset. Use local for LM Studio/local OpenAI-compatible endpoints or opencode-go for hosted OpenCode Go models.",
+    )
+    parser.add_argument(
+        "--base-url",
+        type=str,
+        default=None,
+        help="Base URL root for the selected API. The resolver accepts either the API root or a full documented endpoint and normalizes common suffixes.",
+    )
+    parser.add_argument("--model", type=str, default=None, help="Model name or ID to use.")
+    parser.add_argument(
+        "--api-key",
+        type=str,
+        default=None,
+        help="API key for the selected provider. If omitted, provider-specific environment variables are used.",
+    )
+    parser.add_argument(
+        "--max-output-tokens",
+        type=int,
+        default=None,
+        help="Maximum completion tokens per model call. By default, opencode-go uses a capped value to reduce long-running requests; local leaves it unset.",
+    )
     parser.add_argument("--neo4j-uri", type=str, default="bolt://localhost:7687", help="Neo4j connection URI.")
     parser.add_argument("--neo4j-user", type=str, default="neo4j", help="Neo4j username.")
     parser.add_argument("--neo4j-password", type=str, default="password", help="Neo4j password.")
@@ -71,7 +120,12 @@ def main() -> int:
     parser.add_argument(
         "--no-schema",
         action="store_true",
-        help="Disable response_format JSON Schema enforcement and rely on prompt-only JSON output.",
+        help="Deprecated compatibility flag. No-schema mode is already the default.",
+    )
+    parser.add_argument(
+        "--use-schema",
+        action="store_true",
+        help="Enable response_format JSON Schema enforcement. By default the pipeline runs in no-schema mode.",
     )
     parser.add_argument("--max-retries", type=int, default=3, help="Maximum LLM retries per call.")
     parser.add_argument("--output-dir", type=str, default="outputs", help="Directory where run artifacts are written.")
@@ -81,6 +135,7 @@ def main() -> int:
 
     source_file = Path(args.file_path)
     mode = _mode_name(args)
+    use_schema = _effective_use_schema(args)
     ontology_version = "canonical"
     run_dir = _build_run_dir(Path(args.output_dir), source_file, mode)
     summary: dict[str, Any] = {
@@ -89,7 +144,14 @@ def main() -> int:
         "ontology_version": ontology_version,
         "source_file": str(source_file),
         "run_dir": str(run_dir),
-        "use_schema": not args.no_schema,
+        "provider": args.provider,
+        "requested_model": args.model,
+        "requested_base_url": args.base_url,
+        "requested_max_output_tokens": args.max_output_tokens,
+        "requested_no_schema": args.no_schema,
+        "requested_use_schema": args.use_schema,
+        "use_schema": use_schema,
+        "schema_mode": "schema" if use_schema else "no-schema",
         "started_at": datetime.now(timezone.utc).isoformat(),
     }
     _write_json(run_dir / "run_summary.json", summary)
@@ -98,13 +160,40 @@ def main() -> int:
     logger.info("Writing run artifacts to %s", run_dir)
 
     try:
+        model_settings = resolve_model_settings(
+            provider=args.provider,
+            model=args.model,
+            base_url=args.base_url,
+            api_key=args.api_key,
+            max_output_tokens=args.max_output_tokens,
+        )
+        summary.update(
+            {
+                "provider": model_settings.provider,
+                "model": model_settings.model,
+                "base_url": model_settings.base_url,
+                "api_mode": model_settings.api_mode,
+                "max_output_tokens": model_settings.max_output_tokens,
+                "use_schema": use_schema,
+                "schema_mode": "schema" if use_schema else "no-schema",
+            }
+        )
+        _write_json(run_dir / "run_summary.json", summary)
+        logger.info(
+            "Run settings: pipeline=%s provider=%s model=%s schema_mode=%s max_output_tokens=%s base_url=%s",
+            mode,
+            model_settings.provider,
+            model_settings.model,
+            "schema" if use_schema else "no-schema",
+            model_settings.max_output_tokens,
+            model_settings.base_url,
+        )
+
         logger.info("Reading full text without chunking...")
         full_text = source_file.read_text(encoding="utf-8")
         chunks = [full_text]
         logger.info("Prepared %s chunks.", len(chunks))
         company_name = _infer_company_name(source_file, full_text)
-        logger.info("Using company anchor: %s", company_name)
-
         _write_json(
             run_dir / "chunks.json",
             {
@@ -122,14 +211,21 @@ def main() -> int:
             },
         )
 
-        extractor = LLMExtractor(base_url=args.base_url, api_key=args.api_key, model=args.model)
+        extractor = LLMExtractor(
+            base_url=model_settings.base_url,
+            api_key=model_settings.api_key,
+            model=model_settings.model,
+            provider=model_settings.provider,
+            api_mode=model_settings.api_mode,
+            max_output_tokens=model_settings.max_output_tokens,
+        )
         logger.info("Starting LLM extraction in %s mode...", mode)
 
         chat_result: CanonicalPipelineResult = extractor.extract_canonical_pipeline(
             full_text=full_text,
             company_name=company_name,
             max_retries=args.max_retries,
-            use_schema=not args.no_schema,
+            use_schema=use_schema,
         )
         if not chat_result.success:
             raise ExtractionError(chat_result.error or "Canonical pipeline failed.")
@@ -249,6 +345,8 @@ def main() -> int:
             logger.info("Skipping Neo4j load by request.")
         else:
             logger.info("Loading triples into Neo4j...")
+            from neo4j_loader import Neo4jLoader
+
             loader = Neo4jLoader(uri=args.neo4j_uri, user=args.neo4j_user, password=args.neo4j_password)
             try:
                 if args.clear_neo4j:

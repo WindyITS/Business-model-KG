@@ -464,11 +464,22 @@ Wait for the user instruction.
 
 
 class LLMExtractor:
-    def __init__(self, base_url: str = "http://localhost:1234/v1", api_key: str = "lm-studio", model: str = "local-model"):
+    def __init__(
+        self,
+        base_url: str = "http://localhost:1234/v1",
+        api_key: str = "lm-studio",
+        model: str = "local-model",
+        provider: str = "local",
+        api_mode: str = "chat_completions",
+        max_output_tokens: int | None = None,
+    ):
         from openai import OpenAI
 
         self.client = OpenAI(base_url=base_url, api_key=api_key)
         self.model = model
+        self.provider = provider
+        self.api_mode = api_mode
+        self.max_output_tokens = max_output_tokens
 
     @staticmethod
     def _schema_def(name: str, model_schema: type[BaseModel], *, ontology_version: str = "canonical") -> dict:
@@ -479,6 +490,16 @@ class LLMExtractor:
                 "name": name,
                 "schema": schema,
             },
+        }
+
+    @staticmethod
+    def _responses_schema_def(name: str, model_schema: type[BaseModel], *, ontology_version: str = "canonical") -> dict:
+        schema = model_schema.model_json_schema(by_alias=True)
+        return {
+            "type": "json_schema",
+            "name": name,
+            "schema": schema,
+            "strict": True,
         }
 
     @staticmethod
@@ -495,6 +516,21 @@ class LLMExtractor:
     @staticmethod
     def _assistant_history_content(extraction: KnowledgeGraphExtraction) -> str:
         return json.dumps(extraction.model_dump(mode="json"), ensure_ascii=False)
+
+    @staticmethod
+    def _prepare_messages_for_provider(messages: list[dict[str, str]], provider: str) -> list[dict[str, str]]:
+        if provider != "opencode-go":
+            return list(messages)
+
+        # OpenCode Go is handled more conservatively: keep the pipeline structure,
+        # but send system instructions as user messages for compatibility.
+        return [
+            {
+                **message,
+                "role": "user" if message.get("role") == "system" else message.get("role", "user"),
+            }
+            for message in messages
+        ]
 
     @staticmethod
     def _merge_serves_into_base(
@@ -587,6 +623,32 @@ class LLMExtractor:
         logger.warning("Model response was not exact raw JSON. Falling back to the recovery payload.")
         return json.loads(fallback_payload), True
 
+    @staticmethod
+    def _responses_refusal_text(response: Any) -> str | None:
+        for output_item in getattr(response, "output", []) or []:
+            for content_item in getattr(output_item, "content", []) or []:
+                if getattr(content_item, "type", None) == "refusal":
+                    refusal = getattr(content_item, "refusal", None)
+                    if refusal:
+                        return str(refusal)
+        return None
+
+    @staticmethod
+    def _responses_output_text(response: Any) -> str:
+        output_text = getattr(response, "output_text", None)
+        if output_text:
+            return str(output_text)
+
+        text_parts: list[str] = []
+        for output_item in getattr(response, "output", []) or []:
+            for content_item in getattr(output_item, "content", []) or []:
+                if getattr(content_item, "type", None) != "output_text":
+                    continue
+                text = getattr(content_item, "text", None)
+                if text:
+                    text_parts.append(str(text))
+        return "".join(text_parts)
+
     def _call_structured_messages(
         self,
         *,
@@ -596,12 +658,14 @@ class LLMExtractor:
         fallback_payload: str,
         max_retries: int,
         temperature: float = 0.0,
-        use_schema: bool = True,
+        use_schema: bool = False,
         ontology_version: str = "canonical",
     ) -> tuple[BaseModel, str | None, int, dict[str, Any]]:
+        request_messages = self._prepare_messages_for_provider(messages, self.provider)
         schema_def = self._schema_def(schema_name, schema_model, ontology_version=ontology_version)
+        responses_schema_def = self._responses_schema_def(schema_name, schema_model, ontology_version=ontology_version)
         call_label = schema_name
-        for message in reversed(messages):
+        for message in reversed(request_messages):
             if message.get("role") != "user":
                 continue
             for line in message.get("content", "").splitlines():
@@ -614,27 +678,58 @@ class LLMExtractor:
 
         for attempt in range(1, max_retries + 1):
             try:
-                call_kwargs: dict[str, Any] = {
-                    "model": self.model,
-                    "messages": messages,
-                    "temperature": temperature,
-                }
-                if use_schema:
-                    call_kwargs["response_format"] = schema_def
-                response = self.client.chat.completions.create(**call_kwargs)
-                choice = response.choices[0]
-                finish_reason = getattr(choice, "finish_reason", None)
-                usage = getattr(response, "usage", None)
-                completion_tokens = getattr(usage, "completion_tokens", None) if usage is not None else None
-                logger.info(
-                    "Structured call %s attempt %s/%s finish_reason=%s completion_tokens=%s",
-                    call_label,
-                    attempt,
-                    max_retries,
-                    finish_reason,
-                    completion_tokens,
-                )
-                content = choice.message.content
+                content = ""
+                if self.api_mode == "responses":
+                    call_kwargs = {
+                        "model": self.model,
+                        "input": request_messages,
+                        "temperature": temperature,
+                    }
+                    if use_schema:
+                        call_kwargs["text"] = {"format": responses_schema_def}
+                    response = self.client.responses.create(**call_kwargs)
+                    status = getattr(response, "status", None)
+                    usage = getattr(response, "usage", None)
+                    output_tokens = getattr(usage, "output_tokens", None) if usage is not None else None
+                    logger.info(
+                        "Structured call %s attempt %s/%s status=%s output_tokens=%s",
+                        call_label,
+                        attempt,
+                        max_retries,
+                        status,
+                        output_tokens,
+                    )
+                    refusal_text = self._responses_refusal_text(response)
+                    if refusal_text:
+                        raise ExtractionError(f"Model refused request: {refusal_text}")
+                    content = self._responses_output_text(response)
+                else:
+                    call_kwargs = {
+                        "model": self.model,
+                        "messages": request_messages,
+                        "temperature": temperature,
+                    }
+                    if self.max_output_tokens is not None:
+                        call_kwargs["max_tokens"] = self.max_output_tokens
+                    if use_schema:
+                        call_kwargs["response_format"] = schema_def
+                    response = self.client.chat.completions.create(**call_kwargs)
+                    choice = response.choices[0]
+                    finish_reason = getattr(choice, "finish_reason", None)
+                    usage = getattr(response, "usage", None)
+                    completion_tokens = getattr(usage, "completion_tokens", None) if usage is not None else None
+                    logger.info(
+                        "Structured call %s attempt %s/%s finish_reason=%s completion_tokens=%s",
+                        call_label,
+                        attempt,
+                        max_retries,
+                        finish_reason,
+                        completion_tokens,
+                    )
+                    refusal_text = getattr(choice.message, "refusal", None)
+                    if refusal_text:
+                        raise ExtractionError(f"Model refused request: {refusal_text}")
+                    content = choice.message.content or ""
                 parsed_payload, payload_parse_recovered = self._load_json_payload(content or "", fallback_payload)
                 if use_schema:
                     parsed_model = schema_model(**parsed_payload)
@@ -697,7 +792,7 @@ class LLMExtractor:
         fallback_payload: str,
         max_retries: int,
         temperature: float = 0.0,
-        use_schema: bool = True,
+        use_schema: bool = False,
         ontology_version: str = "canonical",
     ) -> tuple[BaseModel, str | None, int, dict[str, Any]]:
         return self._call_structured_messages(
@@ -722,7 +817,7 @@ class LLMExtractor:
         company_name: str | None = None,
         max_retries: int = 2,
         strict: bool = True,
-        use_schema: bool = True,
+        use_schema: bool = False,
         system_prompt: str | None = None,
         user_prompt: str | None = None,
         ontology_version: str = "canonical",
@@ -769,7 +864,7 @@ class LLMExtractor:
         full_text: str,
         company_name: str | None = None,
         max_retries: int = 2,
-        use_schema: bool = True,
+        use_schema: bool = False,
     ) -> CanonicalPipelineResult:
         same_chat_messages = [{"role": "system", "content": _canonical_pipeline_system_prompt(full_text)}]
 

@@ -2,6 +2,7 @@ import json
 import sys
 import tempfile
 import unittest
+from os import environ
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -20,7 +21,9 @@ from llm_extractor import (
     aggregate_extraction_audits,
     audit_knowledge_graph_payload,
 )
-from main import _mode_name
+from main import _effective_use_schema, _infer_company_name, _mode_name
+from model_provider import resolve_model_settings
+from neo4j_loader import Neo4jLoader
 
 
 class PipelineComponentTests(unittest.TestCase):
@@ -100,6 +103,40 @@ class PipelineComponentTests(unittest.TestCase):
     def test_mode_name_is_canonical_pipeline(self):
         args = SimpleNamespace(pipeline="canonical")
         self.assertEqual(_mode_name(args), "canonical_pipeline")
+
+    def test_infer_company_name_accepts_short_issuer_line(self):
+        text = "ITEM 1. BUSINESS\nMicrosoft is a technology company.\n"
+
+        inferred = _infer_company_name(Path("microsoft_10k.txt"), text)
+
+        self.assertEqual(inferred, "Microsoft")
+
+    def test_infer_company_name_falls_back_when_line_is_descriptive_prose(self):
+        text = (
+            "ITEM 1. BUSINESS\n"
+            "We have built four principal software platforms, Palantir Gotham and Palantir Foundry, "
+            "which enable institutions to transform data.\n"
+        )
+
+        inferred = _infer_company_name(Path("palantir_10k.txt"), text)
+
+        self.assertEqual(inferred, "Palantir")
+
+    def test_local_provider_disables_schema_by_default(self):
+        args = SimpleNamespace(provider="local", no_schema=False)
+        self.assertFalse(_effective_use_schema(args))
+
+    def test_local_provider_no_schema_flag_keeps_schema_disabled(self):
+        args = SimpleNamespace(provider="local", no_schema=True)
+        self.assertFalse(_effective_use_schema(args))
+
+    def test_use_schema_flag_enables_schema(self):
+        args = SimpleNamespace(provider="local", no_schema=False, use_schema=True)
+        self.assertTrue(_effective_use_schema(args))
+
+    def test_opencode_go_disables_schema_by_default(self):
+        args = SimpleNamespace(provider="opencode-go", no_schema=False, use_schema=False)
+        self.assertFalse(_effective_use_schema(args))
 
     def test_payload_audit_counts_malformed_and_ontology_rejections(self):
         payload = {
@@ -251,6 +288,221 @@ class PipelineComponentTests(unittest.TestCase):
     def test_canonical_system_prompts_explicitly_forbid_markdown_fences(self):
         self.assertIn("Do not wrap the JSON in markdown code fences.", _canonical_pipeline_system_prompt("x"))
         self.assertIn("Do not wrap the JSON in markdown code fences.", _canonical_reflection_system_prompt("x"))
+
+    def test_local_provider_preserves_system_messages(self):
+        messages = [
+            {"role": "system", "content": "sys"},
+            {"role": "user", "content": "usr"},
+            {"role": "assistant", "content": "asst"},
+        ]
+
+        prepared = LLMExtractor._prepare_messages_for_provider(messages, "local")
+
+        self.assertEqual(prepared, messages)
+
+    def test_opencode_go_rewrites_system_messages_to_user(self):
+        messages = [
+            {"role": "system", "content": "sys"},
+            {"role": "user", "content": "usr"},
+            {"role": "assistant", "content": "asst"},
+        ]
+
+        prepared = LLMExtractor._prepare_messages_for_provider(messages, "opencode-go")
+
+        self.assertEqual(
+            prepared,
+            [
+                {"role": "user", "content": "sys"},
+                {"role": "user", "content": "usr"},
+                {"role": "assistant", "content": "asst"},
+            ],
+        )
+
+    def test_local_provider_defaults_to_lm_studio_shape(self):
+        settings = resolve_model_settings(provider="local")
+
+        self.assertEqual(settings.provider, "local")
+        self.assertEqual(settings.model, "local-model")
+        self.assertEqual(settings.base_url, "http://localhost:1234/v1")
+        self.assertEqual(settings.api_mode, "chat_completions")
+        self.assertEqual(settings.api_key, "lm-studio")
+        self.assertIsNone(settings.max_output_tokens)
+
+    def test_opencode_go_normalizes_full_endpoint_url(self):
+        settings = resolve_model_settings(
+            provider="opencode-go",
+            model="kimi-k2.5",
+            base_url="https://opencode.ai/zen/go/v1/chat/completions",
+            api_key="secret",
+        )
+
+        self.assertEqual(settings.base_url, "https://opencode.ai/zen/go/v1")
+        self.assertEqual(settings.api_mode, "chat_completions")
+        self.assertEqual(settings.max_output_tokens, 20000)
+
+    def test_opencode_go_defaults_to_kimi(self):
+        settings = resolve_model_settings(
+            provider="opencode-go",
+            api_key="secret",
+        )
+
+        self.assertEqual(settings.model, "kimi-k2.5")
+        self.assertEqual(settings.api_mode, "chat_completions")
+
+    def test_opencode_go_reads_api_key_from_environment(self):
+        with patch.dict(environ, {"OPENCODE_API_KEY": "env-secret"}, clear=True):
+            settings = resolve_model_settings(
+                provider="opencode-go",
+                model="kimi-k2.5",
+            )
+
+        self.assertEqual(settings.api_key, "env-secret")
+        self.assertEqual(settings.max_output_tokens, 20000)
+
+    def test_opencode_go_honors_explicit_output_cap(self):
+        settings = resolve_model_settings(
+            provider="opencode-go",
+            model="kimi-k2.5",
+            api_key="secret",
+            max_output_tokens=1024,
+        )
+
+        self.assertEqual(settings.max_output_tokens, 1024)
+
+    def test_opencode_go_rejects_non_kimi_models(self):
+        with self.assertRaises(ValueError) as ctx:
+            resolve_model_settings(
+                provider="opencode-go",
+                model="glm-5",
+                api_key="secret",
+            )
+
+        self.assertIn("Unsupported opencode-go model", str(ctx.exception))
+
+    def test_scoped_node_merge_pattern_includes_company_for_segments_and_offerings(self):
+        self.assertEqual(
+            Neo4jLoader._merge_pattern("subject", "BusinessSegment"),
+            "subject:BusinessSegment {name: row.subject_name, company: row.subject_company}",
+        )
+        self.assertEqual(
+            Neo4jLoader._merge_pattern("object", "Offering"),
+            "object:Offering {name: row.object_name, company: row.object_company}",
+        )
+
+    def test_unscoped_node_merge_pattern_uses_name_only(self):
+        self.assertEqual(
+            Neo4jLoader._merge_pattern("subject", "Company"),
+            "subject:Company {name: row.subject_name}",
+        )
+        self.assertEqual(
+            Neo4jLoader._merge_pattern("object", "Channel"),
+            "object:Channel {name: row.object_name}",
+        )
+
+    def test_loader_derives_scoped_node_companies_from_triples(self):
+        scopes = Neo4jLoader._infer_scoped_node_companies(
+            [
+                Triple(
+                    subject="Palantir Technologies",
+                    subject_type="Company",
+                    relation="HAS_SEGMENT",
+                    object="Government",
+                    object_type="BusinessSegment",
+                ),
+                Triple(
+                    subject="Government",
+                    subject_type="BusinessSegment",
+                    relation="OFFERS",
+                    object="Palantir Gotham",
+                    object_type="Offering",
+                ),
+                Triple(
+                    subject="Palantir Gotham",
+                    subject_type="Offering",
+                    relation="OFFERS",
+                    object="Mission Manager",
+                    object_type="Offering",
+                ),
+            ]
+        )
+
+        self.assertEqual(scopes[("BusinessSegment", "Government")], "Palantir Technologies")
+        self.assertEqual(scopes[("Offering", "Palantir Gotham")], "Palantir Technologies")
+        self.assertEqual(scopes[("Offering", "Mission Manager")], "Palantir Technologies")
+
+    def test_loader_uses_extracted_company_name_for_scoped_nodes(self):
+        class FakeResult:
+            def consume(self):
+                return None
+
+        class FakeSession:
+            def __init__(self):
+                self.calls = []
+
+            def run(self, query, **params):
+                self.calls.append((query, params))
+                return FakeResult()
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc, tb):
+                return False
+
+        class FakeDriver:
+            def __init__(self, session):
+                self._session = session
+
+            def session(self):
+                return self._session
+
+            def close(self):
+                return None
+
+        fake_session = FakeSession()
+        loader = Neo4jLoader.__new__(Neo4jLoader)
+        loader.driver = FakeDriver(fake_session)
+
+        loaded = loader.load_triples(
+            [
+                Triple(
+                    subject="Palantir Technologies",
+                    subject_type="Company",
+                    relation="HAS_SEGMENT",
+                    object="Government",
+                    object_type="BusinessSegment",
+                ),
+                Triple(
+                    subject="Government",
+                    subject_type="BusinessSegment",
+                    relation="OFFERS",
+                    object="Palantir Gotham",
+                    object_type="Offering",
+                ),
+                Triple(
+                    subject="Palantir Gotham",
+                    subject_type="Offering",
+                    relation="MONETIZES_VIA",
+                    object="subscription",
+                    object_type="RevenueModel",
+                ),
+            ]
+        )
+
+        self.assertEqual(loaded, 3)
+        self.assertEqual(len(fake_session.calls), 3)
+        first_query, first_params = fake_session.calls[0]
+        second_query, second_params = fake_session.calls[1]
+        third_query, third_params = fake_session.calls[2]
+        self.assertIn("subject:Company {name: row.subject_name}", first_query)
+        self.assertIn("object:BusinessSegment {name: row.object_name, company: row.object_company}", first_query)
+        self.assertIn("subject:BusinessSegment {name: row.subject_name, company: row.subject_company}", second_query)
+        self.assertIn("object:Offering {name: row.object_name, company: row.object_company}", second_query)
+        self.assertIn("subject:Offering {name: row.subject_name, company: row.subject_company}", third_query)
+        self.assertEqual(first_params["rows"][0]["object_company"], "Palantir Technologies")
+        self.assertEqual(second_params["rows"][0]["subject_company"], "Palantir Technologies")
+        self.assertEqual(second_params["rows"][0]["object_company"], "Palantir Technologies")
+        self.assertEqual(third_params["rows"][0]["subject_company"], "Palantir Technologies")
 
 
 if __name__ == "__main__":

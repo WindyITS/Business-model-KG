@@ -76,6 +76,7 @@ Requirements:
 - Python 3.10+
 - an OpenAI-compatible local endpoint such as LM Studio
 - optionally Neo4j
+- optionally an OpenCode Go API key if you want to run against hosted models instead of a local endpoint
 
 Setup:
 
@@ -96,6 +97,26 @@ Optional explicit pipeline flag:
 ```bash
 ./venv/bin/python src/main.py data/microsoft_10k.txt --pipeline canonical --skip-neo4j
 ```
+
+Run against OpenCode Go with a hosted open model:
+
+```bash
+export OPENCODE_GO_API_KEY=your_key_here
+./venv/bin/python src/main.py data/microsoft_10k.txt \
+  --provider opencode-go \
+  --model kimi-k2.5 \
+  --skip-neo4j
+```
+
+Provider notes:
+- `local` defaults to `http://localhost:1234/v1` and `local-model`
+- `opencode-go` defaults to `https://opencode.ai/zen/go/v1` and `kimi-k2.5`
+- `opencode-go` currently supports only `kimi-k2.5` in this repo
+- the CLI accepts either a root base URL or a full documented endpoint like `.../chat/completions` and normalizes it automatically
+- for `opencode-go`, the runtime rewrites `system` messages to `user` messages for compatibility while keeping the rest of the pipeline flow unchanged
+- `no-schema` is the default behavior for all providers; pass `--use-schema` to opt back into JSON Schema enforcement
+- `opencode-go` defaults to `--max-output-tokens 20000`; override it if needed
+- every run logs a settings line including pipeline, model, schema mode, and max output tokens
 
 Load into Neo4j instead:
 
