@@ -76,7 +76,7 @@
       "object_types": ["CustomerType"]
     },
     "OPERATES_IN": {
-      "definition": "Links a company to a normalized, business-relevant geography in which it operates, conducts business, or has meaningful market presence. Geography is tracked strictly at the corporate level.",
+      "definition": "Links a company to a normalized, business-relevant geography in which it operates, conducts business, has employees or a local entity, serves customers in a meaningful way, or otherwise has meaningful market presence. Geography is tracked strictly at the corporate level.",
       "subject_types": ["Company"],
       "object_types": ["Place"]
     },

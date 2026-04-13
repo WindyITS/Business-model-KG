@@ -106,7 +106,7 @@ Rules:
 
 `Company -> Place`
 
-Links a company to a normalized, business-relevant geography in which it operates, conducts business, or has meaningful market presence.
+Links a company to a normalized, business-relevant geography in which it operates, conducts business, has employees or a local entity, serves customers in a meaningful way, or otherwise has meaningful market presence.
 
 Rules:
 - strictly company-level
