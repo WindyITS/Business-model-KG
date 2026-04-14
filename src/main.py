@@ -75,6 +75,13 @@ class PipelineConsole:
     def _print_detail(self, label: str, value: Any) -> None:
         self._printer(f"  {f'{label}:':<18}{value}")
 
+    @staticmethod
+    def _format_status_message(message: Any, *, max_length: int = 220) -> str:
+        compact = " ".join(str(message).split())
+        if len(compact) <= max_length:
+            return compact
+        return f"{compact[: max_length - 3]}..."
+
     def start_run(
         self,
         *,
@@ -126,6 +133,21 @@ class PipelineConsole:
             "tokens": tokens,
         }
 
+    def start_llm_attempt(self, *, attempt: int, max_retries: int) -> None:
+        if self._current_stage is None:
+            return
+        self._print_detail("llm", f"starting attempt {attempt}/{max_retries}")
+
+    def fail_llm_attempt(self, *, attempt: int, max_retries: int, error: Any, will_retry: bool) -> None:
+        if self._current_stage is None:
+            return
+
+        retry_status = "retrying" if will_retry else "no retries left"
+        self._print_detail(
+            "llm",
+            f"attempt {attempt}/{max_retries} failed, {retry_status}: {self._format_status_message(error)}",
+        )
+
     def finish_stage(self, *, status: str = "done", details: list[tuple[str, Any]] | None = None) -> None:
         if self._current_stage is None:
             return
@@ -149,6 +171,20 @@ class PipelineConsole:
     def handle_progress(self, event: str, **payload: Any) -> None:
         if event == "stage_start":
             self.start_stage(payload["index"], payload["title"], extracts=payload.get("extracts"))
+            return
+        if event == "llm_call_start":
+            self.start_llm_attempt(
+                attempt=payload["attempt"],
+                max_retries=payload["max_retries"],
+            )
+            return
+        if event == "llm_call_error":
+            self.fail_llm_attempt(
+                attempt=payload["attempt"],
+                max_retries=payload["max_retries"],
+                error=payload["error"],
+                will_retry=payload["will_retry"],
+            )
             return
         if event == "llm_call_complete":
             self.record_llm_call(

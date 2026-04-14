@@ -523,6 +523,107 @@ class LLMExtractor:
         return json.dumps(value, ensure_ascii=False, separators=(",", ":"))
 
     @staticmethod
+    def _truncate_debug_text(value: Any, *, max_length: int = 1200) -> str:
+        compact = " ".join(str(value).split())
+        if len(compact) <= max_length:
+            return compact
+        return f"{compact[: max_length - 3]}..."
+
+    @staticmethod
+    def _compact_headers(headers: Any, *, max_items: int = 20) -> str | None:
+        if headers is None:
+            return None
+
+        try:
+            header_items = list(headers.items())
+        except Exception:
+            return None
+
+        snapshot: dict[str, str] = {}
+        for index, (key, value) in enumerate(header_items):
+            if index >= max_items:
+                snapshot["__truncated__"] = f"{len(header_items) - max_items} more headers"
+                break
+            snapshot[str(key).lower()] = str(value)
+
+        if not snapshot:
+            return None
+        return json.dumps(snapshot, ensure_ascii=False, separators=(",", ":"))
+
+    @staticmethod
+    def _debug_value_text(value: Any) -> str | None:
+        if value is None:
+            return None
+        if isinstance(value, str):
+            return value
+        try:
+            return json.dumps(value, ensure_ascii=False, separators=(",", ":"))
+        except (TypeError, ValueError):
+            return str(value)
+
+    @classmethod
+    def _format_http_diagnostics(
+        cls,
+        *,
+        method: str | None = None,
+        url: Any = None,
+        status: int | None = None,
+        headers: Any = None,
+        parsed_body: Any = None,
+        raw_body: str | None = None,
+    ) -> str:
+        details: list[str] = []
+
+        if method or url:
+            details.append(f"request={method or '?'} {url or '?'}")
+        if status is not None:
+            details.append(f"status={status}")
+
+        header_text = cls._compact_headers(headers)
+        if header_text:
+            details.append(f"headers={header_text}")
+
+        parsed_body_text = cls._debug_value_text(parsed_body)
+        if parsed_body_text:
+            details.append(f"parsed_error={cls._truncate_debug_text(parsed_body_text, max_length=800)}")
+
+        if raw_body:
+            normalized_raw = cls._truncate_debug_text(raw_body, max_length=1200)
+            normalized_parsed = cls._truncate_debug_text(parsed_body_text, max_length=1200) if parsed_body_text else None
+            if normalized_raw != normalized_parsed:
+                details.append(f"raw_response={normalized_raw}")
+
+        return "; ".join(details)
+
+    @classmethod
+    def _http_exception_diagnostics(cls, exc: Exception) -> str | None:
+        response = getattr(exc, "response", None)
+        if response is None:
+            return None
+
+        request = getattr(response, "request", None) or getattr(exc, "request", None)
+        method = getattr(request, "method", None)
+        url = getattr(request, "url", None)
+        status = getattr(response, "status_code", None)
+        headers = getattr(response, "headers", None)
+
+        raw_body = None
+        try:
+            raw_body = response.text
+        except Exception:
+            raw_body = None
+
+        diagnostics = cls._format_http_diagnostics(
+            method=method,
+            url=url,
+            status=status,
+            headers=headers,
+            parsed_body=getattr(exc, "body", None),
+            raw_body=raw_body,
+        )
+        return diagnostics or None
+
+    @staticmethod
     def _strip_code_fence(content: str) -> str:
         match = CODE_FENCE_RE.match(content.strip())
         if match:
@@ -734,13 +835,51 @@ class LLMExtractor:
         try:
             with urllib.request.urlopen(request, timeout=180) as response:
                 raw_response = response.read().decode("utf-8")
+                response_headers = response.headers
+                response_status = getattr(response, "status", None)
         except urllib.error.HTTPError as exc:
             error_body = exc.read().decode("utf-8", errors="replace")
+            diagnostics = self._format_http_diagnostics(
+                method="POST",
+                url=request.full_url,
+                status=exc.code,
+                headers=exc.headers,
+                raw_body=error_body,
+            )
+            if diagnostics:
+                logger.warning(
+                    "Messages API HTTP diagnostics for %s attempt %s/%s: %s",
+                    call_label,
+                    attempt,
+                    max_retries,
+                    diagnostics,
+                )
             raise ExtractionError(f"Messages API returned HTTP {exc.code}: {error_body}") from exc
         except urllib.error.URLError as exc:
             raise ExtractionError(f"Messages API request failed: {exc.reason}") from exc
 
-        response_payload = json.loads(raw_response)
+        try:
+            response_payload = json.loads(raw_response)
+        except json.JSONDecodeError as exc:
+            diagnostics = self._format_http_diagnostics(
+                method="POST",
+                url=request.full_url,
+                status=response_status,
+                headers=response_headers,
+                raw_body=raw_response,
+            )
+            if diagnostics:
+                logger.warning(
+                    "Messages API non-JSON diagnostics for %s attempt %s/%s: %s",
+                    call_label,
+                    attempt,
+                    max_retries,
+                    diagnostics,
+                )
+            raise ExtractionError(
+                f"Messages API returned non-JSON content: {self._truncate_debug_text(raw_response, max_length=800)}"
+            ) from exc
+
         stop_reason = response_payload.get("stop_reason")
         usage = response_payload.get("usage") or {}
         output_tokens = usage.get("output_tokens")
@@ -776,6 +915,7 @@ class LLMExtractor:
         schema_def = self._schema_def(schema_name, schema_model, ontology_version=ontology_version)
         responses_schema_def = self._responses_schema_def(schema_name, schema_model, ontology_version=ontology_version)
         call_label = schema_name
+        last_error: Exception | None = None
         for message in reversed(request_messages):
             if message.get("role") != "user":
                 continue
@@ -788,6 +928,7 @@ class LLMExtractor:
                 break
 
         for attempt in range(1, max_retries + 1):
+            self._emit_progress("llm_call_start", attempt=attempt, max_retries=max_retries)
             try:
                 content = ""
                 token_count: int | None = None
@@ -876,6 +1017,14 @@ class LLMExtractor:
                 )
                 return parsed_model, content, attempt, audit
             except (json.JSONDecodeError, ValidationError, ExtractionError) as exc:
+                last_error = exc
+                self._emit_progress(
+                    "llm_call_error",
+                    attempt=attempt,
+                    max_retries=max_retries,
+                    error=str(exc),
+                    will_retry=attempt < max_retries,
+                )
                 logger.warning(
                     "Structured call %s failed on attempt %s/%s: %s",
                     call_label,
@@ -884,7 +1033,27 @@ class LLMExtractor:
                     exc,
                 )
             except Exception as exc:
+                last_error = exc
+                diagnostics = self._http_exception_diagnostics(exc)
+                if diagnostics:
+                    logger.warning(
+                        "HTTP diagnostics for %s attempt %s/%s: %s",
+                        call_label,
+                        attempt,
+                        max_retries,
+                        diagnostics,
+                    )
+                self._emit_progress(
+                    "llm_call_error",
+                    attempt=attempt,
+                    max_retries=max_retries,
+                    error=str(exc),
+                    will_retry=attempt < max_retries,
+                )
                 logger.warning("LLM API error for %s on attempt %s/%s: %s", call_label, attempt, max_retries, exc)
+
+        if last_error is not None:
+            raise ExtractionError(f"Failed after {max_retries} attempts. Last error: {last_error}")
 
         raise ExtractionError(f"Failed after {max_retries} attempts")
 
