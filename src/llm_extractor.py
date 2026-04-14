@@ -274,18 +274,6 @@ Do not wrap the JSON in markdown code fences.
 - RevenueModel: canonical label only
 </node_types>
 
-<canonical_labels>
-<customer_types>
-{_json_list(CANONICAL_CUSTOMER_TYPES)}
-</customer_types>
-<channels>
-{_json_list(CANONICAL_CHANNELS)}
-</channels>
-<revenue_models>
-{_json_list(CANONICAL_REVENUE_MODELS)}
-</revenue_models>
-</canonical_labels>
-
 <allowed_relations>
 - HAS_SEGMENT: Company -> BusinessSegment
 - OFFERS: Company -> Offering | BusinessSegment -> Offering | Offering -> Offering
@@ -305,53 +293,17 @@ Do not wrap the JSON in markdown code fences.
 </scope_hierarchy>
 
 <scope_rules>
-- SELLS_THROUGH should default to BusinessSegment.
-- SELLS_THROUGH may attach to Offering only when that offering has no BusinessSegment anchor.
-- If an offering family hierarchy exists, attach MONETIZES_VIA to the family parent rather than to its child offerings.
 - Do not automatically duplicate facts upward across scopes.
 - Do not derive company-level facts from lower-level facts during extraction.
 - Do not derive offering-level facts from segment-level facts during extraction.
 </scope_rules>
-
-<structure_rules>
-- BusinessSegment -> OFFERS -> Offering is the primary segment-offering edge.
-- Company -> OFFERS -> Offering is allowed only as a last-resort fallback when, after considering the whole filing, no BusinessSegment anchor is supportable anywhere.
-- Do not use Company -> OFFERS -> Offering just because an offering is described at company scope, as universal, or as shared/common infrastructure; if that evidence ties it to multiple segments, attach it to each supported BusinessSegment instead.
-- Offering -> OFFERS -> Offering is allowed only when the filing explicitly states that one offering is a suite, family, umbrella, or parent offering for another offering.
-- A child Offering may have at most one Offering parent in Offering -> OFFERS -> Offering hierarchy.
-</structure_rules>
 </canonical_graph_policy>
-
-<normalization_rules>
-- CustomerType, Channel, and RevenueModel must use only canonical labels.
-- If a phrase does not map clearly to a canonical label, omit it.
-- Extract explicit named offerings individually and as written.
-- Do not compress explicit offering lists into summary labels.
-- Do not merge similar but distinct offering names.
-</normalization_rules>
-
-<corporate_shell_rules>
-- Valid Place objects are countries, U.S. states, District of Columbia, and these macro-regions: {_json_list(V2_APPROVED_MACRO_REGIONS)}.
-- Normalize aliases such as U.S. -> United States, U.K. -> United Kingdom, asia-pacific -> Asia Pacific, emea -> EMEA.
-- Do not use cities, office sites, vague global labels, or market placeholders.
-- Use PARTNERS_WITH only when the filing explicitly describes a named partnership.
-- Do not use it for suppliers, customers, competitors, ecosystem mentions, or channel relationships.
-</corporate_shell_rules>
-
-<inference_policy>
-- Precision is more important than recall.
-- Extract only text-grounded facts.
-- Conservative inference is allowed only for SERVES.
-- SERVES inference must be segment-specific, not global.
-- Do not spread one customer type across multiple segments unless each segment has its own supporting evidence.
-- Do not make weak guesses from vague proximity or broad context.
-</inference_policy>
 
 <workflow_rules>
 - You will receive one workflow step at a time.
 - Follow only the instructions of the current step.
-- Preserve continuity within the current chat.
-- Later steps MUST treat earlier outputs as fixed context unless the current step explicitly says otherwise.
+- Treat the filing text and any graph payload included in the current request as the full working context for that step.
+- Later steps may receive earlier outputs as fixed context.
 </workflow_rules>
 
 <source_filing>
@@ -807,10 +759,6 @@ class LLMExtractor:
         if match:
             return match.group(1).strip()
         return content.strip()
-
-    @staticmethod
-    def _assistant_history_content(extraction: KnowledgeGraphExtraction) -> str:
-        return json.dumps(extraction.model_dump(mode="json"), ensure_ascii=False)
 
     @staticmethod
     def _prepare_messages_for_provider(messages: list[dict[str, str]], provider: str) -> list[dict[str, str]]:
@@ -1323,7 +1271,7 @@ class LLMExtractor:
         company_name: str | None = None,
         max_retries: int = 2,
     ) -> CanonicalPipelineResult:
-        same_chat_messages = [{"role": "system", "content": _canonical_pipeline_system_prompt(full_text)}]
+        pipeline_system_prompt = _canonical_pipeline_system_prompt(full_text)
 
         self._emit_progress(
             "stage_start",
@@ -1343,10 +1291,21 @@ class LLMExtractor:
             "- HAS_SEGMENT: Company -> BusinessSegment. Use only for formally named internal segments in the filing.\n"
             "- Offering -> Offering only for explicit umbrella, family, suite, or parent relationships.\n"
             "</structure_definitions>\n\n"
+            "<structure_rules>\n"
+            "- BusinessSegment -> OFFERS -> Offering is the primary segment-offering edge.\n"
+            "- Company -> OFFERS -> Offering is allowed only as a last-resort fallback when, after considering the whole filing, no BusinessSegment anchor is supportable anywhere.\n"
+            "- do not use Company -> OFFERS -> Offering just because an offering is described at company scope, as universal, or as shared/common infrastructure; if that evidence ties it to multiple segments, attach it to each supported BusinessSegment instead.\n"
+            "- Offering -> OFFERS -> Offering is allowed only when the filing explicitly states that one offering is a suite, family, umbrella, or parent offering for another offering.\n"
+            "- a child Offering may have at most one Offering parent.\n"
+            "</structure_rules>\n\n"
+            "<naming_rules>\n"
+            "- extract explicit named offerings individually and as written.\n"
+            "- do not compress explicit offering lists into summary labels.\n"
+            "- do not merge similar but distinct offering names.\n"
+            "</naming_rules>\n\n"
             "<pass_specific_focus>\n"
             "- capture all explicit named segments\n"
             "- build the offering inventory segment by segment\n"
-            "- capture all explicit named offerings\n"
             "- use the full filing, not just the nearest sentence or opening overview, to decide each offering's parent\n"
             "- when the filing reports BusinessSegments, assume each named offering should be attached to one or more BusinessSegments unless the filing truly gives no segment anchor anywhere\n"
             "- search broadly across the filing for segment evidence before using Company -> OFFERS -> Offering\n"
@@ -1354,32 +1313,24 @@ class LLMExtractor:
             "- if an offering is described as backing, enabling, bundling with, integrating with, or providing a common layer for offerings used in multiple segments, treat that as segment evidence and attach it to every supported segment\n"
             "- if an overview describes offerings at company scope but later text gives segment-specific evidence, prefer BusinessSegment -> OFFERS -> Offering\n"
             "- do not let a company-level introductory list override later segment-specific evidence\n"
-            "- Company -> OFFERS -> Offering is a last-resort fallback, not a default organizational shortcut\n"
-            "- use Company -> OFFERS -> Offering only if, after considering the whole filing, there is still no credible segment anchor anywhere; company-wide or universal wording alone is not enough\n"
             "- first identify the direct offering children stated under each BusinessSegment\n"
-            "- use Offering -> OFFERS -> Offering only when the text explicitly states that an offering is a family, suite, umbrella, parent, or grouped subcategory for another offering\n"
             "- do not invent intermediate umbrella offerings or extra nesting just to organize the graph more neatly\n"
-            "- each child offering may have at most one Offering parent\n"
             "- if the filing states both an umbrella offering and its explicit named children, keep both\n"
             "- before returning, audit every Company -> OFFERS -> Offering triple and keep it only if no segment assignment is supportable anywhere in the filing, including via multi-segment shared-platform evidence\n"
             "- before returning, check that no explicit named offering has been omitted\n"
             "</pass_specific_focus>\n\n"
-            "<ontology_reminder>\n"
-            "- follow the ontology rules for Company, BusinessSegment, and Offering\n"
-            "- BusinessSegment -> OFFERS -> Offering is the preferred structure whenever segment evidence exists anywhere in the filing\n"
-            "- Company -> OFFERS -> Offering is fallback only\n"
-            "- an explicit umbrella offering does not replace its explicitly named child offerings; keep both when the filing states both\n"
-            "</ontology_reminder>\n\n"
             "<format_reminder>\n"
             'Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array.\n'
             "Do not use markdown code blocks (```json).\n"
             "</format_reminder>\n\n"
             "<output_scope>\nReturn only HAS_SEGMENT and OFFERS triples for this pass.\n</output_scope>"
         )
-        same_chat_messages.append({"role": "user", "content": pass1_prompt})
         try:
             skeleton_extraction, raw_skeleton_response, skeleton_attempts_used, skeleton_audit = self._call_structured_messages(
-                messages=same_chat_messages,
+                messages=[
+                    {"role": "system", "content": pipeline_system_prompt},
+                    {"role": "user", "content": pass1_prompt},
+                ],
                 schema_name="KnowledgeGraphExtraction",
                 schema_model=KnowledgeGraphExtraction,
                 fallback_payload='{"extraction_notes":"Truncated skeleton extraction.","triples":[]}',
@@ -1390,12 +1341,6 @@ class LLMExtractor:
             self._emit_progress("stage_failed", error=str(exc))
             return CanonicalPipelineResult(success=False, error=str(exc))
         self._emit_progress("stage_complete", details=[("result", f"{len(skeleton_extraction.triples)} triples")])
-        same_chat_messages.append(
-            {
-                "role": "assistant",
-                "content": self._assistant_history_content(skeleton_extraction),
-            }
-        )
 
         self._emit_progress(
             "stage_start",
@@ -1405,17 +1350,25 @@ class LLMExtractor:
         )
         pass2_channels_prompt = (
             "<workflow_step>\nPASS 2A - CHANNELS\n</workflow_step>\n\n"
-            "<objective>\nUsing the current graph as fixed context, extract only sales and distribution channels.\n</objective>\n\n"
+            "<objective>\nUsing the structural graph as fixed context, extract only sales and distribution channels.\n</objective>\n\n"
+            f"<current_structure>\n{self._compact_json(skeleton_extraction.model_dump())}\n</current_structure>\n\n"
             "<extract_only>\n- SELLS_THROUGH\n</extract_only>\n\n"
             "<channel_definitions>\n"
+            "- use only the exact canonical Channel labels defined below.\n"
+            "- if a filing phrase does not map clearly to one canonical channel label, omit it.\n"
             f"{_xml_definition_lines(CANONICAL_DEFINITIONS['Channel'])}\n"
             "</channel_definitions>\n\n"
+            "<channel_scope_rules>\n"
+            "- SELLS_THROUGH should default to BusinessSegment.\n"
+            "- SELLS_THROUGH may attach to Offering only when that offering has no BusinessSegment anchor.\n"
+            "- keep the provided structure unchanged.\n"
+            "</channel_scope_rules>\n\n"
             "<pass_specific_focus>\n"
+            "- add only SELLS_THROUGH facts\n"
             "- reason about channels first, before any monetization logic\n"
             "- evaluate channels segment by segment\n"
             "- if a channel is stated at company-wide scope and the company has reported segments, translate that evidence into segment-level channel triples rather than company-level ones\n"
-            "- use Offering for SELLS_THROUGH **only** when the offering has no BusinessSegment anchor\n"
-            "- keep structure unchanged\n"
+            "- do not derive offering-level channel facts from segment-level evidence unless the offering truly has no BusinessSegment anchor\n"
             "</pass_specific_focus>\n\n"
             "<format_reminder>\n"
             'Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array.\n'
@@ -1423,10 +1376,12 @@ class LLMExtractor:
             "</format_reminder>\n\n"
             "<output_scope>\nReturn only SELLS_THROUGH triples for this pass.\n</output_scope>"
         )
-        same_chat_messages.append({"role": "user", "content": pass2_channels_prompt})
         try:
             pass2_channels_extraction, raw_pass2_channels_response, pass2_channels_attempts_used, pass2_channels_audit = self._call_structured_messages(
-                messages=same_chat_messages,
+                messages=[
+                    {"role": "system", "content": pipeline_system_prompt},
+                    {"role": "user", "content": pass2_channels_prompt},
+                ],
                 schema_name="KnowledgeGraphExtraction",
                 schema_model=KnowledgeGraphExtraction,
                 fallback_payload='{"extraction_notes":"Truncated pass-2 channels extraction.","triples":[]}',
@@ -1449,12 +1404,6 @@ class LLMExtractor:
             pass2_channels_extraction,
             allowed_relations={"SELLS_THROUGH"},
         )
-        same_chat_messages.append(
-            {
-                "role": "assistant",
-                "content": self._assistant_history_content(pass2_channels_extraction),
-            }
-        )
 
         self._emit_progress(
             "stage_start",
@@ -1464,15 +1413,22 @@ class LLMExtractor:
         )
         pass2_revenue_prompt = (
             "<workflow_step>\nPASS 2B - REVENUE MODELS\n</workflow_step>\n\n"
-            "<objective>\nUsing the current graph as fixed context, extract only offering-level revenue models.\n</objective>\n\n"
+            "<objective>\nUsing the structural graph as fixed context, extract only offering-level revenue models.\n</objective>\n\n"
+            f"<current_structure>\n{self._compact_json(skeleton_extraction.model_dump())}\n</current_structure>\n\n"
             "<extract_only>\n- MONETIZES_VIA\n</extract_only>\n\n"
             "<revenue_model_definitions>\n"
+            "- use only the exact canonical RevenueModel labels defined below.\n"
+            "- if a filing phrase does not map clearly to one canonical revenue model label, omit it.\n"
             f"{_xml_definition_lines(CANONICAL_DEFINITIONS['RevenueModel'])}\n"
             "</revenue_model_definitions>\n\n"
+            "<revenue_scope_rules>\n"
+            "- if an offering family hierarchy exists, attach MONETIZES_VIA to the first-order family parent rather than to its child offerings.\n"
+            "- do not attach MONETIZES_VIA to a child offering that already has an explicit Offering parent.\n"
+            "- keep the provided structure unchanged.\n"
+            "</revenue_scope_rules>\n\n"
             "<pass_specific_focus>\n"
+            "- add only MONETIZES_VIA facts\n"
             "- evaluate monetization offering by offering\n"
-            "- if an offering family hierarchy exists, attach MONETIZES_VIA to the first order family parent rather than to its child offerings\n"
-            "- do not attach MONETIZES_VIA to a child offering that already has an explicit Offering parent\n"
             "- only add MONETIZES_VIA when the filing supports that offering-level monetization clearly enough\n"
             "</pass_specific_focus>\n\n"
             "<format_reminder>\n"
@@ -1481,10 +1437,12 @@ class LLMExtractor:
             "</format_reminder>\n\n"
             "<output_scope>\nReturn only MONETIZES_VIA triples for this pass.\n</output_scope>"
         )
-        same_chat_messages.append({"role": "user", "content": pass2_revenue_prompt})
         try:
             pass2_revenue_extraction, raw_pass2_revenue_response, pass2_revenue_attempts_used, pass2_revenue_audit = self._call_structured_messages(
-                messages=same_chat_messages,
+                messages=[
+                    {"role": "system", "content": pipeline_system_prompt},
+                    {"role": "user", "content": pass2_revenue_prompt},
+                ],
                 schema_name="KnowledgeGraphExtraction",
                 schema_model=KnowledgeGraphExtraction,
                 fallback_payload='{"extraction_notes":"Truncated pass-2 revenue extraction.","triples":[]}',
@@ -1515,12 +1473,6 @@ class LLMExtractor:
             pass2_revenue_extraction,
             allowed_relations={"MONETIZES_VIA"},
         )
-        same_chat_messages.append(
-            {
-                "role": "assistant",
-                "content": self._assistant_history_content(pass2_revenue_extraction),
-            }
-        )
         pass2_merged_extraction = KnowledgeGraphExtraction(
             extraction_notes="Merged channel and revenue-model passes.",
             triples=pass2_effective_extraction.triples,
@@ -1540,20 +1492,28 @@ class LLMExtractor:
             f"<current_structure>\n{self._compact_json(skeleton_extraction.model_dump())}\n</current_structure>\n\n"
             "<extract_only>\n- SERVES\n</extract_only>\n\n"
             "<customer_type_definitions>\n"
+            "- use only the exact canonical CustomerType labels defined below.\n"
+            "- if a filing phrase does not map clearly to one canonical customer type label, omit it.\n"
             f"{_xml_definition_lines(CANONICAL_DEFINITIONS['CustomerType'])}\n"
             "</customer_type_definitions>\n\n"
+            "<customer_inference_rules>\n"
+            "- precision is more important than recall.\n"
+            "- extract only text-grounded customer-type facts.\n"
+            "- conservative inference is allowed only for SERVES in this pass.\n"
+            "- SERVES inference must be segment-specific, not global.\n"
+            "- do not spread one customer type across multiple segments unless each segment has its own supporting evidence.\n"
+            "- do not make weak guesses from vague proximity or broad context.\n"
+            "</customer_inference_rules>\n\n"
             "<pass_specific_focus>\n"
             "- add only SERVES facts\n"
-            "- use conservative text-grounded inference when justified\n"
             "- use only the PASS 1 structure as fixed context\n"
             "- reason segment by segment from the offerings and descriptions inside each BusinessSegment\n"
             "- for each BusinessSegment, check the canonical customer types against it and keep every clearly stated or clearly implied one\n"
             "- do not fan out a rare or specialized customer type like government agencies, educational institutions, healthcare organizations, financial services firms, manufacturers, or retailers unless that segment has its own support\n"
             "</pass_specific_focus>\n\n"
-            "<ontology_reminder>\n"
-            "- follow the ontology rules for BusinessSegment and CustomerType\n"
-            "- when several offerings inside the same segment point to the same customer type, attach that customer type to the BusinessSegment\n"
-            "</ontology_reminder>\n\n"
+            "<customer_scope_rule>\n"
+            "- when several offerings inside the same segment point to the same customer type, attach that customer type to the BusinessSegment.\n"
+            "</customer_scope_rule>\n\n"
             "<format_reminder>\n"
             'Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array.\n'
             "Do not use markdown code blocks (```json).\n"
@@ -1563,7 +1523,7 @@ class LLMExtractor:
         try:
             pass3_serves_extraction, raw_pass3_serves_response, pass3_serves_attempts_used, pass3_serves_audit = self._call_structured_messages(
                 messages=[
-                    {"role": "system", "content": _canonical_pipeline_system_prompt(full_text)},
+                    {"role": "system", "content": pipeline_system_prompt},
                     {"role": "user", "content": pass3_serves_prompt},
                 ],
                 schema_name="KnowledgeGraphExtraction",
@@ -1611,6 +1571,15 @@ class LLMExtractor:
             "- OPERATES_IN: Company -> Place. Use for a normalized, business-relevant geography where the company conducts business, has employees or a local entity, serves customers in a meaningful way, or otherwise has meaningful market presence.\n"
             "- PARTNERS_WITH: Company -> Company. Use only for an explicit named strategic, commercial, distribution, technology, integration, or go-to-market partnership.\n"
             "</relation_definitions>\n\n"
+            "<place_constraints>\n"
+            f"- valid Place objects are countries, U.S. states, District of Columbia, and these approved macro-regions: {_json_list(V2_APPROVED_MACRO_REGIONS)}.\n"
+            "- normalize aliases such as U.S. -> United States, U.K. -> United Kingdom, asia-pacific -> Asia Pacific, and emea -> EMEA.\n"
+            "- do not use cities, office sites, vague global labels, or market placeholders.\n"
+            "</place_constraints>\n\n"
+            "<partnership_constraints>\n"
+            "- use PARTNERS_WITH only when the filing explicitly describes a named partnership.\n"
+            "- do not use PARTNERS_WITH for suppliers, customers, competitors, ecosystem mentions, or channel relationships.\n"
+            "</partnership_constraints>\n\n"
             "<pass_specific_focus>\n"
             "- add only company-level geography and explicit named partnerships\n"
             "- for **OPERATES_IN**, use the **full filing** and include named countries or approved macro-regions where the company conducts business or has **meaningful market presence**\n"
@@ -1622,8 +1591,7 @@ class LLMExtractor:
             "- do not infer unmentioned countries just to complete a region\n"
             "- only roll up countries into a macro-region when the mapping is clear and unambiguous; if overlap makes the roll-up uncertain, keep the explicit countries\n"
             "- do not substitute one overlapping macro-region for another unless the filing supports that exact label\n"
-            "- for **PARTNERS_WITH**, add only explicit named partnerships and do not infer them from ordinary supplier, customer, channel, ecosystem, or competitor mentions\n"
-            "- exclude vague global labels, cities, office sites, and geographies that appear only as incidental context such as regulatory reference or IP jurisdiction without company presence\n"
+            "- exclude geographies that appear only as incidental context such as regulatory reference or IP jurisdiction without company presence\n"
             "</pass_specific_focus>\n\n"
             "<format_reminder>\n"
             'Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array.\n'
@@ -1634,7 +1602,7 @@ class LLMExtractor:
         try:
             pass4_corporate_extraction, raw_pass4_corporate_response, pass4_corporate_attempts_used, pass4_corporate_audit = self._call_structured_messages(
                 messages=[
-                    {"role": "system", "content": _canonical_pipeline_system_prompt(full_text)},
+                    {"role": "system", "content": pipeline_system_prompt},
                     {"role": "user", "content": pass4_corporate_prompt},
                 ],
                 schema_name="KnowledgeGraphExtraction",

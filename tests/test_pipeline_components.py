@@ -450,6 +450,18 @@ class PipelineComponentTests(unittest.TestCase):
         self.assertIn("Do not wrap the JSON in markdown code fences.", _canonical_pipeline_system_prompt("x"))
         self.assertIn("Do not wrap the JSON in markdown code fences.", _canonical_reflection_system_prompt("x"))
 
+    def test_canonical_pipeline_system_prompt_omits_pass_specific_sections(self):
+        prompt = _canonical_pipeline_system_prompt("full filing text here")
+
+        self.assertIn("<ontology>", prompt)
+        self.assertIn("<canonical_graph_policy>", prompt)
+        self.assertNotIn("<canonical_labels>", prompt)
+        self.assertNotIn("<structure_rules>", prompt)
+        self.assertNotIn("<normalization_rules>", prompt)
+        self.assertNotIn("<corporate_shell_rules>", prompt)
+        self.assertNotIn("<inference_policy>", prompt)
+        self.assertNotIn("SELLS_THROUGH should default to BusinessSegment.", prompt)
+
     def test_canonical_reflection_system_prompt_includes_full_text_and_ontology_rules(self):
         prompt = _canonical_reflection_system_prompt("full filing text here")
 
@@ -989,6 +1001,77 @@ class PipelineComponentTests(unittest.TestCase):
         self.assertEqual(attempts_used, 2)
         self.assertEqual(audit["raw_triple_count"], 1)
         self.assertEqual(audit["kept_triple_count"], 1)
+
+    def test_extract_canonical_pipeline_offloads_rules_into_fresh_pass_prompts(self):
+        extractor = LLMExtractor(
+            base_url="http://localhost:1234/v1",
+            api_key="lm-studio",
+            model="local-model",
+            provider="local",
+            api_mode="chat_completions",
+        )
+        skeleton = KnowledgeGraphExtraction(
+            extraction_notes="skeleton",
+            triples=[
+                Triple(
+                    subject="Microsoft",
+                    subject_type="Company",
+                    relation="HAS_SEGMENT",
+                    object="Intelligent Cloud",
+                    object_type="BusinessSegment",
+                )
+            ],
+        )
+        empty = KnowledgeGraphExtraction(extraction_notes="", triples=[])
+        captured_messages: list[list[dict[str, str]]] = []
+
+        def structured_side_effect(**kwargs):
+            messages = kwargs["messages"]
+            captured_messages.append(messages)
+            call_index = len(captured_messages)
+            if call_index == 1:
+                return skeleton, "raw skeleton", 1, {"kept_triple_count": 1}
+            return empty, f"raw pass {call_index}", 1, {"kept_triple_count": 0}
+
+        def reflect_side_effect(**kwargs):
+            current = kwargs["current_extraction"]
+            return current, "raw reflection", 1, {"kept_triple_count": len(current.triples)}
+
+        with patch.object(extractor, "_call_structured_messages", side_effect=structured_side_effect), patch.object(
+            extractor, "reflect_extraction", side_effect=reflect_side_effect
+        ):
+            result = extractor.extract_canonical_pipeline(
+                full_text="filing",
+                company_name="Microsoft",
+                max_retries=2,
+            )
+
+        self.assertTrue(result.success)
+        self.assertEqual(len(captured_messages), 5)
+
+        pass1_prompt = captured_messages[0][1]["content"]
+        self.assertIn("do not compress explicit offering lists into summary labels.", pass1_prompt)
+        self.assertIn("BusinessSegment -> OFFERS -> Offering is the primary segment-offering edge.", pass1_prompt)
+
+        pass2_channels_messages = captured_messages[1]
+        self.assertEqual(len(pass2_channels_messages), 2)
+        self.assertIn("<current_structure>", pass2_channels_messages[1]["content"])
+        self.assertIn("SELLS_THROUGH should default to BusinessSegment.", pass2_channels_messages[1]["content"])
+        self.assertNotIn("PASS 1 - STRUCTURAL SKELETON", pass2_channels_messages[1]["content"])
+
+        pass2_revenue_messages = captured_messages[2]
+        self.assertEqual(len(pass2_revenue_messages), 2)
+        self.assertIn("<current_structure>", pass2_revenue_messages[1]["content"])
+        self.assertIn("use only the exact canonical RevenueModel labels defined below.", pass2_revenue_messages[1]["content"])
+        self.assertNotIn("PASS 2A - CHANNELS", pass2_revenue_messages[1]["content"])
+
+        pass3_prompt = captured_messages[3][1]["content"]
+        self.assertIn("precision is more important than recall.", pass3_prompt)
+        self.assertIn("do not make weak guesses from vague proximity or broad context.", pass3_prompt)
+
+        pass4_prompt = captured_messages[4][1]["content"]
+        self.assertIn("U.S. -> United States", pass4_prompt)
+        self.assertIn("do not use PARTNERS_WITH for suppliers, customers, competitors, ecosystem mentions, or channel relationships.", pass4_prompt)
 
     def test_extract_canonical_pipeline_runs_two_reflection_stages(self):
         extractor = LLMExtractor(
