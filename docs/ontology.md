@@ -5,7 +5,7 @@ Final segment-centered ontology used by the canonical extraction pipeline.
 This version prioritizes:
 - canonical structure
 - higher standardization across companies
-- conservative extraction from sparse 10-K text
+- conservative extraction for semantic business-model facts, with broader but still text-grounded company geography capture
 - downstream recovery of convenience rollups in Neo4j rather than during extraction
 
 ## Design Principles
@@ -28,9 +28,12 @@ Do not:
 
 Those behaviors belong in downstream Neo4j querying.
 
-### 3. Sparse-text honesty
+### 3. Sparse-text honesty with bounded inference
 
 If the filing only states a fact at a broad level, do not force a more granular triple just to make the graph denser.
+
+Exception:
+- for `SERVES`, conservative segment-level inference is allowed when a customer type is clearly stated or clearly implied by a segment's offerings and descriptions
 
 ### 4. Closed-label discipline
 
@@ -87,7 +90,8 @@ Links:
 
 Rules:
 - `BusinessSegment -> OFFERS -> Offering` is primary
-- `Company -> OFFERS -> Offering` is fallback only when no segment anchor exists or the offering is presented as universal
+- `Company -> OFFERS -> Offering` is fallback only when, after considering the whole filing, no segment anchor is supportable anywhere
+- do not use `Company -> OFFERS -> Offering` just because an offering is described at company scope, as universal, or as shared/common infrastructure; if the evidence ties it to multiple segments, attach it to each supported `BusinessSegment`
 - `Offering -> OFFERS -> Offering` is allowed only when the filing explicitly states the umbrella / family / suite / parent relationship
 - a child `Offering` may have at most one offering parent
 
@@ -99,8 +103,9 @@ Links a business segment to a canonical customer category that it targets, suppo
 
 Rules:
 - `SERVES` is canonical only at `BusinessSegment` scope
-- if a customer type is universal across the company, attach it to each reported `BusinessSegment` rather than to `Company`
-- do not attach `SERVES` to `Offering`
+- if a customer type is stated at company scope, attach it only to the `BusinessSegment` nodes where it is clearly stated or clearly implied by the segment's offerings and descriptions
+- do not spread one customer type across multiple segments unless each segment has its own support
+- do not attach `SERVES` to `Company` or `Offering`
 
 ### `OPERATES_IN`
 
@@ -110,6 +115,15 @@ Links a company to a normalized, business-relevant geography in which it operate
 
 Rules:
 - strictly company-level
+- use named countries or approved macro-regions where the company has meaningful market presence
+- when a named geography is clearly tied to the company's own business presence, prefer recall over unnecessary omission
+- meaningful market presence can be shown by signals such as a named subsidiary or local entity, employee presence, labor structure, customer or revenue presence, country-specific availability, or present-tense current use in that geography
+- when the filing states geography at an approved macro-region level, prefer that macro-region rather than expanding it into many countries
+- when the filing provides a clearly exhaustive country list that unambiguously corresponds to one approved macro-region, and the individual countries do not add distinct business signal, emit the macro-region instead of listing every country
+- keep individual countries when the filing gives country-specific business significance such as a named subsidiary, datacenter, employees, customers, revenue, availability, or legal entity in that country
+- do not infer unmentioned countries just to complete a region
+- only roll up countries into a macro-region when the mapping is clear and unambiguous; if overlap makes the roll-up uncertain, keep the explicit countries
+- do not substitute one overlapping macro-region for another unless the filing supports that exact label
 - do not attach to `BusinessSegment` or `Offering`
 
 ### `SELLS_THROUGH`
@@ -237,6 +251,40 @@ Do not use:
 - vague global placeholders
 - synthetic geography strings
 
+### Downstream Place Hierarchy
+
+The extractor still emits only canonical `Company-[:OPERATES_IN]->Place` facts.
+
+In some cases, that canonical `Place` may be an approved macro-region selected from a clearly exhaustive country list when the roll-up is unambiguous and the individual countries do not add distinct business signal.
+
+For downstream querying, Neo4j may also materialize an internal `Place-[:WITHIN]->Place`
+hierarchy so a country query can expand to broader tagged regions without inventing new
+`OPERATES_IN` triples.
+
+The deterministic hierarchy may cover approved macro-regions, all U.S. states plus
+`District of Columbia`, and a broad sovereign-country set with common aliases.
+
+Example:
+- query place: `Italy`
+- exact company tag: `Italy`
+- broader tagged matches: `Europe`, `European Union`, `EMEA`
+
+Recommended Cypher pattern:
+
+```cypher
+MATCH (requested:Place {name: $place})
+MATCH (requested)-[:WITHIN*0..]->(matched:Place)<-[:OPERATES_IN]-(company:Company)
+WITH company, MIN(CASE WHEN matched.name = requested.name THEN 0 ELSE 1 END) AS match_rank
+RETURN company.name AS company,
+       CASE match_rank
+         WHEN 0 THEN 'exact'
+         ELSE 'broader_region'
+       END AS geography_match
+ORDER BY match_rank, company
+```
+
+This keeps broader regional coverage visible, but tagged distinctly from exact place matches.
+
 ## Canonical Extraction Rules
 
 ### Rule 1: Segment-anchored offerings first
@@ -258,8 +306,12 @@ Do not derive:
 - offering-level facts from segment facts
 - inherited convenience triples for analytics
 
-### Rule 4: Precision over recall
+### Rule 4: Precision first, with explicit exceptions
 
 If a fact is ambiguous, omit it.
+
+For `SERVES`, conservative segment-specific inference is allowed when a customer type is clearly stated or clearly implied by a segment's offerings and descriptions.
+
+For `OPERATES_IN`, prefer recall over unnecessary omission when a named geography is clearly tied to the company's own business presence.
 
 The ontology is designed so downstream Neo4j traversal can recover convenience rollups later.

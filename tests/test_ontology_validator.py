@@ -22,6 +22,35 @@ class OntologyValidatorTests(unittest.TestCase):
         self.assertTrue(result["is_valid"])
         self.assertEqual(result["issues"], [])
 
+    def test_normalizes_curly_quotes_in_entities(self):
+        triple = {
+            "subject": "“Microsoft”",
+            "subject_type": "Company",
+            "relation": "OPERATES_IN",
+            "object": "“United States”",
+            "object_type": "Place",
+        }
+
+        result = validate_triple(triple)
+
+        self.assertTrue(result["is_valid"])
+        self.assertEqual(result["normalized_triple"]["subject"], "Microsoft")
+        self.assertEqual(result["normalized_triple"]["object"], "United States")
+
+    def test_normalizes_place_aliases_deterministically(self):
+        triple = {
+            "subject": "Microsoft",
+            "subject_type": "Company",
+            "relation": "OPERATES_IN",
+            "object": "U.S.",
+            "object_type": "Place",
+        }
+
+        result = validate_triple(triple)
+
+        self.assertTrue(result["is_valid"])
+        self.assertEqual(result["normalized_triple"]["object"], "United States")
+
     def test_rejects_non_canonical_customer_type(self):
         triple = {
             "subject": "Intelligent Cloud",

@@ -6,15 +6,17 @@ from pathlib import Path
 from typing import Any
 
 from ontology_config import canonical_labels, is_valid_relation_schema, node_type_names, relation_names
+from place_hierarchy import normalize_place_name
 
 
 WHITESPACE_RE = re.compile(r"\s+")
 CANONICAL_LABEL_NODE_TYPES = {"CustomerType", "Channel", "RevenueModel"}
+QUOTE_CHARS = "\"'`“”‘’ "
 
 
 def clean_entity_name(name: str) -> str:
     cleaned = unicodedata.normalize("NFKC", name).strip()
-    cleaned = cleaned.strip("\"'` ")
+    cleaned = cleaned.strip(QUOTE_CHARS)
     cleaned = WHITESPACE_RE.sub(" ", cleaned)
     return cleaned
 
@@ -75,6 +77,10 @@ def validate_triple(
         "object": clean_entity_name(str(triple.get("object", ""))),
         "object_type": str(triple.get("object_type", "")).strip(),
     }
+
+    for node_field, type_field in (("subject", "subject_type"), ("object", "object_type")):
+        if normalized[type_field] == "Place" and normalized[node_field]:
+            normalized[node_field] = normalize_place_name(normalized[node_field])
 
     if not normalized["subject"]:
         issues.append({"code": "empty_subject", "message": "Subject is empty after normalization."})

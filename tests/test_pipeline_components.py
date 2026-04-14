@@ -8,11 +8,13 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 
+import httpx
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 import llm_extractor as llm_extractor_module
-from entity_resolver import resolve_entities
+from entity_resolver import clean_entity_name as clean_resolved_entity_name, resolve_entities
 from evaluate_graph import _load_triples_from_json, evaluate
+from openai import InternalServerError
 from llm_extractor import (
     LLMExtractor,
     KnowledgeGraphExtraction,
@@ -24,7 +26,6 @@ from llm_extractor import (
 )
 from main import (
     PipelineConsole,
-    _effective_use_schema,
     _format_duration,
     _format_token_visual,
     _infer_company_name,
@@ -60,6 +61,36 @@ class PipelineComponentTests(unittest.TestCase):
         resolved = resolve_entities(extractions)
         self.assertEqual(len(resolved), 1)
         self.assertEqual(resolved[0].subject, "OpenAI")
+
+    def test_entity_resolver_strips_curly_quotes(self):
+        self.assertEqual(clean_resolved_entity_name('  “Apollo”  '), "Apollo")
+
+        extractions = [
+            KnowledgeGraphExtraction(
+                extraction_notes="ok",
+                triples=[
+                    Triple(
+                        subject="Palantir",
+                        subject_type="Company",
+                        relation="OFFERS",
+                        object="“Apollo”",
+                        object_type="Offering",
+                    ),
+                    Triple(
+                        subject="Palantir",
+                        subject_type="Company",
+                        relation="OFFERS",
+                        object="Apollo",
+                        object_type="Offering",
+                    ),
+                ],
+            )
+        ]
+
+        resolved = resolve_entities(extractions)
+
+        self.assertEqual(len(resolved), 1)
+        self.assertEqual(resolved[0].object, "Apollo")
 
     def test_evaluator_accepts_resolved_triples_payload(self):
         payload = {
@@ -115,9 +146,9 @@ class PipelineComponentTests(unittest.TestCase):
         self.assertEqual(_format_duration(0.42), "0.4s")
         self.assertEqual(_format_duration(75.2), "1m15s")
 
-    def test_format_token_visual_renders_count_and_bar(self):
-        self.assertEqual(_format_token_visual(3244), "3,244 [####------]")
-        self.assertEqual(_format_token_visual(3244, 20000), "3,244/20,000 [##--------]")
+    def test_format_token_visual_renders_plain_counts(self):
+        self.assertEqual(_format_token_visual(3244), "3,244")
+        self.assertEqual(_format_token_visual(3244, 20000), "3,244/20,000")
 
     def test_pipeline_console_renders_pass_progress(self):
         lines: list[str] = []
@@ -130,7 +161,6 @@ class PipelineComponentTests(unittest.TestCase):
             pipeline="canonical",
             provider="local",
             model="local-model",
-            schema_mode="no-schema",
             neo4j_enabled=True,
             llm_token_cap=None,
         )
@@ -147,8 +177,38 @@ class PipelineComponentTests(unittest.TestCase):
         self.assertIn("Neo4j:     enabled (notifications disabled)", lines)
         self.assertIn("[02/09] Pass 1 - Structural skeleton", lines)
         self.assertTrue(any("extracts:" in line and "HAS_SEGMENT, OFFERS" in line for line in lines))
-        self.assertTrue(any("llm:" in line and "attempt 1/3, tokens=3,244 [####------]" in line for line in lines))
+        self.assertTrue(any("llm:" in line and "attempt 1/3, tokens=3,244" in line for line in lines))
         self.assertTrue(any("result:" in line and "9 triples" in line for line in lines))
+
+    def test_pipeline_console_renders_live_retry_updates(self):
+        lines: list[str] = []
+        console = PipelineConsole(printer=lines.append)
+
+        console.handle_progress(
+            "stage_start",
+            index=2,
+            title="Pass 1 - Structural skeleton",
+            extracts="HAS_SEGMENT, OFFERS",
+        )
+        console.handle_progress("llm_call_start", attempt=1, max_retries=3)
+        console.handle_progress(
+            "llm_call_error",
+            attempt=1,
+            max_retries=3,
+            error="Error code: 500 - Unexpected token '<'",
+            will_retry=True,
+        )
+        console.handle_progress("llm_call_start", attempt=2, max_retries=3)
+
+        self.assertTrue(any("llm:" in line and "starting attempt 1/3" in line for line in lines))
+        self.assertTrue(
+            any(
+                "llm:" in line
+                and "attempt 1/3 failed, retrying: Error code: 500 - Unexpected token '<'" in line
+                for line in lines
+            )
+        )
+        self.assertTrue(any("llm:" in line and "starting attempt 2/3" in line for line in lines))
 
     def test_infer_company_name_accepts_short_issuer_line(self):
         text = "ITEM 1. BUSINESS\nMicrosoft is a technology company.\n"
@@ -167,22 +227,6 @@ class PipelineComponentTests(unittest.TestCase):
         inferred = _infer_company_name(Path("palantir_10k.txt"), text)
 
         self.assertEqual(inferred, "Palantir")
-
-    def test_local_provider_disables_schema_by_default(self):
-        args = SimpleNamespace(provider="local", no_schema=False)
-        self.assertFalse(_effective_use_schema(args))
-
-    def test_local_provider_no_schema_flag_keeps_schema_disabled(self):
-        args = SimpleNamespace(provider="local", no_schema=True)
-        self.assertFalse(_effective_use_schema(args))
-
-    def test_use_schema_flag_enables_schema(self):
-        args = SimpleNamespace(provider="local", no_schema=False, use_schema=True)
-        self.assertTrue(_effective_use_schema(args))
-
-    def test_opencode_go_disables_schema_by_default(self):
-        args = SimpleNamespace(provider="opencode-go", no_schema=False, use_schema=False)
-        self.assertFalse(_effective_use_schema(args))
 
     def test_payload_audit_counts_malformed_and_ontology_rejections(self):
         payload = {
@@ -245,26 +289,6 @@ class PipelineComponentTests(unittest.TestCase):
         self.assertEqual(payload["triples"], [])
         self.assertTrue(recovered)
         mock_warning.assert_any_call("Model response may be truncated. Attempting to salvage JSON prefix...")
-
-    def test_canonical_schema_def_lists_only_supported_relations(self):
-        schema_def = LLMExtractor._schema_def(
-            "KnowledgeGraphExtraction",
-            KnowledgeGraphExtraction,
-        )
-        relation_enum = schema_def["json_schema"]["schema"]["$defs"]["Triple"]["properties"]["relation"]["enum"]
-
-        self.assertEqual(
-            set(relation_enum),
-            {
-                "HAS_SEGMENT",
-                "OFFERS",
-                "SERVES",
-                "OPERATES_IN",
-                "SELLS_THROUGH",
-                "PARTNERS_WITH",
-                "MONETIZES_VIA",
-            },
-        )
 
     def test_merge_relation_subset_into_base_replaces_only_allowed_relations(self):
         base = KnowledgeGraphExtraction(
@@ -334,6 +358,15 @@ class PipelineComponentTests(unittest.TestCase):
     def test_canonical_system_prompts_explicitly_forbid_markdown_fences(self):
         self.assertIn("Do not wrap the JSON in markdown code fences.", _canonical_pipeline_system_prompt("x"))
         self.assertIn("Do not wrap the JSON in markdown code fences.", _canonical_reflection_system_prompt("x"))
+
+    def test_canonical_reflection_system_prompt_includes_full_text_and_ontology_rules(self):
+        prompt = _canonical_reflection_system_prompt("full filing text here")
+
+        self.assertIn("<source_filing>", prompt)
+        self.assertIn("full filing text here", prompt)
+        self.assertIn("<canonical_label_definitions>", prompt)
+        self.assertIn("<canonical_graph_policy>", prompt)
+        self.assertIn("SELLS_THROUGH should default to BusinessSegment.", prompt)
 
     def test_local_provider_preserves_system_messages(self):
         messages = [
@@ -482,6 +515,9 @@ class PipelineComponentTests(unittest.TestCase):
 
     def test_messages_api_parses_text_blocks(self):
         class _FakeHTTPResponse:
+            status = 200
+            headers = {"content-type": "application/json"}
+
             def __init__(self, payload):
                 self._payload = payload
 
@@ -527,6 +563,333 @@ class PipelineComponentTests(unittest.TestCase):
         request = mock_urlopen.call_args.args[0]
         self.assertEqual(request.full_url, "https://opencode.ai/zen/go/v1/messages")
         self.assertEqual(content, '{"extraction_notes":"ok","triples":[]}')
+
+    def test_structured_call_emits_retry_progress_and_reports_last_error(self):
+        extractor = LLMExtractor(
+            base_url="http://localhost:1234/v1",
+            api_key="lm-studio",
+            model="local-model",
+            provider="local",
+            api_mode="chat_completions",
+        )
+        events: list[tuple[str, dict[str, object]]] = []
+        extractor.progress_callback = lambda event, **payload: events.append((event, payload))
+
+        success_response = SimpleNamespace(
+            choices=[
+                SimpleNamespace(
+                    finish_reason="stop",
+                    message=SimpleNamespace(content='{"extraction_notes":"ok","triples":[]}', refusal=None),
+                )
+            ],
+            usage=SimpleNamespace(completion_tokens=17),
+        )
+
+        class _CreateCall:
+            def __init__(self):
+                self.calls = 0
+
+            def create(self, **kwargs):
+                self.calls += 1
+                if self.calls == 1:
+                    raise RuntimeError("provider unavailable")
+                return success_response
+
+        extractor.client = SimpleNamespace(chat=SimpleNamespace(completions=_CreateCall()))
+
+        with patch.object(llm_extractor_module.logger, "warning"):
+            parsed_model, raw_content, attempts_used, audit = extractor._call_structured_messages(
+                messages=[{"role": "user", "content": "return json"}],
+                schema_name="KnowledgeGraphExtraction",
+                schema_model=KnowledgeGraphExtraction,
+                fallback_payload='{"extraction_notes":"fallback","triples":[]}',
+                max_retries=2,
+            )
+
+        self.assertEqual(parsed_model.extraction_notes, "ok")
+        self.assertEqual(raw_content, '{"extraction_notes":"ok","triples":[]}')
+        self.assertEqual(attempts_used, 2)
+        self.assertFalse(audit["payload_parse_recovered"])
+        self.assertEqual(
+            events,
+            [
+                ("llm_call_start", {"attempt": 1, "max_retries": 2}),
+                (
+                    "llm_call_error",
+                    {
+                        "attempt": 1,
+                        "max_retries": 2,
+                        "error": "provider unavailable",
+                        "will_retry": True,
+                    },
+                ),
+                ("llm_call_start", {"attempt": 2, "max_retries": 2}),
+                ("llm_call_complete", {"attempt": 2, "max_retries": 2, "tokens": 17}),
+            ],
+        )
+
+        failing_extractor = LLMExtractor(
+            base_url="http://localhost:1234/v1",
+            api_key="lm-studio",
+            model="local-model",
+            provider="local",
+            api_mode="chat_completions",
+        )
+        failing_extractor.client = SimpleNamespace(
+            chat=SimpleNamespace(
+                completions=SimpleNamespace(create=lambda **kwargs: (_ for _ in ()).throw(RuntimeError("still down")))
+            )
+        )
+
+        with patch.object(llm_extractor_module.logger, "warning"):
+            with self.assertRaises(llm_extractor_module.ExtractionError) as ctx:
+                failing_extractor._call_structured_messages(
+                    messages=[{"role": "user", "content": "return json"}],
+                    schema_name="KnowledgeGraphExtraction",
+                    schema_model=KnowledgeGraphExtraction,
+                    fallback_payload='{"extraction_notes":"fallback","triples":[]}',
+                    max_retries=2,
+                )
+
+        self.assertEqual(str(ctx.exception), "Failed after 2 attempts. Last error: still down")
+
+    def test_structured_call_logs_http_diagnostics_from_openai_errors(self):
+        extractor = LLMExtractor(
+            base_url="https://opencode.ai/zen/go/v1",
+            api_key="secret",
+            model="mimo-v2-pro",
+            provider="opencode-go",
+            api_mode="chat_completions",
+        )
+        response_body = (
+            '{"type":"error","message":"Unexpected token \'<\', '
+            '\\"<!DOCTYPE html>\\" is not valid JSON"}'
+        )
+        request = httpx.Request("POST", "https://opencode.ai/zen/go/v1/chat/completions")
+        response = httpx.Response(
+            500,
+            request=request,
+            headers={
+                "content-type": "application/json",
+                "x-request-id": "req_123",
+                "server": "edge",
+            },
+            text=response_body,
+        )
+        api_error = InternalServerError(
+            "Error code: 500",
+            response=response,
+            body={"type": "error", "message": "Unexpected token '<', \"<!DOCTYPE html>\" is not valid JSON"},
+        )
+        extractor.client = SimpleNamespace(
+            chat=SimpleNamespace(
+                completions=SimpleNamespace(create=lambda **kwargs: (_ for _ in ()).throw(api_error))
+            )
+        )
+
+        with patch.object(llm_extractor_module.logger, "warning") as mock_warning:
+            with self.assertRaises(llm_extractor_module.ExtractionError):
+                extractor._call_structured_messages(
+                    messages=[{"role": "user", "content": "return json"}],
+                    schema_name="KnowledgeGraphExtraction",
+                    schema_model=KnowledgeGraphExtraction,
+                    fallback_payload='{"extraction_notes":"fallback","triples":[]}',
+                    max_retries=1,
+                )
+
+        http_diagnostic_call = next(
+            call for call in mock_warning.call_args_list if call.args[0] == "HTTP diagnostics for %s attempt %s/%s: %s"
+        )
+        self.assertEqual(http_diagnostic_call.args[1:4], ("return json", 1, 1))
+        diagnostics = http_diagnostic_call.args[4]
+        self.assertIn("status=500", diagnostics)
+        self.assertIn('"content-type":"application/json"', diagnostics)
+        self.assertIn('"x-request-id":"req_123"', diagnostics)
+        self.assertIn("parsed_error=", diagnostics)
+
+    def test_messages_api_logs_non_json_response_diagnostics(self):
+        class _FakeHTTPResponse:
+            status = 200
+            headers = {
+                "content-type": "text/html; charset=utf-8",
+                "server": "edge",
+            }
+
+            def read(self):
+                return b"<!DOCTYPE html><html><body>upstream down</body></html>"
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc, tb):
+                return False
+
+        extractor = LLMExtractor(
+            base_url="https://opencode.ai/zen/go/v1",
+            api_key="secret",
+            model="minimax-m2.7",
+            provider="opencode-go",
+            api_mode="messages",
+            max_output_tokens=2048,
+        )
+
+        with patch.object(
+            llm_extractor_module.urllib.request,
+            "urlopen",
+            return_value=_FakeHTTPResponse(),
+        ), patch.object(llm_extractor_module.logger, "warning") as mock_warning:
+            with self.assertRaises(llm_extractor_module.ExtractionError) as ctx:
+                extractor._call_messages_api(
+                    request_messages=[{"role": "user", "content": "Hello"}],
+                    temperature=0.0,
+                    call_label="messages-test",
+                    attempt=1,
+                    max_retries=2,
+                )
+
+        self.assertIn("Messages API returned non-JSON content", str(ctx.exception))
+        diagnostic_call = next(
+            call
+            for call in mock_warning.call_args_list
+            if call.args[0] == "Messages API non-JSON diagnostics for %s attempt %s/%s: %s"
+        )
+        self.assertEqual(diagnostic_call.args[1:4], ("messages-test", 1, 2))
+        diagnostics = diagnostic_call.args[4]
+        self.assertIn("status=200", diagnostics)
+        self.assertIn('"content-type":"text/html; charset=utf-8"', diagnostics)
+        self.assertIn("raw_response=<!DOCTYPE html><html><body>upstream down</body></html>", diagnostics)
+
+    def test_reflect_extraction_requires_explicit_user_prompt(self):
+        extractor = LLMExtractor(
+            base_url="http://localhost:1234/v1",
+            api_key="lm-studio",
+            model="local-model",
+            provider="local",
+            api_mode="chat_completions",
+        )
+
+        with self.assertRaises(ValueError) as ctx:
+            extractor.reflect_extraction(
+                full_text="filing",
+                current_extraction=KnowledgeGraphExtraction(),
+                company_name="Microsoft",
+                user_prompt=None,
+            )
+
+        self.assertIn("requires an explicit user_prompt", str(ctx.exception))
+
+    def test_structured_call_filters_ontology_invalid_triples(self):
+        extractor = LLMExtractor(
+            base_url="http://localhost:1234/v1",
+            api_key="lm-studio",
+            model="local-model",
+            provider="local",
+            api_mode="chat_completions",
+        )
+        response = SimpleNamespace(
+            choices=[
+                SimpleNamespace(
+                    finish_reason="stop",
+                    message=SimpleNamespace(
+                        content=(
+                            '{"extraction_notes":"ok","triples":['
+                            '{"subject":"Microsoft","subject_type":"Company","relation":"OFFERS","object":"Azure","object_type":"Offering"},'
+                            '{"subject":"Microsoft","subject_type":"Company","relation":"SERVES","object":"developers","object_type":"CustomerType"}'
+                            ']}'
+                        ),
+                        refusal=None,
+                    ),
+                )
+            ],
+            usage=SimpleNamespace(completion_tokens=12),
+        )
+        extractor.client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=lambda **kwargs: response)))
+
+        parsed_model, _, _, audit = extractor._call_structured_messages(
+            messages=[{"role": "user", "content": "return json"}],
+            schema_name="KnowledgeGraphExtraction",
+            schema_model=KnowledgeGraphExtraction,
+            fallback_payload='{"extraction_notes":"fallback","triples":[]}',
+            max_retries=1,
+        )
+
+        self.assertEqual(len(parsed_model.triples), 1)
+        self.assertEqual(parsed_model.triples[0].relation, "OFFERS")
+        self.assertEqual(audit["ontology_rejected_triple_count"], 1)
+
+    def test_reflection_fallback_reaudits_current_extraction_after_empty_result(self):
+        extractor = LLMExtractor(
+            base_url="http://localhost:1234/v1",
+            api_key="lm-studio",
+            model="local-model",
+            provider="local",
+            api_mode="chat_completions",
+        )
+        current = KnowledgeGraphExtraction(
+            extraction_notes="pre-reflection",
+            triples=[
+                Triple(
+                    subject="Microsoft",
+                    subject_type="Company",
+                    relation="OFFERS",
+                    object="Azure",
+                    object_type="Offering",
+                )
+            ],
+        )
+
+        with patch.object(
+            extractor,
+            "_call_structured",
+            return_value=(KnowledgeGraphExtraction(extraction_notes="empty", triples=[]), "{}", 1, {"raw_triple_count": 0}),
+        ):
+            final_extraction, _, _, audit = extractor.reflect_extraction(
+                full_text="filing",
+                current_extraction=current,
+                company_name="Microsoft",
+                strict=False,
+                user_prompt="review",
+            )
+
+        self.assertEqual(final_extraction.model_dump(), current.model_dump())
+        self.assertEqual(audit["raw_triple_count"], 1)
+        self.assertEqual(audit["kept_triple_count"], 1)
+
+    def test_reflection_failure_reaudits_current_extraction_after_exception(self):
+        extractor = LLMExtractor(
+            base_url="http://localhost:1234/v1",
+            api_key="lm-studio",
+            model="local-model",
+            provider="local",
+            api_mode="chat_completions",
+        )
+        current = KnowledgeGraphExtraction(
+            extraction_notes="pre-reflection",
+            triples=[
+                Triple(
+                    subject="Microsoft",
+                    subject_type="Company",
+                    relation="OPERATES_IN",
+                    object="United States",
+                    object_type="Place",
+                )
+            ],
+        )
+
+        with patch.object(extractor, "_call_structured", side_effect=llm_extractor_module.ExtractionError("boom")):
+            final_extraction, raw_response, attempts_used, audit = extractor.reflect_extraction(
+                full_text="filing",
+                current_extraction=current,
+                company_name="Microsoft",
+                strict=False,
+                user_prompt="review",
+            )
+
+        self.assertEqual(final_extraction.model_dump(), current.model_dump())
+        self.assertIsNone(raw_response)
+        self.assertEqual(attempts_used, 2)
+        self.assertEqual(audit["raw_triple_count"], 1)
+        self.assertEqual(audit["kept_triple_count"], 1)
 
     def test_opencode_go_rejects_unsupported_models(self):
         with self.assertRaises(ValueError) as ctx:

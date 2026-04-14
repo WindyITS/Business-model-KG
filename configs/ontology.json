@@ -66,12 +66,12 @@
       "object_types": ["BusinessSegment"]
     },
     "OFFERS": {
-      "definition": "Links a business segment, a fallback company subject, or an explicit umbrella offering to a commercially provided offering. BusinessSegment -> Offering is primary; Company -> Offering is used only when no segment anchor exists or the offering is presented as universal; Offering -> Offering is used only when the filing explicitly states that one offering acts as an umbrella, family, or parent offering for another offering.",
+      "definition": "Links a business segment, a fallback company subject, or an explicit umbrella offering to a commercially provided offering. BusinessSegment -> Offering is primary; Company -> Offering is used only when, after considering the whole filing, no BusinessSegment anchor is supportable anywhere; Offering -> Offering is used only when the filing explicitly states that one offering acts as an umbrella, family, or parent offering for another offering.",
       "subject_types": ["Company", "BusinessSegment", "Offering"],
       "object_types": ["Offering"]
     },
     "SERVES": {
-      "definition": "Links a business segment to a canonical customer category that it targets, supports, or serves commercially. In this ontology variant, SERVES is canonical only at BusinessSegment scope.",
+      "definition": "Links a business segment to a canonical customer category that it targets, supports, or serves commercially. In this ontology variant, SERVES is canonical only at BusinessSegment scope and may be inferred conservatively when a customer type is clearly stated or clearly implied by the segment's offerings and descriptions.",
       "subject_types": ["BusinessSegment"],
       "object_types": ["CustomerType"]
     },
@@ -96,31 +96,45 @@
       "object_types": ["RevenueModel"]
     }
   },
-  "global_rules": [
-    "Closed ontology: extract only the listed node types and relations.",
-    "Closed labels: CustomerType, Channel, and RevenueModel must use only the approved canonical labels.",
-    "If a customer, channel, or monetization pattern cannot be mapped clearly to one canonical label, omit it.",
-    "Scope-first modeling: Company is the corporate shell, BusinessSegment is the primary semantic anchor, and Offering is the inventory leaf.",
-    "An Offering may also act as an explicit umbrella or family node for another Offering only when the filing directly states that relationship.",
-    "For SERVES, keep the relation on BusinessSegment only.",
-    "If a customer type is universal across the company, attach it to each reported BusinessSegment rather than to Company.",
-    "Do not attach SERVES directly to Offering in this ontology variant.",
-    "For SELLS_THROUGH, keep the relation on BusinessSegment by default and use Offering only when that offering has no BusinessSegment anchor.",
-    "Do not attach SELLS_THROUGH directly to Company in this ontology variant.",
-    "If the filing states a channel universally across a company that has reported segments, attach that channel to each reported BusinessSegment rather than to Company.",
+    "global_rules": [
+      "Closed ontology: extract only the listed node types and relations.",
+      "Closed labels: CustomerType, Channel, and RevenueModel must use only the approved canonical labels.",
+      "If a customer, channel, or monetization pattern cannot be mapped clearly to one canonical label, omit it.",
+      "Scope-first modeling: Company is the corporate shell, BusinessSegment is the primary semantic anchor, and Offering is the inventory leaf.",
+      "An Offering may also act as an explicit umbrella or family node for another Offering only when the filing directly states that relationship.",
+      "For SERVES, keep the relation on BusinessSegment only.",
+      "If a customer type is stated at company scope, attach it only to the BusinessSegment nodes where it is clearly stated or clearly implied by the segment's offerings and descriptions.",
+      "Conservative inference is allowed only for SERVES, and it must be segment-specific rather than global.",
+      "Do not spread one customer type across multiple segments unless each segment has its own support.",
+      "Do not attach SERVES directly to Offering in this ontology variant.",
+      "For SELLS_THROUGH, keep the relation on BusinessSegment by default and use Offering only when that offering has no BusinessSegment anchor.",
+      "Do not attach SELLS_THROUGH directly to Company in this ontology variant.",
+      "If the filing states a channel universally across a company that has reported segments, attach that channel to each reported BusinessSegment rather than to Company.",
     "For MONETIZES_VIA, attach the relation only to Offering.",
     "Do not attach MONETIZES_VIA directly to BusinessSegment or Company in this ontology variant.",
-    "If an offering has an Offering parent in the explicit family hierarchy, do not attach MONETIZES_VIA to the child offering; attach it to the relevant family parent instead.",
-    "If the filing states monetization broadly at segment level, do not force a segment-level triple; keep extraction canonical and recover rollups downstream from offering-level facts.",
-    "Do not automatically duplicate a fact upward across scopes.",
-    "For segment-anchored offerings, use BusinessSegment -> OFFERS -> Offering as the canonical structure.",
-    "Use Offering -> OFFERS -> Offering only when the filing explicitly states that one offering is an umbrella, family, suite, or parent for another offering.",
-    "A child Offering may have at most one Offering parent in Offering -> OFFERS -> Offering hierarchy.",
-    "Do not derive company-level facts from segment or offering facts during extraction.",
-    "Do not derive offering-level facts from segment-level facts during extraction; downstream graph inheritance is responsible for that analytical convenience.",
-    "OPERATES_IN is strictly company-level in this ontology variant.",
-    "PARTNERS_WITH is strictly company-level in this ontology variant.",
-    "Omit ambiguous facts. Precision and standardization are more important than recall.",
-    "Never emit duplicate triples."
-  ]
-}
+      "If an offering has an Offering parent in the explicit family hierarchy, do not attach MONETIZES_VIA to the child offering; attach it to the relevant family parent instead.",
+      "If the filing states monetization broadly at segment level, do not force a segment-level triple; keep extraction canonical and recover rollups downstream from offering-level facts.",
+      "Do not automatically duplicate a fact upward across scopes.",
+      "For segment-anchored offerings, use BusinessSegment -> OFFERS -> Offering as the canonical structure.",
+      "Company -> OFFERS -> Offering is a last-resort fallback only after considering the whole filing and concluding that no BusinessSegment anchor is supportable anywhere.",
+      "Do not use Company -> OFFERS -> Offering just because an offering is described at company scope, as universal, or as shared/common infrastructure; if that evidence ties it to multiple segments, attach it to each supported BusinessSegment instead.",
+      "Use Offering -> OFFERS -> Offering only when the filing explicitly states that one offering is an umbrella, family, suite, or parent for another offering.",
+      "A child Offering may have at most one Offering parent in Offering -> OFFERS -> Offering hierarchy.",
+      "Do not derive company-level facts from segment or offering facts during extraction.",
+      "Do not derive offering-level facts from segment-level facts during extraction; downstream graph inheritance is responsible for that analytical convenience.",
+      "OPERATES_IN is strictly company-level in this ontology variant.",
+      "For OPERATES_IN, use named countries or approved macro-regions where the company has meaningful market presence.",
+      "For OPERATES_IN, meaningful market presence can be shown by signals such as a named subsidiary or local entity, employee presence, labor structure, customer or revenue presence, country-specific availability, or present-tense current use in that geography.",
+      "For OPERATES_IN, prefer recall over unnecessary omission when a named geography is clearly tied to the company's own business presence.",
+      "When the filing states geography at an approved macro-region level, prefer that macro-region rather than expanding it into many countries.",
+      "When the filing provides a clearly exhaustive country list that unambiguously corresponds to one approved macro-region, and the individual countries do not add distinct business signal, emit the macro-region instead of listing every country.",
+      "Keep individual countries when the filing gives country-specific business significance such as a named subsidiary, datacenter, employees, customers, revenue, availability, or legal entity in that country.",
+      "Do not infer unmentioned countries just to complete a region.",
+      "Only roll up countries into a macro-region when the mapping is clear and unambiguous; if overlap makes the roll-up uncertain, keep the explicit countries.",
+      "Do not substitute one overlapping macro-region for another unless the filing supports that exact label.",
+      "PARTNERS_WITH is strictly company-level in this ontology variant.",
+      "Omit ambiguous facts.",
+      "Precision and standardization remain primary for semantic business-model relations.",
+      "Never emit duplicate triples."
+    ]
+  }

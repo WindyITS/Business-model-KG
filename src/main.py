@@ -25,8 +25,6 @@ logging.getLogger("neo4j.notifications").disabled = True
 TOTAL_STAGES = 9
 CONSOLE_RULE = "=" * 50
 CONSOLE_SEPARATOR = "-" * 50
-TOKEN_BAR_WIDTH = 10
-DEFAULT_TOKEN_BAR_CAP = 8000
 
 
 def _console_print(line: str = "") -> None:
@@ -46,17 +44,9 @@ def _format_duration(seconds: float) -> str:
 
 
 def _format_token_visual(tokens: int, token_cap: int | None = None) -> str:
-    scale_max = token_cap if token_cap and token_cap > 0 else DEFAULT_TOKEN_BAR_CAP
-    ratio = min(max(tokens, 0) / scale_max, 1.0)
-    filled = int(round(ratio * TOKEN_BAR_WIDTH))
-    if tokens > 0:
-        filled = max(1, filled)
-    filled = min(TOKEN_BAR_WIDTH, filled)
-    bar = f"[{'#' * filled}{'-' * (TOKEN_BAR_WIDTH - filled)}]"
-
     if token_cap and token_cap > 0:
-        return f"{tokens:,}/{token_cap:,} {bar}"
-    return f"{tokens:,} {bar}"
+        return f"{tokens:,}/{token_cap:,}"
+    return f"{tokens:,}"
 
 
 class PipelineConsole:
@@ -91,7 +81,6 @@ class PipelineConsole:
         pipeline: str,
         provider: str,
         model: str,
-        schema_mode: str,
         neo4j_enabled: bool,
         llm_token_cap: int | None = None,
     ) -> None:
@@ -109,7 +98,6 @@ class PipelineConsole:
         self._printer(f"Pipeline:  {pipeline}")
         self._printer(f"Provider:  {provider}")
         self._printer(f"Model:     {model}")
-        self._printer(f"Schema:    {schema_mode}")
         self._printer(f"Neo4j:     {neo4j_status}")
         self._printer("")
 
@@ -228,10 +216,6 @@ def _mode_name(args: argparse.Namespace) -> str:
     return f"{args.pipeline}_pipeline"
 
 
-def _effective_use_schema(args: argparse.Namespace) -> bool:
-    return bool(getattr(args, "use_schema", False))
-
-
 def _build_run_dir(output_dir: Path, source_file: Path, mode: str) -> Path:
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     run_dir = output_dir / f"{source_file.stem}_{mode}_{timestamp}"
@@ -322,16 +306,6 @@ def main() -> int:
         default="canonical",
         help="Extraction pipeline to run. Only the canonical production pipeline is supported.",
     )
-    parser.add_argument(
-        "--no-schema",
-        action="store_true",
-        help="Deprecated compatibility flag. No-schema mode is already the default.",
-    )
-    parser.add_argument(
-        "--use-schema",
-        action="store_true",
-        help="Enable response_format JSON Schema enforcement. By default the pipeline runs in no-schema mode.",
-    )
     parser.add_argument("--max-retries", type=int, default=3, help="Maximum LLM retries per call.")
     parser.add_argument("--output-dir", type=str, default="outputs", help="Directory where run artifacts are written.")
     parser.add_argument("--skip-neo4j", action="store_true", help="Skip Neo4j loading and only write extraction artifacts.")
@@ -340,7 +314,6 @@ def main() -> int:
 
     source_file = Path(args.file_path)
     mode = _mode_name(args)
-    use_schema = _effective_use_schema(args)
     ontology_version = "canonical"
     run_started_at = datetime.now(timezone.utc)
     run_dir = _build_run_dir(Path(args.output_dir), source_file, mode)
@@ -355,10 +328,6 @@ def main() -> int:
         "requested_model": args.model,
         "requested_base_url": args.base_url,
         "requested_max_output_tokens": args.max_output_tokens,
-        "requested_no_schema": args.no_schema,
-        "requested_use_schema": args.use_schema,
-        "use_schema": use_schema,
-        "schema_mode": "schema" if use_schema else "no-schema",
         "started_at": run_started_at.isoformat(),
     }
     _write_json(run_dir / "run_summary.json", summary)
@@ -378,8 +347,6 @@ def main() -> int:
                 "base_url": model_settings.base_url,
                 "api_mode": model_settings.api_mode,
                 "max_output_tokens": model_settings.max_output_tokens,
-                "use_schema": use_schema,
-                "schema_mode": "schema" if use_schema else "no-schema",
             }
         )
         _write_json(run_dir / "run_summary.json", summary)
@@ -391,7 +358,6 @@ def main() -> int:
             pipeline=args.pipeline,
             provider=model_settings.provider,
             model=model_settings.model,
-            schema_mode="schema" if use_schema else "no-schema",
             neo4j_enabled=not args.skip_neo4j,
             llm_token_cap=model_settings.max_output_tokens,
         )
@@ -432,7 +398,6 @@ def main() -> int:
             full_text=full_text,
             company_name=company_name,
             max_retries=args.max_retries,
-            use_schema=use_schema,
         )
         if not chat_result.success:
             raise ExtractionError(chat_result.error or "Canonical pipeline failed.")
@@ -614,7 +579,6 @@ def main() -> int:
                 pipeline=args.pipeline,
                 provider=str(summary.get("provider", args.provider)),
                 model=str(summary.get("model") or summary.get("requested_model") or "<default>"),
-                schema_mode=str(summary.get("schema_mode", "no-schema")),
                 neo4j_enabled=not args.skip_neo4j,
                 llm_token_cap=summary.get("max_output_tokens"),
             )

@@ -56,6 +56,7 @@ src/
   validate_text2cypher_dataset.py
                           validates gold Cypher against synthetic fixtures
   entity_resolver.py      light entity normalization
+  place_hierarchy.py      query-time place taxonomy and match helpers
   neo4j_loader.py         Neo4j loading
   evaluate_graph.py       graph evaluation utilities
 
@@ -77,6 +78,7 @@ datasets/
 tests/
   test_pipeline_components.py
   test_ontology_validator.py
+  test_place_hierarchy.py
 ```
 
 ## Text2Cypher Dataset Assets
@@ -142,9 +144,8 @@ Provider notes:
 - the CLI also accepts friendly OpenCode Go model names such as `MiniMax M2.7`, plus prefixed IDs like `opencode-go/kimi-k2.5`
 - the CLI accepts either a root base URL or a full documented endpoint like `.../chat/completions` and normalizes it automatically
 - for `opencode-go`, the runtime rewrites `system` messages to `user` messages for compatibility while keeping the rest of the pipeline flow unchanged
-- `no-schema` is the default behavior for all providers; pass `--use-schema` to opt back into JSON Schema enforcement
 - `opencode-go` defaults to `--max-output-tokens 20000`; override it if needed
-- every run logs a settings line including pipeline, model, schema mode, and max output tokens
+- every run logs a settings line including pipeline, model, and max output tokens
 
 Load into Neo4j instead:
 
@@ -156,6 +157,31 @@ docker compose up -d
 Neo4j Browser:
 - `http://localhost:7474`
 - default credentials: `neo4j / password`
+
+## Geography Rollups
+
+The extractor keeps geography canonical at `Company-[:OPERATES_IN]->Place`, but the Neo4j
+loaders also materialize an internal `Place-[:WITHIN]->Place` hierarchy for query-time
+expansion.
+
+The deterministic hierarchy now covers the approved macro-regions, all U.S. states plus
+`District of Columbia`, and a broad sovereign-country set with common aliases.
+
+That lets a country query surface broader regional tags without rewriting the extracted
+facts. For example, an `Italy` lookup can return companies tagged `Italy`, `Europe`,
+`European Union`, or `EMEA`, while still marking which rows are broader matches:
+
+```cypher
+MATCH (requested:Place {name: $place})
+MATCH (requested)-[:WITHIN*0..]->(matched:Place)<-[:OPERATES_IN]-(company:Company)
+WITH company, MIN(CASE WHEN matched.name = requested.name THEN 0 ELSE 1 END) AS match_rank
+RETURN company.name AS company,
+       CASE match_rank
+         WHEN 0 THEN 'exact'
+         ELSE 'broader_region'
+       END AS geography_match
+ORDER BY match_rank, company
+```
 
 ## Output Artifacts
 
@@ -176,5 +202,5 @@ Each run writes a timestamped directory under `outputs/` with artifacts such as:
 Extraction/runtime tests:
 
 ```bash
-./venv/bin/python -m pytest -q tests/test_pipeline_components.py tests/test_ontology_validator.py
+./venv/bin/python -m pytest -q tests/test_pipeline_components.py tests/test_ontology_validator.py tests/test_place_hierarchy.py
 ```

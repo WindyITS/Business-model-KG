@@ -63,7 +63,6 @@ class CanonicalPipelineResult(BaseModel):
     pass3_serves_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     pass4_corporate_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     pre_reflection_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
-    reflection1_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     final_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     skeleton_audit: dict[str, Any] = Field(default_factory=dict)
     pass2_channels_audit: dict[str, Any] = Field(default_factory=dict)
@@ -72,7 +71,6 @@ class CanonicalPipelineResult(BaseModel):
     pass3_serves_audit: dict[str, Any] = Field(default_factory=dict)
     pass4_corporate_audit: dict[str, Any] = Field(default_factory=dict)
     pre_reflection_audit: dict[str, Any] = Field(default_factory=dict)
-    reflection1_audit: dict[str, Any] = Field(default_factory=dict)
     final_reflection_audit: dict[str, Any] = Field(default_factory=dict)
     raw_skeleton_response: str | None = None
     raw_pass2_channels_response: str | None = None
@@ -80,7 +78,6 @@ class CanonicalPipelineResult(BaseModel):
     raw_pass2_response: str | None = None
     raw_pass3_serves_response: str | None = None
     raw_pass4_corporate_response: str | None = None
-    raw_reflection1_response: str | None = None
     raw_final_reflection_response: str | None = None
     skeleton_attempts_used: int = 0
     pass2_channels_attempts_used: int = 0
@@ -88,7 +85,6 @@ class CanonicalPipelineResult(BaseModel):
     pass2_attempts_used: int = 0
     pass3_serves_attempts_used: int = 0
     pass4_corporate_attempts_used: int = 0
-    reflection1_attempts_used: int = 0
     final_reflection_attempts_used: int = 0
     error: str | None = None
 
@@ -438,6 +434,18 @@ Do not wrap the JSON in markdown code fences.
 </revenue_models>
 </canonical_labels>
 
+<canonical_label_definitions>
+<customer_types>
+{_xml_definition_lines(CANONICAL_DEFINITIONS['CustomerType'])}
+</customer_types>
+<channels>
+{_xml_definition_lines(CANONICAL_DEFINITIONS['Channel'])}
+</channels>
+<revenue_models>
+{_xml_definition_lines(CANONICAL_DEFINITIONS['RevenueModel'])}
+</revenue_models>
+</canonical_label_definitions>
+
 <allowed_relations>
 - HAS_SEGMENT: Company -> BusinessSegment
 - OFFERS: Company -> Offering | BusinessSegment -> Offering | Offering -> Offering
@@ -449,6 +457,39 @@ Do not wrap the JSON in markdown code fences.
 </allowed_relations>
 </ontology>
 
+<canonical_graph_policy>
+<scope_hierarchy>
+- Company = corporate shell
+- BusinessSegment = primary semantic anchor
+- Offering = inventory leaf, except when the filing explicitly states that one offering is an umbrella or family for another offering
+</scope_hierarchy>
+
+<scope_rules>
+- SELLS_THROUGH should default to BusinessSegment.
+- SELLS_THROUGH may attach to Offering only when that offering has no BusinessSegment anchor.
+- If an offering family hierarchy exists, attach MONETIZES_VIA to the family parent rather than to its child offerings.
+- Do not automatically duplicate facts upward across scopes.
+- Do not derive company-level facts from lower-level facts during reflection.
+- Do not derive offering-level facts from segment-level facts during reflection.
+</scope_rules>
+
+<structure_rules>
+- BusinessSegment -> OFFERS -> Offering is the primary segment-offering edge.
+- Company -> OFFERS -> Offering is allowed only as a last-resort fallback when, after considering the whole filing, no BusinessSegment anchor is supportable anywhere.
+- Do not use Company -> OFFERS -> Offering just because an offering is described at company scope, as universal, or as shared/common infrastructure; if that evidence ties it to multiple segments, attach it to each supported BusinessSegment instead.
+- Offering -> OFFERS -> Offering is allowed only when the filing explicitly states that one offering is a suite, family, umbrella, or parent offering for another offering.
+- A child Offering may have at most one Offering parent in Offering -> OFFERS -> Offering hierarchy.
+</structure_rules>
+</canonical_graph_policy>
+
+<normalization_rules>
+- CustomerType, Channel, and RevenueModel must use only canonical labels.
+- If a phrase does not map clearly to a canonical label, omit it.
+- Extract explicit named offerings individually and as written.
+- Do not compress explicit offering lists into summary labels.
+- Do not merge similar but distinct offering names.
+</normalization_rules>
+
 <corporate_shell_rules>
 - Valid Place objects are countries, U.S. states, District of Columbia, and these macro-regions: {_json_list(V2_APPROVED_MACRO_REGIONS)}.
 - Normalize aliases such as U.S. -> United States, U.K. -> United Kingdom, asia-pacific -> Asia Pacific, emea -> EMEA.
@@ -456,6 +497,15 @@ Do not wrap the JSON in markdown code fences.
 - Use PARTNERS_WITH only when the filing explicitly describes a named partnership.
 - Do not use it for suppliers, customers, competitors, ecosystem mentions, or channel relationships.
 </corporate_shell_rules>
+
+<inference_policy>
+- Precision is more important than recall.
+- Keep only text-grounded facts.
+- Conservative inference is allowed only for SERVES.
+- SERVES inference must be segment-specific, not global.
+- Do not spread one customer type across multiple segments unless each segment has its own supporting evidence.
+- Do not make weak guesses from vague proximity or broad context.
+</inference_policy>
 
 <source_filing>
 {full_text}
@@ -496,27 +546,6 @@ class LLMExtractor:
         if self.progress_callback is None:
             return
         self.progress_callback(event, **payload)
-
-    @staticmethod
-    def _schema_def(name: str, model_schema: type[BaseModel], *, ontology_version: str = "canonical") -> dict:
-        schema = model_schema.model_json_schema(by_alias=True)
-        return {
-            "type": "json_schema",
-            "json_schema": {
-                "name": name,
-                "schema": schema,
-            },
-        }
-
-    @staticmethod
-    def _responses_schema_def(name: str, model_schema: type[BaseModel], *, ontology_version: str = "canonical") -> dict:
-        schema = model_schema.model_json_schema(by_alias=True)
-        return {
-            "type": "json_schema",
-            "name": name,
-            "schema": schema,
-            "strict": True,
-        }
 
     @staticmethod
     def _compact_json(value: Any) -> str:
@@ -879,7 +908,6 @@ class LLMExtractor:
             raise ExtractionError(
                 f"Messages API returned non-JSON content: {self._truncate_debug_text(raw_response, max_length=800)}"
             ) from exc
-
         stop_reason = response_payload.get("stop_reason")
         usage = response_payload.get("usage") or {}
         output_tokens = usage.get("output_tokens")
@@ -908,12 +936,9 @@ class LLMExtractor:
         fallback_payload: str,
         max_retries: int,
         temperature: float = 0.0,
-        use_schema: bool = False,
         ontology_version: str = "canonical",
     ) -> tuple[BaseModel, str | None, int, dict[str, Any]]:
         request_messages = self._prepare_messages_for_provider(messages, self.provider)
-        schema_def = self._schema_def(schema_name, schema_model, ontology_version=ontology_version)
-        responses_schema_def = self._responses_schema_def(schema_name, schema_model, ontology_version=ontology_version)
         call_label = schema_name
         last_error: Exception | None = None
         for message in reversed(request_messages):
@@ -938,8 +963,6 @@ class LLMExtractor:
                         "input": request_messages,
                         "temperature": temperature,
                     }
-                    if use_schema:
-                        call_kwargs["text"] = {"format": responses_schema_def}
                     response = self.client.responses.create(**call_kwargs)
                     status = getattr(response, "status", None)
                     usage = getattr(response, "usage", None)
@@ -974,8 +997,6 @@ class LLMExtractor:
                     }
                     if self.max_output_tokens is not None:
                         call_kwargs["max_tokens"] = self.max_output_tokens
-                    if use_schema:
-                        call_kwargs["response_format"] = schema_def
                     response = self.client.chat.completions.create(**call_kwargs)
                     choice = response.choices[0]
                     finish_reason = getattr(choice, "finish_reason", None)
@@ -995,20 +1016,12 @@ class LLMExtractor:
                         raise ExtractionError(f"Model refused request: {refusal_text}")
                     content = choice.message.content or ""
                 parsed_payload, payload_parse_recovered = self._load_json_payload(content or "", fallback_payload)
-                if use_schema:
-                    parsed_model = schema_model(**parsed_payload)
-                    _, audit = audit_knowledge_graph_payload(
-                        parsed_payload,
-                        payload_parse_recovered=payload_parse_recovered,
-                        ontology_version=ontology_version,
-                    )
-                else:
-                    parsed_model, audit = self._lenient_model_from_payload(
-                        schema_model,
-                        parsed_payload,
-                        ontology_version=ontology_version,
-                    )
-                    audit["payload_parse_recovered"] = payload_parse_recovered
+                parsed_model, audit = self._lenient_model_from_payload(
+                    schema_model,
+                    parsed_payload,
+                    ontology_version=ontology_version,
+                )
+                audit["payload_parse_recovered"] = payload_parse_recovered
                 self._emit_progress(
                     "llm_call_complete",
                     attempt=attempt,
@@ -1054,7 +1067,6 @@ class LLMExtractor:
 
         if last_error is not None:
             raise ExtractionError(f"Failed after {max_retries} attempts. Last error: {last_error}")
-
         raise ExtractionError(f"Failed after {max_retries} attempts")
 
     @staticmethod
@@ -1090,7 +1102,6 @@ class LLMExtractor:
         fallback_payload: str,
         max_retries: int,
         temperature: float = 0.0,
-        use_schema: bool = False,
         ontology_version: str = "canonical",
     ) -> tuple[BaseModel, str | None, int, dict[str, Any]]:
         return self._call_structured_messages(
@@ -1103,7 +1114,6 @@ class LLMExtractor:
             fallback_payload=fallback_payload,
             max_retries=max_retries,
             temperature=temperature,
-            use_schema=use_schema,
             ontology_version=ontology_version,
         )
 
@@ -1115,46 +1125,41 @@ class LLMExtractor:
         company_name: str | None = None,
         max_retries: int = 2,
         strict: bool = True,
-        use_schema: bool = False,
         system_prompt: str | None = None,
         user_prompt: str | None = None,
         ontology_version: str = "canonical",
     ) -> tuple[KnowledgeGraphExtraction, str | None, int, dict[str, Any]]:
         system_prompt = system_prompt or _canonical_reflection_system_prompt(full_text)
-        reflection_prompt = user_prompt or (
-            "WORKFLOW STEP: REFLECTION 2 - FINAL RECONCILIATION (INDEPENDENT REVIEW)\n\n"
-            f"<company_name>\n{company_name or ''}\n</company_name>\n\n"
-            f"<current_triples>\n{self._compact_json(current_extraction.model_dump())}\n</current_triples>\n\n"
-            f"<text_to_analyze>\n{full_text}\n</text_to_analyze>\n\n"
-            "=== FINAL INSTRUCTIONS ===\n"
-            "Review the draft <current_triples> against the original <text_to_analyze> for <company_name>.\n\n"
-            "Remember your critical constraints:\n"
-            "1. Reconcile, prune, and enrich to create the most accurate final graph.\n"
-            "2. Ensure ALL triples have EXACTLY 5 fields (`subject`, `subject_type`, `relation`, `object`, `object_type`). Do NOT revert to 3-field shorthand.\n"
-            "3. Output the ENTIRE updated graph, not just deltas.\n\n"
-            'Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array. Do not use markdown code blocks (```json).'
-        )
+        if user_prompt is None:
+            raise ValueError("reflect_extraction requires an explicit user_prompt; the generic reflection fallback prompt has been removed.")
 
         try:
             final_extraction, raw_response, attempts_used, audit = self._call_structured(
                 system_prompt=system_prompt,
-                user_prompt=reflection_prompt,
+                user_prompt=user_prompt,
                 schema_name="KnowledgeGraphExtraction",
                 schema_model=KnowledgeGraphExtraction,
                 fallback_payload='{"extraction_notes":"Reflection failed.","triples":[]}',
                 max_retries=max_retries,
-                use_schema=use_schema,
                 ontology_version=ontology_version,
             )
             if not final_extraction.triples and current_extraction.triples:
                 logger.warning("Reflection returned no triples. Falling back to pre-reflection extraction.")
-                return current_extraction, raw_response, attempts_used, audit
+                _, fallback_audit = audit_knowledge_graph_payload(
+                    current_extraction.model_dump(mode="json"),
+                    ontology_version=ontology_version,
+                )
+                return current_extraction, raw_response, attempts_used, fallback_audit
             return final_extraction, raw_response, attempts_used, audit
         except ExtractionError:
             if strict:
                 raise
             logger.warning("Reflection failed. Falling back to pre-reflection extraction.")
-            return current_extraction, None, max_retries, {}
+            _, fallback_audit = audit_knowledge_graph_payload(
+                current_extraction.model_dump(mode="json"),
+                ontology_version=ontology_version,
+            )
+            return current_extraction, None, max_retries, fallback_audit
 
     def extract_canonical_pipeline(
         self,
@@ -1162,7 +1167,6 @@ class LLMExtractor:
         full_text: str,
         company_name: str | None = None,
         max_retries: int = 2,
-        use_schema: bool = False,
     ) -> CanonicalPipelineResult:
         same_chat_messages = [{"role": "system", "content": _canonical_pipeline_system_prompt(full_text)}]
 
@@ -1225,7 +1229,6 @@ class LLMExtractor:
                 schema_model=KnowledgeGraphExtraction,
                 fallback_payload='{"extraction_notes":"Truncated skeleton extraction.","triples":[]}',
                 max_retries=max_retries,
-                use_schema=use_schema,
                 ontology_version="canonical",
             )
         except ExtractionError as exc:
@@ -1256,7 +1259,7 @@ class LLMExtractor:
             "- reason about channels first, before any monetization logic\n"
             "- evaluate channels segment by segment\n"
             "- if a channel is stated at company-wide scope and the company has reported segments, translate that evidence into segment-level channel triples rather than company-level ones\n"
-            "- use Offering for SELLS_THROUGH only when the offering has no BusinessSegment anchor\n"
+            "- use Offering for SELLS_THROUGH **only** when the offering has no BusinessSegment anchor\n"
             "- keep structure unchanged\n"
             "</pass_specific_focus>\n\n"
             "<format_reminder>\n"
@@ -1273,7 +1276,6 @@ class LLMExtractor:
                 schema_model=KnowledgeGraphExtraction,
                 fallback_payload='{"extraction_notes":"Truncated pass-2 channels extraction.","triples":[]}',
                 max_retries=max_retries,
-                use_schema=use_schema,
                 ontology_version="canonical",
             )
         except ExtractionError as exc:
@@ -1314,7 +1316,7 @@ class LLMExtractor:
             "</revenue_model_definitions>\n\n"
             "<pass_specific_focus>\n"
             "- evaluate monetization offering by offering\n"
-            "- if an offering family hierarchy exists, attach MONETIZES_VIA to the family parent rather than to its child offerings\n"
+            "- if an offering family hierarchy exists, attach MONETIZES_VIA to the first order family parent rather than to its child offerings\n"
             "- do not attach MONETIZES_VIA to a child offering that already has an explicit Offering parent\n"
             "- only add MONETIZES_VIA when the filing supports that offering-level monetization clearly enough\n"
             "</pass_specific_focus>\n\n"
@@ -1332,7 +1334,6 @@ class LLMExtractor:
                 schema_model=KnowledgeGraphExtraction,
                 fallback_payload='{"extraction_notes":"Truncated pass-2 revenue extraction.","triples":[]}',
                 max_retries=max_retries,
-                use_schema=use_schema,
                 ontology_version="canonical",
             )
         except ExtractionError as exc:
@@ -1414,7 +1415,6 @@ class LLMExtractor:
                 schema_model=KnowledgeGraphExtraction,
                 fallback_payload='{"extraction_notes":"Truncated serves extraction.","triples":[]}',
                 max_retries=max_retries,
-                use_schema=use_schema,
                 ontology_version="canonical",
             )
         except ExtractionError as exc:
@@ -1486,7 +1486,6 @@ class LLMExtractor:
                 schema_model=KnowledgeGraphExtraction,
                 fallback_payload='{"extraction_notes":"Truncated corporate-shell extraction.","triples":[]}',
                 max_retries=max_retries,
-                use_schema=use_schema,
                 ontology_version="canonical",
             )
         except ExtractionError as exc:
@@ -1513,10 +1512,6 @@ class LLMExtractor:
                 raw_pass2_revenue_response=raw_pass2_revenue_response,
                 raw_pass2_response=raw_pass2_revenue_response,
                 raw_pass3_serves_response=raw_pass3_serves_response,
-                reflection1_extraction=KnowledgeGraphExtraction(
-                    extraction_notes="Merged structure, channels, revenue models, and customer types before corporate-shell extraction.",
-                    triples=pass3_effective_extraction.triples,
-                ),
                 skeleton_attempts_used=skeleton_attempts_used,
                 pass2_channels_attempts_used=pass2_channels_attempts_used,
                 pass2_revenue_attempts_used=pass2_revenue_attempts_used,
@@ -1550,7 +1545,9 @@ class LLMExtractor:
             f"<current_graph>\n{self._compact_json(pre_reflection_extraction.model_dump())}\n</current_graph>\n\n"
             "<review_instruction>\n"
             "Act exactly as the system prompt instructs.\n"
-            "Audit the draft graph against the filing and the ontology.\n"
+            "Audit the draft graph against the filing, the ontology, the ontology rules, and the canonical label definitions.\n"
+            "Every retained or added triple must adhere to the ontology.\n"
+            "If a triple conflicts with ontology scope, relation, hierarchy, or normalization rules, remove or correct it.\n"
             "Correct, remove, keep, and add triples only as needed to produce the final canonical graph.\n"
             "</review_instruction>\n\n"
             "<format_reminder>\n"
@@ -1569,7 +1566,6 @@ class LLMExtractor:
             company_name=company_name,
             max_retries=max_retries,
             strict=False,
-            use_schema=use_schema,
             system_prompt=_canonical_reflection_system_prompt(full_text),
             user_prompt=final_reflection_prompt,
             ontology_version="canonical",
@@ -1585,7 +1581,6 @@ class LLMExtractor:
             pass3_serves_extraction=pass3_serves_extraction,
             pass4_corporate_extraction=pass4_corporate_extraction,
             pre_reflection_extraction=pre_reflection_extraction,
-            reflection1_extraction=pre_reflection_extraction,
             final_extraction=final_extraction,
             skeleton_audit=skeleton_audit,
             pass2_channels_audit=pass2_channels_audit,
@@ -1594,7 +1589,6 @@ class LLMExtractor:
             pass3_serves_audit=pass3_serves_audit,
             pass4_corporate_audit=pass4_corporate_audit,
             pre_reflection_audit=pre_reflection_audit,
-            reflection1_audit=pre_reflection_audit,
             final_reflection_audit=final_reflection_audit,
             raw_skeleton_response=raw_skeleton_response,
             raw_pass2_channels_response=raw_pass2_channels_response,
@@ -1602,7 +1596,6 @@ class LLMExtractor:
             raw_pass2_response=raw_pass2_revenue_response,
             raw_pass3_serves_response=raw_pass3_serves_response,
             raw_pass4_corporate_response=raw_pass4_corporate_response,
-            raw_reflection1_response=raw_pass4_corporate_response,
             raw_final_reflection_response=raw_final_reflection_response,
             skeleton_attempts_used=skeleton_attempts_used,
             pass2_channels_attempts_used=pass2_channels_attempts_used,
@@ -1610,6 +1603,5 @@ class LLMExtractor:
             pass2_attempts_used=pass2_channels_attempts_used + pass2_revenue_attempts_used,
             pass3_serves_attempts_used=pass3_serves_attempts_used,
             pass4_corporate_attempts_used=pass4_corporate_attempts_used,
-            reflection1_attempts_used=pass4_corporate_attempts_used,
             final_reflection_attempts_used=final_reflection_attempts_used,
         )

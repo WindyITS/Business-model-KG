@@ -5,6 +5,7 @@ from typing import DefaultDict, List, Tuple
 from neo4j import GraphDatabase
 
 from llm_extractor import Triple
+from place_hierarchy import PLACE_HIERARCHY_RELATION, place_hierarchy_edges
 
 logger = logging.getLogger(__name__)
 
@@ -55,6 +56,7 @@ class Neo4jLoader:
 
     def load_triples(self, triples: List[Triple], batch_size: int = 200) -> int:
         grouped_rows: DefaultDict[Tuple[str, str, str], List[dict]] = defaultdict(list)
+        place_names: set[str] = set()
         skipped_triples = 0
         for triple in triples:
             if (
@@ -71,6 +73,10 @@ class Neo4jLoader:
                     "object_name": triple.object,
                 }
             )
+            if triple.subject_type == "Place":
+                place_names.add(triple.subject)
+            if triple.object_type == "Place":
+                place_names.add(triple.object)
 
         total_loaded = 0
         with self.driver.session() as session:
@@ -96,6 +102,18 @@ class Neo4jLoader:
                         )
                         raise
                     total_loaded += len(batch)
+
+            place_edges = place_hierarchy_edges(place_names)
+            if place_edges:
+                session.run(
+                    f"""
+                    UNWIND $rows AS row
+                    MERGE (child:Place {{name: row.child}})
+                    MERGE (parent:Place {{name: row.parent}})
+                    MERGE (child)-[:{PLACE_HIERARCHY_RELATION}]->(parent)
+                    """,
+                    rows=[{"child": child, "parent": parent} for child, parent in place_edges],
+                ).consume()
 
         if skipped_triples:
             logger.warning("Skipped %s triples due to invalid node/relation types.", skipped_triples)

@@ -9,11 +9,12 @@ logger = logging.getLogger(__name__)
 
 
 WHITESPACE_RE = re.compile(r"\s+")
+QUOTE_CHARS = "\"'`“”‘’ "
 
 
 def clean_entity_name(name: str) -> str:
     cleaned = unicodedata.normalize("NFKC", name).strip()
-    cleaned = cleaned.strip("\"'` ")
+    cleaned = cleaned.strip(QUOTE_CHARS)
     cleaned = WHITESPACE_RE.sub(" ", cleaned)
     return cleaned
 
