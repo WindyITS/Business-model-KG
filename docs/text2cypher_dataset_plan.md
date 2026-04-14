@@ -4,10 +4,16 @@
 
 Build a high-quality supervised dataset for fine-tuning a small model to translate user requests into read-only Cypher queries for this repo's ontology and Neo4j graph.
 
+Current status:
+
+- the V1 dataset build is complete
+- the final readiness assessment is documented in [`text2cypher_dataset_readiness_v1.md`](./text2cypher_dataset_readiness_v1.md)
+- the next engineering step is model training and evaluation rather than more dataset scaffolding
+
 The target runtime behavior is:
 
 1. receive a natural-language user request
-2. decide whether the request is answerable from the current graph
+2. decide whether the request is answerable from the target ontology-backed graph
 3. emit a safe Cypher query plus parameters when it is answerable
 
 ## Why This Repo Needs A Custom Plan
@@ -31,17 +37,20 @@ That means the model must learn both:
 - direct graph lookups
 - ontology-aware rollups such as traversing `Company -> HAS_SEGMENT -> OFFERS* -> MONETIZES_VIA`
 
-## Current Graph Assumptions
+## Synthetic Fixture Assumptions
 
-The initial dataset should reflect the graph as it exists today:
+The dataset should be built from synthetic graph fixtures that mirror the production ontology and query contract.
+
+Each synthetic fixture should:
 
 - read-only Cypher only
-- current loaded nodes are identified primarily by label plus `name`
+- use the same labels and relationship types as the production ontology
+- identify nodes primarily by label plus `name`
 - the model should not assume extra properties such as revenue amounts, dates, filing metadata, descriptions, or embeddings
 
 Important note:
 
-The current loader merges nodes by `name` within each label. That is workable for a small controlled graph, but if the database grows across many companies, entity identity should be strengthened before scaling the text-to-Cypher dataset.
+Synthetic fixtures should mimic the production graph shape closely enough that the trained model does not learn imaginary properties or unsupported schema patterns.
 
 ## Output Contract
 
@@ -54,7 +63,7 @@ Recommended shape:
   "answerable": true,
   "cypher": "MATCH ... RETURN ...",
   "params": {
-    "company": "Microsoft"
+    "company": "Northstar Systems"
   }
 }
 ```
@@ -107,7 +116,7 @@ Disallowed by default:
 
 ### Phase 2. Build The Coverage Grid
 
-Create a query-family inventory from the ontology and current graph shape.
+Create a query-family inventory from the ontology and target graph schema.
 
 This coverage grid is the source of truth for:
 
@@ -116,6 +125,60 @@ This coverage grid is the source of truth for:
 - how many canonical seed questions we want per family
 
 See [`text2cypher_coverage_grid.md`](./text2cypher_coverage_grid.md).
+
+### Phase 2A. Define The Dataset Layers
+
+Before authoring examples, keep these layers distinct:
+
+- `family_id`
+  The broad query family from the coverage grid.
+  Example: `QF12 = segment revenue rollup`.
+- `intent`
+  One slot-based semantic task inside that family.
+  Example: "return the distinct revenue models for a business segment".
+- `intent_id`
+  The stable identifier for that semantic task.
+  It should identify the reusable query pattern, not a specific company name.
+- `binding`
+  A concrete filling of the intent slots using invented but ontology-valid synthetic values.
+  Example: `company=Northstar Systems`, `segment=Industrial AI`.
+- `example`
+  One actual natural-language phrasing of that bound case.
+  Example: "How does Northstar Systems' Industrial AI segment make money?"
+
+Practical rule:
+
+- if the semantic task stays the same and only the concrete entity values change, keep the same `intent_id`
+- if the query logic changes, create a new `intent_id`
+
+### Phase 2B. Build A Synthetic Fixture Library
+
+Before generating training examples, define a reusable library of synthetic graph fixtures.
+
+Each fixture should:
+
+- be fully valid under the ontology
+- use realistic but invented company, segment, and offering names
+- cover both common and rarer valid graph structures
+- be loadable into a temporary Neo4j database for execution validation
+
+Fixture design goals:
+
+- represent simple one-hop structures
+- represent segment-offering hierarchies
+- represent rollup cases involving `OFFERS*`
+- represent multiple customer, channel, and revenue-model combinations
+- represent ambiguous names when useful
+
+No fixture should depend on currently loaded production data.
+
+Training-readiness note:
+
+- one focused instance per fixture class is enough for early seed authoring and schema review
+- it is not enough as the sole training substrate for the final dataset
+- the complex fixture classes should have multiple concrete graph instances with materially different structure
+- especially for `FX04`, `FX06`, `FX09`, `FX10`, and `FX11`, include overlap, near-misses, mixed hierarchical and non-hierarchical roots, and more than one valid retrieval path where the ontology allows it
+- `FX12` should include multiple ambiguity modes, including graph-backed monetization ambiguity, graph-backed channel-scope ambiguity, and graph-free pronoun-only refusal cases
 
 ### Phase 3. Author Canonical Seed Intents
 
@@ -129,12 +192,19 @@ For each query family:
 
 Each canonical seed intent should represent one unique graph reasoning pattern.
 
+Recommended authoring order inside each family:
+
+1. write the slot-based intent definition
+2. write the canonical parameterized Cypher
+3. bind the intent to synthetic values from the fixture library
+4. write the first concrete question using that binding
+
 Examples:
 
-- "What business segments does Microsoft have?"
-- "Which customer types does Intelligent Cloud serve?"
-- "How does Microsoft monetize Intelligent Cloud?"
-- "Which partners does Palantir have?"
+- "What business segments does Northstar Systems have?"
+- "Which customer types does Industrial AI serve?"
+- "How does Northstar Systems monetize Industrial AI?"
+- "Which partners does Meridian Nexus have?"
 
 The first-pass seed inventory should aim for roughly 150 to 220 canonical intents across all families, with the expectation that duplicate or low-value seeds may be pruned after review.
 
@@ -144,7 +214,7 @@ Each canonical seed must pass all of the following:
 
 - syntax check
 - read-only safety check
-- execution against the real Neo4j database
+- execution against a synthetic validation Neo4j database or fixture-backed test graph
 - result-shape check
 - ontology sanity check
 
@@ -169,6 +239,36 @@ Variant generation should diversify:
 - question form versus command form
 
 The teacher model is most useful here.
+
+### Phase 5A. Use Synthetic Names Intentionally
+
+All bound training examples should come from synthetic fixtures.
+
+Recommended balance:
+
+- 85 to 100 percent synthetic concrete examples with invented names
+- 0 to 15 percent optional slotized examples if they improve generalization
+
+Examples:
+
+- synthetic concrete example:
+  "How does Northstar Systems' Industrial AI segment make money?"
+- slotized example:
+  "How does [BusinessSegment] make money?"
+- semi-slotized example:
+  "How does [Company]'s [BusinessSegment] segment make money?"
+
+Why synthetic concrete names are still important:
+
+- the model must learn realistic surface forms for company, segment, and offering names
+- the model must learn to map named entities into parameters
+- the model should generalize across many valid graph structures, not memorize a tiny live database
+
+Important distinction:
+
+- training inputs should use synthetic names or slots
+- gold outputs should remain parameterized Cypher plus params
+- the model should not be trained to hardcode literal values inside the Cypher string
 
 ### Phase 6. Build Negative And Near-Miss Examples
 
@@ -203,6 +303,7 @@ Never allow one paraphrase into train and another paraphrase of the same query f
 Each final record should contain:
 
 - `intent_id`
+- optional `binding_id`
 - `query_family`
 - `question`
 - `answerable`
@@ -212,18 +313,44 @@ Each final record should contain:
 - `difficulty`
 - optional metadata such as source company, seed author, and validation status
 
+If bindings are synthetic only, `binding_id` should refer to a synthetic fixture assignment rather than a production graph entity.
+
+## Row Semantics
+
+A single concrete training row should usually mean:
+
+- one semantic task identified by `intent_id`
+- one concrete entity binding, optionally identified by `binding_id`
+- one phrasing of that bound case
+
+Example:
+
+- `family_id`: segment revenue rollup
+- `intent_id`: "return the revenue models of a business segment"
+- `binding_id`: "northstar_industrial_ai"
+- `question`: "How does Northstar Systems' Industrial AI segment make money?"
+
+If another row says:
+
+- `question`: "What are the revenue models for Meridian Nexus' Public Sector segment?"
+- `params`: `company=Meridian Nexus`, `segment=Public Sector`
+
+then it may reuse the same `intent_id` if the query logic is unchanged.
+
 ## Suggested Record Shape
 
 ```json
 {
-  "intent_id": "segment_revenue_rollup_001",
-  "query_family": "segment_revenue_rollup",
-  "question": "How does Intelligent Cloud make money?",
+  "intent_id": "qf12_segment_revenue_rollup_basic",
+  "binding_id": "northstar_industrial_ai",
+  "query_family": "QF12",
+  "slot_pattern": "How does [BusinessSegment] make money?",
+  "question": "How does Northstar Systems' Industrial AI segment make money?",
   "answerable": true,
   "cypher": "MATCH (:Company {name: $company})-[:HAS_SEGMENT]->(s:BusinessSegment {name: $segment}) MATCH (s)-[:OFFERS]->(root:Offering) MATCH (root)-[:OFFERS*0..]->(o:Offering) MATCH (o)-[:MONETIZES_VIA]->(r:RevenueModel) RETURN DISTINCT r.name AS revenue_model ORDER BY revenue_model",
   "params": {
-    "company": "Microsoft",
-    "segment": "Intelligent Cloud"
+    "company": "Northstar Systems",
+    "segment": "Industrial AI"
   },
   "result_shape": [
     "revenue_model"
@@ -231,6 +358,29 @@ Each final record should contain:
   "difficulty": "medium"
 }
 ```
+
+Field meanings:
+
+- `intent_id`
+  Stable ID for the semantic query pattern.
+- `binding_id`
+  Optional ID for the concrete entity assignment used in this row.
+- `query_family`
+  Family label from the coverage grid.
+- `slot_pattern`
+  Abstract slot-based wording of the reusable task.
+- `question`
+  Concrete user-facing phrasing used as model input.
+- `answerable`
+  Whether the graph can answer the question.
+- `cypher`
+  The validated gold query.
+- `params`
+  Parameter values passed to the query.
+- `result_shape`
+  Expected returned columns and types.
+- `difficulty`
+  Informal complexity tag for analysis and balancing.
 
 ## Quality Gates
 
@@ -253,7 +403,7 @@ Additional recommended checks:
 The intended training path is:
 
 1. optional short warm-up on public Text-to-Cypher data to reinforce syntax and query structure
-2. main fine-tuning pass on this repo's ontology-specific dataset
+2. main fine-tuning pass on this repo's ontology-specific synthetic dataset
 
 The ontology-specific pass should dominate the final model behavior.
 
@@ -263,6 +413,7 @@ The dataset effort should produce:
 
 - coverage grid
 - canonical seed intent list
+- synthetic fixture library
 - validated gold Cypher set
 - paraphrase-expanded training set
 - negative example set
@@ -271,6 +422,4 @@ The dataset effort should produce:
 
 ## Immediate Next Step
 
-Start from the coverage grid and define the query families we need to cover.
-
-Once the coverage grid is stable, the next artifact should be a canonical seed-intent file authored directly from that grid.
+Start from the intent catalog and create a synthetic fixture library that can instantiate the selected families with ontology-valid invented names and structures.

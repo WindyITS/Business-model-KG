@@ -13,11 +13,17 @@ __pycache__/
 
 # Virtual environment
 venv/
+.venv/
 .env
 .python-version
 
 # Outputs / scratch
 outputs/
+docs/_bound_seed_example_drafts/
+docs/_bound_seed_example_v1_drafts/
+docs/_fixture_instance_drafts/
+docs/_fixture_instance_v1_drafts/
+docs/_training_example_v1_drafts/
 
 # OS
 .DS_Store

@@ -1,0 +1,237 @@
+{
+  "dataset_path": "docs/text2cypher_training_examples_v1.jsonl",
+  "split_unit": "intent_id",
+  "split_counts": {
+    "train": {
+      "rows": 1820,
+      "intents": 70,
+      "source_examples": 140
+    },
+    "dev": {
+      "rows": 390,
+      "intents": 15,
+      "source_examples": 30
+    },
+    "test": {
+      "rows": 364,
+      "intents": 14,
+      "source_examples": 28
+    }
+  },
+  "family_intent_split_counts": {
+    "QF01": {
+      "train": 2,
+      "dev": 1
+    },
+    "QF02": {
+      "train": 2,
+      "test": 1
+    },
+    "QF03": {
+      "train": 2,
+      "dev": 1
+    },
+    "QF04": {
+      "train": 2,
+      "test": 1
+    },
+    "QF05": {
+      "dev": 1,
+      "train": 2
+    },
+    "QF06": {
+      "train": 2,
+      "test": 1
+    },
+    "QF07": {
+      "train": 2,
+      "dev": 1
+    },
+    "QF08": {
+      "test": 1,
+      "train": 2
+    },
+    "QF09": {
+      "train": 2,
+      "dev": 1
+    },
+    "QF10": {
+      "train": 2,
+      "test": 1
+    },
+    "QF11": {
+      "train": 2,
+      "dev": 1
+    },
+    "QF12": {
+      "train": 3,
+      "dev": 1
+    },
+    "QF13": {
+      "train": 3,
+      "test": 1
+    },
+    "QF14": {
+      "train": 3,
+      "dev": 1
+    },
+    "QF15": {
+      "train": 3,
+      "test": 1
+    },
+    "QF16": {
+      "dev": 1,
+      "train": 3
+    },
+    "QF17": {
+      "test": 1,
+      "train": 3
+    },
+    "QF18": {
+      "train": 3,
+      "dev": 1
+    },
+    "QF19": {
+      "train": 3,
+      "test": 1
+    },
+    "QF20": {
+      "train": 3,
+      "dev": 1,
+      "test": 1
+    },
+    "QF21": {
+      "train": 3,
+      "dev": 1
+    },
+    "QF22": {
+      "train": 3,
+      "test": 1
+    },
+    "QF23": {
+      "train": 2,
+      "test": 1
+    },
+    "QF24": {
+      "dev": 1,
+      "train": 2
+    },
+    "QF25": {
+      "dev": 1,
+      "train": 3
+    },
+    "QF26": {
+      "train": 3,
+      "test": 1
+    },
+    "QF27": {
+      "dev": 1,
+      "train": 3
+    },
+    "QF28": {
+      "train": 2,
+      "test": 1
+    }
+  },
+  "intent_split_map": {
+    "qf01_company_segments_count": "train",
+    "qf01_company_segments_list": "dev",
+    "qf01_company_segments_membership": "train",
+    "qf02_company_offerings_count": "train",
+    "qf02_company_offerings_list": "train",
+    "qf02_company_offerings_membership": "test",
+    "qf03_segment_direct_offerings_count": "train",
+    "qf03_segment_direct_offerings_list": "train",
+    "qf03_segment_direct_offerings_membership": "dev",
+    "qf04_offering_children_count": "train",
+    "qf04_offering_children_list": "test",
+    "qf04_offering_children_membership": "train",
+    "qf05_offering_descendants_count": "dev",
+    "qf05_offering_descendants_list": "train",
+    "qf05_offering_leaf_descendants_list": "train",
+    "qf06_company_places_count": "train",
+    "qf06_company_places_list": "test",
+    "qf06_company_places_membership": "train",
+    "qf07_company_partners_count": "train",
+    "qf07_company_partners_list": "dev",
+    "qf07_company_partners_membership": "train",
+    "qf08_segment_customer_types_count": "test",
+    "qf08_segment_customer_types_list": "train",
+    "qf08_segment_customer_types_membership": "train",
+    "qf09_segment_channels_count": "train",
+    "qf09_segment_channels_list": "dev",
+    "qf09_segment_channels_membership": "train",
+    "qf10_offering_channels_count": "train",
+    "qf10_offering_channels_list": "test",
+    "qf10_offering_channels_membership": "train",
+    "qf11_offering_revenue_model_membership": "train",
+    "qf11_offering_revenue_models_count": "dev",
+    "qf11_offering_revenue_models_list": "train",
+    "qf12_segment_revenue_contributors_list": "train",
+    "qf12_segment_revenue_rollup_count": "train",
+    "qf12_segment_revenue_rollup_list": "train",
+    "qf12_segment_revenue_rollup_membership": "dev",
+    "qf13_company_revenue_rollup_count": "train",
+    "qf13_company_revenue_rollup_list": "train",
+    "qf13_company_revenue_rollup_membership": "train",
+    "qf13_company_revenue_sources_list": "test",
+    "qf14_company_channel_sources_list": "train",
+    "qf14_company_channels_count": "train",
+    "qf14_company_channels_list": "dev",
+    "qf14_company_channels_membership": "train",
+    "qf15_company_customer_sources_list": "train",
+    "qf15_company_customer_types_count": "train",
+    "qf15_company_customer_types_list": "train",
+    "qf15_company_customer_types_membership": "test",
+    "qf16_segment_offering_monetization_count": "dev",
+    "qf16_segment_offering_monetization_list": "train",
+    "qf16_segment_offering_monetization_membership": "train",
+    "qf16_segment_offering_monetization_pairs": "train",
+    "qf17_channel_segment_membership": "test",
+    "qf17_channel_segment_reverse_count": "train",
+    "qf17_channel_segment_reverse_list": "train",
+    "qf17_company_channel_segment_list": "train",
+    "qf18_segment_customer_offering_count": "train",
+    "qf18_segment_customer_offering_list": "train",
+    "qf18_segment_customer_segment_count": "dev",
+    "qf18_segment_customer_segment_list": "train",
+    "qf19_segment_customer_channel_list": "train",
+    "qf19_segment_customer_channel_offering_list": "train",
+    "qf19_segment_customer_offering_list": "train",
+    "qf19_segment_intersection_count": "test",
+    "qf20_company_descendant_offerings_count": "train",
+    "qf20_company_direct_offerings_count": "dev",
+    "qf20_filtered_match_count": "test",
+    "qf20_rollup_descendant_count": "train",
+    "qf20_segment_offerings_count": "train",
+    "qf21_descendant_offerings_ordered_list": "train",
+    "qf21_offerings_alpha_limited_list": "dev",
+    "qf21_offerings_alpha_list": "train",
+    "qf21_places_alpha_list": "train",
+    "qf22_company_place_existence": "train",
+    "qf22_offering_revenue_existence": "test",
+    "qf22_partner_existence": "train",
+    "qf22_segment_customer_existence": "train",
+    "qf23_offering_anchor_path": "train",
+    "qf23_offering_root_anchor": "test",
+    "qf23_offering_segment_anchor": "train",
+    "qf24_offering_ancestor_list": "dev",
+    "qf24_offering_parent_list": "train",
+    "qf24_offering_root_ancestor": "train",
+    "qf25_company_revenue_amount": "dev",
+    "qf25_offering_revenue_amount": "train",
+    "qf25_revenue_time_series": "train",
+    "qf25_segment_revenue_amount": "train",
+    "qf26_fastest_growing_segment": "train",
+    "qf26_latest_period_request": "test",
+    "qf26_time_window_comparison": "train",
+    "qf26_yoy_change_request": "train",
+    "qf27_customer_list_request": "dev",
+    "qf27_headcount_request": "train",
+    "qf27_pricing_request": "train",
+    "qf27_supplier_request": "train",
+    "qf28_ambiguous_name_request": "train",
+    "qf28_pronoun_only_request": "test",
+    "qf28_scope_ambiguous_request": "train"
+  }
+}
