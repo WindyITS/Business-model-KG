@@ -315,7 +315,8 @@ Do not wrap the JSON in markdown code fences.
 
 <structure_rules>
 - BusinessSegment -> OFFERS -> Offering is the primary segment-offering edge.
-- Company -> OFFERS -> Offering is allowed only as fallback when no segment anchor exists, or when the filing explicitly presents the offering at company level.
+- Company -> OFFERS -> Offering is allowed only as a last-resort fallback when, after considering the whole filing, no BusinessSegment anchor is supportable anywhere.
+- Do not use Company -> OFFERS -> Offering just because an offering is described at company scope, as universal, or as shared/common infrastructure; if that evidence ties it to multiple segments, attach it to each supported BusinessSegment instead.
 - Offering -> OFFERS -> Offering is allowed only when the filing explicitly states that one offering is a suite, family, umbrella, or parent offering for another offering.
 - A child Offering may have at most one Offering parent in Offering -> OFFERS -> Offering hierarchy.
 </structure_rules>
@@ -1012,7 +1013,7 @@ class LLMExtractor:
             "- BusinessSegment: a formally named internal segment or line of business; use as the primary semantic anchor for offerings.\n"
             "- Offering: a specific named product, service, platform, subscription, application, brand, solution, or explicitly named product family.\n"
             "- HAS_SEGMENT: Company -> BusinessSegment. Use only for formally named internal segments in the filing.\n"
-            "- OFFERS: BusinessSegment -> Offering is primary; Company -> Offering is fallback only when no segment anchor exists or the offering is presented as universal; Offering -> Offering only for explicit umbrella, family, suite, or parent relationships.\n"
+            "- Offering -> Offering only for explicit umbrella, family, suite, or parent relationships.\n"
             "</structure_definitions>\n\n"
             "<pass_specific_focus>\n"
             "- capture all explicit named segments\n"
@@ -1022,16 +1023,17 @@ class LLMExtractor:
             "- when the filing reports BusinessSegments, assume each named offering should be attached to one or more BusinessSegments unless the filing truly gives no segment anchor anywhere\n"
             "- search broadly across the filing for segment evidence before using Company -> OFFERS -> Offering\n"
             "- if an offering has support for more than one segment, attach it to every supported segment\n"
+            "- if an offering is described as backing, enabling, bundling with, integrating with, or providing a common layer for offerings used in multiple segments, treat that as segment evidence and attach it to every supported segment\n"
             "- if an overview describes offerings at company scope but later text gives segment-specific evidence, prefer BusinessSegment -> OFFERS -> Offering\n"
             "- do not let a company-level introductory list override later segment-specific evidence\n"
             "- Company -> OFFERS -> Offering is a last-resort fallback, not a default organizational shortcut\n"
-            "- use Company -> OFFERS -> Offering only if, after considering the whole filing, there is still no credible segment anchor, or the filing explicitly presents the offering only at company scope\n"
+            "- use Company -> OFFERS -> Offering only if, after considering the whole filing, there is still no credible segment anchor anywhere; company-wide or universal wording alone is not enough\n"
             "- first identify the direct offering children stated under each BusinessSegment\n"
             "- use Offering -> OFFERS -> Offering only when the text explicitly states that an offering is a family, suite, umbrella, parent, or grouped subcategory for another offering\n"
             "- do not invent intermediate umbrella offerings or extra nesting just to organize the graph more neatly\n"
             "- each child offering may have at most one Offering parent\n"
             "- if the filing states both an umbrella offering and its explicit named children, keep both\n"
-            "- before returning, audit every Company -> OFFERS -> Offering triple and keep it only if no segment assignment is supportable from the filing\n"
+            "- before returning, audit every Company -> OFFERS -> Offering triple and keep it only if no segment assignment is supportable anywhere in the filing, including via multi-segment shared-platform evidence\n"
             "- before returning, check that no explicit named offering has been omitted\n"
             "</pass_specific_focus>\n\n"
             "<ontology_reminder>\n"
