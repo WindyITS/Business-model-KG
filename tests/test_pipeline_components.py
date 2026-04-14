@@ -469,6 +469,7 @@ class PipelineComponentTests(unittest.TestCase):
         self.assertIn("full filing text here", prompt)
         self.assertIn("<canonical_label_definitions>", prompt)
         self.assertIn("<canonical_graph_policy>", prompt)
+        self.assertIn("Supervisor and editor of an existing draft graph", prompt)
         self.assertIn("SELLS_THROUGH should default to BusinessSegment.", prompt)
 
     def test_canonical_rule_reflection_system_prompt_includes_rules_without_filing(self):
@@ -1052,6 +1053,7 @@ class PipelineComponentTests(unittest.TestCase):
         pass1_prompt = captured_messages[0][1]["content"]
         self.assertIn("do not compress explicit offering lists into summary labels.", pass1_prompt)
         self.assertIn("BusinessSegment -> OFFERS -> Offering is the primary segment-offering edge.", pass1_prompt)
+        self.assertIn("reason carefully about product families", pass1_prompt)
 
         pass2_channels_messages = captured_messages[1]
         self.assertEqual(len(pass2_channels_messages), 2)
@@ -1103,9 +1105,11 @@ class PipelineComponentTests(unittest.TestCase):
             triples=skeleton.triples,
         )
         reflection_calls: list[tuple[str, dict[str, object]]] = []
+        reflection_prompts: dict[str, str] = {}
 
         def reflect_side_effect(**kwargs):
             reflection_calls.append((kwargs["stage_label"], kwargs["current_extraction"].model_dump()))
+            reflection_prompts[kwargs["stage_label"]] = kwargs["user_prompt"]
             if kwargs["stage_label"] == "Rule reflection":
                 return rule_reflection, '{"extraction_notes":"rule cleaned","triples":[]}', 1, {"kept_triple_count": 1}
             return final_reflection, '{"extraction_notes":"final","triples":[]}', 2, {"kept_triple_count": 1}
@@ -1137,6 +1141,8 @@ class PipelineComponentTests(unittest.TestCase):
         self.assertEqual(result.final_extraction.model_dump(), final_reflection.model_dump())
         self.assertEqual(result.rule_reflection_attempts_used, 1)
         self.assertEqual(result.final_reflection_attempts_used, 2)
+        self.assertIn("supervising and editing an existing draft graph", reflection_prompts["Filing reflection"])
+        self.assertIn("Preserve existing triples by default", reflection_prompts["Filing reflection"])
 
     def test_opencode_go_rejects_unsupported_models(self):
         with self.assertRaises(ValueError) as ctx:

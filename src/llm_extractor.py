@@ -463,8 +463,8 @@ Wait for the user instruction.
 
 def _canonical_reflection_system_prompt(full_text: str) -> str:
     return f"""<system_role>
-You are an independent expert reviewer reconciling a business-model knowledge graph extracted from an SEC 10-K filing.
-Your role is Reviewer, not first extractor.
+You are an independent expert supervisor reviewing and reconciling a business-model knowledge graph extracted from an SEC 10-K filing.
+Your role is Supervisor and editor of an existing draft graph, not first extractor.
 You must start from the draft graph provided by the user, audit it against the filing and the ontology, and return one final canonical graph.
 Do not ignore the draft graph and rebuild blindly from zero.
 Think primarily about whether the provided triples are correct, missing, malformed, redundant, or wrongly scoped.
@@ -501,6 +501,9 @@ Do not wrap the JSON in markdown code fences.
 
 <review_policy>
 - Correct only if facts are text-grounded in the filing and consistent with the ontology.
+- Favor minimal, targeted corrections over broad rewrites.
+- Preserve the existing graph by default when a triple is ontology-valid and plausibly supported by the filing.
+- Remove a triple only when it is clearly contradicted, clearly unsupported after considering the whole filing, or clearly invalid under the ontology.
 - Preserve BusinessSegment -> OFFERS -> Offering as the primary extracted structure when a segment anchor exists.
 - Preserve explicit offering-family hierarchy only when the filing states it clearly.
 - For offering structure specifically, change an offering's parent only when the current parent-child assignment is clearly wrong and not supported by the filing text.
@@ -509,7 +512,9 @@ Do not wrap the JSON in markdown code fences.
 - Add missing named offerings when the filing states them.
 - Do not merge similar but distinct offering names.
 - Do not fan out a rare or specialized customer type across multiple segments unless each segment has its own support in the filing.
-- Remove unsupported duplicates, malformed scope choices, and very weakly supported semantic edges.
+- Do not silently drop an entire relation family or broad category of triples just because the support is diffuse across the filing.
+- When fixing one area of the graph, preserve unrelated valid triples.
+- Remove unsupported duplicates, malformed scope choices, and clearly weak semantic edges only after reviewing them triple by triple.
 </review_policy>
 
 <ontology>
@@ -1308,6 +1313,7 @@ class LLMExtractor:
             "- build the offering inventory segment by segment\n"
             "- use the full filing, not just the nearest sentence or opening overview, to decide each offering's parent\n"
             "- when the filing reports BusinessSegments, assume each named offering should be attached to one or more BusinessSegments unless the filing truly gives no segment anchor anywhere\n"
+            "- reason carefully about product families, suites, umbrella offerings, and parent offerings; if the filing explicitly states both a family-level offering and named child offerings, keep the family and its children rather than flattening or omitting the family layer\n"
             "- search broadly across the filing for segment evidence before using Company -> OFFERS -> Offering\n"
             "- if an offering has support for more than one segment, attach it to every supported segment\n"
             "- if an offering is described as backing, enabling, bundling with, integrating with, or providing a common layer for offerings used in multiple segments, treat that as segment evidence and attach it to every supported segment\n"
@@ -1709,9 +1715,15 @@ class LLMExtractor:
             "<review_instruction>\n"
             "Act exactly as the system prompt instructs.\n"
             "Start from the current graph exactly as provided.\n"
+            "You are supervising and editing an existing draft graph, not performing first-pass extraction from scratch.\n"
+            "Favor minimal, targeted corrections over broad rewrites.\n"
             "Use the full filing to audit the graph against the filing, the ontology, the ontology rules, and the canonical label definitions.\n"
             "Every retained or added triple must adhere to the ontology.\n"
+            "Preserve existing triples by default when they are ontology-valid and plausibly supported by the filing.\n"
             "If a triple conflicts with ontology scope, relation, hierarchy, or normalization rules, remove or correct it.\n"
+            "Only remove a triple when it is clearly contradicted, clearly unsupported after considering the whole filing, or clearly invalid under the ontology.\n"
+            "Do not drop an entire relation family just because support is broad or distributed across multiple parts of the filing.\n"
+            "Review the current graph relation by relation and fix only what is actually wrong.\n"
             "In this step you may prune unsupported triples, resolve context-dependent conflicts, and add clearly missing facts.\n"
             "Correct, remove, keep, and add triples only as needed to produce the final canonical graph.\n"
             "</review_instruction>\n\n"
