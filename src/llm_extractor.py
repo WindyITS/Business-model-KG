@@ -825,6 +825,34 @@ class LLMExtractor:
         )
 
     @staticmethod
+    def _triple_key(triple: Triple) -> tuple[str, str, str, str, str]:
+        return (
+            " ".join(triple.subject.split()).casefold(),
+            triple.subject_type,
+            triple.relation,
+            " ".join(triple.object.split()).casefold(),
+            triple.object_type,
+        )
+
+    @classmethod
+    def _triple_count(cls, extraction: KnowledgeGraphExtraction) -> int:
+        return len({cls._triple_key(triple) for triple in extraction.triples})
+
+    @classmethod
+    def _triple_delta_details(
+        cls,
+        before_extraction: KnowledgeGraphExtraction,
+        after_extraction: KnowledgeGraphExtraction,
+    ) -> list[tuple[str, int]]:
+        before_keys = {cls._triple_key(triple) for triple in before_extraction.triples}
+        after_keys = {cls._triple_key(triple) for triple in after_extraction.triples}
+        return [
+            ("triples out", len(after_keys)),
+            ("triples added", len(after_keys - before_keys)),
+            ("triples removed", len(before_keys - after_keys)),
+        ]
+
+    @staticmethod
     def _load_json_payload(content: str, fallback_payload: str) -> tuple[dict[str, Any], bool, bool]:
         content = content.strip()
         if not content:
@@ -1689,6 +1717,7 @@ class LLMExtractor:
             "stage_start",
             index=7,
             title="Reflection 1 - Ontology compliance",
+            details=[("triples in", self._triple_count(pre_reflection_extraction))],
         )
         rule_reflection_extraction, raw_rule_reflection_response, rule_reflection_attempts_used, rule_reflection_audit = self.reflect_extraction(
             full_text=full_text,
@@ -1701,7 +1730,8 @@ class LLMExtractor:
             stage_label="Rule reflection",
             ontology_version="canonical",
         )
-        self._emit_progress("stage_complete", details=[("result", f"{len(rule_reflection_extraction.triples)} triples kept")])
+        rule_reflection_details = self._triple_delta_details(pre_reflection_extraction, rule_reflection_extraction)
+        self._emit_progress("stage_complete", details=rule_reflection_details)
 
         final_reflection_prompt = (
             "<workflow_step>\n"
@@ -1736,6 +1766,7 @@ class LLMExtractor:
             "stage_start",
             index=8,
             title="Reflection 2 - Filing reconciliation",
+            details=[("triples in", self._triple_count(rule_reflection_extraction))],
         )
         final_extraction, raw_final_reflection_response, final_reflection_attempts_used, final_reflection_audit = self.reflect_extraction(
             full_text=full_text,
@@ -1748,7 +1779,8 @@ class LLMExtractor:
             stage_label="Filing reflection",
             ontology_version="canonical",
         )
-        self._emit_progress("stage_complete", details=[("result", f"{len(final_extraction.triples)} triples kept")])
+        final_reflection_details = self._triple_delta_details(rule_reflection_extraction, final_extraction)
+        self._emit_progress("stage_complete", details=final_reflection_details)
 
         return CanonicalPipelineResult(
             success=True,

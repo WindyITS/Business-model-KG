@@ -201,6 +201,20 @@ class PipelineComponentTests(unittest.TestCase):
         self.assertTrue(any("llm:" in line and "attempt 1/3, tokens=3,244" in line for line in lines))
         self.assertTrue(any("result:" in line and "9 triples" in line for line in lines))
 
+    def test_pipeline_console_renders_stage_start_details(self):
+        lines: list[str] = []
+        console = PipelineConsole(printer=lines.append)
+
+        console.handle_progress(
+            "stage_start",
+            index=7,
+            title="Reflection 1 - Ontology compliance",
+            details=[("triples in", 14)],
+        )
+
+        self.assertIn("[07/10] Reflection 1 - Ontology compliance", lines)
+        self.assertTrue(any("triples in:" in line and "14" in line for line in lines))
+
     def test_pipeline_console_renders_live_retry_updates(self):
         lines: list[str] = []
         console = PipelineConsole(printer=lines.append)
@@ -1083,6 +1097,9 @@ class PipelineComponentTests(unittest.TestCase):
             provider="local",
             api_mode="chat_completions",
         )
+        lines: list[str] = []
+        console = PipelineConsole(printer=lines.append)
+        extractor.progress_callback = console.handle_progress
         skeleton = KnowledgeGraphExtraction(
             extraction_notes="skeleton",
             triples=[
@@ -1098,11 +1115,28 @@ class PipelineComponentTests(unittest.TestCase):
         empty = KnowledgeGraphExtraction(extraction_notes="", triples=[])
         rule_reflection = KnowledgeGraphExtraction(
             extraction_notes="rule cleaned",
-            triples=skeleton.triples,
+            triples=[
+                *skeleton.triples,
+                Triple(
+                    subject="Intelligent Cloud",
+                    subject_type="BusinessSegment",
+                    relation="OFFERS",
+                    object="Azure",
+                    object_type="Offering",
+                ),
+            ],
         )
         final_reflection = KnowledgeGraphExtraction(
             extraction_notes="final",
-            triples=skeleton.triples,
+            triples=[
+                Triple(
+                    subject="Intelligent Cloud",
+                    subject_type="BusinessSegment",
+                    relation="OFFERS",
+                    object="Azure",
+                    object_type="Offering",
+                )
+            ],
         )
         reflection_calls: list[tuple[str, dict[str, object]]] = []
         reflection_prompts: dict[str, str] = {}
@@ -1143,6 +1177,14 @@ class PipelineComponentTests(unittest.TestCase):
         self.assertEqual(result.final_reflection_attempts_used, 2)
         self.assertIn("supervising and editing an existing draft graph", reflection_prompts["Filing reflection"])
         self.assertIn("Preserve existing triples by default", reflection_prompts["Filing reflection"])
+        self.assertIn("[07/10] Reflection 1 - Ontology compliance", lines)
+        self.assertIn("[08/10] Reflection 2 - Filing reconciliation", lines)
+        self.assertTrue(any("triples in:" in line and "1" in line for line in lines))
+        self.assertTrue(any("triples added:" in line and "1" in line for line in lines))
+        self.assertTrue(any("triples removed:" in line and "0" in line for line in lines))
+        self.assertTrue(any("triples in:" in line and "2" in line for line in lines))
+        self.assertTrue(any("triples added:" in line and "0" in line for line in lines))
+        self.assertTrue(any("triples removed:" in line and "1" in line for line in lines))
 
     def test_opencode_go_rejects_unsupported_models(self):
         with self.assertRaises(ValueError) as ctx:

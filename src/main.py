@@ -101,7 +101,14 @@ class PipelineConsole:
         self._printer(f"Neo4j:     {neo4j_status}")
         self._printer("")
 
-    def start_stage(self, index: int, title: str, *, extracts: str | None = None) -> None:
+    def start_stage(
+        self,
+        index: int,
+        title: str,
+        *,
+        extracts: str | None = None,
+        details: list[tuple[str, Any]] | None = None,
+    ) -> None:
         self._current_stage = {
             "index": index,
             "title": title,
@@ -111,6 +118,8 @@ class PipelineConsole:
         self._printer(f"[{index:02d}/{self.total_stages:02d}] {title}")
         if extracts:
             self._print_detail("extracts", extracts)
+        for label, value in details or []:
+            self._print_detail(label, value)
 
     def record_llm_call(self, *, attempt: int, max_retries: int, tokens: int | None = None) -> None:
         if self._current_stage is None:
@@ -158,7 +167,12 @@ class PipelineConsole:
 
     def handle_progress(self, event: str, **payload: Any) -> None:
         if event == "stage_start":
-            self.start_stage(payload["index"], payload["title"], extracts=payload.get("extracts"))
+            self.start_stage(
+                payload["index"],
+                payload["title"],
+                extracts=payload.get("extracts"),
+                details=payload.get("details"),
+            )
             return
         if event == "llm_call_start":
             self.start_llm_attempt(
