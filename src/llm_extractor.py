@@ -63,6 +63,7 @@ class CanonicalPipelineResult(BaseModel):
     pass3_serves_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     pass4_corporate_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     pre_reflection_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
+    rule_reflection_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     final_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     skeleton_audit: dict[str, Any] = Field(default_factory=dict)
     pass2_channels_audit: dict[str, Any] = Field(default_factory=dict)
@@ -71,6 +72,7 @@ class CanonicalPipelineResult(BaseModel):
     pass3_serves_audit: dict[str, Any] = Field(default_factory=dict)
     pass4_corporate_audit: dict[str, Any] = Field(default_factory=dict)
     pre_reflection_audit: dict[str, Any] = Field(default_factory=dict)
+    rule_reflection_audit: dict[str, Any] = Field(default_factory=dict)
     final_reflection_audit: dict[str, Any] = Field(default_factory=dict)
     raw_skeleton_response: str | None = None
     raw_pass2_channels_response: str | None = None
@@ -78,6 +80,7 @@ class CanonicalPipelineResult(BaseModel):
     raw_pass2_response: str | None = None
     raw_pass3_serves_response: str | None = None
     raw_pass4_corporate_response: str | None = None
+    raw_rule_reflection_response: str | None = None
     raw_final_reflection_response: str | None = None
     skeleton_attempts_used: int = 0
     pass2_channels_attempts_used: int = 0
@@ -85,6 +88,7 @@ class CanonicalPipelineResult(BaseModel):
     pass2_attempts_used: int = 0
     pass3_serves_attempts_used: int = 0
     pass4_corporate_attempts_used: int = 0
+    rule_reflection_attempts_used: int = 0
     final_reflection_attempts_used: int = 0
     error: str | None = None
 
@@ -357,6 +361,151 @@ Do not wrap the JSON in markdown code fences.
 <startup_instruction>
 Do not output anything now.
 Wait for the first user instruction.
+</startup_instruction>"""
+
+
+def _canonical_rule_reflection_system_prompt() -> str:
+    return f"""<system_role>
+You are an ontology and graph-rule compliance reviewer for a business-model knowledge graph extracted from an SEC 10-K filing.
+Your role in this step is Rule Reviewer, not filing auditor.
+You must review the draft graph only against the ontology, canonical label definitions, relation rules, and graph-structure rules.
+Do not use missing filing context, business plausibility, or support in the filing as a reason to change a triple in this step.
+</system_role>
+
+<data_contract>
+You must output ONLY one valid JSON object.
+
+Required shape:
+{{
+  "extraction_notes": "Summarize the ontology or rule fixes you made.",
+  "triples": [
+    {{
+      "subject": "Name of subject",
+      "subject_type": "EXACT_NODE_TYPE",
+      "relation": "EXACT_RELATION",
+      "object": "Name of object or canonical label",
+      "object_type": "EXACT_NODE_TYPE"
+    }}
+  ]
+}}
+
+Every triple must contain exactly:
+- subject
+- subject_type
+- relation
+- object
+- object_type
+
+If subject_type or object_type is missing, the output is invalid.
+Output ONLY JSON object.
+Do not wrap the JSON in markdown code fences.
+</data_contract>
+
+<review_policy>
+- Preserve the graph as intact as possible.
+- Change or remove a triple only when it violates the ontology, canonical label requirements, allowed relation shapes, scope rules, hierarchy rules, or formatting requirements.
+- Do not add new facts from the filing in this step.
+- Do not remove a triple solely because it may be unsupported by the filing.
+- Do not deduplicate or collapse semantically similar triples in this step.
+- Do not choose between competing facts using filing context in this step.
+- Output the ENTIRE updated graph, not just deltas.
+</review_policy>
+
+<ontology>
+<node_types>
+- Company: reporting company or named external commercial company
+- BusinessSegment: formally named internal segment or line of business
+- Offering: specific named product, service, platform, subscription, application, brand, solution, or explicitly named product family
+- CustomerType: canonical label only
+- Channel: canonical label only
+- Place: normalized business-relevant geography
+- RevenueModel: canonical label only
+</node_types>
+
+<canonical_labels>
+<customer_types>
+{_json_list(CANONICAL_CUSTOMER_TYPES)}
+</customer_types>
+<channels>
+{_json_list(CANONICAL_CHANNELS)}
+</channels>
+<revenue_models>
+{_json_list(CANONICAL_REVENUE_MODELS)}
+</revenue_models>
+</canonical_labels>
+
+<canonical_label_definitions>
+<customer_types>
+{_xml_definition_lines(CANONICAL_DEFINITIONS['CustomerType'])}
+</customer_types>
+<channels>
+{_xml_definition_lines(CANONICAL_DEFINITIONS['Channel'])}
+</channels>
+<revenue_models>
+{_xml_definition_lines(CANONICAL_DEFINITIONS['RevenueModel'])}
+</revenue_models>
+</canonical_label_definitions>
+
+<allowed_relations>
+- HAS_SEGMENT: Company -> BusinessSegment
+- OFFERS: Company -> Offering | BusinessSegment -> Offering | Offering -> Offering
+- SERVES: BusinessSegment -> CustomerType
+- OPERATES_IN: Company -> Place
+- SELLS_THROUGH: BusinessSegment -> Channel | Offering -> Channel
+- PARTNERS_WITH: Company -> Company
+- MONETIZES_VIA: Offering -> RevenueModel
+</allowed_relations>
+</ontology>
+
+<canonical_graph_policy>
+<scope_hierarchy>
+- Company = corporate shell
+- BusinessSegment = primary semantic anchor
+- Offering = inventory leaf, except when the filing explicitly states that one offering is an umbrella or family for another offering
+</scope_hierarchy>
+
+<scope_rules>
+- SELLS_THROUGH should default to BusinessSegment.
+- SELLS_THROUGH may attach to Offering only when that offering has no BusinessSegment anchor.
+- If an offering family hierarchy exists, attach MONETIZES_VIA to the family parent rather than to its child offerings.
+- Do not automatically duplicate facts upward across scopes.
+- Do not derive company-level facts from lower-level facts in this step.
+- Do not derive offering-level facts from segment-level facts in this step.
+</scope_rules>
+
+<structure_rules>
+- BusinessSegment -> OFFERS -> Offering is the primary segment-offering edge.
+- Company -> OFFERS -> Offering is allowed only as a last-resort fallback when, after considering the whole filing, no BusinessSegment anchor is supportable anywhere.
+- Offering -> OFFERS -> Offering is allowed only when the filing explicitly states that one offering is a suite, family, umbrella, or parent offering for another offering.
+- A child Offering may have at most one Offering parent in Offering -> OFFERS -> Offering hierarchy.
+</structure_rules>
+</canonical_graph_policy>
+
+<normalization_rules>
+- CustomerType, Channel, and RevenueModel must use only canonical labels.
+- If a phrase does not map clearly to a canonical label, omit it.
+- Extract explicit named offerings individually and as written.
+- Do not compress explicit offering lists into summary labels.
+- Do not merge similar but distinct offering names.
+</normalization_rules>
+
+<corporate_shell_rules>
+- Valid Place objects are countries, U.S. states, District of Columbia, and these macro-regions: {_json_list(V2_APPROVED_MACRO_REGIONS)}.
+- Normalize aliases such as U.S. -> United States, U.K. -> United Kingdom, asia-pacific -> Asia Pacific, emea -> EMEA.
+- Do not use cities, office sites, vague global labels, or market placeholders.
+- Use PARTNERS_WITH only when the filing explicitly describes a named partnership.
+- Do not use it for suppliers, customers, competitors, ecosystem mentions, or channel relationships.
+</corporate_shell_rules>
+
+<workflow_rules>
+- This step is rule-only.
+- No filing text is provided in this step by design.
+- If a triple is rule-valid but its factual support is uncertain, leave it unchanged for the next step.
+</workflow_rules>
+
+<startup_instruction>
+Do not output anything now.
+Wait for the user instruction.
 </startup_instruction>"""
 
 
@@ -1132,6 +1281,7 @@ class LLMExtractor:
         strict: bool = True,
         system_prompt: str | None = None,
         user_prompt: str | None = None,
+        stage_label: str = "Reflection",
         ontology_version: str = "canonical",
     ) -> tuple[KnowledgeGraphExtraction, str | None, int, dict[str, Any]]:
         system_prompt = system_prompt or _canonical_reflection_system_prompt(full_text)
@@ -1149,7 +1299,7 @@ class LLMExtractor:
                 ontology_version=ontology_version,
             )
             if not final_extraction.triples and current_extraction.triples:
-                logger.warning("Reflection returned no triples. Falling back to pre-reflection extraction.")
+                logger.warning("%s returned no triples. Falling back to prior graph.", stage_label)
                 _, fallback_audit = audit_knowledge_graph_payload(
                     current_extraction.model_dump(mode="json"),
                     ontology_version=ontology_version,
@@ -1159,7 +1309,7 @@ class LLMExtractor:
         except ExtractionError:
             if strict:
                 raise
-            logger.warning("Reflection failed. Falling back to pre-reflection extraction.")
+            logger.warning("%s failed. Falling back to prior graph.", stage_label)
             _, fallback_audit = audit_knowledge_graph_payload(
                 current_extraction.model_dump(mode="json"),
                 ontology_version=ontology_version,
@@ -1539,21 +1689,22 @@ class LLMExtractor:
             ontology_version="canonical",
         )
 
-        final_reflection_prompt = (
+        rule_reflection_prompt = (
             "<workflow_step>\n"
-            "REFLECTION - FINAL RECONCILIATION\n"
+            "REFLECTION 1 - ONTOLOGY COMPLIANCE\n"
             "</workflow_step>\n\n"
             "<objective>\n"
-            "Review the draft graph and return the final canonical graph.\n"
+            "Review the draft graph only against the ontology, relation rules, and canonical label rules.\n"
             "</objective>\n\n"
             f"<company_name>\n{company_name or ''}\n</company_name>\n\n"
             f"<current_graph>\n{self._compact_json(pre_reflection_extraction.model_dump())}\n</current_graph>\n\n"
             "<review_instruction>\n"
             "Act exactly as the system prompt instructs.\n"
-            "Audit the draft graph against the filing, the ontology, the ontology rules, and the canonical label definitions.\n"
-            "Every retained or added triple must adhere to the ontology.\n"
-            "If a triple conflicts with ontology scope, relation, hierarchy, or normalization rules, remove or correct it.\n"
-            "Correct, remove, keep, and add triples only as needed to produce the final canonical graph.\n"
+            "Repair malformed triples and rule violations only.\n"
+            "Do not remove or change a triple solely because support in the filing may be weak or ambiguous.\n"
+            "Do not add new facts from the filing in this step.\n"
+            "Do not deduplicate or collapse semantically similar triples in this step.\n"
+            "Return the full updated graph.\n"
             "</review_instruction>\n\n"
             "<format_reminder>\n"
             'Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array.\n'
@@ -1563,16 +1714,58 @@ class LLMExtractor:
         self._emit_progress(
             "stage_start",
             index=7,
-            title="Reflection - Final reconciliation",
+            title="Reflection 1 - Ontology compliance",
         )
-        final_extraction, raw_final_reflection_response, final_reflection_attempts_used, final_reflection_audit = self.reflect_extraction(
+        rule_reflection_extraction, raw_rule_reflection_response, rule_reflection_attempts_used, rule_reflection_audit = self.reflect_extraction(
             full_text=full_text,
             current_extraction=pre_reflection_extraction,
             company_name=company_name,
             max_retries=max_retries,
             strict=False,
+            system_prompt=_canonical_rule_reflection_system_prompt(),
+            user_prompt=rule_reflection_prompt,
+            stage_label="Rule reflection",
+            ontology_version="canonical",
+        )
+        self._emit_progress("stage_complete", details=[("result", f"{len(rule_reflection_extraction.triples)} triples kept")])
+
+        final_reflection_prompt = (
+            "<workflow_step>\n"
+            "REFLECTION 2 - FILING RECONCILIATION\n"
+            "</workflow_step>\n\n"
+            "<objective>\n"
+            "Review the rule-compliant draft graph against the full filing and return the final canonical graph.\n"
+            "</objective>\n\n"
+            f"<company_name>\n{company_name or ''}\n</company_name>\n\n"
+            f"<current_graph>\n{self._compact_json(rule_reflection_extraction.model_dump())}\n</current_graph>\n\n"
+            "<review_instruction>\n"
+            "Act exactly as the system prompt instructs.\n"
+            "Start from the current graph exactly as provided.\n"
+            "Use the full filing to audit the graph against the filing, the ontology, the ontology rules, and the canonical label definitions.\n"
+            "Every retained or added triple must adhere to the ontology.\n"
+            "If a triple conflicts with ontology scope, relation, hierarchy, or normalization rules, remove or correct it.\n"
+            "In this step you may prune unsupported triples, resolve context-dependent conflicts, and add clearly missing facts.\n"
+            "Correct, remove, keep, and add triples only as needed to produce the final canonical graph.\n"
+            "</review_instruction>\n\n"
+            "<format_reminder>\n"
+            'Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array.\n'
+            "Do not use markdown code blocks (```json).\n"
+            "</format_reminder>"
+        )
+        self._emit_progress(
+            "stage_start",
+            index=8,
+            title="Reflection 2 - Filing reconciliation",
+        )
+        final_extraction, raw_final_reflection_response, final_reflection_attempts_used, final_reflection_audit = self.reflect_extraction(
+            full_text=full_text,
+            current_extraction=rule_reflection_extraction,
+            company_name=company_name,
+            max_retries=max_retries,
+            strict=False,
             system_prompt=_canonical_reflection_system_prompt(full_text),
             user_prompt=final_reflection_prompt,
+            stage_label="Filing reflection",
             ontology_version="canonical",
         )
         self._emit_progress("stage_complete", details=[("result", f"{len(final_extraction.triples)} triples kept")])
@@ -1586,6 +1779,7 @@ class LLMExtractor:
             pass3_serves_extraction=pass3_serves_extraction,
             pass4_corporate_extraction=pass4_corporate_extraction,
             pre_reflection_extraction=pre_reflection_extraction,
+            rule_reflection_extraction=rule_reflection_extraction,
             final_extraction=final_extraction,
             skeleton_audit=skeleton_audit,
             pass2_channels_audit=pass2_channels_audit,
@@ -1594,6 +1788,7 @@ class LLMExtractor:
             pass3_serves_audit=pass3_serves_audit,
             pass4_corporate_audit=pass4_corporate_audit,
             pre_reflection_audit=pre_reflection_audit,
+            rule_reflection_audit=rule_reflection_audit,
             final_reflection_audit=final_reflection_audit,
             raw_skeleton_response=raw_skeleton_response,
             raw_pass2_channels_response=raw_pass2_channels_response,
@@ -1601,6 +1796,7 @@ class LLMExtractor:
             raw_pass2_response=raw_pass2_revenue_response,
             raw_pass3_serves_response=raw_pass3_serves_response,
             raw_pass4_corporate_response=raw_pass4_corporate_response,
+            raw_rule_reflection_response=raw_rule_reflection_response,
             raw_final_reflection_response=raw_final_reflection_response,
             skeleton_attempts_used=skeleton_attempts_used,
             pass2_channels_attempts_used=pass2_channels_attempts_used,
@@ -1608,5 +1804,6 @@ class LLMExtractor:
             pass2_attempts_used=pass2_channels_attempts_used + pass2_revenue_attempts_used,
             pass3_serves_attempts_used=pass3_serves_attempts_used,
             pass4_corporate_attempts_used=pass4_corporate_attempts_used,
+            rule_reflection_attempts_used=rule_reflection_attempts_used,
             final_reflection_attempts_used=final_reflection_attempts_used,
         )

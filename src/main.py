@@ -22,7 +22,7 @@ logging.getLogger("httpcore").setLevel(logging.WARNING)
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logging.getLogger("neo4j.notifications").disabled = True
 
-TOTAL_STAGES = 9
+TOTAL_STAGES = 10
 CONSOLE_RULE = "=" * 50
 CONSOLE_SEPARATOR = "-" * 50
 
@@ -451,6 +451,15 @@ def main() -> int:
             },
         )
         _write_json(
+            run_dir / "rule_reflection_extraction.json",
+            {
+                "triples": [t.model_dump() for t in chat_result.rule_reflection_extraction.triples],
+                "extraction_notes": chat_result.rule_reflection_extraction.extraction_notes,
+                "attempts_used": chat_result.rule_reflection_attempts_used,
+                "raw_response": chat_result.raw_rule_reflection_response,
+            },
+        )
+        _write_json(
             run_dir / "reflection_extraction.json",
             {
                 "triples": [t.model_dump() for t in chat_result.final_extraction.triples],
@@ -468,6 +477,7 @@ def main() -> int:
             "pass3_serves_extraction": chat_result.pass3_serves_extraction.model_dump(),
             "pass4_corporate_extraction": chat_result.pass4_corporate_extraction.model_dump(),
             "pre_reflection_extraction": chat_result.pre_reflection_extraction.model_dump(),
+            "rule_reflection_extraction": chat_result.rule_reflection_extraction.model_dump(),
             "final_extraction": chat_result.final_extraction.model_dump(),
         }
         stage_audits = {
@@ -478,6 +488,7 @@ def main() -> int:
             "pass3_serves": chat_result.pass3_serves_audit,
             "pass4_corporate": chat_result.pass4_corporate_audit,
             "pre_reflection": chat_result.pre_reflection_audit,
+            "rule_reflection": chat_result.rule_reflection_audit,
             "reflection": chat_result.final_reflection_audit,
         }
         final_output_audit = chat_result.final_reflection_audit
@@ -486,7 +497,7 @@ def main() -> int:
         _write_json(run_dir / "extraction_audits.json", stage_audits)
         _write_json(run_dir / "final_output_validation_report.json", final_output_audit)
 
-        console.start_stage(8, "Resolve + validate")
+        console.start_stage(9, "Resolve + validate")
         resolved_triples = resolve_entities(extractions)
         if not resolved_triples:
             raise ExtractionError("Extraction completed but produced zero resolved triples.")
@@ -522,7 +533,7 @@ def main() -> int:
         )
 
         loaded_triples = 0
-        console.start_stage(9, "Load Neo4j")
+        console.start_stage(10, "Load Neo4j")
         if args.skip_neo4j:
             console.finish_stage(status="skipped", details=[("load", "skipped by request")])
         else:

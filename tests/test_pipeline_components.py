@@ -20,6 +20,7 @@ from llm_extractor import (
     KnowledgeGraphExtraction,
     Triple,
     _canonical_pipeline_system_prompt,
+    _canonical_rule_reflection_system_prompt,
     _canonical_reflection_system_prompt,
     aggregate_extraction_audits,
     audit_knowledge_graph_payload,
@@ -195,7 +196,7 @@ class PipelineComponentTests(unittest.TestCase):
 
         self.assertIn("KG PIPELINE RUN", lines)
         self.assertIn("Neo4j:     enabled (notifications disabled)", lines)
-        self.assertIn("[02/09] Pass 1 - Structural skeleton", lines)
+        self.assertIn("[02/10] Pass 1 - Structural skeleton", lines)
         self.assertTrue(any("extracts:" in line and "HAS_SEGMENT, OFFERS" in line for line in lines))
         self.assertTrue(any("llm:" in line and "attempt 1/3, tokens=3,244" in line for line in lines))
         self.assertTrue(any("result:" in line and "9 triples" in line for line in lines))
@@ -457,6 +458,14 @@ class PipelineComponentTests(unittest.TestCase):
         self.assertIn("<canonical_label_definitions>", prompt)
         self.assertIn("<canonical_graph_policy>", prompt)
         self.assertIn("SELLS_THROUGH should default to BusinessSegment.", prompt)
+
+    def test_canonical_rule_reflection_system_prompt_includes_rules_without_filing(self):
+        prompt = _canonical_rule_reflection_system_prompt()
+
+        self.assertIn("<canonical_label_definitions>", prompt)
+        self.assertIn("<canonical_graph_policy>", prompt)
+        self.assertIn("No filing text is provided in this step by design.", prompt)
+        self.assertNotIn("<source_filing>", prompt)
 
     def test_local_provider_preserves_system_messages(self):
         messages = [
@@ -980,6 +989,71 @@ class PipelineComponentTests(unittest.TestCase):
         self.assertEqual(attempts_used, 2)
         self.assertEqual(audit["raw_triple_count"], 1)
         self.assertEqual(audit["kept_triple_count"], 1)
+
+    def test_extract_canonical_pipeline_runs_two_reflection_stages(self):
+        extractor = LLMExtractor(
+            base_url="http://localhost:1234/v1",
+            api_key="lm-studio",
+            model="local-model",
+            provider="local",
+            api_mode="chat_completions",
+        )
+        skeleton = KnowledgeGraphExtraction(
+            extraction_notes="skeleton",
+            triples=[
+                Triple(
+                    subject="Microsoft",
+                    subject_type="Company",
+                    relation="HAS_SEGMENT",
+                    object="Intelligent Cloud",
+                    object_type="BusinessSegment",
+                )
+            ],
+        )
+        empty = KnowledgeGraphExtraction(extraction_notes="", triples=[])
+        rule_reflection = KnowledgeGraphExtraction(
+            extraction_notes="rule cleaned",
+            triples=skeleton.triples,
+        )
+        final_reflection = KnowledgeGraphExtraction(
+            extraction_notes="final",
+            triples=skeleton.triples,
+        )
+        reflection_calls: list[tuple[str, dict[str, object]]] = []
+
+        def reflect_side_effect(**kwargs):
+            reflection_calls.append((kwargs["stage_label"], kwargs["current_extraction"].model_dump()))
+            if kwargs["stage_label"] == "Rule reflection":
+                return rule_reflection, '{"extraction_notes":"rule cleaned","triples":[]}', 1, {"kept_triple_count": 1}
+            return final_reflection, '{"extraction_notes":"final","triples":[]}', 2, {"kept_triple_count": 1}
+
+        with patch.object(
+            extractor,
+            "_call_structured_messages",
+            side_effect=[
+                (skeleton, "raw skeleton", 1, {"kept_triple_count": 1}),
+                (empty, "raw channels", 1, {"kept_triple_count": 0}),
+                (empty, "raw revenue", 1, {"kept_triple_count": 0}),
+                (empty, "raw serves", 1, {"kept_triple_count": 0}),
+                (empty, "raw corporate", 1, {"kept_triple_count": 0}),
+            ],
+        ), patch.object(extractor, "reflect_extraction", side_effect=reflect_side_effect):
+            result = extractor.extract_canonical_pipeline(
+                full_text="filing",
+                company_name="Microsoft",
+                max_retries=2,
+            )
+
+        self.assertTrue(result.success)
+        self.assertEqual(len(reflection_calls), 2)
+        self.assertEqual(reflection_calls[0][0], "Rule reflection")
+        self.assertEqual(reflection_calls[0][1], result.pre_reflection_extraction.model_dump())
+        self.assertEqual(reflection_calls[1][0], "Filing reflection")
+        self.assertEqual(reflection_calls[1][1], rule_reflection.model_dump())
+        self.assertEqual(result.rule_reflection_extraction.model_dump(), rule_reflection.model_dump())
+        self.assertEqual(result.final_extraction.model_dump(), final_reflection.model_dump())
+        self.assertEqual(result.rule_reflection_attempts_used, 1)
+        self.assertEqual(result.final_reflection_attempts_used, 2)
 
     def test_opencode_go_rejects_unsupported_models(self):
         with self.assertRaises(ValueError) as ctx:
