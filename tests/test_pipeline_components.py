@@ -112,6 +112,26 @@ class PipelineComponentTests(unittest.TestCase):
 
         self.assertEqual(len(triples), 1)
 
+    def test_evaluator_accepts_validation_report_valid_triples_payload(self):
+        payload = {
+            "valid_triples": [
+                {
+                    "subject": "Microsoft",
+                    "subject_type": "Company",
+                    "relation": "OFFERS",
+                    "object": "Azure",
+                    "object_type": "Offering",
+                }
+            ]
+        }
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            path = Path(tmp_dir) / "validation_report.json"
+            path.write_text(json.dumps(payload), encoding="utf-8")
+            triples = _load_triples_from_json(str(path))
+
+        self.assertEqual(len(triples), 1)
+
     def test_evaluate_scores_exact_match(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
             payload = {
@@ -266,7 +286,7 @@ class PipelineComponentTests(unittest.TestCase):
         payload_text = '```json\n{"extraction_notes":"ok","triples":[]}\n```'
 
         with patch.object(llm_extractor_module.logger, "warning") as mock_warning:
-            payload, recovered = LLMExtractor._load_json_payload(
+            payload, recovered, used_fallback = LLMExtractor._load_json_payload(
                 payload_text,
                 '{"extraction_notes":"fallback","triples":[]}',
             )
@@ -274,13 +294,14 @@ class PipelineComponentTests(unittest.TestCase):
         self.assertEqual(payload["extraction_notes"], "ok")
         self.assertEqual(payload["triples"], [])
         self.assertTrue(recovered)
+        self.assertFalse(used_fallback)
         mock_warning.assert_not_called()
 
     def test_load_json_payload_warns_for_likely_truncation(self):
         payload_text = '{"extraction_notes":"ok","triples":[]'
 
         with patch.object(llm_extractor_module.logger, "warning") as mock_warning:
-            payload, recovered = LLMExtractor._load_json_payload(
+            payload, recovered, used_fallback = LLMExtractor._load_json_payload(
                 payload_text,
                 '{"extraction_notes":"fallback","triples":[]}',
             )
@@ -288,7 +309,76 @@ class PipelineComponentTests(unittest.TestCase):
         self.assertEqual(payload["extraction_notes"], "fallback")
         self.assertEqual(payload["triples"], [])
         self.assertTrue(recovered)
+        self.assertTrue(used_fallback)
         mock_warning.assert_any_call("Model response may be truncated. Attempting to salvage JSON prefix...")
+
+    def test_structured_call_retries_when_json_falls_back_to_placeholder(self):
+        extractor = LLMExtractor(
+            base_url="http://localhost:1234/v1",
+            api_key="lm-studio",
+            model="local-model",
+            provider="local",
+            api_mode="chat_completions",
+        )
+        events: list[tuple[str, dict[str, object]]] = []
+        extractor.progress_callback = lambda event, **payload: events.append((event, payload))
+
+        responses = iter(
+            [
+                SimpleNamespace(
+                    choices=[
+                        SimpleNamespace(
+                            finish_reason="stop",
+                            message=SimpleNamespace(content="<html>temporary upstream error</html>", refusal=None),
+                        )
+                    ],
+                    usage=SimpleNamespace(completion_tokens=4),
+                ),
+                SimpleNamespace(
+                    choices=[
+                        SimpleNamespace(
+                            finish_reason="stop",
+                            message=SimpleNamespace(content='{"extraction_notes":"ok","triples":[]}', refusal=None),
+                        )
+                    ],
+                    usage=SimpleNamespace(completion_tokens=9),
+                ),
+            ]
+        )
+        extractor.client = SimpleNamespace(
+            chat=SimpleNamespace(completions=SimpleNamespace(create=lambda **kwargs: next(responses)))
+        )
+
+        with patch.object(llm_extractor_module.logger, "warning"):
+            parsed_model, raw_content, attempts_used, audit = extractor._call_structured_messages(
+                messages=[{"role": "user", "content": "return json"}],
+                schema_name="KnowledgeGraphExtraction",
+                schema_model=KnowledgeGraphExtraction,
+                fallback_payload='{"extraction_notes":"fallback","triples":[]}',
+                max_retries=2,
+            )
+
+        self.assertEqual(parsed_model.extraction_notes, "ok")
+        self.assertEqual(raw_content, '{"extraction_notes":"ok","triples":[]}')
+        self.assertEqual(attempts_used, 2)
+        self.assertFalse(audit["payload_parse_recovered"])
+        self.assertEqual(
+            events,
+            [
+                ("llm_call_start", {"attempt": 1, "max_retries": 2}),
+                (
+                    "llm_call_error",
+                    {
+                        "attempt": 1,
+                        "max_retries": 2,
+                        "error": "Model response was not recoverable as JSON.",
+                        "will_retry": True,
+                    },
+                ),
+                ("llm_call_start", {"attempt": 2, "max_retries": 2}),
+                ("llm_call_complete", {"attempt": 2, "max_retries": 2, "tokens": 9}),
+            ],
+        )
 
     def test_merge_relation_subset_into_base_replaces_only_allowed_relations(self):
         base = KnowledgeGraphExtraction(

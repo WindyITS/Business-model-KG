@@ -723,20 +723,20 @@ class LLMExtractor:
         )
 
     @staticmethod
-    def _load_json_payload(content: str, fallback_payload: str) -> tuple[dict, bool]:
+    def _load_json_payload(content: str, fallback_payload: str) -> tuple[dict[str, Any], bool, bool]:
         content = content.strip()
         if not content:
             raise ExtractionError("Empty response from model.")
 
         try:
-            return json.loads(content), False
+            return json.loads(content), False, False
         except json.JSONDecodeError:
             pass
 
         fenced_content = LLMExtractor._strip_code_fence(content)
         if fenced_content != content:
             try:
-                return json.loads(fenced_content), True
+                return json.loads(fenced_content), True, False
             except json.JSONDecodeError:
                 pass
 
@@ -745,7 +745,7 @@ class LLMExtractor:
             json_object_text = match.group(0)
             if json_object_text != content:
                 try:
-                    return json.loads(json_object_text), True
+                    return json.loads(json_object_text), True, False
                 except json.JSONDecodeError:
                     pass
 
@@ -762,12 +762,12 @@ class LLMExtractor:
             truncated_candidate = content[: last_json_end + 1] if last_json_end != -1 else ""
             if truncated_candidate:
                 try:
-                    return json.loads(truncated_candidate), True
+                    return json.loads(truncated_candidate), True, False
                 except json.JSONDecodeError:
                     pass
 
         logger.warning("Model response was not exact raw JSON. Falling back to the recovery payload.")
-        return json.loads(fallback_payload), True
+        return json.loads(fallback_payload), True, True
 
     @staticmethod
     def _responses_refusal_text(response: Any) -> str | None:
@@ -1015,7 +1015,12 @@ class LLMExtractor:
                     if refusal_text:
                         raise ExtractionError(f"Model refused request: {refusal_text}")
                     content = choice.message.content or ""
-                parsed_payload, payload_parse_recovered = self._load_json_payload(content or "", fallback_payload)
+                parsed_payload, payload_parse_recovered, used_recovery_payload = self._load_json_payload(
+                    content or "",
+                    fallback_payload,
+                )
+                if used_recovery_payload:
+                    raise ExtractionError("Model response was not recoverable as JSON.")
                 parsed_model, audit = self._lenient_model_from_payload(
                     schema_model,
                     parsed_payload,

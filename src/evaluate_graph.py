@@ -27,6 +27,8 @@ def _load_triples(path: Path) -> List[dict]:
             triples = payload["triples"]
         elif "resolved_triples" in payload:
             triples = payload["resolved_triples"]
+        elif "valid_triples" in payload:
+            triples = payload["valid_triples"]
         else:
             triples = []
 
