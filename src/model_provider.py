@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 
-ApiMode = Literal["chat_completions"]
+ApiMode = Literal["chat_completions", "messages"]
 
 LOCAL_PROVIDER = "local"
 OPENCODE_GO_PROVIDER = "opencode-go"
@@ -11,6 +11,7 @@ OPENCODE_GO_PROVIDER = "opencode-go"
 DEFAULT_LOCAL_BASE_URL = "http://localhost:1234/v1"
 DEFAULT_LOCAL_MODEL = "local-model"
 DEFAULT_OPENCODE_GO_MODEL = "kimi-k2.5"
+OPENCODE_GO_DEFAULT_MAX_OUTPUT_TOKENS = 20000
 
 OPENCODE_GO_BASE_URL = "https://opencode.ai/zen/go/v1"
 
@@ -18,12 +19,22 @@ SUPPORTED_PROVIDERS = (
     LOCAL_PROVIDER,
     OPENCODE_GO_PROVIDER,
 )
-SUPPORTED_API_MODES = ("chat_completions",)
-SUPPORTED_ENDPOINT_FAMILIES = {"chat_completions"}
+SUPPORTED_API_MODES = ("chat_completions", "messages")
+SUPPORTED_ENDPOINT_FAMILIES = {"chat_completions", "messages"}
+
+OPENCODE_GO_MODEL_ALIASES = {
+    "kimi-k2.5": "kimi-k2.5",
+    "kimi k2.5": "kimi-k2.5",
+    "mimo-v2-pro": "mimo-v2-pro",
+    "mimo v2 pro": "mimo-v2-pro",
+    "minimax-m2.7": "minimax-m2.7",
+    "minimax m2.7": "minimax-m2.7",
+}
 
 OPENCODE_GO_MODEL_ENDPOINTS = {
     "kimi-k2.5": "chat_completions",
     "mimo-v2-pro": "chat_completions",
+    "minimax-m2.7": "messages",
 }
 
 
@@ -39,6 +50,18 @@ class ModelSettings:
 
 def normalize_provider_name(provider: str) -> str:
     return provider.strip().lower()
+
+
+def normalize_model_name(provider: str, model: str) -> str:
+    normalized_model = model.strip()
+    if provider != OPENCODE_GO_PROVIDER:
+        return normalized_model
+
+    if normalized_model.lower().startswith(f"{OPENCODE_GO_PROVIDER}/"):
+        normalized_model = normalized_model[len(OPENCODE_GO_PROVIDER) + 1 :]
+
+    alias_key = " ".join(normalized_model.replace("_", " ").strip().lower().split())
+    return OPENCODE_GO_MODEL_ALIASES.get(alias_key, normalized_model.strip().lower())
 
 
 def normalize_base_url(base_url: str | None) -> str | None:
@@ -83,7 +106,7 @@ def _resolve_api_mode(
     if endpoint_family is not None and endpoint_family not in SUPPORTED_ENDPOINT_FAMILIES:
         raise ValueError(
             f"Model {model!r} on provider {provider!r} uses the {endpoint_family!r} endpoint family, "
-            "but this pipeline currently supports only OpenAI-compatible chat/completions endpoints."
+            "but this pipeline currently supports only chat/completions and messages endpoints."
         )
 
     if endpoint_family is not None:
@@ -114,7 +137,7 @@ def resolve_model_settings(
         raise ValueError(f"Unsupported provider: {provider}")
 
     if normalized_provider == LOCAL_PROVIDER:
-        resolved_model = model or DEFAULT_LOCAL_MODEL
+        resolved_model = normalize_model_name(normalized_provider, model or DEFAULT_LOCAL_MODEL)
         resolved_base_url = normalize_base_url(base_url) or DEFAULT_LOCAL_BASE_URL
         resolved_api_key = _resolve_api_key(
             api_key,
@@ -122,7 +145,7 @@ def resolve_model_settings(
             default="lm-studio",
         )
     else:
-        resolved_model = model or DEFAULT_OPENCODE_GO_MODEL
+        resolved_model = normalize_model_name(normalized_provider, model or DEFAULT_OPENCODE_GO_MODEL)
         if resolved_model not in OPENCODE_GO_MODEL_ENDPOINTS:
             supported_models = ", ".join(sorted(OPENCODE_GO_MODEL_ENDPOINTS))
             raise ValueError(
@@ -145,5 +168,7 @@ def resolve_model_settings(
         base_url=resolved_base_url,
         api_key=resolved_api_key,
         api_mode=resolved_api_mode,
-        max_output_tokens=max_output_tokens if max_output_tokens is not None else (20000 if normalized_provider == OPENCODE_GO_PROVIDER else None),
+        max_output_tokens=max_output_tokens
+        if max_output_tokens is not None
+        else (OPENCODE_GO_DEFAULT_MAX_OUTPUT_TOKENS if normalized_provider == OPENCODE_GO_PROVIDER else None),
     )

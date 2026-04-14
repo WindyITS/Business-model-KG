@@ -1,6 +1,9 @@
 import json
 import logging
 import re
+import urllib.error
+import urllib.request
+from collections.abc import Callable
 from collections import Counter
 from typing import Any, List, Literal
 
@@ -472,14 +475,26 @@ class LLMExtractor:
         provider: str = "local",
         api_mode: str = "chat_completions",
         max_output_tokens: int | None = None,
+        progress_callback: Callable[..., None] | None = None,
     ):
-        from openai import OpenAI
-
-        self.client = OpenAI(base_url=base_url, api_key=api_key)
+        self.base_url = base_url.rstrip("/")
+        self.api_key = api_key
         self.model = model
         self.provider = provider
         self.api_mode = api_mode
         self.max_output_tokens = max_output_tokens
+        self.progress_callback = progress_callback
+        self.client = None
+
+        if api_mode != "messages":
+            from openai import OpenAI
+
+            self.client = OpenAI(base_url=self.base_url, api_key=api_key)
+
+    def _emit_progress(self, event: str, **payload: Any) -> None:
+        if self.progress_callback is None:
+            return
+        self.progress_callback(event, **payload)
 
     @staticmethod
     def _schema_def(name: str, model_schema: type[BaseModel], *, ontology_version: str = "canonical") -> dict:
@@ -649,6 +664,101 @@ class LLMExtractor:
                     text_parts.append(str(text))
         return "".join(text_parts)
 
+    @staticmethod
+    def _messages_request_payload(
+        messages: list[dict[str, str]],
+        *,
+        model: str,
+        max_output_tokens: int,
+        temperature: float,
+    ) -> dict[str, Any]:
+        anthropic_messages = [
+            {
+                "role": message.get("role", "user"),
+                "content": message.get("content", ""),
+            }
+            for message in messages
+            if message.get("role", "user") in {"user", "assistant"}
+        ]
+        return {
+            "model": model,
+            "max_tokens": max_output_tokens,
+            "messages": anthropic_messages,
+            "temperature": temperature,
+        }
+
+    @staticmethod
+    def _messages_output_text(response_payload: dict[str, Any]) -> str:
+        text_parts: list[str] = []
+        for content_item in response_payload.get("content", []) or []:
+            if not isinstance(content_item, dict):
+                continue
+            if content_item.get("type") != "text":
+                continue
+            text = content_item.get("text")
+            if text:
+                text_parts.append(str(text))
+        return "".join(text_parts)
+
+    def _call_messages_api(
+        self,
+        *,
+        request_messages: list[dict[str, str]],
+        temperature: float,
+        call_label: str,
+        attempt: int,
+        max_retries: int,
+        return_token_count: bool = False,
+    ) -> str | tuple[str, int | None]:
+        if self.max_output_tokens is None:
+            raise ExtractionError("Messages API requires max_output_tokens to be set.")
+
+        request_payload = self._messages_request_payload(
+            request_messages,
+            model=self.model,
+            max_output_tokens=self.max_output_tokens,
+            temperature=temperature,
+        )
+        request = urllib.request.Request(
+            url=f"{self.base_url}/messages",
+            data=json.dumps(request_payload).encode("utf-8"),
+            headers={
+                "content-type": "application/json",
+                "x-api-key": self.api_key,
+                "anthropic-version": "2023-06-01",
+            },
+            method="POST",
+        )
+
+        try:
+            with urllib.request.urlopen(request, timeout=180) as response:
+                raw_response = response.read().decode("utf-8")
+        except urllib.error.HTTPError as exc:
+            error_body = exc.read().decode("utf-8", errors="replace")
+            raise ExtractionError(f"Messages API returned HTTP {exc.code}: {error_body}") from exc
+        except urllib.error.URLError as exc:
+            raise ExtractionError(f"Messages API request failed: {exc.reason}") from exc
+
+        response_payload = json.loads(raw_response)
+        stop_reason = response_payload.get("stop_reason")
+        usage = response_payload.get("usage") or {}
+        output_tokens = usage.get("output_tokens")
+        logger.info(
+            "Structured call %s attempt %s/%s stop_reason=%s output_tokens=%s",
+            call_label,
+            attempt,
+            max_retries,
+            stop_reason,
+            output_tokens,
+        )
+
+        content = self._messages_output_text(response_payload)
+        if not content:
+            raise ExtractionError("Messages API returned no text content.")
+        if return_token_count:
+            return content, output_tokens
+        return content
+
     def _call_structured_messages(
         self,
         *,
@@ -679,6 +789,7 @@ class LLMExtractor:
         for attempt in range(1, max_retries + 1):
             try:
                 content = ""
+                token_count: int | None = None
                 if self.api_mode == "responses":
                     call_kwargs = {
                         "model": self.model,
@@ -691,6 +802,7 @@ class LLMExtractor:
                     status = getattr(response, "status", None)
                     usage = getattr(response, "usage", None)
                     output_tokens = getattr(usage, "output_tokens", None) if usage is not None else None
+                    token_count = output_tokens
                     logger.info(
                         "Structured call %s attempt %s/%s status=%s output_tokens=%s",
                         call_label,
@@ -703,6 +815,15 @@ class LLMExtractor:
                     if refusal_text:
                         raise ExtractionError(f"Model refused request: {refusal_text}")
                     content = self._responses_output_text(response)
+                elif self.api_mode == "messages":
+                    content, token_count = self._call_messages_api(
+                        request_messages=request_messages,
+                        temperature=temperature,
+                        call_label=call_label,
+                        attempt=attempt,
+                        max_retries=max_retries,
+                        return_token_count=True,
+                    )
                 else:
                     call_kwargs = {
                         "model": self.model,
@@ -718,6 +839,7 @@ class LLMExtractor:
                     finish_reason = getattr(choice, "finish_reason", None)
                     usage = getattr(response, "usage", None)
                     completion_tokens = getattr(usage, "completion_tokens", None) if usage is not None else None
+                    token_count = completion_tokens
                     logger.info(
                         "Structured call %s attempt %s/%s finish_reason=%s completion_tokens=%s",
                         call_label,
@@ -745,6 +867,12 @@ class LLMExtractor:
                         ontology_version=ontology_version,
                     )
                     audit["payload_parse_recovered"] = payload_parse_recovered
+                self._emit_progress(
+                    "llm_call_complete",
+                    attempt=attempt,
+                    max_retries=max_retries,
+                    tokens=token_count,
+                )
                 return parsed_model, content, attempt, audit
             except (json.JSONDecodeError, ValidationError, ExtractionError) as exc:
                 logger.warning(
@@ -868,6 +996,12 @@ class LLMExtractor:
     ) -> CanonicalPipelineResult:
         same_chat_messages = [{"role": "system", "content": _canonical_pipeline_system_prompt(full_text)}]
 
+        self._emit_progress(
+            "stage_start",
+            index=2,
+            title="Pass 1 - Structural skeleton",
+            extracts="HAS_SEGMENT, OFFERS",
+        )
         pass1_prompt = (
             "<workflow_step>\nPASS 1 - STRUCTURAL SKELETON\n</workflow_step>\n\n"
             "<objective>\nBuild the structural inventory of the business.\n</objective>\n\n"
@@ -924,7 +1058,9 @@ class LLMExtractor:
                 ontology_version="canonical",
             )
         except ExtractionError as exc:
+            self._emit_progress("stage_failed", error=str(exc))
             return CanonicalPipelineResult(success=False, error=str(exc))
+        self._emit_progress("stage_complete", details=[("result", f"{len(skeleton_extraction.triples)} triples")])
         same_chat_messages.append(
             {
                 "role": "assistant",
@@ -932,6 +1068,12 @@ class LLMExtractor:
             }
         )
 
+        self._emit_progress(
+            "stage_start",
+            index=3,
+            title="Pass 2A - Channels",
+            extracts="SELLS_THROUGH",
+        )
         pass2_channels_prompt = (
             "<workflow_step>\nPASS 2A - CHANNELS\n</workflow_step>\n\n"
             "<objective>\nUsing the current graph as fixed context, extract only sales and distribution channels.\n</objective>\n\n"
@@ -964,6 +1106,7 @@ class LLMExtractor:
                 ontology_version="canonical",
             )
         except ExtractionError as exc:
+            self._emit_progress("stage_failed", error=str(exc))
             return CanonicalPipelineResult(
                 success=False,
                 skeleton_extraction=skeleton_extraction,
@@ -972,6 +1115,7 @@ class LLMExtractor:
                 skeleton_attempts_used=skeleton_attempts_used,
                 error=str(exc),
             )
+        self._emit_progress("stage_complete", details=[("result", f"{len(pass2_channels_extraction.triples)} triples")])
         channels_effective_extraction = self._merge_relation_subset_into_base(
             skeleton_extraction,
             pass2_channels_extraction,
@@ -984,6 +1128,12 @@ class LLMExtractor:
             }
         )
 
+        self._emit_progress(
+            "stage_start",
+            index=4,
+            title="Pass 2B - Revenue models",
+            extracts="MONETIZES_VIA",
+        )
         pass2_revenue_prompt = (
             "<workflow_step>\nPASS 2B - REVENUE MODELS\n</workflow_step>\n\n"
             "<objective>\nUsing the current graph as fixed context, extract only offering-level revenue models.\n</objective>\n\n"
@@ -1015,6 +1165,7 @@ class LLMExtractor:
                 ontology_version="canonical",
             )
         except ExtractionError as exc:
+            self._emit_progress("stage_failed", error=str(exc))
             return CanonicalPipelineResult(
                 success=False,
                 skeleton_extraction=skeleton_extraction,
@@ -1031,6 +1182,7 @@ class LLMExtractor:
                 pass2_attempts_used=pass2_channels_attempts_used,
                 error=str(exc),
             )
+        self._emit_progress("stage_complete", details=[("result", f"{len(pass2_revenue_extraction.triples)} triples")])
         pass2_effective_extraction = self._merge_relation_subset_into_base(
             channels_effective_extraction,
             pass2_revenue_extraction,
@@ -1048,6 +1200,12 @@ class LLMExtractor:
         )
         pass2_aggregate_audit = aggregate_extraction_audits([pass2_channels_audit, pass2_revenue_audit])
 
+        self._emit_progress(
+            "stage_start",
+            index=5,
+            title="Pass 3 - Customer types",
+            extracts="SERVES",
+        )
         pass3_serves_prompt = (
             "<workflow_step>\nPASS 3 - CUSTOMER TYPES\n</workflow_step>\n\n"
             "<objective>\nUsing the structural graph from PASS 1 as fixed context, extract customer-type relations.\n</objective>\n\n"
@@ -1089,6 +1247,7 @@ class LLMExtractor:
                 ontology_version="canonical",
             )
         except ExtractionError as exc:
+            self._emit_progress("stage_failed", error=str(exc))
             return CanonicalPipelineResult(
                 success=False,
                 skeleton_extraction=skeleton_extraction,
@@ -1109,8 +1268,15 @@ class LLMExtractor:
                 pass2_attempts_used=pass2_channels_attempts_used + pass2_revenue_attempts_used,
                 error=str(exc),
             )
+        self._emit_progress("stage_complete", details=[("result", f"{len(pass3_serves_extraction.triples)} triples")])
         pass3_effective_extraction = self._merge_serves_into_base(pass2_effective_extraction, pass3_serves_extraction)
 
+        self._emit_progress(
+            "stage_start",
+            index=6,
+            title="Pass 4 - Corporate shell facts",
+            extracts="OPERATES_IN, PARTNERS_WITH",
+        )
         pass4_corporate_prompt = (
             "<workflow_step>\nPASS 4 - CORPORATE SHELL FACTS\n</workflow_step>\n\n"
             "<objective>\nUsing the filing directly, extract corporate geography and partnerships.\n</objective>\n\n"
@@ -1147,6 +1313,7 @@ class LLMExtractor:
                 ontology_version="canonical",
             )
         except ExtractionError as exc:
+            self._emit_progress("stage_failed", error=str(exc))
             return CanonicalPipelineResult(
                 success=False,
                 skeleton_extraction=skeleton_extraction,
@@ -1180,6 +1347,7 @@ class LLMExtractor:
                 pass3_serves_attempts_used=pass3_serves_attempts_used,
                 error=str(exc),
             )
+        self._emit_progress("stage_complete", details=[("result", f"{len(pass4_corporate_extraction.triples)} triples")])
         pass4_effective_extraction = self._merge_relation_subset_into_base(
             pass3_effective_extraction,
             pass4_corporate_extraction,
@@ -1213,6 +1381,11 @@ class LLMExtractor:
             "Do not use markdown code blocks (```json).\n"
             "</format_reminder>"
         )
+        self._emit_progress(
+            "stage_start",
+            index=7,
+            title="Reflection - Final reconciliation",
+        )
         final_extraction, raw_final_reflection_response, final_reflection_attempts_used, final_reflection_audit = self.reflect_extraction(
             full_text=full_text,
             current_extraction=pre_reflection_extraction,
@@ -1224,6 +1397,7 @@ class LLMExtractor:
             user_prompt=final_reflection_prompt,
             ontology_version="canonical",
         )
+        self._emit_progress("stage_complete", details=[("result", f"{len(final_extraction.triples)} triples kept")])
 
         return CanonicalPipelineResult(
             success=True,

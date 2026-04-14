@@ -108,10 +108,19 @@ export OPENCODE_GO_API_KEY=your_key_here
   --skip-neo4j
 ```
 
+Other supported OpenCode Go models use the same CLI shape:
+
+```bash
+./venv/bin/python src/main.py data/microsoft_10k.txt --provider opencode-go --model mimo-v2-pro --skip-neo4j
+./venv/bin/python src/main.py data/microsoft_10k.txt --provider opencode-go --model minimax-m2.7 --skip-neo4j
+```
+
 Provider notes:
 - `local` defaults to `http://localhost:1234/v1` and `local-model`
 - `opencode-go` defaults to `https://opencode.ai/zen/go/v1` and `kimi-k2.5`
-- `opencode-go` currently supports `kimi-k2.5` and `mimo-v2-pro` in this repo
+- `opencode-go` currently supports `kimi-k2.5`, `mimo-v2-pro`, and `minimax-m2.7` in this repo
+- `kimi-k2.5` and `mimo-v2-pro` use OpenCode Go's `chat/completions` endpoint; `minimax-m2.7` is routed automatically to OpenCode Go's Anthropic-compatible `messages` endpoint
+- the CLI also accepts friendly OpenCode Go model names such as `MiniMax M2.7`, plus prefixed IDs like `opencode-go/kimi-k2.5`
 - the CLI accepts either a root base URL or a full documented endpoint like `.../chat/completions` and normalizes it automatically
 - for `opencode-go`, the runtime rewrites `system` messages to `user` messages for compatibility while keeping the rest of the pipeline flow unchanged
 - `no-schema` is the default behavior for all providers; pass `--use-schema` to opt back into JSON Schema enforcement

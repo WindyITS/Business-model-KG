@@ -2,8 +2,10 @@ import argparse
 import json
 import logging
 import sys
+from collections.abc import Callable
 from datetime import datetime, timezone
 from pathlib import Path
+from time import perf_counter
 from typing import Any
 
 from entity_resolver import resolve_entities
@@ -15,8 +17,170 @@ from llm_extractor import (
 from model_provider import resolve_model_settings
 from ontology_validator import validate_triples
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
-logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.WARNING, format="%(levelname)s %(name)s: %(message)s")
+logging.getLogger("httpcore").setLevel(logging.WARNING)
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("neo4j.notifications").disabled = True
+
+TOTAL_STAGES = 9
+CONSOLE_RULE = "=" * 50
+CONSOLE_SEPARATOR = "-" * 50
+TOKEN_BAR_WIDTH = 10
+DEFAULT_TOKEN_BAR_CAP = 8000
+
+
+def _console_print(line: str = "") -> None:
+    print(line, flush=True)
+
+
+def _format_duration(seconds: float) -> str:
+    if seconds < 60:
+        return f"{seconds:.1f}s"
+
+    total_seconds = max(0, int(round(seconds)))
+    hours, remainder = divmod(total_seconds, 3600)
+    minutes, secs = divmod(remainder, 60)
+    if hours:
+        return f"{hours}h{minutes:02d}m{secs:02d}s"
+    return f"{minutes}m{secs:02d}s"
+
+
+def _format_token_visual(tokens: int, token_cap: int | None = None) -> str:
+    scale_max = token_cap if token_cap and token_cap > 0 else DEFAULT_TOKEN_BAR_CAP
+    ratio = min(max(tokens, 0) / scale_max, 1.0)
+    filled = int(round(ratio * TOKEN_BAR_WIDTH))
+    if tokens > 0:
+        filled = max(1, filled)
+    filled = min(TOKEN_BAR_WIDTH, filled)
+    bar = f"[{'#' * filled}{'-' * (TOKEN_BAR_WIDTH - filled)}]"
+
+    if token_cap and token_cap > 0:
+        return f"{tokens:,}/{token_cap:,} {bar}"
+    return f"{tokens:,} {bar}"
+
+
+class PipelineConsole:
+    def __init__(self, total_stages: int = TOTAL_STAGES, printer: Callable[[str], None] = _console_print):
+        self.total_stages = total_stages
+        self._printer = printer
+        self._run_started_at = perf_counter()
+        self._header_printed = False
+        self._current_stage: dict[str, Any] | None = None
+        self._llm_token_cap: int | None = None
+
+    @property
+    def header_printed(self) -> bool:
+        return self._header_printed
+
+    def _print_detail(self, label: str, value: Any) -> None:
+        self._printer(f"  {f'{label}:':<18}{value}")
+
+    def start_run(
+        self,
+        *,
+        started_at: datetime,
+        source_file: Path,
+        run_dir: Path,
+        pipeline: str,
+        provider: str,
+        model: str,
+        schema_mode: str,
+        neo4j_enabled: bool,
+        llm_token_cap: int | None = None,
+    ) -> None:
+        self._run_started_at = perf_counter()
+        self._header_printed = True
+        self._llm_token_cap = llm_token_cap
+        neo4j_status = "enabled (notifications disabled)" if neo4j_enabled else "skipped"
+
+        self._printer(CONSOLE_RULE)
+        self._printer("KG PIPELINE RUN")
+        self._printer(CONSOLE_RULE)
+        self._printer(f"Started:   {started_at.astimezone().strftime('%Y-%m-%d %H:%M:%S')}")
+        self._printer(f"Input:     {source_file}")
+        self._printer(f"Run dir:   {run_dir}")
+        self._printer(f"Pipeline:  {pipeline}")
+        self._printer(f"Provider:  {provider}")
+        self._printer(f"Model:     {model}")
+        self._printer(f"Schema:    {schema_mode}")
+        self._printer(f"Neo4j:     {neo4j_status}")
+        self._printer("")
+
+    def start_stage(self, index: int, title: str, *, extracts: str | None = None) -> None:
+        self._current_stage = {
+            "index": index,
+            "title": title,
+            "started_at": perf_counter(),
+            "llm": None,
+        }
+        self._printer(f"[{index:02d}/{self.total_stages:02d}] {title}")
+        if extracts:
+            self._print_detail("extracts", extracts)
+
+    def record_llm_call(self, *, attempt: int, max_retries: int, tokens: int | None = None) -> None:
+        if self._current_stage is None:
+            return
+        self._current_stage["llm"] = {
+            "attempt": attempt,
+            "max_retries": max_retries,
+            "tokens": tokens,
+        }
+
+    def finish_stage(self, *, status: str = "done", details: list[tuple[str, Any]] | None = None) -> None:
+        if self._current_stage is None:
+            return
+
+        stage = self._current_stage
+        llm = stage.get("llm")
+        if llm:
+            llm_summary = f"attempt {llm['attempt']}/{llm['max_retries']}"
+            if llm.get("tokens") is not None:
+                llm_summary += f", tokens={_format_token_visual(llm['tokens'], self._llm_token_cap)}"
+            self._print_detail("llm", llm_summary)
+
+        for label, value in details or []:
+            self._print_detail(label, value)
+
+        self._print_detail("status", status)
+        self._print_detail("time", _format_duration(perf_counter() - stage["started_at"]))
+        self._printer("")
+        self._current_stage = None
+
+    def handle_progress(self, event: str, **payload: Any) -> None:
+        if event == "stage_start":
+            self.start_stage(payload["index"], payload["title"], extracts=payload.get("extracts"))
+            return
+        if event == "llm_call_complete":
+            self.record_llm_call(
+                attempt=payload["attempt"],
+                max_retries=payload["max_retries"],
+                tokens=payload.get("tokens"),
+            )
+            return
+        if event == "stage_complete":
+            self.finish_stage(status=payload.get("status", "done"), details=payload.get("details"))
+            return
+        if event == "stage_failed":
+            self.finish_stage(status="failed", details=[("error", payload["error"])])
+
+    def complete_run(
+        self,
+        *,
+        status: str,
+        artifacts: Path,
+        resolved_triples: int | None = None,
+        error: str | None = None,
+    ) -> None:
+        self._printer(CONSOLE_SEPARATOR)
+        self._printer("RUN COMPLETE" if status == "success" else "RUN FAILED")
+        self._print_detail("status", status)
+        if resolved_triples is not None:
+            self._print_detail("resolved triples", resolved_triples)
+        if error:
+            self._print_detail("error", error)
+        self._print_detail("duration", _format_duration(perf_counter() - self._run_started_at))
+        self._print_detail("artifacts", artifacts)
+        self._printer(CONSOLE_RULE)
 
 
 def _write_json(path: Path, payload: Any) -> None:
@@ -95,7 +259,12 @@ def main() -> int:
         default=None,
         help="Base URL root for the selected API. The resolver accepts either the API root or a full documented endpoint and normalizes common suffixes.",
     )
-    parser.add_argument("--model", type=str, default=None, help="Model name or ID to use.")
+    parser.add_argument(
+        "--model",
+        type=str,
+        default=None,
+        help="Model name or ID to use. For opencode-go this repo supports kimi-k2.5, mimo-v2-pro, and minimax-m2.7.",
+    )
     parser.add_argument(
         "--api-key",
         type=str,
@@ -137,7 +306,9 @@ def main() -> int:
     mode = _mode_name(args)
     use_schema = _effective_use_schema(args)
     ontology_version = "canonical"
+    run_started_at = datetime.now(timezone.utc)
     run_dir = _build_run_dir(Path(args.output_dir), source_file, mode)
+    console = PipelineConsole()
     summary: dict[str, Any] = {
         "status": "running",
         "mode": mode,
@@ -152,12 +323,9 @@ def main() -> int:
         "requested_use_schema": args.use_schema,
         "use_schema": use_schema,
         "schema_mode": "schema" if use_schema else "no-schema",
-        "started_at": datetime.now(timezone.utc).isoformat(),
+        "started_at": run_started_at.isoformat(),
     }
     _write_json(run_dir / "run_summary.json", summary)
-
-    logger.info("Starting pipeline on %s", args.file_path)
-    logger.info("Writing run artifacts to %s", run_dir)
 
     try:
         model_settings = resolve_model_settings(
@@ -179,20 +347,22 @@ def main() -> int:
             }
         )
         _write_json(run_dir / "run_summary.json", summary)
-        logger.info(
-            "Run settings: pipeline=%s provider=%s model=%s schema_mode=%s max_output_tokens=%s base_url=%s",
-            mode,
-            model_settings.provider,
-            model_settings.model,
-            "schema" if use_schema else "no-schema",
-            model_settings.max_output_tokens,
-            model_settings.base_url,
+
+        console.start_run(
+            started_at=run_started_at,
+            source_file=source_file,
+            run_dir=run_dir,
+            pipeline=args.pipeline,
+            provider=model_settings.provider,
+            model=model_settings.model,
+            schema_mode="schema" if use_schema else "no-schema",
+            neo4j_enabled=not args.skip_neo4j,
+            llm_token_cap=model_settings.max_output_tokens,
         )
 
-        logger.info("Reading full text without chunking...")
+        console.start_stage(1, "Read input")
         full_text = source_file.read_text(encoding="utf-8")
         chunks = [full_text]
-        logger.info("Prepared %s chunks.", len(chunks))
         company_name = _infer_company_name(source_file, full_text)
         _write_json(
             run_dir / "chunks.json",
@@ -210,6 +380,7 @@ def main() -> int:
                 ],
             },
         )
+        console.finish_stage(details=[("chunks", len(chunks))])
 
         extractor = LLMExtractor(
             base_url=model_settings.base_url,
@@ -218,8 +389,8 @@ def main() -> int:
             provider=model_settings.provider,
             api_mode=model_settings.api_mode,
             max_output_tokens=model_settings.max_output_tokens,
+            progress_callback=console.handle_progress,
         )
-        logger.info("Starting LLM extraction in %s mode...", mode)
 
         chat_result: CanonicalPipelineResult = extractor.extract_canonical_pipeline(
             full_text=full_text,
@@ -314,10 +485,11 @@ def main() -> int:
         _write_json(run_dir / "extraction_audits.json", stage_audits)
         _write_json(run_dir / "final_output_validation_report.json", final_output_audit)
 
-        logger.info("Resolving entities...")
+        console.start_stage(8, "Resolve + validate")
         resolved_triples = resolve_entities(extractions)
         if not resolved_triples:
             raise ExtractionError("Extraction completed but produced zero resolved triples.")
+        raw_resolved_triple_count = len(resolved_triples)
 
         validation_report = validate_triples(
             [triple.model_dump() for triple in resolved_triples],
@@ -339,23 +511,39 @@ def main() -> int:
                 "triples": [triple.model_dump() for triple in resolved_triples],
             },
         )
+        console.finish_stage(
+            details=[
+                ("raw triples", raw_resolved_triple_count),
+                ("resolved triples", len(resolved_triples)),
+                ("invalid removed", validation_report["summary"]["invalid_triple_count"]),
+                ("duplicates removed", validation_report["summary"]["duplicate_triple_count"]),
+            ]
+        )
 
         loaded_triples = 0
+        console.start_stage(9, "Load Neo4j")
         if args.skip_neo4j:
-            logger.info("Skipping Neo4j load by request.")
+            console.finish_stage(status="skipped", details=[("load", "skipped by request")])
         else:
-            logger.info("Loading triples into Neo4j...")
             from neo4j_loader import Neo4jLoader
 
             loader = Neo4jLoader(uri=args.neo4j_uri, user=args.neo4j_user, password=args.neo4j_password)
+            graph_cleared = False
             try:
                 if args.clear_neo4j:
-                    logger.warning("Clearing the entire Neo4j database before load because --clear-neo4j was provided.")
                     loader.clear_graph()
+                    graph_cleared = True
                 loader.setup_constraints()
                 loaded_triples = loader.load_triples(resolved_triples)
             finally:
                 loader.close()
+
+            neo4j_details: list[tuple[str, Any]] = []
+            if graph_cleared:
+                neo4j_details.append(("database", "cleared before load"))
+            neo4j_details.append(("constraints", "checked"))
+            neo4j_details.append(("triples loaded", loaded_triples))
+            console.finish_stage(details=neo4j_details)
 
         summary.update(
             {
@@ -379,9 +567,22 @@ def main() -> int:
             }
         )
         _write_json(run_dir / "run_summary.json", summary)
-        logger.info("Pipeline complete. Resolved %s triples.", len(resolved_triples))
+        console.complete_run(status="success", artifacts=run_dir, resolved_triples=len(resolved_triples))
         return 0
     except Exception as exc:
+        if not console.header_printed:
+            console.start_run(
+                started_at=run_started_at,
+                source_file=source_file,
+                run_dir=run_dir,
+                pipeline=args.pipeline,
+                provider=str(summary.get("provider", args.provider)),
+                model=str(summary.get("model") or summary.get("requested_model") or "<default>"),
+                schema_mode=str(summary.get("schema_mode", "no-schema")),
+                neo4j_enabled=not args.skip_neo4j,
+                llm_token_cap=summary.get("max_output_tokens"),
+            )
+        console.finish_stage(status="failed", details=[("error", str(exc))])
         summary.update(
             {
                 "status": "failed",
@@ -390,7 +591,7 @@ def main() -> int:
             }
         )
         _write_json(run_dir / "run_summary.json", summary)
-        logger.error("Pipeline failed: %s", exc)
+        console.complete_run(status="failed", artifacts=run_dir, error=str(exc))
         return 1
 
 

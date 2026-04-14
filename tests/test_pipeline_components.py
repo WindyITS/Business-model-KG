@@ -2,6 +2,7 @@ import json
 import sys
 import tempfile
 import unittest
+from datetime import datetime, timezone
 from os import environ
 from pathlib import Path
 from types import SimpleNamespace
@@ -21,7 +22,14 @@ from llm_extractor import (
     aggregate_extraction_audits,
     audit_knowledge_graph_payload,
 )
-from main import _effective_use_schema, _infer_company_name, _mode_name
+from main import (
+    PipelineConsole,
+    _effective_use_schema,
+    _format_duration,
+    _format_token_visual,
+    _infer_company_name,
+    _mode_name,
+)
 from model_provider import resolve_model_settings
 
 
@@ -102,6 +110,45 @@ class PipelineComponentTests(unittest.TestCase):
     def test_mode_name_is_canonical_pipeline(self):
         args = SimpleNamespace(pipeline="canonical")
         self.assertEqual(_mode_name(args), "canonical_pipeline")
+
+    def test_format_duration_uses_compact_seconds_and_minutes(self):
+        self.assertEqual(_format_duration(0.42), "0.4s")
+        self.assertEqual(_format_duration(75.2), "1m15s")
+
+    def test_format_token_visual_renders_count_and_bar(self):
+        self.assertEqual(_format_token_visual(3244), "3,244 [####------]")
+        self.assertEqual(_format_token_visual(3244, 20000), "3,244/20,000 [##--------]")
+
+    def test_pipeline_console_renders_pass_progress(self):
+        lines: list[str] = []
+        console = PipelineConsole(printer=lines.append)
+
+        console.start_run(
+            started_at=datetime(2026, 4, 14, 7, 19, 1, tzinfo=timezone.utc),
+            source_file=Path("data/palantir_10k.txt"),
+            run_dir=Path("outputs/palantir_run"),
+            pipeline="canonical",
+            provider="local",
+            model="local-model",
+            schema_mode="no-schema",
+            neo4j_enabled=True,
+            llm_token_cap=None,
+        )
+        console.handle_progress(
+            "stage_start",
+            index=2,
+            title="Pass 1 - Structural skeleton",
+            extracts="HAS_SEGMENT, OFFERS",
+        )
+        console.handle_progress("llm_call_complete", attempt=1, max_retries=3, tokens=3244)
+        console.handle_progress("stage_complete", details=[("result", "9 triples")])
+
+        self.assertIn("KG PIPELINE RUN", lines)
+        self.assertIn("Neo4j:     enabled (notifications disabled)", lines)
+        self.assertIn("[02/09] Pass 1 - Structural skeleton", lines)
+        self.assertTrue(any("extracts:" in line and "HAS_SEGMENT, OFFERS" in line for line in lines))
+        self.assertTrue(any("llm:" in line and "attempt 1/3, tokens=3,244 [####------]" in line for line in lines))
+        self.assertTrue(any("result:" in line and "9 triples" in line for line in lines))
 
     def test_infer_company_name_accepts_short_issuer_line(self):
         text = "ITEM 1. BUSINESS\nMicrosoft is a technology company.\n"
@@ -339,6 +386,18 @@ class PipelineComponentTests(unittest.TestCase):
         self.assertEqual(settings.api_mode, "chat_completions")
         self.assertEqual(settings.max_output_tokens, 20000)
 
+    def test_opencode_go_normalizes_full_messages_endpoint_url(self):
+        settings = resolve_model_settings(
+            provider="opencode-go",
+            model="minimax-m2.7",
+            base_url="https://opencode.ai/zen/go/v1/messages",
+            api_key="secret",
+        )
+
+        self.assertEqual(settings.base_url, "https://opencode.ai/zen/go/v1")
+        self.assertEqual(settings.api_mode, "messages")
+        self.assertEqual(settings.max_output_tokens, 20000)
+
     def test_opencode_go_defaults_to_kimi(self):
         settings = resolve_model_settings(
             provider="opencode-go",
@@ -378,11 +437,102 @@ class PipelineComponentTests(unittest.TestCase):
         self.assertEqual(settings.model, "mimo-v2-pro")
         self.assertEqual(settings.api_mode, "chat_completions")
 
+    def test_opencode_go_accepts_human_friendly_model_aliases(self):
+        settings = resolve_model_settings(
+            provider="opencode-go",
+            model="MiniMax M2.7",
+            api_key="secret",
+        )
+
+        self.assertEqual(settings.model, "minimax-m2.7")
+        self.assertEqual(settings.api_mode, "messages")
+
+    def test_opencode_go_accepts_prefixed_model_ids(self):
+        settings = resolve_model_settings(
+            provider="opencode-go",
+            model="opencode-go/kimi-k2.5",
+            api_key="secret",
+        )
+
+        self.assertEqual(settings.model, "kimi-k2.5")
+        self.assertEqual(settings.api_mode, "chat_completions")
+
+    def test_messages_request_payload_keeps_conversation_history_shape(self):
+        payload = LLMExtractor._messages_request_payload(
+            [
+                {"role": "user", "content": "sys"},
+                {"role": "user", "content": "usr"},
+                {"role": "assistant", "content": "asst"},
+            ],
+            model="minimax-m2.7",
+            max_output_tokens=2048,
+            temperature=0.0,
+        )
+
+        self.assertEqual(payload["model"], "minimax-m2.7")
+        self.assertEqual(payload["max_tokens"], 2048)
+        self.assertEqual(
+            payload["messages"],
+            [
+                {"role": "user", "content": "sys"},
+                {"role": "user", "content": "usr"},
+                {"role": "assistant", "content": "asst"},
+            ],
+        )
+
+    def test_messages_api_parses_text_blocks(self):
+        class _FakeHTTPResponse:
+            def __init__(self, payload):
+                self._payload = payload
+
+            def read(self):
+                return json.dumps(self._payload).encode("utf-8")
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc, tb):
+                return False
+
+        extractor = LLMExtractor(
+            base_url="https://opencode.ai/zen/go/v1",
+            api_key="secret",
+            model="minimax-m2.7",
+            provider="opencode-go",
+            api_mode="messages",
+            max_output_tokens=2048,
+        )
+
+        response_payload = {
+            "id": "msg_123",
+            "type": "message",
+            "role": "assistant",
+            "content": [{"type": "text", "text": '{"extraction_notes":"ok","triples":[]}'}],
+            "stop_reason": "end_turn",
+            "usage": {"input_tokens": 10, "output_tokens": 5},
+        }
+        with patch.object(
+            llm_extractor_module.urllib.request,
+            "urlopen",
+            return_value=_FakeHTTPResponse(response_payload),
+        ) as mock_urlopen:
+            content = extractor._call_messages_api(
+                request_messages=[{"role": "user", "content": "Hello"}],
+                temperature=0.0,
+                call_label="test",
+                attempt=1,
+                max_retries=2,
+            )
+
+        request = mock_urlopen.call_args.args[0]
+        self.assertEqual(request.full_url, "https://opencode.ai/zen/go/v1/messages")
+        self.assertEqual(content, '{"extraction_notes":"ok","triples":[]}')
+
     def test_opencode_go_rejects_unsupported_models(self):
         with self.assertRaises(ValueError) as ctx:
             resolve_model_settings(
                 provider="opencode-go",
-                model="glm-5",
+                model="glm-5.1",
                 api_key="secret",
             )
 
