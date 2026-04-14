@@ -7,7 +7,8 @@ Build a high-quality supervised dataset for fine-tuning a small model to transla
 Current status:
 
 - the V1 dataset build is complete
-- the final readiness assessment is documented in [`text2cypher_dataset_readiness_v1.md`](./text2cypher_dataset_readiness_v1.md)
+- the final readiness assessment is documented in [`readiness_v1.md`](./readiness_v1.md)
+- the canonical machine-readable artifacts live under [`datasets/text2cypher/`](../../../datasets/text2cypher/README.md)
 - the next engineering step is model training and evaluation rather than more dataset scaffolding
 
 The target runtime behavior is:
@@ -124,7 +125,7 @@ This coverage grid is the source of truth for:
 - which graph patterns the model must learn
 - how many canonical seed questions we want per family
 
-See [`text2cypher_coverage_grid.md`](./text2cypher_coverage_grid.md).
+See [`coverage_grid.md`](./coverage_grid.md).
 
 ### Phase 2A. Define The Dataset Layers
 

@@ -2,11 +2,9 @@
 
 A local pipeline for turning SEC 10-K business sections into a standardized business-model knowledge graph.
 
-The repo now contains only the canonical runtime stack:
-- one canonical extraction pipeline
-- one canonical ontology
-- one validator aligned to that ontology
-- optional Neo4j loading and graph evaluation utilities
+The repo is organized around two maintained surfaces:
+- one canonical extraction/runtime stack
+- one structured text-to-Cypher dataset for SFT and evaluation
 
 ## What The Pipeline Extracts
 
@@ -55,6 +53,8 @@ src/
   main.py                 CLI entrypoint
   ontology_config.py      canonical ontology loader
   ontology_validator.py   ontology validation and structural checks
+  validate_text2cypher_dataset.py
+                          validates gold Cypher against synthetic fixtures
   entity_resolver.py      light entity normalization
   neo4j_loader.py         Neo4j loading
   evaluate_graph.py       graph evaluation utilities
@@ -64,11 +64,30 @@ configs/
 
 docs/
   ontology.md             canonical ontology specification
+  text2cypher/
+    README.md             dataset documentation and canonical entrypoints
+    design/               coverage, intent, fixture, and readiness docs
+
+datasets/
+  text2cypher/
+    README.md             machine-readable dataset layout
+    v1/                   canonical training corpus and reports
+    archive/v0/           archived prototype artifacts
 
 tests/
   test_pipeline_components.py
   test_ontology_validator.py
 ```
+
+## Text2Cypher Dataset Assets
+
+The supervised text-to-Cypher corpus is now split by role:
+
+- prose and design docs live in [`docs/text2cypher/`](./docs/text2cypher/README.md)
+- canonical machine-readable V1 artifacts live in [`datasets/text2cypher/v1/`](./datasets/text2cypher/README.md)
+- archived pre-V1 snapshots live in `datasets/text2cypher/archive/v0/`
+
+The dataset validator in [`src/validate_text2cypher_dataset.py`](./src/validate_text2cypher_dataset.py) now defaults to the canonical V1 artifact set under `datasets/text2cypher/v1/`.
 
 ## Quickstart
 

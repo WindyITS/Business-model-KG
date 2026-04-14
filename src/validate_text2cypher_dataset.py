@@ -330,17 +330,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--fixtures-path",
         type=Path,
-        default=Path("docs/text2cypher_synthetic_fixture_instances_v0.jsonl"),
+        default=Path("datasets/text2cypher/v1/source/fixture_instances.jsonl"),
     )
     parser.add_argument(
         "--examples-path",
         type=Path,
-        default=Path("docs/text2cypher_bound_seed_examples_v0.jsonl"),
+        default=Path("datasets/text2cypher/v1/source/bound_seed_examples.jsonl"),
     )
     parser.add_argument(
         "--report-path",
         type=Path,
-        default=Path("docs/text2cypher_bound_seed_validation_report.json"),
+        default=Path("datasets/text2cypher/v1/reports/bound_seed_validation_report.json"),
     )
     parser.add_argument("--neo4j-uri", type=str, default="bolt://localhost:7687")
     parser.add_argument("--neo4j-user", type=str, default="neo4j")

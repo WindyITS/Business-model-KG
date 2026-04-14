@@ -1,4 +1,4 @@
-# Synthetic Fixture Library v0
+# Synthetic Fixture Library
 
 ## Purpose
 
@@ -9,7 +9,7 @@ It is a structure library, not a dataset. The intent is to give us a small numbe
 ## Design Rules
 
 - Use only synthetic names and synthetic bindings.
-- Stay strictly within the ontology from [`docs/ontology.md`](./ontology.md).
+- Stay strictly within the ontology from [`docs/ontology.md`](../../ontology.md).
 - Model read-only graph shapes only; do not invent write-time or extraction-only concepts.
 - Keep `Company`, `BusinessSegment`, and `Offering` as the core anchors.
 - Treat `CustomerType`, `Channel`, `Place`, and `RevenueModel` as closed canonical labels.

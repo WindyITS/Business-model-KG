@@ -16,19 +16,19 @@ It is not a final or perfect corpus, but it is strong enough to support an initi
 
 ## Final Artifacts
 
-- canonical plan: [`text2cypher_dataset_plan.md`](./text2cypher_dataset_plan.md)
-- coverage grid: [`text2cypher_coverage_grid.md`](./text2cypher_coverage_grid.md)
-- intent inventory: [`text2cypher_intent_cases_by_family.md`](./text2cypher_intent_cases_by_family.md)
-- fixture library: [`text2cypher_synthetic_fixture_library_v0.md`](./text2cypher_synthetic_fixture_library_v0.md)
-- fixture instances: [`text2cypher_synthetic_fixture_instances_v1.jsonl`](./text2cypher_synthetic_fixture_instances_v1.jsonl)
-- bound seed examples: [`text2cypher_bound_seed_examples_v1.jsonl`](./text2cypher_bound_seed_examples_v1.jsonl)
-- bound validation report: [`text2cypher_bound_seed_validation_report_v1.json`](./text2cypher_bound_seed_validation_report_v1.json)
-- training corpus: [`text2cypher_training_examples_v1.jsonl`](./text2cypher_training_examples_v1.jsonl)
-- split manifest: [`text2cypher_training_split_manifest_v1.json`](./text2cypher_training_split_manifest_v1.json)
+- canonical plan: [`dataset_plan.md`](./dataset_plan.md)
+- coverage grid: [`coverage_grid.md`](./coverage_grid.md)
+- intent inventory: [`intent_cases_by_family.md`](./intent_cases_by_family.md)
+- fixture library: [`fixture_library.md`](./fixture_library.md)
+- fixture instances: [`fixture_instances.jsonl`](../../../datasets/text2cypher/v1/source/fixture_instances.jsonl)
+- bound seed examples: [`bound_seed_examples.jsonl`](../../../datasets/text2cypher/v1/source/bound_seed_examples.jsonl)
+- bound validation report: [`bound_seed_validation_report.json`](../../../datasets/text2cypher/v1/reports/bound_seed_validation_report.json)
+- training corpus: [`training_examples.jsonl`](../../../datasets/text2cypher/v1/training/training_examples.jsonl)
+- split manifest: [`training_split_manifest.json`](../../../datasets/text2cypher/v1/reports/training_split_manifest.json)
 - split files:
-  - [`text2cypher_training_examples_v1_train.jsonl`](./text2cypher_training_examples_v1_train.jsonl)
-  - [`text2cypher_training_examples_v1_dev.jsonl`](./text2cypher_training_examples_v1_dev.jsonl)
-  - [`text2cypher_training_examples_v1_test.jsonl`](./text2cypher_training_examples_v1_test.jsonl)
+  - [`train.jsonl`](../../../datasets/text2cypher/v1/training/train.jsonl)
+  - [`dev.jsonl`](../../../datasets/text2cypher/v1/training/dev.jsonl)
+  - [`test.jsonl`](../../../datasets/text2cypher/v1/training/test.jsonl)
 
 ## Readiness Checks
 

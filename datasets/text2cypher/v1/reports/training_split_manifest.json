@@ -1,5 +1,5 @@
 {
-  "dataset_path": "docs/text2cypher_training_examples_v1.jsonl",
+  "dataset_path": "datasets/text2cypher/v1/training/training_examples.jsonl",
   "split_unit": "intent_id",
   "split_counts": {
     "train": {
