@@ -104,14 +104,14 @@ Run against OpenCode Go with a hosted open model:
 export OPENCODE_GO_API_KEY=your_key_here
 ./venv/bin/python src/main.py data/microsoft_10k.txt \
   --provider opencode-go \
-  --model mimo-v2-pro \
+  --model kimi-k2.5 \
   --skip-neo4j
 ```
 
 Provider notes:
 - `local` defaults to `http://localhost:1234/v1` and `local-model`
-- `opencode-go` defaults to `https://opencode.ai/zen/go/v1` and `mimo-v2-pro`
-- `opencode-go` currently supports `mimo-v2-pro` and `kimi-k2.5` in this repo
+- `opencode-go` defaults to `https://opencode.ai/zen/go/v1` and `kimi-k2.5`
+- `opencode-go` currently supports `kimi-k2.5` and `mimo-v2-pro` in this repo
 - the CLI accepts either a root base URL or a full documented endpoint like `.../chat/completions` and normalizes it automatically
 - for `opencode-go`, the runtime rewrites `system` messages to `user` messages for compatibility while keeping the rest of the pipeline flow unchanged
 - `no-schema` is the default behavior for all providers; pass `--use-schema` to opt back into JSON Schema enforcement

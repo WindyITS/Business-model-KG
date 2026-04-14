@@ -10,7 +10,7 @@ OPENCODE_GO_PROVIDER = "opencode-go"
 
 DEFAULT_LOCAL_BASE_URL = "http://localhost:1234/v1"
 DEFAULT_LOCAL_MODEL = "local-model"
-DEFAULT_OPENCODE_GO_MODEL = "mimo-v2-pro"
+DEFAULT_OPENCODE_GO_MODEL = "kimi-k2.5"
 
 OPENCODE_GO_BASE_URL = "https://opencode.ai/zen/go/v1"
 
