@@ -32,23 +32,46 @@ This keeps canonical shared vocabularies such as `Channel`, `CustomerType`, `Rev
 
 Full ontology spec: [`docs/ontology.md`](./docs/ontology.md)
 
+## Pipeline Philosophy
+
+The canonical runtime follows a few consistent rules:
+
+- scope-first modeling: `Company` is the corporate shell, `BusinessSegment` is the primary semantic anchor, and `Offering` is the inventory layer
+- canonical extraction over convenience duplication: the extractor does not materialize inherited or rollup facts just to make the graph denser
+- closed semantic vocabularies: `CustomerType`, `Channel`, and `RevenueModel` must map to the approved canonical labels or be omitted
+- precision-first semantic extraction: `SERVES`, `SELLS_THROUGH`, `MONETIZES_VIA`, and `PARTNERS_WITH` favor standardization and explicit support over aggressive recall
+- broader but still text-grounded company geography capture: `OPERATES_IN` is more recall-friendly than the semantic business-model relations, but still constrained to meaningful company presence
+- staged extraction with supervision: the runtime extracts structure first, then relation families, then runs a rule-only reflection pass followed by a filing-aware reconciliation pass
+
+This means the effective behavior of the pipeline comes from three layers together:
+- the formal schema in [`configs/ontology.json`](./configs/ontology.json)
+- the staged extraction and reflection prompts in [`src/llm_extractor.py`](./src/llm_extractor.py)
+- the final normalization and structural enforcement in [`src/ontology_validator.py`](./src/ontology_validator.py)
+
 ## Canonical Extraction Pipeline
 
 The default runtime pipeline is the only supported extraction pipeline in the repo.
 
 High-level flow:
 
-1. `PASS 1`: build the structural skeleton
-2. `PASS 2A`: extract channels
-3. `PASS 2B`: extract revenue models
-4. `PASS 3`: extract customer types from the structural graph
-5. `PASS 4`: extract company-level geography and partnerships
-6. Final reflection: reconcile the graph against the filing
+1. Read the filing text, infer `company_name` from the input filename, and write `chunks.json`
+2. `PASS 1`: build the structural skeleton with only `HAS_SEGMENT` and `OFFERS`
+3. `PASS 2A`: extract only `SELLS_THROUGH`
+4. `PASS 2B`: extract only `MONETIZES_VIA`
+5. `PASS 3`: extract only `SERVES` from the structural graph
+6. `PASS 4`: extract only company-level `OPERATES_IN` and `PARTNERS_WITH`
+7. `Reflection 1`: enforce ontology and graph-rule compliance without adding new filing facts
+8. `Reflection 2`: reconcile the draft graph against the full filing
+9. Resolve surface forms, revalidate the final graph, and write final artifacts
+10. Optionally load the graph into Neo4j
 
-Then the pipeline:
-- validates the final triples against the ontology
-- resolves duplicate surface forms
-- optionally loads the graph into Neo4j
+Runtime notes:
+- each LLM step is relation-scoped and independently audited
+- the pass outputs are merged incrementally rather than regenerated from scratch each time
+- the final CLI validation is ontology- and structure-driven, with duplicate removal and place normalization
+- the final CLI validation does not require strict text grounding by default
+- if a reflection pass fails or returns an empty graph, the runtime falls back to the prior graph instead of hard-failing the whole run
+- `--only-pass1` stops after the structural skeleton, then still resolves, validates, and can still load to Neo4j unless `--skip-neo4j` is also set
 
 ## Repo Layout
 
@@ -124,6 +147,12 @@ Optional explicit pipeline flag:
 ./venv/bin/python src/main.py data/microsoft_10k.txt --pipeline canonical --skip-neo4j
 ```
 
+Run only the structural skeleton:
+
+```bash
+./venv/bin/python src/main.py data/microsoft_10k.txt --only-pass1 --skip-neo4j
+```
+
 Run against OpenCode Go with a hosted open model:
 
 ```bash
@@ -148,9 +177,19 @@ Provider notes:
 - `kimi-k2.5` and `mimo-v2-pro` use OpenCode Go's `chat/completions` endpoint; `minimax-m2.7` is routed automatically to OpenCode Go's Anthropic-compatible `messages` endpoint
 - the CLI also accepts friendly OpenCode Go model names such as `MiniMax M2.7`, plus prefixed IDs like `opencode-go/kimi-k2.5`
 - the CLI accepts either a root base URL or a full documented endpoint like `.../chat/completions` and normalizes it automatically
+- `local` reads `--api-key` first, then `LOCAL_LLM_API_KEY`, then `LM_STUDIO_API_KEY`, and otherwise falls back to `lm-studio`
+- `opencode-go` reads `--api-key` first, then `OPENCODE_GO_API_KEY`, then `OPENCODE_API_KEY`
 - for `opencode-go`, the runtime rewrites `system` messages to `user` messages for compatibility while keeping the rest of the pipeline flow unchanged
 - `opencode-go` defaults to `--max-output-tokens 20000`; override it if needed
-- every run logs a settings line including pipeline, model, and max output tokens
+- every run writes `run_summary.json`; the console header shows pipeline, provider, and model, and LLM attempt summaries show token counts when available
+
+Useful CLI flags:
+- `--only-pass1`: stop after structural extraction, then still resolve/validate and optionally load
+- `--max-retries`: change the retry budget per LLM call
+- `--base-url`: pass either an API root or a full endpoint URL; the runtime normalizes common suffixes
+- `--api-key`: override environment-based key resolution
+- `--max-output-tokens`: explicitly cap model output tokens
+- `--clear-neo4j`: clear the target database before loading
 
 Load into Neo4j instead:
 
@@ -243,15 +282,39 @@ keeping the strongest match class.
 
 Each run writes a timestamped directory under `outputs/` with artifacts such as:
 - `run_summary.json`
+- `chunks.json`
 - `skeleton_extraction.json`
 - `pass2_channels_extraction.json`
 - `pass2_revenue_extraction.json`
+- `pass2_commercial_extraction.json`
 - `pass3_serves_extraction.json`
 - `pass4_corporate_extraction.json`
 - `pre_reflection_extraction.json`
+- `rule_reflection_extraction.json`
 - `reflection_extraction.json`
+- `extractions.json`
+- `extraction_audits.json`
+- `final_output_validation_report.json`
 - `resolved_triples.json`
 - `validation_report.json`
+
+`--only-pass1` writes the structural subset of these artifacts rather than the full multi-pass set.
+
+## Evaluation Utilities
+
+Compare a predicted extraction to a gold graph:
+
+```bash
+./venv/bin/python src/evaluate_graph.py compare path/to/predicted.json path/to/gold.json
+```
+
+Inspect the graph currently loaded in Neo4j:
+
+```bash
+./venv/bin/python src/evaluate_graph.py dump-neo4j
+```
+
+The evaluation utility accepts payloads wrapped as `triples`, `resolved_triples`, or `valid_triples`.
 
 ## Tests
 

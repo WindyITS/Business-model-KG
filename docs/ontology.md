@@ -54,6 +54,17 @@ Exception:
 
 If a phrase does not map clearly to one canonical label, omit it.
 
+### 5. Effective ontology = schema + prompt policy + validator enforcement
+
+The canonical node and relation schema lives in [`configs/ontology.json`](../configs/ontology.json).
+
+In practice, though, the production ontology is enforced through three layers together:
+- the formal schema and canonical labels
+- the staged extraction and reflection prompts in [`src/llm_extractor.py`](../src/llm_extractor.py)
+- the runtime validator in [`src/ontology_validator.py`](../src/ontology_validator.py)
+
+This document records the full effective behavior of the maintained pipeline, not just the raw schema file.
+
 ## Node Types
 
 ### `Company`
@@ -107,6 +118,14 @@ Rules:
 - do not use `Company -> OFFERS -> Offering` just because an offering is described at company scope, as universal, or as shared/common infrastructure; if the evidence ties it to multiple segments, attach it to each supported `BusinessSegment`
 - `Offering -> OFFERS -> Offering` is allowed only when the filing explicitly states the umbrella / family / suite / parent relationship
 - a child `Offering` may have at most one offering parent
+- extract explicit named offerings individually and as written
+- do not compress explicit offering lists into invented summary labels, but if the filing itself uses a single semantic parent heading for the list, keep that heading as the parent offering
+- if the filing explicitly breaks a heading into named subcategories, create those subcategories as child offerings even when they are broad category names
+- if a local list contains one bare offering name plus sibling offerings that share the same stem with added modifiers, treat the bare name as the first-order family offering and the variants as child offerings
+- if an offering has support for more than one segment, attach it to every supported `BusinessSegment`
+- shared-platform evidence can still count as segment support; if an offering is described as backing, enabling, bundling with, integrating with, or providing a common layer for offerings used in multiple segments, attach it to each supported segment
+- `BusinessSegment` should link only to first-order offerings; if an offering has an explicit offering parent, keep the child under that parent rather than attaching it directly to the segment as well
+- do not invent intermediate umbrella offerings or extra nesting just to organize the graph more neatly
 
 ### `SERVES`
 
@@ -119,6 +138,11 @@ Rules:
 - if a customer type is stated at company scope, attach it only to the `BusinessSegment` nodes where it is clearly stated or clearly implied by the segment's offerings and descriptions
 - do not spread one customer type across multiple segments unless each segment has its own support
 - do not attach `SERVES` to `Company` or `Offering`
+- precision is more important than recall
+- conservative inference is allowed only for `SERVES`, and it must remain segment-specific rather than global
+- do not make weak guesses from vague proximity or broad context
+- rare or specialized customer types should not be fanned out across many segments unless each segment has its own support
+- when several offerings inside the same segment point to the same customer type, attach that customer type to the `BusinessSegment`
 
 ### `OPERATES_IN`
 
@@ -137,6 +161,7 @@ Rules:
 - do not infer unmentioned countries just to complete a region
 - only roll up countries into a macro-region when the mapping is clear and unambiguous; if overlap makes the roll-up uncertain, keep the explicit countries
 - do not substitute one overlapping macro-region for another unless the filing supports that exact label
+- exclude geographies that appear only as incidental context, such as regulatory references or IP jurisdiction without company presence
 - do not attach to `BusinessSegment` or `Offering`
 
 ### `SELLS_THROUGH`
@@ -150,6 +175,9 @@ Rules:
 - `Offering` is a fallback only for offerings without a business segment
 - `Company` is not a valid subject
 - if the filing states a channel universally across a company that has reported segments, attach that channel to each reported `BusinessSegment`
+- default to `BusinessSegment` whenever a segment anchor exists
+- do not derive offering-level channel facts from segment-level evidence unless the offering truly has no `BusinessSegment` anchor
+- if an `Offering` already has a direct `BusinessSegment` anchor, the runtime validator rejects `Offering -> SELLS_THROUGH -> Channel`
 
 ### `PARTNERS_WITH`
 
@@ -160,6 +188,7 @@ Links a company to another company with which it has a named strategic, commerci
 Rules:
 - strictly company-level
 - excludes incidental mentions and ordinary supplier or customer relationships
+- do not use `PARTNERS_WITH` for suppliers, customers, competitors, ecosystem mentions, or channel relationships
 
 ### `MONETIZES_VIA`
 
@@ -172,6 +201,8 @@ Rules:
 - do not attach directly to `BusinessSegment` or `Company`
 - if an offering family hierarchy exists, attach `MONETIZES_VIA` to the family parent rather than to its child offerings
 - if the filing states monetization broadly at segment level, do not force a segment-level triple; recover rollups downstream from offering-level facts
+- attach monetization to the first-order family parent rather than to a child offering beneath it
+- if a child offering already has an explicit `Offering` parent, the runtime validator rejects `MONETIZES_VIA` on that child
 
 ## Relation Validity Matrix
 
@@ -184,6 +215,23 @@ Rules:
 | `SELLS_THROUGH` | `BusinessSegment`, `Offering` | `Channel` |
 | `PARTNERS_WITH` | `Company` | `Company` |
 | `MONETIZES_VIA` | `Offering` | `RevenueModel` |
+
+## Runtime Validation And Normalization
+
+The runtime validator does more than just check the schema:
+
+- entity text is normalized with NFKC, quote cleanup, and whitespace cleanup before validation
+- `Place` values are normalized through the canonical place alias map
+- `CustomerType`, `Channel`, and `RevenueModel` are enforced as closed canonical labels
+- duplicate triples are removed using normalized entity keys
+- validator reports preserve invalid triples, duplicate triples, and issue codes as audit output
+- optional text grounding can be enabled when validating triples outside the main runtime
+- the main CLI runtime validates with text grounding disabled by default and relies on the staged extraction and reflection process for factual support
+
+Additional structural enforcement:
+- a child `Offering` may have at most one `Offering` parent
+- a child `Offering` with an explicit offering parent cannot carry `MONETIZES_VIA`
+- an `Offering` with a direct `BusinessSegment` anchor cannot carry `SELLS_THROUGH`
 
 ## Canonical Label Definitions
 
@@ -347,6 +395,8 @@ Do not automatically emit `Company -> OFFERS -> Offering`.
 Use `Offering -> OFFERS -> Offering` only when the filing explicitly states that hierarchy.
 
 An umbrella offering does not replace its explicit named child offerings.
+
+If the filing itself uses a single semantic parent heading, explicit composite heading, or explicit named subcategories, keep that structure rather than flattening it away.
 
 ### Rule 3: No derivation during extraction
 
