@@ -10,11 +10,9 @@ from typing import Any
 
 from .entity_resolver import resolve_entities
 from graph.neo4j_loader import Neo4jLoader
-from llm.extractor import (
-    CanonicalPipelineResult,
-    ExtractionError,
-    LLMExtractor,
-)
+from llm.extractor import LLMExtractor
+from llm_extraction.models import CanonicalPipelineResult, ExtractionError
+from llm_extraction.pipelines import implemented_pipeline_names, run_extraction_pipeline
 from .model_provider import resolve_model_settings
 from ontology.validator import validate_triples
 
@@ -284,9 +282,9 @@ def main() -> int:
     parser.add_argument("--neo4j-password", type=str, default="password", help="Neo4j password.")
     parser.add_argument(
         "--pipeline",
-        choices=["canonical"],
+        choices=implemented_pipeline_names(),
         default="canonical",
-        help="Extraction pipeline to run. Only the canonical production pipeline is supported.",
+        help="Extraction pipeline to run. Canonical is implemented today; analyst already has a scaffold but is not wired into the CLI yet.",
     )
     parser.add_argument("--max-retries", type=int, default=3, help="Maximum LLM retries per call.")
     parser.add_argument(
@@ -388,7 +386,9 @@ def main() -> int:
             progress_callback=console.handle_progress,
         )
 
-        chat_result: CanonicalPipelineResult = extractor.extract_canonical_pipeline(
+        chat_result: CanonicalPipelineResult = run_extraction_pipeline(
+            pipeline=args.pipeline,
+            extractor=extractor,
             full_text=full_text,
             company_name=company_name,
             max_retries=args.max_retries,

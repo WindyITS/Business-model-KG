@@ -150,9 +150,7 @@ class RuntimeMainTests(unittest.TestCase):
                     triples=[resolved_triple],
                 ),
             )
-            fake_extractor = SimpleNamespace(
-                extract_canonical_pipeline=MagicMock(return_value=fake_result),
-            )
+            fake_extractor = SimpleNamespace()
             fake_validation_report = {
                 "valid_triples": [resolved_triple.model_dump()],
                 "summary": {
@@ -186,6 +184,8 @@ class RuntimeMainTests(unittest.TestCase):
             with patch.object(main_module, "_build_run_dir", return_value=run_dir), patch.object(
                 main_module, "resolve_model_settings"
             ) as mock_resolve, patch.object(main_module, "LLMExtractor", return_value=fake_extractor), patch.object(
+                main_module, "run_extraction_pipeline", return_value=fake_result
+            ) as mock_run_pipeline, patch.object(
                 main_module, "resolve_entities", return_value=[resolved_triple]
             ), patch.object(
                 main_module, "validate_triples", return_value=fake_validation_report
@@ -220,8 +220,9 @@ class RuntimeMainTests(unittest.TestCase):
             self.assertEqual(load_call["triple_count"], 1)
 
             mock_resolve.assert_called_once()
-            fake_extractor.extract_canonical_pipeline.assert_called_once()
-            self.assertTrue(fake_extractor.extract_canonical_pipeline.call_args.kwargs["stop_after_pass1"])
+            mock_run_pipeline.assert_called_once()
+            self.assertIs(mock_run_pipeline.call_args.kwargs["extractor"], fake_extractor)
+            self.assertTrue(mock_run_pipeline.call_args.kwargs["stop_after_pass1"])
 
 
 if __name__ == "__main__":

@@ -60,5 +60,4 @@ include = [
 ]
 
 [tool.setuptools.package-data]
-llm_extraction = ["pipelines/canonical/templates/*.txt"]
 ontology = ["ontology.json"]

@@ -7,14 +7,15 @@ from unittest.mock import patch
 
 import httpx
 from llm import extractor as llm_extractor_module
-from llm.extractor import (
-    LLMExtractor,
-    _canonical_pipeline_system_prompt,
-    _canonical_reflection_system_prompt,
-    _canonical_rule_reflection_system_prompt,
-)
+from llm.extractor import LLMExtractor
 from llm_extraction.audit import aggregate_extraction_audits, audit_knowledge_graph_payload
 from llm_extraction.models import KnowledgeGraphExtraction, Triple
+from llm_extraction.pipelines.canonical.prompts import (
+    canonical_pipeline_system_prompt,
+    canonical_reflection_system_prompt,
+    canonical_rule_reflection_system_prompt,
+)
+from llm_extraction.pipelines.canonical.runner import CanonicalPipelineRunner
 from openai import InternalServerError
 
 
@@ -245,11 +246,11 @@ class LLMExtractorTests(unittest.TestCase):
         self.assertEqual(aggregated["payload_parse_recovered_count"], 1)
 
     def test_canonical_system_prompts_explicitly_forbid_markdown_fences(self):
-        self.assertIn("Do not wrap the JSON in markdown code fences.", _canonical_pipeline_system_prompt("x"))
-        self.assertIn("Do not wrap the JSON in markdown code fences.", _canonical_reflection_system_prompt("x"))
+        self.assertIn("Do not wrap the JSON in markdown code fences.", canonical_pipeline_system_prompt("x"))
+        self.assertIn("Do not wrap the JSON in markdown code fences.", canonical_reflection_system_prompt("x"))
 
     def test_canonical_pipeline_system_prompt_omits_pass_specific_sections(self):
-        prompt = _canonical_pipeline_system_prompt("full filing text here")
+        prompt = canonical_pipeline_system_prompt("full filing text here")
 
         self.assertIn("<ontology>", prompt)
         self.assertIn("<canonical_graph_policy>", prompt)
@@ -261,7 +262,7 @@ class LLMExtractorTests(unittest.TestCase):
         self.assertNotIn("SELLS_THROUGH should default to BusinessSegment.", prompt)
 
     def test_canonical_reflection_system_prompt_includes_full_text_and_ontology_rules(self):
-        prompt = _canonical_reflection_system_prompt("full filing text here")
+        prompt = canonical_reflection_system_prompt("full filing text here")
 
         self.assertIn("<source_filing>", prompt)
         self.assertIn("full filing text here", prompt)
@@ -271,7 +272,7 @@ class LLMExtractorTests(unittest.TestCase):
         self.assertIn("SELLS_THROUGH should default to BusinessSegment.", prompt)
 
     def test_canonical_rule_reflection_system_prompt_includes_rules_without_filing(self):
-        prompt = _canonical_rule_reflection_system_prompt()
+        prompt = canonical_rule_reflection_system_prompt()
 
         self.assertIn("<canonical_label_definitions>", prompt)
         self.assertIn("<canonical_graph_policy>", prompt)
@@ -590,10 +591,11 @@ class LLMExtractorTests(unittest.TestCase):
                 full_text="filing",
                 current_extraction=KnowledgeGraphExtraction(),
                 company_name="Microsoft",
+                system_prompt="system",
                 user_prompt=None,
             )
 
-        self.assertIn("requires an explicit user_prompt", str(ctx.exception))
+        self.assertIn("requires explicit system_prompt and user_prompt", str(ctx.exception))
 
     def test_structured_call_filters_ontology_invalid_triples(self):
         extractor = LLMExtractor(
@@ -665,6 +667,7 @@ class LLMExtractorTests(unittest.TestCase):
                 current_extraction=current,
                 company_name="Microsoft",
                 strict=False,
+                system_prompt="system",
                 user_prompt="review",
             )
 
@@ -699,6 +702,7 @@ class LLMExtractorTests(unittest.TestCase):
                 current_extraction=current,
                 company_name="Microsoft",
                 strict=False,
+                system_prompt="system",
                 user_prompt="review",
             )
 
@@ -708,7 +712,7 @@ class LLMExtractorTests(unittest.TestCase):
         self.assertEqual(audit["raw_triple_count"], 1)
         self.assertEqual(audit["kept_triple_count"], 1)
 
-    def test_extract_canonical_pipeline_offloads_rules_into_fresh_pass_prompts(self):
+    def test_canonical_runner_offloads_rules_into_fresh_pass_prompts(self):
         extractor = LLMExtractor(
             base_url="http://localhost:1234/v1",
             api_key="lm-studio",
@@ -746,7 +750,7 @@ class LLMExtractorTests(unittest.TestCase):
         with patch.object(extractor, "_call_structured_messages", side_effect=structured_side_effect), patch.object(
             extractor, "reflect_extraction", side_effect=reflect_side_effect
         ):
-            result = extractor.extract_canonical_pipeline(
+            result = CanonicalPipelineRunner(extractor).run(
                 full_text="filing",
                 company_name="Microsoft",
                 max_retries=2,
@@ -783,7 +787,7 @@ class LLMExtractorTests(unittest.TestCase):
         self.assertIn("U.S. -> United States", pass4_prompt)
         self.assertIn("do not use PARTNERS_WITH for suppliers, customers, competitors, ecosystem mentions, or channel relationships.", pass4_prompt)
 
-    def test_extract_canonical_pipeline_can_stop_after_pass1(self):
+    def test_canonical_runner_can_stop_after_pass1(self):
         extractor = LLMExtractor(
             base_url="http://localhost:1234/v1",
             api_key="lm-studio",
@@ -813,7 +817,7 @@ class LLMExtractorTests(unittest.TestCase):
         with patch.object(extractor, "_call_structured_messages", side_effect=structured_side_effect), patch.object(
             extractor, "reflect_extraction"
         ) as mock_reflection:
-            result = extractor.extract_canonical_pipeline(
+            result = CanonicalPipelineRunner(extractor).run(
                 full_text="filing",
                 company_name="Microsoft",
                 max_retries=2,
@@ -827,7 +831,7 @@ class LLMExtractorTests(unittest.TestCase):
         self.assertEqual(len(result.pass2_channels_extraction.triples), 0)
         self.assertEqual(len(result.final_extraction.triples), 0)
 
-    def test_extract_canonical_pipeline_runs_two_reflection_stages(self):
+    def test_canonical_runner_runs_two_reflection_stages(self):
         extractor = LLMExtractor(
             base_url="http://localhost:1234/v1",
             api_key="lm-studio",
@@ -899,7 +903,7 @@ class LLMExtractorTests(unittest.TestCase):
                 (empty, "raw corporate", 1, {"kept_triple_count": 0}),
             ],
         ), patch.object(extractor, "reflect_extraction", side_effect=reflect_side_effect):
-            result = extractor.extract_canonical_pipeline(
+            result = CanonicalPipelineRunner(extractor).run(
                 full_text="filing",
                 company_name="Microsoft",
                 max_retries=2,

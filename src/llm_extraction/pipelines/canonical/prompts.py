@@ -1,7 +1,6 @@
 import json
-from pathlib import Path
 
-from llm_extraction.prompting import render_template
+from llm_extraction.prompting import pipeline_prompt_dir, render_prompt
 from ontology.config import canonical_labels, load_ontology_config
 
 
@@ -30,7 +29,7 @@ V2_APPROVED_MACRO_REGIONS = [
     "Western Europe",
 ]
 
-TEMPLATE_DIR = Path(__file__).resolve().parent / "templates"
+PROMPT_DIR = pipeline_prompt_dir("canonical")
 
 
 def _json_list(values: list[str]) -> str:
@@ -41,8 +40,8 @@ def _xml_definition_lines(definitions: dict[str, str]) -> str:
     return "\n".join(f'- "{label}": {definition}' for label, definition in definitions.items())
 
 
-def _render(template_name: str, **context: object) -> str:
-    return render_template(TEMPLATE_DIR / template_name, **context)
+def _render(prompt_name: str, **context: object) -> str:
+    return render_prompt(PROMPT_DIR / prompt_name, **context)
 
 
 def canonical_pipeline_system_prompt(full_text: str) -> str:

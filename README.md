@@ -45,12 +45,13 @@ The canonical runtime follows a few consistent rules:
 
 This means the effective behavior of the pipeline comes from three layers together:
 - the formal schema in [`configs/ontology.json`](./configs/ontology.json)
-- the staged extraction and reflection pipeline under [`src/llm/`](./src/llm/) with prompt templates in [`src/llm_extraction/pipelines/canonical/templates/`](./src/llm_extraction/pipelines/canonical/templates/)
+- the staged extraction and reflection pipeline under [`src/llm/`](./src/llm/) and [`src/llm_extraction/pipelines/`](./src/llm_extraction/pipelines/) with prompt assets in [`prompts/canonical/`](./prompts/canonical/)
 - the final normalization and structural enforcement in [`src/ontology/validator.py`](./src/ontology/validator.py)
 
 ## Canonical Extraction Pipeline
 
-The default runtime pipeline is the only supported extraction pipeline in the repo.
+The canonical runtime pipeline is the only implemented extraction pipeline today.
+An analyst-style sibling scaffold already exists under [`src/llm_extraction/pipelines/analyst/`](./src/llm_extraction/pipelines/analyst/) and [`prompts/analyst/`](./prompts/analyst/), but it is intentionally not implemented yet.
 
 High-level flow:
 
@@ -84,8 +85,12 @@ src/
   llm/
     extractor.py          generic LLM calling and extraction facade
   llm_extraction/
+    prompting.py          lightweight prompt loading/rendering helpers
+    pipelines/__init__.py pipeline registry and runner dispatch
     pipelines/canonical/
-                          canonical pipeline orchestration and prompt templates
+                          canonical pipeline orchestration
+    pipelines/analyst/
+                          future analyst pipeline scaffold
   ontology/
     config.py             canonical ontology loader
     validator.py          ontology validation and structural checks
@@ -106,6 +111,11 @@ src/
 
 configs/
   ontology.json           canonical ontology config
+
+prompts/
+  README.md               prompt asset overview
+  canonical/              canonical pipeline prompt assets
+  analyst/                future analyst pipeline prompt scaffold
 
 docs/
   ontology.md             canonical ontology specification
@@ -144,6 +154,11 @@ tests/
   test_graph/
   test_text2cypher/
 ```
+
+Pipeline structure notes:
+- prompt files are repo assets under `prompts/`, not embedded in `src/`
+- [`src/llm/extractor.py`](./src/llm/extractor.py) now handles transport, retries, JSON recovery, and parsing only
+- pipeline-specific orchestration and prompt selection live under [`src/llm_extraction/pipelines/`](./src/llm_extraction/pipelines/)
 
 ## Text2Cypher Dataset Assets
 
@@ -268,6 +283,7 @@ Provider notes:
 - `opencode-go` reads `--api-key` first, then `OPENCODE_GO_API_KEY`, then `OPENCODE_API_KEY`
 - for `opencode-go`, the runtime rewrites `system` messages to `user` messages for compatibility while keeping the rest of the pipeline flow unchanged
 - `opencode-go` defaults to `--max-output-tokens 20000`; override it if needed
+- the CLI currently exposes only the implemented `canonical` pipeline, even though the analyst scaffold already exists in the codebase
 - every run writes `run_summary.json`; the console header shows pipeline, provider, and model, and LLM attempt summaries show token counts when available
 
 Useful CLI flags:

@@ -8,16 +8,6 @@ from typing import Any
 
 from llm_extraction.audit import aggregate_extraction_audits, audit_knowledge_graph_payload, normalize_lenient_payload
 from llm_extraction.models import CanonicalPipelineResult, ExtractionError, KnowledgeGraphExtraction, Triple
-from llm_extraction.pipelines.canonical.prompts import (
-    canonical_pipeline_system_prompt as _canonical_pipeline_system_prompt,
-)
-from llm_extraction.pipelines.canonical.prompts import (
-    canonical_reflection_system_prompt as _canonical_reflection_system_prompt,
-)
-from llm_extraction.pipelines.canonical.prompts import (
-    canonical_rule_reflection_system_prompt as _canonical_rule_reflection_system_prompt,
-)
-from llm_extraction.pipelines.canonical.runner import CanonicalPipelineRunner
 from pydantic import BaseModel, ValidationError
 
 logger = logging.getLogger(__name__)
@@ -669,10 +659,10 @@ class LLMExtractor:
         stage_label: str = "Reflection",
         ontology_version: str = "canonical",
     ) -> tuple[KnowledgeGraphExtraction, str | None, int, dict[str, Any]]:
-        system_prompt = system_prompt or _canonical_reflection_system_prompt(full_text)
-        if user_prompt is None:
+        _ = full_text
+        if system_prompt is None or user_prompt is None:
             raise ValueError(
-                "reflect_extraction requires an explicit user_prompt; the generic reflection fallback prompt has been removed."
+                "reflect_extraction requires explicit system_prompt and user_prompt; pipeline-specific reflection prompts live with the pipeline."
             )
 
         try:
@@ -703,21 +693,6 @@ class LLMExtractor:
             )
             return current_extraction, None, max_retries, fallback_audit
 
-    def extract_canonical_pipeline(
-        self,
-        *,
-        full_text: str,
-        company_name: str | None = None,
-        max_retries: int = 2,
-        stop_after_pass1: bool = False,
-    ) -> CanonicalPipelineResult:
-        return CanonicalPipelineRunner(self).run(
-            full_text=full_text,
-            company_name=company_name,
-            max_retries=max_retries,
-            stop_after_pass1=stop_after_pass1,
-        )
-
 
 __all__ = [
     "CanonicalPipelineResult",
@@ -725,9 +700,6 @@ __all__ = [
     "KnowledgeGraphExtraction",
     "LLMExtractor",
     "Triple",
-    "_canonical_pipeline_system_prompt",
-    "_canonical_reflection_system_prompt",
-    "_canonical_rule_reflection_system_prompt",
     "aggregate_extraction_audits",
     "audit_knowledge_graph_payload",
     "normalize_lenient_payload",
