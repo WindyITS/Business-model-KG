@@ -4,14 +4,16 @@ This directory contains the machine-readable artifacts for the text-to-Cypher su
 
 ## Layout
 
-- `v1/`
+- `v2/`
   The canonical dataset release used for current validation, training, and evaluation.
-- `v1/source/`
+- `v2/source/`
   Synthetic fixture instances plus bound gold examples.
-- `v1/reports/`
+- `v2/reports/`
   Validation outputs and split metadata.
-- `v1/training/`
+- `v2/training/`
   The full training corpus plus train, dev, and test split exports.
+- `v1/`
+  The superseded first full release, kept for provenance and comparison.
 - `archive/v0/`
   Older prototype artifacts kept for provenance only.
 

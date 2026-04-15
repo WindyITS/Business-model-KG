@@ -4,7 +4,7 @@ import re
 import sys
 from collections import defaultdict
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Tuple
+from typing import Any, DefaultDict, Dict, Iterable, List, Tuple
 
 from neo4j import GraphDatabase
 from place_hierarchy import PLACE_INCLUDES_PROPERTY, PLACE_WITHIN_PROPERTY, place_query_property_rows
@@ -29,6 +29,9 @@ ALLOWED_RELATION_TYPES = {
     "PARTNERS_WITH",
     "MONETIZES_VIA",
 }
+
+SCOPED_NODE_LABELS = {"BusinessSegment", "Offering"}
+FIXTURE_NODE_RESERVED_KEYS = {"node_id", "label", "name", "properties"}
 
 DISALLOWED_CLAUSE_PATTERNS = (
     r"\bCREATE\b",
@@ -66,19 +69,31 @@ def load_jsonl(path: Path) -> List[Dict[str, Any]]:
 
 def validate_fixture_shape(fixture: Dict[str, Any]) -> None:
     node_lookup = {}
+    node_names: DefaultDict[str, List[Dict[str, Any]]] = defaultdict(list)
     for node in fixture["nodes"]:
+        if not isinstance(node, dict):
+            raise ValueError(f"Fixture graph {fixture['graph_id']} contains a non-object node entry")
+        for required_key in ("node_id", "label", "name"):
+            if required_key not in node:
+                raise ValueError(
+                    f"Fixture graph {fixture['graph_id']} contains a node missing {required_key!r}"
+                )
+        properties = node.get("properties")
+        if properties is not None and not isinstance(properties, dict):
+            raise ValueError(
+                f"Fixture graph {fixture['graph_id']} node {node['node_id']!r} has non-object properties"
+            )
         label = node["label"]
         if label not in ALLOWED_NODE_LABELS:
             raise ValueError(f"Unsupported node label {label!r} in graph {fixture['graph_id']}")
         node_lookup[node["node_id"]] = node
+        node_names[node["name"]].append(node)
 
     for edge in fixture["edges"]:
         if edge["type"] not in ALLOWED_RELATION_TYPES:
             raise ValueError(f"Unsupported relation type {edge['type']!r} in graph {fixture['graph_id']}")
-        if edge["from"] not in node_lookup:
-            raise ValueError(f"Unknown edge source {edge['from']!r} in graph {fixture['graph_id']}")
-        if edge["to"] not in node_lookup:
-            raise ValueError(f"Unknown edge target {edge['to']!r} in graph {fixture['graph_id']}")
+        SyntheticGraphLoader._resolve_edge_endpoint(edge["from"], node_lookup, node_names, fixture["graph_id"])
+        SyntheticGraphLoader._resolve_edge_endpoint(edge["to"], node_lookup, node_names, fixture["graph_id"])
 
 
 def validate_read_only_cypher(cypher: str) -> List[str]:
@@ -108,6 +123,24 @@ def value_matches_type(value: Any, expected_type: str) -> bool:
     if expected_type == "boolean":
         return isinstance(value, bool)
     return False
+
+
+def _extract_node_properties(node: Dict[str, Any]) -> Dict[str, Any]:
+    properties: Dict[str, Any] = {"node_id": node["node_id"], "name": node["name"]}
+
+    nested_properties = node.get("properties")
+    if isinstance(nested_properties, dict):
+        properties.update(nested_properties)
+
+    for key, value in node.items():
+        if key not in FIXTURE_NODE_RESERVED_KEYS:
+            properties[key] = value
+
+    return properties
+
+
+def _is_scoped_label(node_label: str) -> bool:
+    return node_label in SCOPED_NODE_LABELS
 
 
 def validate_result(
@@ -181,46 +214,78 @@ class SyntheticGraphLoader:
     def setup_constraints(self) -> None:
         with self.driver.session() as session:
             for label in sorted(ALLOWED_NODE_LABELS):
-                session.run(
-                    f"CREATE CONSTRAINT {label}_name IF NOT EXISTS "
-                    f"FOR (node:{label}) REQUIRE node.name IS UNIQUE"
-                ).consume()
+                if _is_scoped_label(label):
+                    session.run(f"DROP CONSTRAINT {label}_name IF EXISTS").consume()
+                    session.run(
+                        f"CREATE CONSTRAINT {label}_name_company IF NOT EXISTS "
+                        f"FOR (node:{label}) REQUIRE (node.company_name, node.name) IS UNIQUE"
+                    ).consume()
+                else:
+                    session.run(
+                        f"CREATE CONSTRAINT {label}_name IF NOT EXISTS "
+                        f"FOR (node:{label}) REQUIRE node.name IS UNIQUE"
+                    ).consume()
 
     def load_graph(self, fixture: Dict[str, Any]) -> None:
         validate_fixture_shape(fixture)
-        nodes_by_label: Dict[str, List[Dict[str, str]]] = defaultdict(list)
+        nodes_by_label: DefaultDict[Tuple[str, bool], List[Dict[str, Any]]] = defaultdict(list)
         node_lookup = {node["node_id"]: node for node in fixture["nodes"]}
+        node_names: DefaultDict[str, List[Dict[str, Any]]] = defaultdict(list)
         place_names: set[str] = set()
 
         for node in fixture["nodes"]:
-            nodes_by_label[node["label"]].append({"name": node["name"]})
+            node_properties = _extract_node_properties(node)
+            row = {
+                "name": node["name"],
+                "properties": node_properties,
+                "node_id": node["node_id"],
+            }
+            has_company_name = _is_scoped_label(node["label"]) and "company_name" in node_properties
+            if has_company_name:
+                row["company_name"] = node_properties["company_name"]
+            nodes_by_label[(node["label"], has_company_name)].append(row)
+            node_names[node["name"]].append(node)
             if node["label"] == "Place":
                 place_names.add(node["name"])
 
-        edges_by_signature: Dict[Tuple[str, str, str], List[Dict[str, str]]] = defaultdict(list)
+        edges_by_signature: DefaultDict[Tuple[str, str, str], List[Dict[str, str]]] = defaultdict(list)
         for edge in fixture["edges"]:
-            source = node_lookup[edge["from"]]
-            target = node_lookup[edge["to"]]
+            source = self._resolve_edge_endpoint(edge["from"], node_lookup, node_names, fixture["graph_id"])
+            target = self._resolve_edge_endpoint(edge["to"], node_lookup, node_names, fixture["graph_id"])
             edges_by_signature[(source["label"], edge["type"], target["label"])].append(
                 {
-                    "from_name": source["name"],
-                    "to_name": target["name"],
+                    "from_node_id": source["node_id"],
+                    "to_node_id": target["node_id"],
                 }
             )
 
         with self.driver.session() as session:
-            for label, rows in nodes_by_label.items():
-                session.run(
-                    f"UNWIND $rows AS row MERGE (n:{label} {{name: row.name}})",
-                    rows=rows,
-                ).consume()
+            for (label, has_company_name), rows in nodes_by_label.items():
+                if _is_scoped_label(label) and has_company_name:
+                    session.run(
+                        f"""
+                        UNWIND $rows AS row
+                        MERGE (n:{label} {{name: row.name, company_name: row.company_name}})
+                        SET n += row.properties
+                        """,
+                        rows=rows,
+                    ).consume()
+                else:
+                    session.run(
+                        f"""
+                        UNWIND $rows AS row
+                        MERGE (n:{label} {{name: row.name}})
+                        SET n += row.properties
+                        """,
+                        rows=rows,
+                    ).consume()
 
             for (from_label, rel_type, to_label), rows in edges_by_signature.items():
                 session.run(
                     f"""
                     UNWIND $rows AS row
-                    MATCH (source:{from_label} {{name: row.from_name}})
-                    MATCH (target:{to_label} {{name: row.to_name}})
+                    MATCH (source:{from_label} {{node_id: row.from_node_id}})
+                    MATCH (target:{to_label} {{node_id: row.to_node_id}})
                     MERGE (source)-[:{rel_type}]->(target)
                     """,
                     rows=rows,
@@ -236,6 +301,25 @@ class SyntheticGraphLoader:
                     """,
                     rows=list(place_query_property_rows(place_names)),
                 ).consume()
+
+    @staticmethod
+    def _resolve_edge_endpoint(
+        reference: str,
+        node_lookup: Dict[str, Dict[str, Any]],
+        node_names: Dict[str, List[Dict[str, Any]]],
+        graph_id: str,
+    ) -> Dict[str, Any]:
+        if reference in node_lookup:
+            return node_lookup[reference]
+
+        candidates = node_names.get(reference, [])
+        if len(candidates) == 1:
+            return candidates[0]
+
+        if not candidates:
+            raise ValueError(f"Unknown edge endpoint {reference!r} in graph {graph_id}")
+
+        raise ValueError(f"Ambiguous edge endpoint {reference!r} in graph {graph_id}; use node_id references")
 
     def run_query(self, cypher: str, params: Dict[str, Any]) -> Tuple[List[str], List[Dict[str, Any]]]:
         with self.driver.session() as session:
@@ -345,17 +429,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--fixtures-path",
         type=Path,
-        default=Path("datasets/text2cypher/v1/source/fixture_instances.jsonl"),
+        default=Path("datasets/text2cypher/v2/source/fixture_instances.jsonl"),
     )
     parser.add_argument(
         "--examples-path",
         type=Path,
-        default=Path("datasets/text2cypher/v1/source/bound_seed_examples.jsonl"),
+        default=Path("datasets/text2cypher/v2/source/bound_seed_examples.jsonl"),
     )
     parser.add_argument(
         "--report-path",
         type=Path,
-        default=Path("datasets/text2cypher/v1/reports/bound_seed_validation_report.json"),
+        default=Path("datasets/text2cypher/v2/reports/bound_seed_validation_report.json"),
     )
     parser.add_argument("--neo4j-uri", type=str, default="bolt://localhost:7687")
     parser.add_argument("--neo4j-user", type=str, default="neo4j")

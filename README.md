@@ -100,7 +100,8 @@ docs/
 datasets/
   text2cypher/
     README.md             machine-readable dataset layout
-    v1/                   canonical training corpus and reports
+    v2/                   canonical training corpus and reports
+    v1/                   superseded dataset release kept for provenance
     archive/v0/           archived prototype artifacts
 
 tests/
@@ -114,10 +115,11 @@ tests/
 The supervised text-to-Cypher corpus is now split by role:
 
 - prose and design docs live in [`docs/text2cypher/`](./docs/text2cypher/README.md)
-- canonical machine-readable V1 artifacts live in [`datasets/text2cypher/v1/`](./datasets/text2cypher/README.md)
+- canonical machine-readable V2 artifacts live in [`datasets/text2cypher/v2/`](./datasets/text2cypher/README.md)
+- the superseded V1 release remains in-repo for provenance and comparison
 - archived pre-V1 snapshots live in `datasets/text2cypher/archive/v0/`
 
-The dataset validator in [`src/validate_text2cypher_dataset.py`](./src/validate_text2cypher_dataset.py) now defaults to the canonical V1 artifact set under `datasets/text2cypher/v1/`.
+The dataset validator in [`src/validate_text2cypher_dataset.py`](./src/validate_text2cypher_dataset.py) now defaults to the canonical V2 artifact set under `datasets/text2cypher/v2/`.
 
 ## Quickstart
 

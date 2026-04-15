@@ -6,8 +6,8 @@ Build a high-quality supervised dataset for fine-tuning a small model to transla
 
 Current status:
 
-- the V1 dataset build is complete
-- the final readiness assessment is documented in [`readiness_v1.md`](./readiness_v1.md)
+- the V2 dataset build is complete
+- the final readiness assessment is documented in [`readiness_v2.md`](./readiness_v2.md)
 - the canonical machine-readable artifacts live under [`datasets/text2cypher/`](../../../datasets/text2cypher/README.md)
 - the next engineering step is model training and evaluation rather than more dataset scaffolding
 
@@ -46,7 +46,8 @@ Each synthetic fixture should:
 
 - read-only Cypher only
 - use the same labels and relationship types as the production ontology
-- identify nodes primarily by label plus `name`
+- identify `BusinessSegment` and `Offering` by the production-style composite of `company_name` plus `name` whenever company-scoped inventory is involved
+- support hierarchy-aware geography queries through `within_places` and `includes_places` on `Place`
 - the model should not assume extra properties such as revenue amounts, dates, filing metadata, descriptions, or embeddings
 
 Important note:
