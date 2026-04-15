@@ -1,10 +1,12 @@
 import argparse
 import json
+import os
 import re
 import sys
 from collections import defaultdict
 from pathlib import Path
 from typing import Any, DefaultDict, Dict, Iterable, List, Tuple
+from urllib.parse import urlparse
 
 from neo4j import GraphDatabase
 from place_hierarchy import PLACE_INCLUDES_PROPERTY, PLACE_WITHIN_PROPERTY, place_query_property_rows
@@ -44,6 +46,11 @@ DISALLOWED_CLAUSE_PATTERNS = (
 )
 
 PARAM_PATTERN = re.compile(r"\$([A-Za-z_][A-Za-z0-9_]*)")
+DEFAULT_NEO4J_URI = "bolt://localhost:7687"
+BROWSER_PORT_TO_BOLT_PORT = {
+    7473: 7687,
+    7474: 7687,
+}
 
 SINGLE_STRING_INTENTS = {
     "qf23_offering_segment_anchor",
@@ -65,6 +72,39 @@ def load_jsonl(path: Path) -> List[Dict[str, Any]]:
             except json.JSONDecodeError as exc:
                 raise ValueError(f"Invalid JSON on line {line_number} of {path}: {exc}") from exc
     return rows
+
+
+def normalize_neo4j_uri(uri: str | None) -> str:
+    raw = (
+        (uri or "").strip()
+        or os.getenv("NEO4J_URI", "").strip()
+        or os.getenv("NEO4J_URL", "").strip()
+        or DEFAULT_NEO4J_URI
+    )
+
+    if "://" not in raw:
+        host, separator, port_text = raw.rpartition(":")
+        if separator and host and port_text.isdigit():
+            port = int(port_text)
+            bolt_port = BROWSER_PORT_TO_BOLT_PORT.get(port, port)
+            return f"bolt://{host}:{bolt_port}"
+        return f"bolt://{raw}"
+
+    parsed = urlparse(raw)
+    if parsed.scheme in {"bolt", "neo4j", "bolt+s", "bolt+ssc", "neo4j+s", "neo4j+ssc"}:
+        return raw
+
+    if parsed.scheme in {"http", "https"}:
+        if not parsed.hostname:
+            raise ValueError(f"Neo4j URI {raw!r} is missing a hostname")
+        port = parsed.port or (443 if parsed.scheme == "https" else 80)
+        bolt_port = BROWSER_PORT_TO_BOLT_PORT.get(port, port)
+        return f"bolt://{parsed.hostname}:{bolt_port}"
+
+    raise ValueError(
+        "Unsupported Neo4j URI scheme. Use bolt/neo4j URIs directly, or pass a browser URL "
+        "such as http://localhost:7474 and it will be normalized."
+    )
 
 
 def validate_fixture_shape(fixture: Dict[str, Any]) -> None:
@@ -202,7 +242,7 @@ def validate_result(
 
 class SyntheticGraphLoader:
     def __init__(self, uri: str, user: str, password: str):
-        self.driver = GraphDatabase.driver(uri, auth=(user, password))
+        self.driver = GraphDatabase.driver(normalize_neo4j_uri(uri), auth=(user, password))
 
     def close(self) -> None:
         self.driver.close()
@@ -441,7 +481,11 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         default=Path("datasets/text2cypher/v2/reports/bound_seed_validation_report.json"),
     )
-    parser.add_argument("--neo4j-uri", type=str, default="bolt://localhost:7687")
+    parser.add_argument(
+        "--neo4j-uri",
+        type=str,
+        default=os.getenv("NEO4J_URI") or os.getenv("NEO4J_URL") or DEFAULT_NEO4J_URI,
+    )
     parser.add_argument("--neo4j-user", type=str, default="neo4j")
     parser.add_argument("--neo4j-password", type=str, default="password")
     return parser.parse_args()
@@ -452,7 +496,8 @@ def main() -> int:
     fixtures = load_jsonl(args.fixtures_path)
     examples = load_jsonl(args.examples_path)
 
-    loader = SyntheticGraphLoader(args.neo4j_uri, args.neo4j_user, args.neo4j_password)
+    neo4j_uri = normalize_neo4j_uri(args.neo4j_uri)
+    loader = SyntheticGraphLoader(neo4j_uri, args.neo4j_user, args.neo4j_password)
     try:
         loader.setup_constraints()
         report = build_report(fixtures, examples, loader)
@@ -468,6 +513,7 @@ def main() -> int:
                 "examples_checked": summary["examples_checked"],
                 "passed": summary["passed"],
                 "failed": summary["failed"],
+                "neo4j_uri": neo4j_uri,
                 "report_path": str(args.report_path),
             },
             indent=2,

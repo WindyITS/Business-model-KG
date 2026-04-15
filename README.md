@@ -4,7 +4,7 @@ A local pipeline for turning SEC 10-K business sections into a standardized busi
 
 The repo is organized around two maintained surfaces:
 - one canonical extraction/runtime stack
-- one structured text-to-Cypher dataset for SFT and evaluation
+- one structured text-to-Cypher dataset with a canonical corpus plus generated SFT/message exports
 
 ## What The Pipeline Extracts
 
@@ -104,7 +104,7 @@ datasets/
 
 scripts/
   export_hf_text2cypher_dataset.py
-                          local export helper for HF-ready release assembly
+                          local export helper for HF-ready release assembly from the canonical corpus and message exports
 
 tests/
   test_pipeline_components.py
@@ -117,7 +117,8 @@ tests/
 The supervised text-to-Cypher corpus is now split by role:
 
 - prose and design docs live in [`docs/text2cypher/`](./docs/text2cypher/README.md)
-- canonical machine-readable V2 artifacts live in [`datasets/text2cypher/v2/`](./datasets/text2cypher/README.md)
+- canonical machine-readable V2 corpus plus generated `messages.jsonl` trainer view live in [`datasets/text2cypher/v2/`](./datasets/text2cypher/README.md)
+- the packaging script copies those artifacts into the Hugging Face release bundle
 
 The dataset validator in [`src/validate_text2cypher_dataset.py`](./src/validate_text2cypher_dataset.py) now defaults to the canonical V2 artifact set under `datasets/text2cypher/v2/`.
 
@@ -141,10 +142,10 @@ That means the dataset is not just a pile of question-query pairs. It is a check
 For public distribution, the repo now uses a single-branch flow:
 
 - keep this GitHub repo focused on the KG pipeline, ontology, dataset documentation, and the public dataset workflow
-- publish the machine-readable text-to-Cypher dataset as a dedicated Hugging Face dataset release
+- publish the machine-readable text-to-Cypher corpus, including the generated `messages.jsonl` SFT view, as a dedicated Hugging Face dataset release
 - keep local packaging/upload templates outside the public tracked repo surface
 
-In other words, the public repo explains the dataset and its provenance, Hugging Face remains the publication target for the machine-readable release, and local packaging notes/templates stay private.
+In other words, the public repo explains the dataset and its provenance, Hugging Face remains the publication target for the canonical corpus plus trainer-facing message exports, and local packaging notes/templates stay private.
 
 ## Quickstart
 

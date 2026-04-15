@@ -1334,7 +1334,7 @@ class LLMExtractor:
             "</structure_rules>\n\n"
             "<naming_rules>\n"
             "- extract explicit named offerings individually and as written.\n"
-            "- do not compress explicit offering lists into invented summary labels, but if the filing itself uses a **single semantic parent heading** for the list, keep that heading as the parent offering.\n"
+            "- do not compress explicit offering lists into invented summary labels, but if the filing itself uses a named parent heading for the list, keep that named heading as the parent offering. When multiple headings appear, require one **single semantic parent heading** before creating the parent layer.\n"
             "- do not merge similar but distinct offering names.\n"
             "</naming_rules>\n\n"
             "<pass_specific_focus>\n"

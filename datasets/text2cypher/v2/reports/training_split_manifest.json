@@ -3,19 +3,19 @@
   "split_unit": "intent_id",
   "split_counts": {
     "train": {
-      "rows": 2693,
-      "intents": 76,
-      "source_examples": 274
+      "rows": 2828,
+      "intents": 77,
+      "source_examples": 283
     },
     "dev": {
-      "rows": 547,
-      "intents": 15,
-      "source_examples": 52
+      "rows": 675,
+      "intents": 16,
+      "source_examples": 60
     },
     "test": {
-      "rows": 1261,
-      "intents": 21,
-      "source_examples": 95
+      "rows": 991,
+      "intents": 19,
+      "source_examples": 78
     }
   },
   "family_intent_split_counts": {
@@ -142,7 +142,9 @@
       "train": 5
     },
     "QF31": {
-      "test": 3
+      "dev": 1,
+      "test": 1,
+      "train": 1
     }
   },
   "intent_split_map": {
@@ -255,8 +257,8 @@
     "qf30_offering_collision_list": "train",
     "qf30_segment_collision_count": "train",
     "qf30_segment_collision_list": "test",
-    "qf31_place_company_revenue_model_count": "test",
-    "qf31_place_company_revenue_model_list": "test",
+    "qf31_place_company_revenue_model_count": "dev",
+    "qf31_place_company_revenue_model_list": "train",
     "qf31_place_segment_channel_list": "test"
   }
 }

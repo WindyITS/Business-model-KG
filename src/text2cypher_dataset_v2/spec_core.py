@@ -257,6 +257,22 @@ QUESTION_PARAPHRASE_BOOSTS: dict[str, tuple[str, str]] = {
         "Show me the places where {company} operates sorted alphabetically.",
         "List all places where {company} operates in alphabetical order.",
     ),
+    "Is {partner} explicitly recorded as a partner of {company}?": (
+        "Can you confirm that the graph records {partner} as a partner of {company}?",
+        "Does the KG explicitly list {partner} as a partner for {company}?",
+    ),
+    "Is {customer_type} explicitly recorded as a customer type for {company}'s {segment} segment?": (
+        "Can you confirm that the graph records {customer_type} for {company}'s {segment} segment?",
+        "Does the KG explicitly list {customer_type} as a customer type for {company}'s {segment} segment?",
+    ),
+    "Is {revenue_model} explicitly recorded as a revenue model for {company}'s {offering}?": (
+        "Can you confirm that the graph records {revenue_model} for {company}'s {offering}?",
+        "Does the KG explicitly list {revenue_model} as a revenue model for {company}'s {offering}?",
+    ),
+    "Is {place} explicitly recorded as an operating place for {company}?": (
+        "Can you confirm that the graph records {place} as an operating place for {company}?",
+        "Does the KG explicitly list {place} in {company}'s operating footprint?",
+    ),
     "Which companies have a segment called {segment_name}?": (
         "Show every company with a segment called {segment_name}.",
         "List the companies that expose a segment named {segment_name}.",
@@ -289,6 +305,14 @@ QUESTION_PARAPHRASE_BOOSTS: dict[str, tuple[str, str]] = {
         "Show me how {surface_name} makes money.",
         "List the revenue models associated with {surface_name}.",
     ),
+    "What does the surface name {surface_name} offer?": (
+        "Show me what the surface name {surface_name} offers.",
+        "What offerings belong to the surface form {surface_name}?",
+    ),
+    "How does the surface name {surface_name} make money?": (
+        "Show me how the surface name {surface_name} makes money.",
+        "What revenue models attach to the surface form {surface_name}?",
+    ),
     "Which segment is {company}'s {offering} under?": (
         "Show me the segment that contains {company}'s {offering}.",
         "What segment anchors {company}'s {offering}?",
@@ -313,6 +337,14 @@ QUESTION_PARAPHRASE_BOOSTS: dict[str, tuple[str, str]] = {
         "Show me the top-level offering for {company}'s {offering}.",
         "Which root offering anchors {company}'s {offering}?",
     ),
+    "What is the topmost offering above {company}'s {offering}?": (
+        "Show me the root ancestor offering for {company}'s {offering}.",
+        "Which topmost ancestor sits above {company}'s {offering}?",
+    ),
+    "Is {company}'s {segment} segment one of the segments that sell through {channel}?": (
+        "Can you confirm that the reverse channel lookup for {channel} includes {company}'s {segment} segment?",
+        "Does the segment set for {channel} include {company}'s {segment} segment?",
+    ),
     "Which companies operate in {place}?": (
         "Show all companies that operate in {place}.",
         "List the companies that match {place} geographically.",
@@ -328,6 +360,10 @@ QUESTION_PARAPHRASE_BOOSTS: dict[str, tuple[str, str]] = {
     "How does {company} match {place}?": (
         "What geography match class applies to {company} for {place}?",
         "Show the match label for {company} and {place}.",
+    ),
+    "Does {company}'s operating footprint match {place} anywhere in the geography hierarchy?": (
+        "Can you confirm that {company} matches {place} through an exact, broader, or narrower geography?",
+        "Is {place} matched anywhere in {company}'s geography hierarchy footprint?",
     ),
 }
 
@@ -1779,8 +1815,8 @@ intent_specs = [
     _intent(
         intent_id="qf17_channel_segment_membership",
         family_id="QF17",
-        question_template="Does {company}'s {segment} segment sell through {channel}?",
-        paraphrase_templates=("Is {channel} one of the channels for {company}'s {segment} segment?",),
+        question_template="Is {company}'s {segment} segment one of the segments that sell through {channel}?",
+        paraphrase_templates=("Is {company}'s {segment} segment included in the segment set for {channel}?",),
         cypher="MATCH (:Company {name: $company})-[:HAS_SEGMENT]->(s:BusinessSegment {company_name: $company, name: $segment})-[:SELLS_THROUGH]->(:Channel {name: $channel}) RETURN COUNT(DISTINCT s) > 0 AS is_match",
         result_shape=BOOL_SHAPE("Whether the segment uses the given channel"),
         bindings=SEGMENT_CUSTOMER_CHANNEL_BINDINGS,
@@ -1892,8 +1928,8 @@ intent_specs = [
     _intent(
         intent_id="qf22_partner_existence",
         family_id="QF22",
-        question_template="Does {company} partner with {partner}?",
-        paraphrase_templates=("Is {partner} a partner of {company}?",),
+        question_template="Is {partner} explicitly recorded as a partner of {company}?",
+        paraphrase_templates=("Is {partner} listed in the KG as a partner of {company}?",),
         cypher="MATCH (:Company {name: $company})-[:PARTNERS_WITH]->(partner:Company {name: $partner}) RETURN COUNT(DISTINCT partner) > 0 AS is_match",
         result_shape=BOOL_SHAPE("Whether the company partners with the given company"),
         bindings=GEO_PARTNER_EU_BINDINGS + GEO_PARTNER_APAC_BINDINGS,
@@ -1902,8 +1938,8 @@ intent_specs = [
     _intent(
         intent_id="qf22_segment_customer_existence",
         family_id="QF22",
-        question_template="Does {company}'s {segment} segment serve {customer_type}?",
-        paraphrase_templates=("Is {customer_type} a customer type for {company}'s {segment} segment?",),
+        question_template="Is {customer_type} explicitly recorded as a customer type for {company}'s {segment} segment?",
+        paraphrase_templates=("Is {customer_type} listed in the KG for {company}'s {segment} segment?",),
         cypher="MATCH (:Company {name: $company})-[:HAS_SEGMENT]->(:BusinessSegment {company_name: $company, name: $segment})-[:SERVES]->(c:CustomerType {name: $customer_type}) RETURN COUNT(DISTINCT c) > 0 AS is_match",
         result_shape=BOOL_SHAPE("Whether the segment serves the given customer type"),
         bindings=SEGMENT_CUSTOMER_CHANNEL_BINDINGS,
@@ -1912,8 +1948,8 @@ intent_specs = [
     _intent(
         intent_id="qf22_offering_revenue_existence",
         family_id="QF22",
-        question_template="Does {company}'s {offering} monetize via {revenue_model}?",
-        paraphrase_templates=("Is {revenue_model} a revenue model for {company}'s {offering}?",),
+        question_template="Is {revenue_model} explicitly recorded as a revenue model for {company}'s {offering}?",
+        paraphrase_templates=("Is {revenue_model} listed in the KG for {company}'s {offering}?",),
         cypher="MATCH (:Company {name: $company})-[:OFFERS]->(o:Offering {company_name: $company, name: $offering})-[:MONETIZES_VIA]->(r:RevenueModel {name: $revenue_model}) RETURN COUNT(DISTINCT r) > 0 AS is_match",
         result_shape=BOOL_SHAPE("Whether the offering monetizes via the given revenue model"),
         bindings=REVENUE_BINDINGS,
@@ -1922,8 +1958,8 @@ intent_specs = [
     _intent(
         intent_id="qf22_company_place_existence",
         family_id="QF22",
-        question_template="Does {company} operate in {place}?",
-        paraphrase_templates=("Is {place} one of {company}'s operating geographies?",),
+        question_template="Is {place} explicitly recorded as an operating place for {company}?",
+        paraphrase_templates=("Is {place} listed in the KG as an operating place for {company}?",),
         cypher="MATCH (:Company {name: $company})-[:OPERATES_IN]->(place_node:Place {name: $place}) RETURN COUNT(DISTINCT place_node) > 0 AS is_match",
         result_shape=BOOL_SHAPE("Whether the company operates in the given place"),
         bindings=GEO_PARTNER_EU_BINDINGS + GEO_PARTNER_APAC_BINDINGS,
@@ -1986,8 +2022,8 @@ intent_specs = [
     _intent(
         intent_id="qf24_offering_root_ancestor",
         family_id="QF24",
-        question_template="What is the root offering for {company}'s {offering}?",
-        paraphrase_templates=("What top-level offering anchors {company}'s {offering}?",),
+        question_template="What is the topmost offering above {company}'s {offering}?",
+        paraphrase_templates=("What is the root ancestor offering for {company}'s {offering}?",),
         cypher="MATCH p=(root:Offering {company_name: $company})-[:OFFERS*1..]->(o:Offering {company_name: $company, name: $offering}) WITH root.name AS root_offering, length(p) AS depth ORDER BY depth DESC LIMIT 1 RETURN root_offering",
         result_shape=(_col("root_offering", "string"),),
         bindings=REVERSE_HIERARCHY_BINDINGS,
@@ -2041,8 +2077,8 @@ intent_specs = [
     _intent(
         intent_id="qf29_company_geography_match_boolean",
         family_id="QF29",
-        question_template="Does {company} operate in {place}?",
-        paraphrase_templates=("Is {place} a valid operating geography for {company}?",),
+        question_template="Does {company}'s operating footprint match {place} anywhere in the geography hierarchy?",
+        paraphrase_templates=("Is {place} matched anywhere in {company}'s geography hierarchy footprint?",),
         cypher=(
             "MATCH (:Company {name: $company})-[:OPERATES_IN]->(place:Place) "
             "WITH place.name AS matched_place, "
@@ -2150,8 +2186,8 @@ intent_specs = [
     _intent(
         intent_id="qf30_ambiguous_surface_request",
         family_id="QF30",
-        question_template="What does {surface_name} offer?",
-        paraphrase_templates=("How does {surface_name} make money?",),
+        question_template="What does the surface name {surface_name} offer?",
+        paraphrase_templates=("How does the surface name {surface_name} make money?",),
         cypher=None,
         result_shape=None,
         bindings=QF30_REFUSAL_BINDINGS,

@@ -26,6 +26,12 @@ DEFAULT_SPEC_MODULES = (
 DEFAULT_OUTPUT_ROOT = Path("datasets/text2cypher/v2")
 SPLIT_ORDER = ("train", "dev", "test")
 PARAM_PATTERN = re.compile(r"\$([A-Za-z_][A-Za-z0-9_]*)")
+SFT_SYSTEM_PROMPT = (
+    "Translate the user request into read-only Cypher for this business-model knowledge graph. "
+    "Output compact JSON only. "
+    'For answerable requests return {"answerable": true, "cypher": "...", "params": {...}}. '
+    'For unsupported or ambiguous requests return {"answerable": false, "reason": "..."}.' 
+)
 
 
 class DatasetBuildError(ValueError):
@@ -160,6 +166,32 @@ def _normalize_source_example(source: SourceExampleSpec | Dict[str, Any]) -> dic
     return row
 
 
+def _assistant_output_payload(row: Dict[str, Any]) -> dict[str, Any]:
+    if row["answerable"]:
+        return {
+            "answerable": True,
+            "cypher": row["gold_cypher"],
+            "params": _jsonable(row["params"]),
+        }
+    return {
+        "answerable": False,
+        "reason": row["refusal_reason"],
+    }
+
+
+def _assistant_output_text(row: Dict[str, Any]) -> str:
+    return json.dumps(
+        _assistant_output_payload(row),
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=False,
+    )
+
+
+def _normalize_question_text(question: str) -> str:
+    return " ".join(question.split()).casefold()
+
+
 def _load_module_spec(module_name: str) -> DatasetSpec:
     try:
         module = importlib.import_module(module_name)
@@ -271,6 +303,10 @@ def _validate_spec_shapes(fixtures: Sequence[Dict[str, Any]], source_examples: S
                 raise DatasetBuildError(
                     f"Answerable example {example['example_id']} must provide result_shape as a list"
                 )
+            if example["refusal_reason"] is not None:
+                raise DatasetBuildError(
+                    f"Answerable example {example['example_id']} must not provide refusal_reason"
+                )
             for column in example["result_shape"]:
                 if not isinstance(column, dict):
                     raise DatasetBuildError(
@@ -288,6 +324,10 @@ def _validate_spec_shapes(fixtures: Sequence[Dict[str, Any]], source_examples: S
         else:
             if example["gold_cypher"] is not None:
                 raise DatasetBuildError(f"Refusal example {example['example_id']} must omit gold_cypher")
+            if not isinstance(example["refusal_reason"], str) or not example["refusal_reason"].strip():
+                raise DatasetBuildError(
+                    f"Refusal example {example['example_id']} must include refusal_reason"
+                )
         previous_split = intent_splits.setdefault(example["intent_id"], example["split"])
         if previous_split != example["split"]:
             raise DatasetBuildError(
@@ -395,6 +435,140 @@ def _build_split_manifest(source_examples: Sequence[Dict[str, Any]], training_ro
     }
 
 
+def _validate_train_family_coverage(manifest: Dict[str, Any]) -> None:
+    missing_train_families = [
+        family_id
+        for family_id, split_counts in sorted(manifest["family_intent_split_counts"].items())
+        if split_counts.get("train", 0) < 1
+    ]
+    if missing_train_families:
+        raise DatasetBuildError(
+            "Every query family must have train coverage. Missing from train: "
+            + ", ".join(missing_train_families)
+        )
+
+
+def _validate_training_question_contracts(
+    training_rows: Sequence[Dict[str, Any]],
+    intent_split_map: Dict[str, str],
+) -> None:
+    question_to_rows: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in training_rows:
+        question_to_rows[_normalize_question_text(row["question"])].append(row)
+
+    conflicting_questions: list[str] = []
+    leaked_questions: list[str] = []
+    for normalized_question, rows in sorted(question_to_rows.items()):
+        completions = {_assistant_output_text(row) for row in rows}
+        if len(completions) > 1:
+            conflicting_questions.append(rows[0]["question"])
+        splits = {intent_split_map[row["intent_id"]] for row in rows}
+        if len(splits) > 1:
+            leaked_questions.append(rows[0]["question"])
+
+    if conflicting_questions:
+        sample = ", ".join(repr(question) for question in conflicting_questions[:5])
+        raise DatasetBuildError(
+            "duplicate question conflicts map to different assistant targets. "
+            f"Sample conflicts: {sample}"
+        )
+    if leaked_questions:
+        sample = ", ".join(repr(question) for question in leaked_questions[:5])
+        raise DatasetBuildError(
+            "duplicate question leakage across splits detected. "
+            f"Sample leaked prompts: {sample}"
+        )
+
+
+def _build_sft_rows(
+    training_rows: Sequence[Dict[str, Any]],
+    intent_split_map: Dict[str, str],
+) -> list[dict[str, Any]]:
+    grouped_rows: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
+    for row in training_rows:
+        split = intent_split_map[row["intent_id"]]
+        completion = _assistant_output_text(row)
+        grouped_rows[(split, row["question"], completion)].append(row)
+
+    sft_rows: list[dict[str, Any]] = []
+    for (split, question, completion), rows in sorted(grouped_rows.items()):
+        first_row = rows[0]
+        training_example_ids = sorted(row["training_example_id"] for row in rows)
+        source_example_ids = sorted({row["source_example_id"] for row in rows})
+        intent_ids = sorted({row["intent_id"] for row in rows})
+        family_ids = sorted({row["family_id"] for row in rows})
+        fixture_ids = sorted({row["fixture_id"] for row in rows if row["fixture_id"] is not None})
+        graph_ids = sorted({row["graph_id"] for row in rows if row["graph_id"] is not None})
+        binding_ids = sorted({row["binding_id"] for row in rows if row["binding_id"] is not None})
+        difficulties = sorted({row["difficulty"] for row in rows})
+        variant_kinds = sorted({row["variant_kind"] for row in rows})
+
+        sft_rows.append(
+            {
+                "sft_example_id": training_example_ids[0],
+                "training_example_ids": training_example_ids,
+                "split": split,
+                "prompt": question,
+                "completion": completion,
+                "messages": [
+                    {"role": "system", "content": SFT_SYSTEM_PROMPT},
+                    {"role": "user", "content": question},
+                    {"role": "assistant", "content": completion},
+                ],
+                "metadata": {
+                    "example_id": first_row["source_example_id"],
+                    "training_example_id": first_row["training_example_id"],
+                    "intent_id": first_row["intent_id"],
+                    "family_id": first_row["family_id"],
+                    "source_example_ids": source_example_ids,
+                    "intent_ids": intent_ids,
+                    "family_ids": family_ids,
+                    "fixture_ids": fixture_ids,
+                    "graph_ids": graph_ids,
+                    "binding_ids": binding_ids,
+                    "variant_kinds": variant_kinds,
+                    "difficulty": difficulties,
+                    "answerable": first_row["answerable"],
+                    "refusal_reason": first_row["refusal_reason"],
+                    "result_shape": first_row["result_shape"],
+                },
+            }
+        )
+    return sft_rows
+
+
+def _build_sft_manifest(
+    sft_rows: Sequence[Dict[str, Any]],
+    training_rows: Sequence[Dict[str, Any]],
+    dataset_path: Path,
+) -> Dict[str, Any]:
+    split_counts: dict[str, dict[str, int]] = {}
+    for split in SPLIT_ORDER:
+        rows = [row for row in sft_rows if row["split"] == split]
+        split_counts[split] = {
+            "rows": len(rows),
+            "answerable_rows": sum(row["metadata"]["answerable"] for row in rows),
+            "refusal_rows": sum(not row["metadata"]["answerable"] for row in rows),
+        }
+
+    return {
+        "dataset_path": str(dataset_path),
+        "system_prompt": SFT_SYSTEM_PROMPT,
+        "assistant_contract": {
+            "answerable": {"keys": ["answerable", "cypher", "params"]},
+            "refusal": {"keys": ["answerable", "reason"]},
+        },
+        "counts": {
+            "source_training_rows": len(training_rows),
+            "sft_rows": len(sft_rows),
+            "duplicate_prompt_rows_merged": len(training_rows) - len(sft_rows),
+            "answerable_rows": sum(row["metadata"]["answerable"] for row in sft_rows),
+            "refusal_rows": sum(not row["metadata"]["answerable"] for row in sft_rows),
+        },
+        "split_counts": split_counts,
+    }
+
+
 def _write_jsonl(path: Path, rows: Iterable[Dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as handle:
@@ -413,6 +587,10 @@ def build_dataset(spec: DatasetSpec, output_root: Path = DEFAULT_OUTPUT_ROOT) ->
             raise DatasetBuildError(f"Training row {row['training_example_id']} is answerable but missing gold_cypher")
         if not row["answerable"] and row["gold_cypher"] is not None:
             raise DatasetBuildError(f"Training row {row['training_example_id']} is refusal but has gold_cypher")
+        if not row["answerable"] and not row["refusal_reason"]:
+            raise DatasetBuildError(
+                f"Training row {row['training_example_id']} is refusal but missing refusal_reason"
+            )
 
     seen_training_ids = set()
     for row in training_rows:
@@ -430,11 +608,21 @@ def build_dataset(spec: DatasetSpec, output_root: Path = DEFAULT_OUTPUT_ROOT) ->
         training_rows,
         output_root / "training" / "training_examples.jsonl",
     )
+    _validate_training_question_contracts(training_rows, manifest["intent_split_map"])
+    _validate_train_family_coverage(manifest)
+    sft_rows = _build_sft_rows(training_rows, manifest["intent_split_map"])
+    sft_manifest = _build_sft_manifest(
+        sft_rows,
+        training_rows,
+        output_root / "training" / "messages.jsonl",
+    )
     return {
         "fixtures": fixtures,
         "source_examples": source_examples,
         "training_examples": training_rows,
         "split_manifest": manifest,
+        "sft_examples": sft_rows,
+        "sft_manifest": sft_manifest,
     }
 
 
@@ -446,6 +634,7 @@ def write_dataset(dataset: dict[str, Any], output_root: Path = DEFAULT_OUTPUT_RO
     _write_jsonl(source_root / "fixture_instances.jsonl", dataset["fixtures"])
     _write_jsonl(source_root / "bound_seed_examples.jsonl", dataset["source_examples"])
     _write_jsonl(training_root / "training_examples.jsonl", dataset["training_examples"])
+    _write_jsonl(training_root / "messages.jsonl", dataset["sft_examples"])
 
     split_rows: dict[str, list[dict[str, Any]]] = {split: [] for split in SPLIT_ORDER}
     for row in dataset["training_examples"]:
@@ -454,9 +643,19 @@ def write_dataset(dataset: dict[str, Any], output_root: Path = DEFAULT_OUTPUT_RO
     for split in SPLIT_ORDER:
         _write_jsonl(training_root / f"{split}.jsonl", split_rows[split])
 
+    sft_split_rows: dict[str, list[dict[str, Any]]] = {split: [] for split in SPLIT_ORDER}
+    for row in dataset["sft_examples"]:
+        sft_split_rows[row["split"]].append(row)
+    for split in SPLIT_ORDER:
+        _write_jsonl(training_root / f"{split}_messages.jsonl", sft_split_rows[split])
+
     reports_root.mkdir(parents=True, exist_ok=True)
     (reports_root / "training_split_manifest.json").write_text(
         json.dumps(dataset["split_manifest"], indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    (reports_root / "sft_manifest.json").write_text(
+        json.dumps(dataset["sft_manifest"], indent=2, ensure_ascii=False),
         encoding="utf-8",
     )
 
@@ -489,6 +688,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "fixtures": len(dataset["fixtures"]),
         "source_examples": len(dataset["source_examples"]),
         "training_examples": len(dataset["training_examples"]),
+        "sft_examples": len(dataset["sft_examples"]),
     }
     print(json.dumps(summary, indent=2, ensure_ascii=False))
     return 0

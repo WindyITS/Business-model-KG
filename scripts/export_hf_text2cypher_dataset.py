@@ -45,23 +45,30 @@ def _build_summary(dataset_root: Path) -> dict:
     fixture_path = dataset_root / "source" / "fixture_instances.jsonl"
     source_path = dataset_root / "source" / "bound_seed_examples.jsonl"
     training_path = dataset_root / "training" / "training_examples.jsonl"
+    messages_path = dataset_root / "training" / "messages.jsonl"
     manifest_path = dataset_root / "reports" / "training_split_manifest.json"
+    sft_manifest_path = dataset_root / "reports" / "sft_manifest.json"
 
     fixtures = _load_jsonl(fixture_path)
     source_rows = _load_jsonl(source_path)
     training_rows = _load_jsonl(training_path)
+    message_rows = _load_jsonl(messages_path) if messages_path.exists() else []
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    sft_manifest = json.loads(sft_manifest_path.read_text(encoding="utf-8")) if sft_manifest_path.exists() else {}
 
     return {
         "dataset_root": str(dataset_root.relative_to(ROOT)),
         "fixtures": len(fixtures),
         "source_examples": len(source_rows),
         "training_examples": len(training_rows),
+        "message_examples": len(message_rows),
         "intents": len({row["intent_id"] for row in source_rows}),
         "families": len({row["family_id"] for row in source_rows}),
         "answerable_source_examples": Counter(row["answerable"] for row in source_rows),
         "difficulty_training_rows": Counter(row["difficulty"] for row in training_rows),
         "split_counts": manifest["split_counts"],
+        "message_split_counts": sft_manifest.get("split_counts", {}),
+        "duplicate_prompt_rows_merged": sft_manifest.get("counts", {}).get("duplicate_prompt_rows_merged", 0),
     }
 
 
@@ -105,6 +112,7 @@ def main() -> int:
         dataset_root / "source",
         dataset_root / "reports",
         dataset_root / "training",
+        dataset_root / "training" / "messages.jsonl",
         packaging_root / "README.md",
     ):
         _ensure_exists(required)

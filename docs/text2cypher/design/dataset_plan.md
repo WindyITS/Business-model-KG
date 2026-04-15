@@ -9,6 +9,7 @@ Current status:
 - the V2 dataset build is complete
 - the final readiness assessment is documented in [`readiness_v2.md`](./readiness_v2.md)
 - the canonical machine-readable artifacts live under [`datasets/text2cypher/`](../../../datasets/text2cypher/README.md)
+- the generated model-facing `messages.jsonl` export lives under `datasets/text2cypher/v2/training/` and is copied into the release bundle during packaging
 - the next engineering step is model training and evaluation rather than more dataset scaffolding
 
 The target runtime behavior is:
@@ -56,7 +57,7 @@ Synthetic fixtures should mimic the production graph shape closely enough that t
 
 ## Output Contract
 
-The fine-tuned model should emit compact JSON, not prose.
+The fine-tuned model should emit compact JSON, not prose. The canonical corpus retains the provenance and validation fields; the generated trainer-facing export should reshape those rows into a chat-style or prompt/completion-style SFT record whose assistant target is the JSON contract below.
 
 Recommended shape:
 
@@ -84,6 +85,7 @@ Notes:
 - prefer parameterized Cypher over hardcoded literals
 - never emit write queries
 - never emit explanations, markdown, or chain-of-thought
+- in the canonical source corpus, refusal rows may keep `gold_cypher: null`; in `training/messages.jsonl`, refusal targets must become explicit JSON refusal objects
 
 ## Dataset Construction Workflow
 
@@ -302,7 +304,7 @@ Never allow one paraphrase into train and another paraphrase of the same query f
 
 ### Phase 8. Package Training Examples
 
-Each final record should contain:
+Each canonical source row should contain:
 
 - `intent_id`
 - optional `binding_id`
@@ -315,7 +317,11 @@ Each final record should contain:
 - `difficulty`
 - optional metadata such as source company, seed author, and validation status
 
+The generated SFT export should then turn those rows into a trainer-facing message or prompt/completion schema, preserve the split assignment, and keep the assistant output as strict JSON only.
+
 If bindings are synthetic only, `binding_id` should refer to a synthetic fixture assignment rather than a production graph entity.
+
+For the model-facing export, the same semantic content should be rendered into a strict SFT envelope such as `messages` or `prompt`/`completion`, without losing the canonical metadata needed for provenance or evaluation.
 
 ## Row Semantics
 
@@ -419,6 +425,7 @@ The dataset effort should produce:
 - validated gold Cypher set
 - paraphrase-expanded training set
 - negative example set
+- generated `messages.jsonl` SFT export suitable for fine-tuning
 - train/validation/test splits by `intent_id`
 - evaluation harness based on execution accuracy
 

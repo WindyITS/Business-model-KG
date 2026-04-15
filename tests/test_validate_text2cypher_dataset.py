@@ -138,15 +138,30 @@ class ValidateText2CypherDatasetTests(unittest.TestCase):
                 scoped_rows.extend(call["params"]["rows"])
 
         self.assertEqual(
-            {
-                (row["name"], row["company_name"], row["properties"]["segment_tag"])
-                for row in scoped_rows
-            },
-            {
-                ("Atlas", "Atlas Dynamics", "primary"),
-                ("Atlas", "Atlas Works", "secondary"),
-            },
-        )
+                {
+                    (row["name"], row["company_name"], row["properties"]["segment_tag"])
+                    for row in scoped_rows
+                },
+                {
+                    ("Atlas", "Atlas Dynamics", "primary"),
+                    ("Atlas", "Atlas Works", "secondary"),
+                },
+            )
+
+    def test_normalizes_browser_style_neo4j_uri_before_connecting(self):
+        recorded = {}
+
+        def _driver(uri, auth):
+            recorded["uri"] = uri
+            recorded["auth"] = auth
+            return _FakeDriver()
+
+        with patch("validate_text2cypher_dataset.GraphDatabase.driver", side_effect=_driver):
+            loader = SyntheticGraphLoader("http://localhost:7474", "neo4j", "password")
+            loader.close()
+
+        self.assertEqual(recorded["uri"], "bolt://localhost:7687")
+        self.assertEqual(recorded["auth"], ("neo4j", "password"))
 
 
 if __name__ == "__main__":

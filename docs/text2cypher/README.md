@@ -2,7 +2,7 @@
 
 This folder holds the prose documentation for the supervised text-to-Cypher dataset.
 
-Machine-readable artifacts live under [`datasets/text2cypher/`](../../datasets/text2cypher/README.md), not in `docs/`.
+Machine-readable artifacts live under [`datasets/text2cypher/`](../../datasets/text2cypher/README.md), not in `docs/`. The canonical corpus and the generated `messages.jsonl` / split-specific message exports all live there.
 
 ## Canonical Docs
 
@@ -19,9 +19,21 @@ Machine-readable artifacts live under [`datasets/text2cypher/`](../../datasets/t
 - [Validation report](../../datasets/text2cypher/v2/reports/bound_seed_validation_report.json)
 - [Training corpus](../../datasets/text2cypher/v2/training/training_examples.jsonl)
 - [Split manifest](../../datasets/text2cypher/v2/reports/training_split_manifest.json)
+- [SFT manifest](../../datasets/text2cypher/v2/reports/sft_manifest.json)
 - [Train split](../../datasets/text2cypher/v2/training/train.jsonl)
 - [Dev split](../../datasets/text2cypher/v2/training/dev.jsonl)
 - [Test split](../../datasets/text2cypher/v2/training/test.jsonl)
+- [Messages export](../../datasets/text2cypher/v2/training/messages.jsonl)
+- [Train messages](../../datasets/text2cypher/v2/training/train_messages.jsonl)
+- [Dev messages](../../datasets/text2cypher/v2/training/dev_messages.jsonl)
+- [Test messages](../../datasets/text2cypher/v2/training/test_messages.jsonl)
+
+## Release Surfaces
+
+- canonical corpus: [`datasets/text2cypher/v2/`](../../datasets/text2cypher/README.md)
+- model-facing SFT export: [`datasets/text2cypher/v2/training/messages.jsonl`](../../datasets/text2cypher/v2/training/messages.jsonl) plus the split-specific `*_messages.jsonl` files
+- public GitHub repo: KG pipeline, ontology, dataset docs, and the workflow narrative
+- Hugging Face dataset repo: the release bundle consumed by trainers and evaluators
 
 ## Workflow
 
@@ -38,12 +50,12 @@ The workflow was:
 
 In practice, agents handled orchestration, expansion, and verification, while the dataset logic itself stayed curated at the intent, fixture, and query-pattern level rather than accepted from blind auto-generation.
 
-## Release Surfaces
+## Release Workflow
 
 The repo keeps the workflow narrative public, while allowing the packaging notes/templates to stay local:
 
 - public GitHub repo: KG pipeline, ontology, dataset docs, and the workflow narrative
-- Hugging Face dataset repo: machine-readable dataset release
+- Hugging Face dataset repo: canonical corpus plus the generated SFT-ready training view
 - local packaging templates and `dist/` export tree: generated release material, intentionally kept out of git
 
 That keeps the provenance visible to anyone landing on the project while still keeping release-operation details out of version control.

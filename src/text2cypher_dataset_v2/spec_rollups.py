@@ -11,8 +11,16 @@ from .models import (
     SourceExampleSpec,
 )
 
+INTENT_SPLIT_OVERRIDES = {
+    "qf31_place_company_revenue_model_list": "train",
+    "qf31_place_company_revenue_model_count": "dev",
+    "qf31_place_segment_channel_list": "test",
+}
+
 
 def _split_for_intent(intent_id: str) -> str:
+    if intent_id in INTENT_SPLIT_OVERRIDES:
+        return INTENT_SPLIT_OVERRIDES[intent_id]
     bucket = sum(ord(char) for char in intent_id) % 10
     if bucket in {0, 1}:
         return "test"
@@ -486,7 +494,7 @@ def _build_fx09_segment_revenue_rollup_tree() -> tuple[FixtureSpec, list[SourceE
                 fixture_id=fixture_id,
                 graph_id=graph_id,
                 binding_id=f"{slug}_{revenue_model.replace(' ', '_')}_filtered_count",
-                question=f"How many offerings in {company}'s {segment} segment monetize via {revenue_model}?",
+                question=f"Count the offerings in {company}'s {segment} segment that monetize via {revenue_model}.",
                 gold_cypher=monetized_offerings_count_cypher,
                 params={"company": company, "segment": segment, "revenue_model": revenue_model},
                 result_shape=[_col("offering_count", "integer")],
