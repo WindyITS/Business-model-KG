@@ -23,6 +23,21 @@ Machine-readable artifacts live under [`datasets/text2cypher/`](../../datasets/t
 - [Dev split](../../datasets/text2cypher/v2/training/dev.jsonl)
 - [Test split](../../datasets/text2cypher/v2/training/test.jsonl)
 
+## How It Was Built
+
+This text-to-Cypher dataset/database was built through agent orchestration rather than a fully autonomous self-generation loop.
+
+The workflow was:
+
+- define query families and intent-level semantic tasks
+- author synthetic graph fixtures where those tasks are valid, ambiguous, or unsupported on purpose
+- write gold parameterized Cypher for each intent
+- bind those intents to concrete synthetic values
+- validate the gold queries against Neo4j-backed synthetic graphs
+- expand the natural-language side with multiple user phrasings, including messier analyst-style prompts and refusal cases
+
+In practice, the agents handled orchestration, expansion, and verification, but the dataset logic was still curated at the intent, fixture, and query-pattern level rather than accepted from blind auto-generation.
+
 ## Tooling
 
 Dataset validation entrypoint:

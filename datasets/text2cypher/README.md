@@ -2,6 +2,8 @@
 
 This directory contains the machine-readable artifacts for the text-to-Cypher supervised dataset.
 
+The dataset/database itself was built through agent orchestration over authored query families, synthetic graph fixtures, validated gold Cypher, and expanded user-question variants. See [`../../docs/text2cypher/README.md`](../../docs/text2cypher/README.md) for the full build workflow.
+
 ## Layout
 
 - `v2/`
