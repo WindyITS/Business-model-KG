@@ -35,6 +35,7 @@ from main import (
     _mode_name,
 )
 from model_provider import resolve_model_settings
+from neo4j_loader import _merge_node_clause
 
 
 class PipelineComponentTests(unittest.TestCase):
@@ -94,6 +95,15 @@ class PipelineComponentTests(unittest.TestCase):
 
         self.assertEqual(len(resolved), 1)
         self.assertEqual(resolved[0].object, "Apollo")
+
+    def test_merge_node_clause_scopes_segments_and_offerings_by_company(self):
+        segment_clause = _merge_node_clause("subject", "BusinessSegment", "subject_name", "subject_company_name")
+        offering_clause = _merge_node_clause("object", "Offering", "object_name", "object_company_name")
+        company_clause = _merge_node_clause("subject", "Company", "subject_name", "subject_company_name")
+
+        self.assertIn("company_name: row.subject_company_name", segment_clause)
+        self.assertIn("company_name: row.object_company_name", offering_clause)
+        self.assertNotIn("company_name", company_clause)
 
     def test_evaluator_accepts_resolved_triples_payload(self):
         payload = {
@@ -1177,6 +1187,8 @@ class PipelineComponentTests(unittest.TestCase):
                 },
             }
 
+            load_call: dict[str, object] = {}
+
             class FakeNeo4jLoader:
                 def __init__(self, uri, user, password):
                     self.uri = uri
@@ -1189,7 +1201,9 @@ class PipelineComponentTests(unittest.TestCase):
                 def setup_constraints(self):
                     pass
 
-                def load_triples(self, triples):
+                def load_triples(self, triples, company_name):
+                    load_call["company_name"] = company_name
+                    load_call["triple_count"] = len(triples)
                     return len(triples)
 
                 def close(self):
@@ -1228,6 +1242,8 @@ class PipelineComponentTests(unittest.TestCase):
             self.assertFalse(summary["skip_neo4j"])
             self.assertEqual(summary["status"], "success")
             self.assertEqual(summary["loaded_triple_count"], 1)
+            self.assertEqual(load_call["company_name"], "Microsoft")
+            self.assertEqual(load_call["triple_count"], 1)
 
             mock_resolve.assert_called_once()
             fake_extractor.extract_canonical_pipeline.assert_called_once()

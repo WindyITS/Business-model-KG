@@ -554,7 +554,7 @@ def main() -> int:
                     loader.clear_graph()
                     graph_cleared = True
                 loader.setup_constraints()
-                loaded_triples = loader.load_triples(resolved_triples)
+                loaded_triples = loader.load_triples(resolved_triples, company_name=company_name)
             finally:
                 loader.close()
 

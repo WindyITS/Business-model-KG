@@ -10,6 +10,8 @@ from place_hierarchy import PLACE_INCLUDES_PROPERTY, PLACE_WITHIN_PROPERTY, plac
 logger = logging.getLogger(__name__)
 
 ALLOWED_NODE_TYPES = {"Company", "BusinessSegment", "Offering", "CustomerType", "Channel", "Place", "RevenueModel"}
+SCOPED_NODE_TYPES = {"BusinessSegment", "Offering"}
+SCOPED_NODE_COMPANY_PROPERTY = "company_name"
 ALLOWED_RELATION_TYPES = {
     "HAS_SEGMENT",
     "OFFERS",
@@ -35,15 +37,20 @@ class Neo4jLoader:
         logger.info("Cleared all nodes and relationships from Neo4j.")
 
     def setup_constraints(self) -> None:
-        """Set up uniqueness constraints on the `name` property for all node types."""
-        node_types = ["Company", "BusinessSegment", "Offering", "CustomerType", "Channel", "Place", "RevenueModel"]
+        """Set up uniqueness constraints, scoping segments and offerings by company."""
+        unscoped_node_types = ["Company", "CustomerType", "Channel", "Place", "RevenueModel"]
         with self.driver.session() as session:
-            for constraint_name in ("BusinessSegment_name_company", "Offering_name_company"):
+            for constraint_name in (
+                "BusinessSegment_name",
+                "BusinessSegment_name_company",
+                "Offering_name",
+                "Offering_name_company",
+            ):
                 try:
                     session.run(f"DROP CONSTRAINT {constraint_name} IF EXISTS").consume()
                 except Exception as exc:  # pragma: no cover - exercised only with Neo4j.
                     logger.warning("Could not drop scoped constraint %s: %s", constraint_name, exc)
-            for node_type in node_types:
+            for node_type in unscoped_node_types:
                 try:
                     query = (
                         f"CREATE CONSTRAINT {node_type}_name IF NOT EXISTS "
@@ -52,9 +59,18 @@ class Neo4jLoader:
                     session.run(query)
                 except Exception as exc:  # pragma: no cover - exercised only with Neo4j.
                     logger.warning("Could not create constraint for %s: %s", node_type, exc)
+            for node_type in sorted(SCOPED_NODE_TYPES):
+                try:
+                    query = (
+                        f"CREATE CONSTRAINT {node_type}_name_company IF NOT EXISTS "
+                        f"FOR (node:{node_type}) REQUIRE (node.{SCOPED_NODE_COMPANY_PROPERTY}, node.name) IS UNIQUE"
+                    )
+                    session.run(query)
+                except Exception as exc:  # pragma: no cover - exercised only with Neo4j.
+                    logger.warning("Could not create scoped constraint for %s: %s", node_type, exc)
             logger.info("Checked/created uniqueness constraints.")
 
-    def load_triples(self, triples: List[Triple], batch_size: int = 200) -> int:
+    def load_triples(self, triples: List[Triple], company_name: str, batch_size: int = 200) -> int:
         grouped_rows: DefaultDict[Tuple[str, str, str], List[dict]] = defaultdict(list)
         place_names: set[str] = set()
         skipped_triples = 0
@@ -70,7 +86,9 @@ class Neo4jLoader:
             grouped_rows[(triple.subject_type, triple.relation, triple.object_type)].append(
                 {
                     "subject_name": triple.subject,
+                    "subject_company_name": company_name,
                     "object_name": triple.object,
+                    "object_company_name": company_name,
                 }
             )
             if triple.subject_type == "Place":
@@ -81,10 +99,22 @@ class Neo4jLoader:
         total_loaded = 0
         with self.driver.session() as session:
             for (subject_type, relation, object_type), rows in grouped_rows.items():
+                subject_merge = _merge_node_clause(
+                    alias="subject",
+                    node_type=subject_type,
+                    name_field="subject_name",
+                    company_field="subject_company_name",
+                )
+                object_merge = _merge_node_clause(
+                    alias="object",
+                    node_type=object_type,
+                    name_field="object_name",
+                    company_field="object_company_name",
+                )
                 query = f"""
                 UNWIND $rows AS row
-                MERGE (subject:{subject_type} {{name: row.subject_name}})
-                MERGE (object:{object_type} {{name: row.object_name}})
+                {subject_merge}
+                {object_merge}
                 MERGE (subject)-[:{relation}]->(object)
                 """
                 for start in range(0, len(rows), batch_size):
@@ -118,3 +148,12 @@ class Neo4jLoader:
             logger.warning("Skipped %s triples due to invalid node/relation types.", skipped_triples)
         logger.info("Successfully loaded %s triples into Neo4j.", total_loaded)
         return total_loaded
+
+
+def _merge_node_clause(alias: str, node_type: str, name_field: str, company_field: str) -> str:
+    if node_type in SCOPED_NODE_TYPES:
+        return (
+            f"MERGE ({alias}:{node_type} "
+            f"{{name: row.{name_field}, {SCOPED_NODE_COMPANY_PROPERTY}: row.{company_field}}})"
+        )
+    return f"MERGE ({alias}:{node_type} {{name: row.{name_field}}})"

@@ -25,6 +25,11 @@ The ontology is segment-centered:
 - `MONETIZES_VIA` lives on `Offering`
 - `OPERATES_IN` and `PARTNERS_WITH` stay company-level
 
+When loading multiple companies into Neo4j, `BusinessSegment` and `Offering` nodes are scoped by
+`company_name` so same-named nodes from different companies do not collapse into one shared node.
+This keeps canonical shared vocabularies such as `Channel`, `CustomerType`, `RevenueModel`, and
+`Place` global, while keeping company-owned inventory nodes distinct.
+
 Full ontology spec: [`docs/ontology.md`](./docs/ontology.md)
 
 ## Canonical Extraction Pipeline
@@ -157,6 +162,35 @@ docker compose up -d
 Neo4j Browser:
 - `http://localhost:7474`
 - default credentials: `neo4j / password`
+
+## Neo4j Node Scoping
+
+When the loader writes to Neo4j:
+- `Company`, `Channel`, `CustomerType`, `RevenueModel`, and `Place` remain globally keyed by `name`
+- `BusinessSegment` and `Offering` are keyed by `(company_name, name)`
+
+This prevents cross-company collisions such as two different companies each having an offering named
+`Advertising`.
+
+Example checks:
+
+```cypher
+MATCH (n)
+WHERE n.company_name = "Apple" AND (n:BusinessSegment OR n:Offering)
+RETURN labels(n)[0] AS label, n.name AS name, n.company_name AS company_name
+ORDER BY label, name
+LIMIT 100
+```
+
+```cypher
+MATCH (o:Offering {name: "Advertising"})
+RETURN o.name AS offering, o.company_name AS company_name
+ORDER BY company_name
+```
+
+If your database already contains older unscoped `BusinessSegment` or `Offering` nodes from a
+previous loader version, clear and reload the graph once so the scoped identity takes effect
+consistently.
 
 ## Geography
 

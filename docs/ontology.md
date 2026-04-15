@@ -28,6 +28,19 @@ Do not:
 
 Those behaviors belong in downstream Neo4j querying.
 
+### 2A. Company-scoped inventory identity in Neo4j
+
+The extraction format stays canonical and does not add extra scope fields to triples.
+
+At Neo4j load time, however, the runtime scopes company-owned inventory nodes so same-named
+entities from different companies do not collapse together:
+- `BusinessSegment` nodes are keyed by `(company_name, name)`
+- `Offering` nodes are keyed by `(company_name, name)`
+- `Company`, `Channel`, `CustomerType`, `RevenueModel`, and `Place` remain globally keyed by `name`
+
+This means two different companies can each have an offering named `Advertising` without creating
+one shared `Offering` node in the graph.
+
 ### 3. Sparse-text honesty with bounded inference
 
 If the filing only states a fact at a broad level, do not force a more granular triple just to make the graph denser.
@@ -295,6 +308,31 @@ ORDER BY best_rank, company
 A company can match through more than one direct place tag. Aggregate by company and use
 `MIN(match_rank)` so the final result keeps one row per company with the strongest match
 class.
+
+### Downstream Company-Scoped Inventory Queries
+
+For downstream querying, treat `BusinessSegment` and `Offering` as company-scoped even when the
+surface name is ambiguous across companies.
+
+Recommended Cypher pattern:
+
+```cypher
+MATCH (company:Company {name: $company})-[:HAS_SEGMENT]->(segment:BusinessSegment {company_name: $company})
+OPTIONAL MATCH (segment)-[:OFFERS]->(offering:Offering {company_name: $company})
+RETURN company.name AS company,
+       segment.name AS segment,
+       collect(DISTINCT offering.name) AS offerings
+ORDER BY segment
+```
+
+Collision check example:
+
+```cypher
+MATCH (offering:Offering {name: $offering_name})
+RETURN offering.name AS offering,
+       offering.company_name AS company_name
+ORDER BY company_name
+```
 
 ## Canonical Extraction Rules
 
