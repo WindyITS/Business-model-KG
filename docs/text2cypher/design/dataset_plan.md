@@ -410,10 +410,10 @@ Additional recommended checks:
 
 The intended training path is:
 
-1. optional short warm-up on public Text-to-Cypher data to reinforce syntax and query structure
-2. main fine-tuning pass on this repo's ontology-specific synthetic dataset
+1. fine-tune directly on this repo's ontology-specific dataset
+2. use `train_messages.jsonl` as the training split and keep `dev_messages.jsonl` and `test_messages.jsonl` held out for evaluation
 
-The ontology-specific pass should dominate the final model behavior.
+No public warm-up stage is planned. The goal is for the model to learn this KG's query contract directly from the checked-in corpus rather than from a broader mixed-schema Cypher dataset.
 
 ## Deliverables
 

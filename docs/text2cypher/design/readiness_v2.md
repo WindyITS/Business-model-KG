@@ -4,6 +4,8 @@
 
 The rebuilt canonical corpus is ready for high-quality fine-tuning, and the checked-in `messages.jsonl` export already gives the little model the right trainer-facing contract.
 
+The training plan is to use this dataset only. No external Cypher warm-up corpus is required before the ontology-specific fine-tune.
+
 This `v2` corpus is training-ready because it now combines:
 
 - production-faithful `company_name` scoping for `BusinessSegment` and `Offering`
@@ -101,6 +103,7 @@ Split interpretation:
 - `train_messages.jsonl`, `dev_messages.jsonl`, and `test_messages.jsonl` are the corresponding trainer-facing splits
 - `messages.jsonl` is the deduplicated all-splits export for packaging or downstream reshaping
 - `QF31` now has one intent in each of train, dev, and test, so every active family is represented in fine-tuning while evaluation coverage remains intact
+- the intended fine-tuning run should train only on `train_messages.jsonl`, with `dev_messages.jsonl` and `test_messages.jsonl` reserved for evaluation
 
 ## What V2 Fixes
 

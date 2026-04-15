@@ -120,6 +120,11 @@ The supervised text-to-Cypher corpus is now split by role:
 - canonical machine-readable V2 corpus plus generated `messages.jsonl` trainer view live in [`datasets/text2cypher/v2/`](./datasets/text2cypher/README.md)
 - the packaging script copies those artifacts into the Hugging Face release bundle
 
+Training guidance:
+- the fine-tuning plan is to use this repo's dataset only
+- `train_messages.jsonl` is the train-facing SFT corpus
+- `dev_messages.jsonl` and `test_messages.jsonl` remain held out for evaluation
+
 The dataset validator in [`src/validate_text2cypher_dataset.py`](./src/validate_text2cypher_dataset.py) now defaults to the canonical V2 artifact set under `datasets/text2cypher/v2/`.
 
 ## How The Dataset Was Built
