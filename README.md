@@ -56,7 +56,7 @@ src/
   validate_text2cypher_dataset.py
                           validates gold Cypher against synthetic fixtures
   entity_resolver.py      light entity normalization
-  place_hierarchy.py      place normalization helpers
+  place_hierarchy.py      place normalization and query metadata helpers
   neo4j_loader.py         Neo4j loading
   evaluate_graph.py       graph evaluation utilities
 
@@ -163,9 +163,40 @@ Neo4j Browser:
 The extractor and Neo4j loader keep geography canonical at
 `Company-[:OPERATES_IN]->Place`.
 
-No derived place hierarchy is materialized in Neo4j. Places are normalized to canonical
-ontology values during validation and load, but queries operate only on the places that
-were actually extracted.
+No derived place hierarchy relationships are materialized in Neo4j.
+
+Instead, each extracted `Place` node can receive two query helper properties during load:
+- `within_places`: broader canonical places that contain the place
+- `includes_places`: narrower canonical places that the place contains
+
+Examples:
+- `Italy` can carry `within_places = ["Europe", "Western Europe", "EMEA", "European Union"]`
+- `Europe` can carry `includes_places = ["Western Europe", "Eastern Europe", "Italy", "Germany", ...]`
+- `United States` can carry `includes_places = ["Alabama", "Alaska", ..., "Wyoming"]`
+
+This keeps the graph canonical while still letting Neo4j answer both directions of
+geography matching without extra `WITHIN` edges.
+
+Recommended Cypher pattern:
+
+```cypher
+MATCH (company:Company)-[:OPERATES_IN]->(place:Place)
+WITH company, place,
+     CASE
+       WHEN place.name = $place THEN 0
+       WHEN $place IN coalesce(place.includes_places, []) THEN 1
+       WHEN $place IN coalesce(place.within_places, []) THEN 2
+       ELSE NULL
+     END AS match_rank
+WHERE match_rank IS NOT NULL
+RETURN company.name AS company,
+       CASE match_rank
+         WHEN 0 THEN 'exact'
+         WHEN 1 THEN 'narrower_place'
+         ELSE 'broader_region'
+       END AS geography_match
+ORDER BY match_rank, company
+```
 
 ## Output Artifacts
 

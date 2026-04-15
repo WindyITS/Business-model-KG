@@ -1,10 +1,17 @@
 import re
 import unicodedata
+from collections import deque
+from functools import lru_cache
 from typing import Iterable
 
 
 WHITESPACE_RE = re.compile(r"\s+")
 QUOTE_CHARS = "\"'`“”‘’ "
+PLACE_WITHIN_PROPERTY = "within_places"
+PLACE_INCLUDES_PROPERTY = "includes_places"
+EXACT_PLACE_MATCH = "exact"
+NARROWER_PLACE_MATCH = "narrower_place"
+BROADER_PLACE_MATCH = "broader_region"
 
 # Place normalization only. This covers the ontology's macro-regions, U.S. states plus D.C.,
 # and a broad sovereign-country set so aliases resolve to canonical place labels.
@@ -512,3 +519,119 @@ def normalize_place_name(name: str) -> str:
     if key in _PLACE_ALIASES:
         return _PLACE_ALIASES[key]
     return _CANONICAL_PLACE_NAMES.get(key, cleaned)
+
+
+PLACE_PARENTS = {
+    normalize_place_name(place): tuple(normalize_place_name(parent) for parent in parents)
+    for place, parents in _RAW_PLACE_PARENTS.items()
+}
+
+PLACE_CHILDREN: dict[str, tuple[str, ...]] = {}
+_children_builder: dict[str, list[str]] = {}
+for place, parents in PLACE_PARENTS.items():
+    for parent in parents:
+        _children_builder.setdefault(parent, []).append(place)
+PLACE_CHILDREN = {
+    parent: tuple(sorted(children))
+    for parent, children in _children_builder.items()
+}
+
+
+def place_parents(place: str) -> tuple[str, ...]:
+    return PLACE_PARENTS.get(normalize_place_name(place), ())
+
+
+def place_children(place: str) -> tuple[str, ...]:
+    return PLACE_CHILDREN.get(normalize_place_name(place), ())
+
+
+@lru_cache(maxsize=None)
+def place_ancestors(place: str) -> tuple[str, ...]:
+    normalized_place = normalize_place_name(place)
+    queue = deque(place_parents(normalized_place))
+    ancestors: list[str] = []
+    seen: set[str] = set()
+
+    while queue:
+        current = queue.popleft()
+        if current in seen:
+            continue
+        seen.add(current)
+        ancestors.append(current)
+        queue.extend(place_parents(current))
+
+    return tuple(ancestors)
+
+
+@lru_cache(maxsize=None)
+def place_descendants(place: str) -> tuple[str, ...]:
+    normalized_place = normalize_place_name(place)
+    queue = deque(place_children(normalized_place))
+    descendants: list[str] = []
+    seen: set[str] = set()
+
+    while queue:
+        current = queue.popleft()
+        if current in seen:
+            continue
+        seen.add(current)
+        descendants.append(current)
+        queue.extend(place_children(current))
+
+    return tuple(descendants)
+
+
+def place_query_properties(place: str) -> dict[str, object]:
+    normalized_place = normalize_place_name(place)
+    return {
+        "name": normalized_place,
+        PLACE_WITHIN_PROPERTY: list(place_ancestors(normalized_place)),
+        PLACE_INCLUDES_PROPERTY: list(place_descendants(normalized_place)),
+    }
+
+
+def place_query_property_rows(place_names: Iterable[str]) -> tuple[dict[str, object], ...]:
+    rows: list[dict[str, object]] = []
+    seen: set[str] = set()
+
+    for place_name in place_names:
+        normalized_place = normalize_place_name(place_name)
+        if not normalized_place or normalized_place in seen:
+            continue
+        seen.add(normalized_place)
+        rows.append(place_query_properties(normalized_place))
+
+    rows.sort(key=lambda row: str(row["name"]))
+    return tuple(rows)
+
+
+def classify_place_match(requested_place: str, company_place: str) -> str | None:
+    requested = normalize_place_name(requested_place)
+    company = normalize_place_name(company_place)
+    if requested == company:
+        return EXACT_PLACE_MATCH
+    if requested in place_descendants(company):
+        return NARROWER_PLACE_MATCH
+    if requested in place_ancestors(company):
+        return BROADER_PLACE_MATCH
+    return None
+
+
+COMPANY_PLACE_PROPERTY_MATCH_CYPHER = f"""
+MATCH (company:Company)-[:OPERATES_IN]->(place:Place)
+WITH company, place,
+     CASE
+       WHEN place.name = $place THEN 0
+       WHEN $place IN coalesce(place.{PLACE_INCLUDES_PROPERTY}, []) THEN 1
+       WHEN $place IN coalesce(place.{PLACE_WITHIN_PROPERTY}, []) THEN 2
+       ELSE NULL
+     END AS match_rank
+WHERE match_rank IS NOT NULL
+RETURN company.name AS company,
+       CASE match_rank
+         WHEN 0 THEN '{EXACT_PLACE_MATCH}'
+         WHEN 1 THEN '{NARROWER_PLACE_MATCH}'
+         ELSE '{BROADER_PLACE_MATCH}'
+       END AS geography_match
+ORDER BY match_rank, company
+""".strip()

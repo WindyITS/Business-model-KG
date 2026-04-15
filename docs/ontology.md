@@ -251,14 +251,44 @@ Do not use:
 - vague global placeholders
 - synthetic geography strings
 
-### Downstream Place Hierarchy
+### Downstream Place Query Metadata
 
 The extractor still emits only canonical `Company-[:OPERATES_IN]->Place` facts.
 
 In some cases, that canonical `Place` may be an approved macro-region selected from a clearly exhaustive country list when the roll-up is unambiguous and the individual countries do not add distinct business signal.
 
 For downstream querying, Neo4j keeps only canonical `Company-[:OPERATES_IN]->Place`
-facts. No derived place hierarchy is materialized.
+facts and does not materialize a derived place hierarchy as relationships.
+
+Instead, the loader may attach query helper list properties to each extracted `Place`:
+- `within_places`: broader canonical places that contain the place
+- `includes_places`: narrower canonical places that the place contains
+
+Examples:
+- `Italy` may carry `within_places = ["Europe", "Western Europe", "EMEA", "European Union"]`
+- `Europe` may carry `includes_places = ["Western Europe", "Eastern Europe", "Italy", "Germany", ...]`
+- `United States` may carry `includes_places = ["Alabama", "Alaska", ..., "Wyoming"]`
+
+Recommended Cypher pattern:
+
+```cypher
+MATCH (company:Company)-[:OPERATES_IN]->(place:Place)
+WITH company, place,
+     CASE
+       WHEN place.name = $place THEN 0
+       WHEN $place IN coalesce(place.includes_places, []) THEN 1
+       WHEN $place IN coalesce(place.within_places, []) THEN 2
+       ELSE NULL
+     END AS match_rank
+WHERE match_rank IS NOT NULL
+RETURN company.name AS company,
+       CASE match_rank
+         WHEN 0 THEN 'exact'
+         WHEN 1 THEN 'narrower_place'
+         ELSE 'broader_region'
+       END AS geography_match
+ORDER BY match_rank, company
+```
 
 ## Canonical Extraction Rules
 
