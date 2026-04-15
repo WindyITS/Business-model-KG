@@ -1342,6 +1342,7 @@ class LLMExtractor:
             "- use the full filing, not just the nearest sentence or opening overview, to decide each offering's parent\n"
             "- when the filing reports BusinessSegments, assume each named offering should be attached to one or more BusinessSegments unless the filing truly gives no segment anchor anywhere\n"
             "- reason carefully about product families, suites, umbrella offerings, and parent offerings; if the filing explicitly states both a family-level offering and named child offerings, keep the family and its children rather than flattening or omitting the family layer\n"
+            "- If a local list includes one bare offering name and other offerings that share the same stem with added modifiers (for example, Nimbus, Nimbus Lite, Nimbus Max), treat the bare name as the **first-order family offering** and all the others as **sub-offerings**.\n"
             "- search broadly across the filing for segment evidence before using Company -> OFFERS -> Offering\n"
             "- if an offering has support for more than one segment, attach it to every supported segment\n"
             "- if an offering is described as backing, enabling, bundling with, integrating with, or providing a common layer for offerings used in multiple segments, treat that as segment evidence and attach it to every supported segment\n"
