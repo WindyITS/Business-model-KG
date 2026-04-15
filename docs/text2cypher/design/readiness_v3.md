@@ -9,7 +9,7 @@ The train/eval contract is now explicit:
 - train on [`train_messages.jsonl`](../../../datasets/text2cypher/v3/training/train_messages.jsonl)
 - evaluate on [`test_messages.jsonl`](../../../datasets/text2cypher/v3/evaluation/test_messages.jsonl)
 
-This release keeps the original `v2` corpus as the audited base, removes the two previously duplicated trainer rows, adds a hard-query training extension, and introduces a brand-new held-out evaluation set with leakage checks.
+This release removes the previously duplicated trainer rows, adds a hard-query training extension, and introduces a brand-new held-out evaluation set with leakage checks.
 
 ## Final Artifacts
 
@@ -61,4 +61,4 @@ Current result:
 
 ## Recommendation
 
-Use `v3` for the next fine-tuning run. Keep `v2` as the historical baseline and provenance source.
+Use `v3` for the next fine-tuning run.

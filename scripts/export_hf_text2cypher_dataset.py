@@ -9,9 +9,9 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_DATASET_ROOT = ROOT / "datasets" / "text2cypher" / "v2"
-DEFAULT_PACKAGING_ROOT = ROOT / "packaging" / "huggingface" / "text2cypher-v2"
-DEFAULT_OUTPUT_ROOT = ROOT / "dist" / "huggingface" / "text2cypher-v2"
+DEFAULT_DATASET_ROOT = ROOT / "datasets" / "text2cypher" / "v3"
+DEFAULT_PACKAGING_ROOT = ROOT / "packaging" / "huggingface" / "text2cypher-v3"
+DEFAULT_OUTPUT_ROOT = ROOT / "dist" / "huggingface" / "text2cypher-v3"
 
 
 def _load_jsonl(path: Path) -> list[dict]:
@@ -86,7 +86,7 @@ def _build_summary(dataset_root: Path) -> dict:
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Export the text2cypher v2 dataset into an HF-ready directory."
+        description="Export the active text2cypher dataset into an HF-ready directory."
     )
     parser.add_argument(
         "--dataset-root",

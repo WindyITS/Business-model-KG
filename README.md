@@ -100,7 +100,7 @@ docs/
 datasets/
   text2cypher/
     README.md             machine-readable dataset layout
-    v2/                   canonical training corpus and reports
+    v3/                   active training corpus, evaluation set, and reports
 
 scripts/
   export_hf_text2cypher_dataset.py
@@ -118,7 +118,6 @@ The supervised text-to-Cypher corpus is now split by role:
 
 - prose and design docs live in [`docs/text2cypher/`](./docs/text2cypher/README.md)
 - the active machine-readable release lives in [`datasets/text2cypher/v3/`](./datasets/text2cypher/README.md)
-- the audited predecessor remains available in [`datasets/text2cypher/v2/`](./datasets/text2cypher/README.md)
 - the packaging script copies those artifacts into the Hugging Face release bundle
 
 Training guidance:
@@ -126,11 +125,11 @@ Training guidance:
 - `datasets/text2cypher/v3/training/train_messages.jsonl` is the train-facing SFT corpus
 - `datasets/text2cypher/v3/evaluation/test_messages.jsonl` is the held-out evaluation set
 
-The dataset validator in [`src/validate_text2cypher_dataset.py`](./src/validate_text2cypher_dataset.py) still defaults to `v2`, but it can validate `v3` by pointing it at the `datasets/text2cypher/v3/source/` artifacts.
+The dataset validator in [`src/validate_text2cypher_dataset.py`](./src/validate_text2cypher_dataset.py) now defaults to the active `v3` artifact set under `datasets/text2cypher/v3/`.
 
 ## How The Dataset Was Built
 
-`Text2Cypher v3` was built through the same agent-orchestrated, spec-first workflow as `v2`, then extended with a hard-query train cohort and a separate held-out evaluation cohort.
+`Text2Cypher v3` was built through an agent-orchestrated, spec-first workflow rather than through a blind auto-generation loop, then extended with a hard-query train cohort and a separate held-out evaluation cohort.
 
 The generation flow was:
 

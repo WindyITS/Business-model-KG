@@ -32,9 +32,9 @@ class ExportText2CypherDatasetTests(unittest.TestCase):
     def test_export_preserves_derived_messages_layer(self):
         with tempfile.TemporaryDirectory(dir=ROOT) as tmp_dir:
             tmp_root = Path(tmp_dir)
-            dataset_root = tmp_root / "datasets" / "text2cypher" / "v2"
-            packaging_root = tmp_root / "packaging" / "huggingface" / "text2cypher-v2"
-            output_root = tmp_root / "dist" / "huggingface" / "text2cypher-v2"
+            dataset_root = tmp_root / "datasets" / "text2cypher" / "v3"
+            packaging_root = tmp_root / "packaging" / "huggingface" / "text2cypher-v3"
+            output_root = tmp_root / "dist" / "huggingface" / "text2cypher-v3"
 
             _write_jsonl(
                 dataset_root / "source" / "fixture_instances.jsonl",
@@ -154,7 +154,7 @@ class ExportText2CypherDatasetTests(unittest.TestCase):
             )
 
             packaging_root.mkdir(parents=True, exist_ok=True)
-            (packaging_root / "README.md").write_text("# Text2Cypher v2\n", encoding="utf-8")
+            (packaging_root / "README.md").write_text("# Text2Cypher v3\n", encoding="utf-8")
             (packaging_root / ".gitattributes").write_text("* text=auto\n", encoding="utf-8")
             (packaging_root / "UPLOAD.md").write_text("Upload notes.\n", encoding="utf-8")
 

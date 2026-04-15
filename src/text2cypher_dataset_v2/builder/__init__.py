@@ -22,8 +22,10 @@ DEFAULT_SPEC_MODULES = (
     "text2cypher_dataset_v2.spec_core",
     "text2cypher_dataset_v2.spec_rollups",
     "text2cypher_dataset_v2.spec_negative",
+    "text2cypher_dataset_v2.spec_hard_train",
+    "text2cypher_dataset_v2.spec_heldout_test",
 )
-DEFAULT_OUTPUT_ROOT = Path("datasets/text2cypher/v2")
+DEFAULT_OUTPUT_ROOT = Path("datasets/text2cypher/v3")
 TRAINING_POOL_SPLITS = ("train", "dev", "test")
 HELDOUT_SPLIT = "heldout_test"
 SOURCE_SPLIT_ORDER = TRAINING_POOL_SPLITS + (HELDOUT_SPLIT,)
@@ -775,7 +777,7 @@ def write_dataset(dataset: dict[str, Any], output_root: Path = DEFAULT_OUTPUT_RO
 def main(argv: Sequence[str] | None = None) -> int:
     import argparse
 
-    parser = argparse.ArgumentParser(description="Build the text2cypher v2 dataset from spec modules.")
+    parser = argparse.ArgumentParser(description="Build the active text2cypher dataset release from spec modules.")
     parser.add_argument(
         "--output-root",
         type=Path,
@@ -786,7 +788,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "--spec-module",
         action="append",
         dest="spec_modules",
-        help="Spec module to load. May be passed multiple times; defaults to the three v2 spec modules.",
+        help="Spec module to load. May be passed multiple times; defaults to the active dataset spec modules.",
     )
     args = parser.parse_args(argv)
     spec_modules = args.spec_modules or list(DEFAULT_SPEC_MODULES)

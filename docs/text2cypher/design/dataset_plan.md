@@ -6,10 +6,11 @@ Build a high-quality supervised dataset for fine-tuning a small model to transla
 
 Current status:
 
-- the V2 dataset build is complete
-- the final readiness assessment is documented in [`readiness_v2.md`](./readiness_v2.md)
+- the active dataset build is complete
+- the final readiness assessment is documented in [`readiness_v3.md`](./readiness_v3.md)
 - the canonical machine-readable artifacts live under [`datasets/text2cypher/`](../../../datasets/text2cypher/README.md)
-- the generated model-facing `messages.jsonl` export lives under `datasets/text2cypher/v2/training/` and is copied into the release bundle during packaging
+- the train-facing `messages` export lives under `datasets/text2cypher/v3/training/`
+- the held-out evaluation export lives under `datasets/text2cypher/v3/evaluation/`
 - the next engineering step is model training and evaluation rather than more dataset scaffolding
 
 The target runtime behavior is:
