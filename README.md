@@ -181,22 +181,29 @@ Recommended Cypher pattern:
 
 ```cypher
 MATCH (company:Company)-[:OPERATES_IN]->(place:Place)
-WITH company, place,
+WITH company, place.name AS matched_place,
      CASE
-       WHEN place.name = $place THEN 0
+       WHEN matched_place = $place THEN 0
        WHEN $place IN coalesce(place.includes_places, []) THEN 1
        WHEN $place IN coalesce(place.within_places, []) THEN 2
        ELSE NULL
      END AS match_rank
 WHERE match_rank IS NOT NULL
+WITH company, MIN(match_rank) AS best_rank, collect(DISTINCT matched_place) AS matched_places
 RETURN company.name AS company,
-       CASE match_rank
+       CASE best_rank
          WHEN 0 THEN 'exact'
          WHEN 1 THEN 'narrower_place'
          ELSE 'broader_region'
-       END AS geography_match
-ORDER BY match_rank, company
+       END AS geography_match,
+       matched_places
+ORDER BY best_rank, company
 ```
+
+A company can match through more than one direct place tag. For example, a company tagged
+to both `Europe` and `European Union` can match a query for `Italy` through both tags.
+The `MIN(match_rank)` aggregation above collapses those into one row per company while
+keeping the strongest match class.
 
 ## Output Artifacts
 

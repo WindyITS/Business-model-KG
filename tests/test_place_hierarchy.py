@@ -79,6 +79,8 @@ class PlaceHierarchyTests(unittest.TestCase):
     def test_company_place_property_match_cypher_uses_place_properties(self):
         self.assertIn(f"place.{PLACE_INCLUDES_PROPERTY}", COMPANY_PLACE_PROPERTY_MATCH_CYPHER)
         self.assertIn(f"place.{PLACE_WITHIN_PROPERTY}", COMPANY_PLACE_PROPERTY_MATCH_CYPHER)
+        self.assertIn("MIN(match_rank)", COMPANY_PLACE_PROPERTY_MATCH_CYPHER)
+        self.assertIn("collect(DISTINCT matched_place)", COMPANY_PLACE_PROPERTY_MATCH_CYPHER)
         self.assertIn("'narrower_place'", COMPANY_PLACE_PROPERTY_MATCH_CYPHER)
         self.assertIn("'broader_region'", COMPANY_PLACE_PROPERTY_MATCH_CYPHER)
 

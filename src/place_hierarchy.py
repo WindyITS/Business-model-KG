@@ -619,19 +619,21 @@ def classify_place_match(requested_place: str, company_place: str) -> str | None
 
 COMPANY_PLACE_PROPERTY_MATCH_CYPHER = f"""
 MATCH (company:Company)-[:OPERATES_IN]->(place:Place)
-WITH company, place,
+WITH company, place.name AS matched_place,
      CASE
-       WHEN place.name = $place THEN 0
+       WHEN matched_place = $place THEN 0
        WHEN $place IN coalesce(place.{PLACE_INCLUDES_PROPERTY}, []) THEN 1
        WHEN $place IN coalesce(place.{PLACE_WITHIN_PROPERTY}, []) THEN 2
        ELSE NULL
      END AS match_rank
 WHERE match_rank IS NOT NULL
+WITH company, MIN(match_rank) AS best_rank, collect(DISTINCT matched_place) AS matched_places
 RETURN company.name AS company,
-       CASE match_rank
+       CASE best_rank
          WHEN 0 THEN '{EXACT_PLACE_MATCH}'
          WHEN 1 THEN '{NARROWER_PLACE_MATCH}'
          ELSE '{BROADER_PLACE_MATCH}'
-       END AS geography_match
-ORDER BY match_rank, company
+       END AS geography_match,
+       matched_places
+ORDER BY best_rank, company
 """.strip()
