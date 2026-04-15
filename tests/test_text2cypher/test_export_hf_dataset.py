@@ -1,25 +1,12 @@
-import importlib.util
+import importlib
 import json
-import sys
 import tempfile
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 
-ROOT = Path(__file__).resolve().parents[1]
-SCRIPT_PATH = ROOT / "scripts" / "export_hf_text2cypher_dataset.py"
-
-spec_root = ROOT / "src"
-sys.path.insert(0, str(spec_root))
-
-
-def _load_export_module():
-    spec = importlib.util.spec_from_file_location("export_hf_text2cypher_dataset", SCRIPT_PATH)
-    module = importlib.util.module_from_spec(spec)
-    assert spec.loader is not None
-    spec.loader.exec_module(module)
-    return module
+export_module = importlib.import_module("text2cypher.cli.export_hf_text2cypher_dataset")
 
 
 def _write_jsonl(path: Path, rows: list[dict]) -> None:
@@ -30,7 +17,7 @@ def _write_jsonl(path: Path, rows: list[dict]) -> None:
 
 class ExportText2CypherDatasetTests(unittest.TestCase):
     def test_export_preserves_derived_messages_layer(self):
-        with tempfile.TemporaryDirectory(dir=ROOT) as tmp_dir:
+        with tempfile.TemporaryDirectory() as tmp_dir:
             tmp_root = Path(tmp_dir)
             dataset_root = tmp_root / "datasets" / "text2cypher" / "v3"
             packaging_root = tmp_root / "packaging" / "huggingface" / "text2cypher-v3"
@@ -158,7 +145,6 @@ class ExportText2CypherDatasetTests(unittest.TestCase):
             (packaging_root / ".gitattributes").write_text("* text=auto\n", encoding="utf-8")
             (packaging_root / "UPLOAD.md").write_text("Upload notes.\n", encoding="utf-8")
 
-            module = _load_export_module()
             args = SimpleNamespace(
                 dataset_root=dataset_root,
                 packaging_root=packaging_root,
@@ -166,8 +152,8 @@ class ExportText2CypherDatasetTests(unittest.TestCase):
                 force=True,
             )
 
-            with patch.object(module, "parse_args", return_value=args):
-                exit_code = module.main()
+            with patch.object(export_module, "parse_args", return_value=args):
+                exit_code = export_module.main()
 
             self.assertEqual(exit_code, 0)
             exported_messages = output_root / "training" / "messages.jsonl"

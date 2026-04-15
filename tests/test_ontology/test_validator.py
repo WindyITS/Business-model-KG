@@ -1,10 +1,6 @@
-import sys
 import unittest
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-
-from ontology_validator import validate_payload, validate_triple, validate_triples
+from ontology.validator import validate_payload, validate_triple, validate_triples
 
 
 class OntologyValidatorTests(unittest.TestCase):

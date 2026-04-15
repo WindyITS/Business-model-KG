@@ -11,10 +11,10 @@ The default workflow is:
 
 Recommended first run:
 
-1. `./venv/bin/python scripts/build_text2cypher_dataset.py`
-2. `./venv/bin/python scripts/prepare_text2cypher_mlx_dataset.py --force`
-3. `./venv/bin/python scripts/train_text2cypher_mlx_lora.py`
-4. `./venv/bin/python scripts/evaluate_text2cypher_mlx_adapter.py --adapter-path outputs/text2cypher_mlx/gemma4_e4b/adapters --force`
+1. `./venv/bin/text2cypher-build`
+2. `./venv/bin/text2cypher-prepare-mlx --force`
+3. `./venv/bin/text2cypher-train-mlx`
+4. `./venv/bin/text2cypher-evaluate-mlx --adapter-path outputs/text2cypher_mlx/gemma4_e4b/adapters --force`
 
 ## Install
 
@@ -22,7 +22,7 @@ Keep the runtime dependencies and the training dependencies separate:
 
 ```bash
 source venv/bin/activate
-pip install -r requirements.txt
+pip install -e .
 pip install -r requirements-mlx-lora.txt
 ```
 
@@ -40,8 +40,8 @@ Reference: [MLX LoRA guide](https://github.com/ml-explore/mlx-lm/blob/main/mlx_l
 Build the local dataset workspace first, then prepare the MLX-ready chat dataset:
 
 ```bash
-./venv/bin/python scripts/build_text2cypher_dataset.py
-./venv/bin/python scripts/prepare_text2cypher_mlx_dataset.py --force
+./venv/bin/text2cypher-build
+./venv/bin/text2cypher-prepare-mlx --force
 ```
 
 By default this writes:
@@ -56,7 +56,7 @@ Each row keeps the model-facing `messages` list as the training signal and prese
 Launch a first LoRA run:
 
 ```bash
-./venv/bin/python scripts/train_text2cypher_mlx_lora.py
+./venv/bin/text2cypher-train-mlx
 ```
 
 The default training shape is conservative for a laptop:
@@ -77,13 +77,13 @@ The default adapter output path is `outputs/text2cypher_mlx/gemma4_e4b/adapters`
 For a quick smoke run:
 
 ```bash
-./venv/bin/python scripts/train_text2cypher_mlx_lora.py --iters 250 --dry-run
+./venv/bin/text2cypher-train-mlx --iters 250 --dry-run
 ```
 
 To run MLX test loss on the held-out set after training:
 
 ```bash
-./venv/bin/python scripts/train_text2cypher_mlx_lora.py --run-test-loss
+./venv/bin/text2cypher-train-mlx --run-test-loss
 ```
 
 ## Evaluate The Adapter
@@ -91,7 +91,7 @@ To run MLX test loss on the held-out set after training:
 Run held-out generation and score the predictions:
 
 ```bash
-./venv/bin/python scripts/evaluate_text2cypher_mlx_adapter.py \
+./venv/bin/text2cypher-evaluate-mlx \
   --adapter-path outputs/text2cypher_mlx/gemma4_e4b/adapters \
   --force
 ```
@@ -115,7 +115,7 @@ It also reports grouped summaries by `example_id` and `intent_id`, which matters
 To include execution-based checking:
 
 ```bash
-./venv/bin/python scripts/evaluate_text2cypher_mlx_adapter.py \
+./venv/bin/text2cypher-evaluate-mlx \
   --adapter-path outputs/text2cypher_mlx/gemma4_e4b/adapters \
   --neo4j-uri http://localhost:7474 \
   --force
@@ -134,7 +134,7 @@ That is deliberate:
 If you want to experiment with inference-time reasoning anyway, the evaluator supports:
 
 ```bash
-./venv/bin/python scripts/evaluate_text2cypher_mlx_adapter.py \
+./venv/bin/text2cypher-evaluate-mlx \
   --adapter-path outputs/text2cypher_mlx/gemma4_e4b/adapters \
   --enable-thinking \
   --force

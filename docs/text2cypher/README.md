@@ -2,7 +2,7 @@
 
 This folder holds the prose documentation for the supervised text-to-Cypher dataset.
 
-Machine-readable artifacts are built locally under `datasets/text2cypher/v3/` and exported to Hugging Face with [`scripts/export_hf_text2cypher_dataset.py`](../../scripts/export_hf_text2cypher_dataset.py). The generated dataset directories are intentionally not tracked in git.
+Machine-readable artifacts are built locally under `datasets/text2cypher/v3/` and exported to Hugging Face with `text2cypher-export-hf` or [`scripts/text2cypher/export_hf_text2cypher_dataset.py`](../../scripts/text2cypher/export_hf_text2cypher_dataset.py). The generated dataset directories are intentionally not tracked in git.
 
 ## Canonical Docs
 
@@ -18,7 +18,7 @@ Machine-readable artifacts are built locally under `datasets/text2cypher/v3/` an
 Run the local dataset build first:
 
 ```bash
-./venv/bin/python scripts/build_text2cypher_dataset.py
+./venv/bin/text2cypher-build
 ```
 
 That writes the current `v3` artifact set under `datasets/text2cypher/v3/`, including:
@@ -81,6 +81,7 @@ That keeps the provenance visible to anyone landing on the project while still k
 
 Dataset validation entrypoint:
 
+- preferred console entrypoint: `text2cypher-validate`
 - implementation: [`src/text2cypher/validation.py`](../../src/text2cypher/validation.py)
 - compatibility wrapper: [`src/validate_text2cypher_dataset.py`](../../src/validate_text2cypher_dataset.py)
 

@@ -9,7 +9,8 @@ from time import perf_counter
 from typing import Any
 
 from .entity_resolver import resolve_entities
-from llm_extractor import (
+from graph.neo4j_loader import Neo4jLoader
+from llm.extractor import (
     CanonicalPipelineResult,
     ExtractionError,
     LLMExtractor,
@@ -545,8 +546,6 @@ def main() -> int:
         if args.skip_neo4j:
             console.finish_stage(status="skipped", details=[("load", "skipped by request")])
         else:
-            from graph.neo4j_loader import Neo4jLoader
-
             loader = Neo4jLoader(uri=args.neo4j_uri, user=args.neo4j_user, password=args.neo4j_password)
             graph_cleared = False
             try:

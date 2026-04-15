@@ -1,0 +1,140 @@
+{
+  "node_types": {
+    "Company": {
+      "definition": "A legally distinct commercial organization referenced in the filing, including the reporting company itself and named external companies such as partners, distributors, resellers, competitors, subsidiaries, or marketplace operators when they act as companies."
+    },
+    "BusinessSegment": {
+      "definition": "A formally named internal business segment, reporting segment, division, or line of business. In this ontology variant, BusinessSegment is the primary semantic anchor for business-model logic."
+    },
+    "Offering": {
+      "definition": "A specific named product, service, platform, application, subscription, brand, solution, or explicitly named product family offered commercially. Offerings are usually inventory leaves, but an offering may also act as an umbrella for other offerings when the filing explicitly states that hierarchy."
+    },
+    "CustomerType": {
+      "definition": "A standardized category representing the kind of customer or user targeted by a business segment."
+    },
+    "Channel": {
+      "definition": "A standardized category representing how a business segment or offering reaches customers commercially."
+    },
+    "Place": {
+      "definition": "A normalized business-relevant geography in which the company operates, conducts business, or has meaningful market presence."
+    },
+    "RevenueModel": {
+      "definition": "A standardized category representing how an offering earns revenue."
+    }
+  },
+  "canonical_labels": {
+    "CustomerType": {
+      "consumers": "Individual end users buying or using a product or service for personal, household, or non-business use.",
+      "small businesses": "Commercial organizations clearly described as small business, SMB, or an equivalent small-scale business segment.",
+      "mid-market companies": "Commercial organizations explicitly described as mid-market, midsize, or an equivalent segment between SMB and enterprise scale.",
+      "large enterprises": "Large organizations with enterprise-scale procurement, operations, compliance, or IT needs.",
+      "developers": "Software builders who create, test, extend, integrate, or deploy applications, code, or technical solutions.",
+      "IT professionals": "Technical staff primarily responsible for operating, administering, securing, supporting, or governing information systems and infrastructure.",
+      "government agencies": "Public-sector bodies with governmental authority or administrative responsibility at federal, state, regional, local, or supranational level.",
+      "educational institutions": "Organizations whose primary function is formal instruction, training, or education, including schools, colleges, and universities.",
+      "healthcare organizations": "Organizations whose primary function is delivering, administering, financing, or coordinating health care services.",
+      "financial services firms": "Organizations primarily engaged in financial transactions, intermediation, insurance, investment, payments, lending, brokerage, or related financial services.",
+      "manufacturers": "Businesses primarily engaged in transforming materials, components, or substances into physical products.",
+      "retailers": "Businesses primarily engaged in selling goods in relatively small quantities to end customers through physical or digital retail operations."
+    },
+    "Channel": {
+      "direct sales": "Sales where the company sells directly to the end customer through its own sales force, account teams, or direct contracting process.",
+      "online": "Sales transacted through the company's own website, app, digital storefront, or self-service online purchasing experience.",
+      "retail": "Sales through physical retail stores or store-like consumer-facing locations that sell directly to end customers.",
+      "distributors": "Intermediaries that purchase, hold, allocate, or supply products for onward sale through other partners rather than primarily selling to end customers themselves.",
+      "resellers": "Third parties that resell the company's products or services to end customers without being the original manufacturer or the primary long-term operator of the solution.",
+      "OEMs": "Original equipment manufacturers that embed, bundle, preinstall, or incorporate the company's offering into their own hardware or integrated systems before sale.",
+      "system integrators": "Partners whose primary role is combining, customizing, implementing, or integrating multiple technologies into a customer-specific solution.",
+      "managed service providers": "Third parties that operate, administer, monitor, maintain, or support technology solutions for customers on an ongoing service basis.",
+      "marketplaces": "Third-party digital platforms through which customers discover, procure, subscribe to, or transact for products or services."
+    },
+    "RevenueModel": {
+      "subscription": "Revenue earned from recurring payments for ongoing access to a product or service over time.",
+      "advertising": "Revenue earned by selling advertising inventory, sponsored visibility, promotional placement, or audience access to third-party advertisers.",
+      "licensing": "Revenue earned by granting another party the right to use software, technology, content, trademarks, patents, or other protected assets without transferring ownership.",
+      "consumption-based": "Revenue earned according to measured customer usage, volume, metering, or pay-as-you-go consumption rather than a fixed recurring amount alone.",
+      "hardware sales": "Revenue earned from selling physical devices, equipment, components, appliances, or other tangible hardware products.",
+      "service fees": "Revenue earned from performing services for customers, such as implementation, consulting, support, maintenance, training, professional services, or managed services.",
+      "royalties": "Revenue earned as recurring or usage-linked payments from another party's authorized use of the company's intellectual property, content, brand, or technology.",
+      "transaction fees": "Revenue earned by charging a fee each time a payment, trade, booking, exchange, or other platform-mediated transaction is processed or facilitated."
+    }
+  },
+  "relations": {
+    "HAS_SEGMENT": {
+      "definition": "Links a company to a formally named internal business segment that is part of the company's organizational or reporting structure.",
+      "subject_types": ["Company"],
+      "object_types": ["BusinessSegment"]
+    },
+    "OFFERS": {
+      "definition": "Links a business segment, a fallback company subject, or an explicit umbrella offering to a commercially provided offering. BusinessSegment -> Offering is primary; Company -> Offering is used only when, after considering the whole filing, no BusinessSegment anchor is supportable anywhere; Offering -> Offering is used only when the filing explicitly states that one offering acts as an umbrella, family, or parent offering for another offering.",
+      "subject_types": ["Company", "BusinessSegment", "Offering"],
+      "object_types": ["Offering"]
+    },
+    "SERVES": {
+      "definition": "Links a business segment to a canonical customer category that it targets, supports, or serves commercially. In this ontology variant, SERVES is canonical only at BusinessSegment scope and may be inferred conservatively when a customer type is clearly stated or clearly implied by the segment's offerings and descriptions.",
+      "subject_types": ["BusinessSegment"],
+      "object_types": ["CustomerType"]
+    },
+    "OPERATES_IN": {
+      "definition": "Links a company to a normalized, business-relevant geography in which it operates, conducts business, has employees or a local entity, serves customers in a meaningful way, or otherwise has meaningful market presence. Geography is tracked strictly at the corporate level.",
+      "subject_types": ["Company"],
+      "object_types": ["Place"]
+    },
+    "SELLS_THROUGH": {
+      "definition": "Links a business segment or, only when no segment anchor exists, an offering to a canonical sales or distribution channel through which it reaches customers. BusinessSegment is the primary anchor; Offering is a fallback only for offerings without a business segment. Company is not a valid subject in this ontology variant.",
+      "subject_types": ["BusinessSegment", "Offering"],
+      "object_types": ["Channel"]
+    },
+    "PARTNERS_WITH": {
+      "definition": "Links a company to another company with which it has a named strategic, commercial, distribution, technology, integration, or go-to-market partnership. Excludes incidental mentions and ordinary supplier or customer relationships.",
+      "subject_types": ["Company"],
+      "object_types": ["Company"]
+    },
+    "MONETIZES_VIA": {
+      "definition": "Links an offering to the canonical revenue model through which it earns money. If an offering family hierarchy exists, attach the revenue model to the family parent rather than to its child offerings. Company- and segment-level revenue models should be recovered downstream from offering-level facts rather than extracted directly in this ontology variant.",
+      "subject_types": ["Offering"],
+      "object_types": ["RevenueModel"]
+    }
+  },
+    "global_rules": [
+      "Closed ontology: extract only the listed node types and relations.",
+      "Closed labels: CustomerType, Channel, and RevenueModel must use only the approved canonical labels.",
+      "If a customer, channel, or monetization pattern cannot be mapped clearly to one canonical label, omit it.",
+      "Scope-first modeling: Company is the corporate shell, BusinessSegment is the primary semantic anchor, and Offering is the inventory leaf.",
+      "An Offering may also act as an explicit umbrella or family node for another Offering only when the filing directly states that relationship.",
+      "For SERVES, keep the relation on BusinessSegment only.",
+      "If a customer type is stated at company scope, attach it only to the BusinessSegment nodes where it is clearly stated or clearly implied by the segment's offerings and descriptions.",
+      "Conservative inference is allowed only for SERVES, and it must be segment-specific rather than global.",
+      "Do not spread one customer type across multiple segments unless each segment has its own support.",
+      "Do not attach SERVES directly to Offering in this ontology variant.",
+      "For SELLS_THROUGH, keep the relation on BusinessSegment by default and use Offering only when that offering has no BusinessSegment anchor.",
+      "Do not attach SELLS_THROUGH directly to Company in this ontology variant.",
+      "If the filing states a channel universally across a company that has reported segments, attach that channel to each reported BusinessSegment rather than to Company.",
+    "For MONETIZES_VIA, attach the relation only to Offering.",
+    "Do not attach MONETIZES_VIA directly to BusinessSegment or Company in this ontology variant.",
+      "If an offering has an Offering parent in the explicit family hierarchy, do not attach MONETIZES_VIA to the child offering; attach it to the relevant family parent instead.",
+      "If the filing states monetization broadly at segment level, do not force a segment-level triple; keep extraction canonical and recover rollups downstream from offering-level facts.",
+      "Do not automatically duplicate a fact upward across scopes.",
+      "For segment-anchored offerings, use BusinessSegment -> OFFERS -> Offering as the canonical structure.",
+      "Company -> OFFERS -> Offering is a last-resort fallback only after considering the whole filing and concluding that no BusinessSegment anchor is supportable anywhere.",
+      "Do not use Company -> OFFERS -> Offering just because an offering is described at company scope, as universal, or as shared/common infrastructure; if that evidence ties it to multiple segments, attach it to each supported BusinessSegment instead.",
+      "Use Offering -> OFFERS -> Offering only when the filing explicitly states that one offering is an umbrella, family, suite, or parent for another offering.",
+      "A child Offering may have at most one Offering parent in Offering -> OFFERS -> Offering hierarchy.",
+      "Do not derive company-level facts from segment or offering facts during extraction.",
+      "Do not derive offering-level facts from segment-level facts during extraction; downstream graph inheritance is responsible for that analytical convenience.",
+      "OPERATES_IN is strictly company-level in this ontology variant.",
+      "For OPERATES_IN, use named countries or approved macro-regions where the company has meaningful market presence.",
+      "For OPERATES_IN, meaningful market presence can be shown by signals such as a named subsidiary or local entity, employee presence, labor structure, customer or revenue presence, country-specific availability, or present-tense current use in that geography.",
+      "For OPERATES_IN, prefer recall over unnecessary omission when a named geography is clearly tied to the company's own business presence.",
+      "When the filing states geography at an approved macro-region level, prefer that macro-region rather than expanding it into many countries.",
+      "When the filing provides a clearly exhaustive country list that unambiguously corresponds to one approved macro-region, and the individual countries do not add distinct business signal, emit the macro-region instead of listing every country.",
+      "Keep individual countries when the filing gives country-specific business significance such as a named subsidiary, datacenter, employees, customers, revenue, availability, or legal entity in that country.",
+      "Do not infer unmentioned countries just to complete a region.",
+      "Only roll up countries into a macro-region when the mapping is clear and unambiguous; if overlap makes the roll-up uncertain, keep the explicit countries.",
+      "Do not substitute one overlapping macro-region for another unless the filing supports that exact label.",
+      "PARTNERS_WITH is strictly company-level in this ontology variant.",
+      "Omit ambiguous facts.",
+      "Precision and standardization remain primary for semantic business-model relations.",
+      "Never emit duplicate triples."
+    ]
+  }

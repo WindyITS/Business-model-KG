@@ -9,7 +9,7 @@ from typing import Any, DefaultDict, Dict, Iterable, List, Tuple
 from urllib.parse import urlparse
 
 from neo4j import GraphDatabase
-from place_hierarchy import PLACE_INCLUDES_PROPERTY, PLACE_WITHIN_PROPERTY, place_query_property_rows
+from ontology.place_hierarchy import PLACE_INCLUDES_PROPERTY, PLACE_WITHIN_PROPERTY, place_query_property_rows
 
 
 ALLOWED_NODE_LABELS = {

@@ -11,7 +11,7 @@ Current status:
 - the machine-readable artifacts are generated locally under `datasets/text2cypher/v3/`
 - the train-facing `messages` export is written to `datasets/text2cypher/v3/training/`
 - the held-out evaluation export is written to `datasets/text2cypher/v3/evaluation/`
-- the export step publishes that local build output to Hugging Face via `scripts/export_hf_text2cypher_dataset.py`
+- the export step publishes that local build output to Hugging Face via `text2cypher-export-hf` or `scripts/text2cypher/export_hf_text2cypher_dataset.py`
 - the next engineering step is model training and evaluation rather than more dataset scaffolding
 
 The target runtime behavior is:

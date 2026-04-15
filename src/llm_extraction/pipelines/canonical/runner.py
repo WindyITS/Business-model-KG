@@ -17,7 +17,7 @@ from llm_extraction.pipelines.canonical.prompts import (
 )
 
 if TYPE_CHECKING:
-    from llm_extractor import LLMExtractor
+    from llm.extractor import LLMExtractor
 
 
 @dataclass

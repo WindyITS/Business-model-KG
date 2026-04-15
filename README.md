@@ -119,21 +119,30 @@ datasets/
     v3/                   active training corpus, evaluation set, and reports
 
 scripts/
-  build_text2cypher_dataset.py
+  text2cypher/
+    build_text2cypher_dataset.py
                           dataset build entrypoint
-  prepare_text2cypher_mlx_dataset.py
+    prepare_text2cypher_mlx_dataset.py
                           MLX dataset preparation
-  train_text2cypher_mlx_lora.py
+    train_text2cypher_mlx_lora.py
                           MLX LoRA training entrypoint
-  evaluate_text2cypher_mlx_adapter.py
+    evaluate_text2cypher_mlx_adapter.py
                           MLX held-out evaluation
-  export_hf_text2cypher_dataset.py
+    export_hf_text2cypher_dataset.py
                           local export helper for HF-ready release assembly from the generated dataset workspace
+  build_text2cypher_dataset.py
+  prepare_text2cypher_mlx_dataset.py
+  train_text2cypher_mlx_lora.py
+  evaluate_text2cypher_mlx_adapter.py
+  export_hf_text2cypher_dataset.py
+                          compatibility wrappers
 
 tests/
-  test_pipeline_components.py
-  test_ontology_validator.py
-  test_place_hierarchy.py
+  test_runtime/
+  test_llm/
+  test_ontology/
+  test_graph/
+  test_text2cypher/
 ```
 
 ## Text2Cypher Dataset Assets
@@ -146,7 +155,7 @@ The supervised text-to-Cypher corpus is now split by role:
 
 Training guidance:
 - the fine-tuning plan is to use this repo's dataset only
-- build the dataset locally with [`scripts/build_text2cypher_dataset.py`](./scripts/build_text2cypher_dataset.py) before training or validation
+- build the dataset locally with `text2cypher-build` or [`scripts/text2cypher/build_text2cypher_dataset.py`](./scripts/text2cypher/build_text2cypher_dataset.py) before training or validation
 - `datasets/text2cypher/v3/training/train_messages.jsonl` is the train-facing SFT corpus once the local build exists
 - `datasets/text2cypher/v3/evaluation/test_messages.jsonl` is the held-out evaluation set once the local build exists
 
@@ -158,9 +167,9 @@ The repo now includes a local Apple Silicon LoRA pipeline for `google/gemma-4-E4
 
 The intended flow is:
 
-1. prepare the MLX-ready chat dataset with [`scripts/prepare_text2cypher_mlx_dataset.py`](./scripts/prepare_text2cypher_mlx_dataset.py)
-2. train adapters with [`scripts/train_text2cypher_mlx_lora.py`](./scripts/train_text2cypher_mlx_lora.py)
-3. score the held-out set with [`scripts/evaluate_text2cypher_mlx_adapter.py`](./scripts/evaluate_text2cypher_mlx_adapter.py)
+1. prepare the MLX-ready chat dataset with `text2cypher-prepare-mlx` or [`scripts/text2cypher/prepare_text2cypher_mlx_dataset.py`](./scripts/text2cypher/prepare_text2cypher_mlx_dataset.py)
+2. train adapters with `text2cypher-train-mlx` or [`scripts/text2cypher/train_text2cypher_mlx_lora.py`](./scripts/text2cypher/train_text2cypher_mlx_lora.py)
+3. score the held-out set with `text2cypher-evaluate-mlx` or [`scripts/text2cypher/evaluate_text2cypher_mlx_adapter.py`](./scripts/text2cypher/evaluate_text2cypher_mlx_adapter.py)
 
 The detailed workflow, defaults, and commands live in [`docs/text2cypher/fine_tuning_mlx.md`](./docs/text2cypher/fine_tuning_mlx.md).
 
@@ -204,7 +213,7 @@ Setup:
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
+pip install -e .
 ```
 
 To use the Apple Silicon LoRA training path as well:
@@ -216,26 +225,26 @@ pip install -r requirements-mlx-lora.txt
 Run the extraction pipeline:
 
 ```bash
-./venv/bin/python src/main.py data/microsoft_10k.txt --skip-neo4j
+./venv/bin/kg-pipeline data/microsoft_10k.txt --skip-neo4j
 ```
 
 Optional explicit pipeline flag:
 
 ```bash
-./venv/bin/python src/main.py data/microsoft_10k.txt --pipeline canonical --skip-neo4j
+./venv/bin/kg-pipeline data/microsoft_10k.txt --pipeline canonical --skip-neo4j
 ```
 
 Run only the structural skeleton:
 
 ```bash
-./venv/bin/python src/main.py data/microsoft_10k.txt --only-pass1 --skip-neo4j
+./venv/bin/kg-pipeline data/microsoft_10k.txt --only-pass1 --skip-neo4j
 ```
 
 Run against OpenCode Go with a hosted open model:
 
 ```bash
 export OPENCODE_GO_API_KEY=your_key_here
-./venv/bin/python src/main.py data/microsoft_10k.txt \
+./venv/bin/kg-pipeline data/microsoft_10k.txt \
   --provider opencode-go \
   --model kimi-k2.5 \
   --skip-neo4j
@@ -244,8 +253,8 @@ export OPENCODE_GO_API_KEY=your_key_here
 Other supported OpenCode Go models use the same CLI shape:
 
 ```bash
-./venv/bin/python src/main.py data/microsoft_10k.txt --provider opencode-go --model mimo-v2-pro --skip-neo4j
-./venv/bin/python src/main.py data/microsoft_10k.txt --provider opencode-go --model minimax-m2.7 --skip-neo4j
+./venv/bin/kg-pipeline data/microsoft_10k.txt --provider opencode-go --model mimo-v2-pro --skip-neo4j
+./venv/bin/kg-pipeline data/microsoft_10k.txt --provider opencode-go --model minimax-m2.7 --skip-neo4j
 ```
 
 Provider notes:
@@ -273,7 +282,7 @@ Load into Neo4j instead:
 
 ```bash
 docker compose up -d
-./venv/bin/python src/main.py data/microsoft_10k.txt
+./venv/bin/kg-pipeline data/microsoft_10k.txt
 ```
 
 Neo4j Browser:
@@ -383,13 +392,13 @@ Each run writes a timestamped directory under `outputs/` with artifacts such as:
 Compare a predicted extraction to a gold graph:
 
 ```bash
-./venv/bin/python src/evaluate_graph.py compare path/to/predicted.json path/to/gold.json
+./venv/bin/kg-evaluate-graph compare path/to/predicted.json path/to/gold.json
 ```
 
 Inspect the graph currently loaded in Neo4j:
 
 ```bash
-./venv/bin/python src/evaluate_graph.py dump-neo4j
+./venv/bin/kg-evaluate-graph dump-neo4j
 ```
 
 The evaluation utility accepts payloads wrapped as `triples`, `resolved_triples`, or `valid_triples`.
@@ -399,5 +408,5 @@ The evaluation utility accepts payloads wrapped as `triples`, `resolved_triples`
 Extraction/runtime tests:
 
 ```bash
-./venv/bin/python -m pytest -q tests/test_pipeline_components.py tests/test_ontology_validator.py tests/test_place_hierarchy.py
+./venv/bin/python -m unittest discover -s tests
 ```

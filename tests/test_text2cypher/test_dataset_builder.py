@@ -1,12 +1,9 @@
 import json
-import sys
 import tempfile
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from text2cypher.dataset.v2.builder import DatasetBuildError, build_dataset, load_dataset_specs, write_dataset
 from text2cypher.dataset.v2.models import (

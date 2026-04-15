@@ -1,10 +1,6 @@
-import sys
 import unittest
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-
-from place_hierarchy import (
+from ontology.place_hierarchy import (
     BROADER_PLACE_MATCH,
     COMPANY_PLACE_PROPERTY_MATCH_CYPHER,
     EXACT_PLACE_MATCH,

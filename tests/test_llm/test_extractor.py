@@ -1,292 +1,41 @@
 import json
-import sys
 import tempfile
 import unittest
-from datetime import datetime, timezone
-from os import environ
 from pathlib import Path
 from types import SimpleNamespace
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import httpx
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-
-import main as main_module
-import llm_extractor as llm_extractor_module
-from entity_resolver import clean_entity_name as clean_resolved_entity_name, resolve_entities
-from evaluate_graph import _load_triples_from_json, evaluate
-from openai import InternalServerError
-from llm_extractor import (
+from llm import extractor as llm_extractor_module
+from llm.extractor import (
     LLMExtractor,
-    CanonicalPipelineResult,
-    KnowledgeGraphExtraction,
-    Triple,
     _canonical_pipeline_system_prompt,
-    _canonical_rule_reflection_system_prompt,
     _canonical_reflection_system_prompt,
-    aggregate_extraction_audits,
-    audit_knowledge_graph_payload,
+    _canonical_rule_reflection_system_prompt,
 )
-from main import (
-    PipelineConsole,
-    _format_duration,
-    _format_token_visual,
-    _infer_company_name,
-    _mode_name,
-)
-from model_provider import resolve_model_settings
-from neo4j_loader import _merge_node_clause
+from llm_extraction.audit import aggregate_extraction_audits, audit_knowledge_graph_payload
+from llm_extraction.models import KnowledgeGraphExtraction, Triple
+from openai import InternalServerError
 
 
-class PipelineComponentTests(unittest.TestCase):
-    def test_entity_resolver_preserves_best_surface_form(self):
-        extractions = [
-            KnowledgeGraphExtraction(
-                extraction_notes="ok",
-                triples=[
-                    Triple(
-                        subject="OpenAI",
-                        subject_type="Company",
-                        relation="PARTNERS_WITH",
-                        object="NASA",
-                        object_type="Company",
-                    ),
-                    Triple(
-                        subject="openai",
-                        subject_type="Company",
-                        relation="PARTNERS_WITH",
-                        object="NASA",
-                        object_type="Company",
-                    ),
-                ],
-            )
-        ]
-
-        resolved = resolve_entities(extractions)
-        self.assertEqual(len(resolved), 1)
-        self.assertEqual(resolved[0].subject, "OpenAI")
-
-    def test_entity_resolver_strips_curly_quotes(self):
-        self.assertEqual(clean_resolved_entity_name('  “Apollo”  '), "Apollo")
-
-        extractions = [
-            KnowledgeGraphExtraction(
-                extraction_notes="ok",
-                triples=[
-                    Triple(
-                        subject="Palantir",
-                        subject_type="Company",
-                        relation="OFFERS",
-                        object="“Apollo”",
-                        object_type="Offering",
-                    ),
-                    Triple(
-                        subject="Palantir",
-                        subject_type="Company",
-                        relation="OFFERS",
-                        object="Apollo",
-                        object_type="Offering",
-                    ),
-                ],
-            )
-        ]
-
-        resolved = resolve_entities(extractions)
-
-        self.assertEqual(len(resolved), 1)
-        self.assertEqual(resolved[0].object, "Apollo")
-
-    def test_merge_node_clause_scopes_segments_and_offerings_by_company(self):
-        segment_clause = _merge_node_clause("subject", "BusinessSegment", "subject_name", "subject_company_name")
-        offering_clause = _merge_node_clause("object", "Offering", "object_name", "object_company_name")
-        company_clause = _merge_node_clause("subject", "Company", "subject_name", "subject_company_name")
-
-        self.assertIn("company_name: row.subject_company_name", segment_clause)
-        self.assertIn("company_name: row.object_company_name", offering_clause)
-        self.assertNotIn("company_name", company_clause)
-
-    def test_evaluator_accepts_resolved_triples_payload(self):
-        payload = {
-            "resolved_triples": [
-                {
-                    "subject": "Microsoft",
-                    "subject_type": "Company",
-                    "relation": "OFFERS",
-                    "object": "Azure",
-                    "object_type": "Offering",
-                }
-            ]
-        }
-
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            path = Path(tmp_dir) / "resolved.json"
-            path.write_text(json.dumps(payload), encoding="utf-8")
-            triples = _load_triples_from_json(str(path))
-
-        self.assertEqual(len(triples), 1)
-
-    def test_evaluator_accepts_validation_report_valid_triples_payload(self):
-        payload = {
-            "valid_triples": [
-                {
-                    "subject": "Microsoft",
-                    "subject_type": "Company",
-                    "relation": "OFFERS",
-                    "object": "Azure",
-                    "object_type": "Offering",
-                }
-            ]
-        }
-
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            path = Path(tmp_dir) / "validation_report.json"
-            path.write_text(json.dumps(payload), encoding="utf-8")
-            triples = _load_triples_from_json(str(path))
-
-        self.assertEqual(len(triples), 1)
-
-    def test_evaluate_scores_exact_match(self):
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            payload = {
-                "triples": [
-                    {
-                        "subject": "Microsoft",
-                        "subject_type": "Company",
-                        "relation": "OFFERS",
-                        "object": "Azure",
-                        "object_type": "Offering",
-                    }
-                ]
-            }
-            gold_path = Path(tmp_dir) / "gold.json"
-            pred_path = Path(tmp_dir) / "pred.json"
-            gold_path.write_text(json.dumps(payload), encoding="utf-8")
-            pred_path.write_text(json.dumps(payload), encoding="utf-8")
-
-            gold = _load_triples_from_json(str(gold_path))
-            predicted = _load_triples_from_json(str(pred_path))
-            report = evaluate(predicted, gold)
-
-        self.assertEqual(report["precision"], 1.0)
-        self.assertEqual(report["recall"], 1.0)
-        self.assertEqual(report["f1"], 1.0)
-
-    def test_mode_name_is_canonical_pipeline(self):
-        args = SimpleNamespace(pipeline="canonical")
-        self.assertEqual(_mode_name(args), "canonical_pipeline")
-
-    def test_format_duration_uses_compact_seconds_and_minutes(self):
-        self.assertEqual(_format_duration(0.42), "0.4s")
-        self.assertEqual(_format_duration(75.2), "1m15s")
-
-    def test_format_token_visual_renders_plain_counts(self):
-        self.assertEqual(_format_token_visual(3244), "3,244")
-        self.assertEqual(_format_token_visual(3244, 20000), "3,244/20,000")
-
-    def test_pipeline_console_renders_pass_progress(self):
-        lines: list[str] = []
-        console = PipelineConsole(printer=lines.append)
-
-        console.start_run(
-            started_at=datetime(2026, 4, 14, 7, 19, 1, tzinfo=timezone.utc),
-            source_file=Path("data/palantir_10k.txt"),
-            run_dir=Path("outputs/palantir_run"),
-            pipeline="canonical",
-            provider="local",
-            model="local-model",
-            neo4j_enabled=True,
-            llm_token_cap=None,
-        )
-        console.handle_progress(
-            "stage_start",
-            index=2,
-            title="Pass 1 - Structural skeleton",
-            extracts="HAS_SEGMENT, OFFERS",
-        )
-        console.handle_progress("llm_call_complete", attempt=1, max_retries=3, tokens=3244)
-        console.handle_progress("stage_complete", details=[("result", "9 triples")])
-
-        self.assertIn("KG PIPELINE RUN", lines)
-        self.assertIn("Neo4j:     enabled (notifications disabled)", lines)
-        self.assertIn("[02/10] Pass 1 - Structural skeleton", lines)
-        self.assertTrue(any("extracts:" in line and "HAS_SEGMENT, OFFERS" in line for line in lines))
-        self.assertTrue(any("llm:" in line and "attempt 1/3, tokens=3,244" in line for line in lines))
-        self.assertTrue(any("result:" in line and "9 triples" in line for line in lines))
-
-    def test_pipeline_console_renders_stage_start_details(self):
-        lines: list[str] = []
-        console = PipelineConsole(printer=lines.append)
-
-        console.handle_progress(
-            "stage_start",
-            index=7,
-            title="Reflection 1 - Ontology compliance",
-            details=[("triples in", 14)],
-        )
-
-        self.assertIn("[07/10] Reflection 1 - Ontology compliance", lines)
-        self.assertTrue(any("triples in:" in line and "14" in line for line in lines))
-
-    def test_pipeline_console_renders_live_retry_updates(self):
-        lines: list[str] = []
-        console = PipelineConsole(printer=lines.append)
-
-        console.handle_progress(
-            "stage_start",
-            index=2,
-            title="Pass 1 - Structural skeleton",
-            extracts="HAS_SEGMENT, OFFERS",
-        )
-        console.handle_progress("llm_call_start", attempt=1, max_retries=3)
-        console.handle_progress(
-            "llm_call_error",
-            attempt=1,
-            max_retries=3,
-            error="Error code: 500 - Unexpected token '<'",
-            will_retry=True,
-        )
-        console.handle_progress("llm_call_start", attempt=2, max_retries=3)
-
-        self.assertTrue(any("llm:" in line and "starting attempt 1/3" in line for line in lines))
-        self.assertTrue(
-            any(
-                "llm:" in line
-                and "attempt 1/3 failed, retrying: Error code: 500 - Unexpected token '<'" in line
-                for line in lines
-            )
-        )
-        self.assertTrue(any("llm:" in line and "starting attempt 2/3" in line for line in lines))
-
-    def test_infer_company_name_uses_filename_stem(self):
-        text = "ITEM 1. BUSINESS\nMicrosoft is a technology company.\n"
-
-        inferred = _infer_company_name(Path("microsoft_10k.txt"), text)
-
-        self.assertEqual(inferred, "Microsoft")
-
-    def test_infer_company_name_ignores_filing_text(self):
-        text = (
-            "ITEM 1. BUSINESS\n"
-            "We have built four principal software platforms, Palantir Gotham and Palantir Foundry, "
-            "which enable institutions to transform data.\n"
-        )
-
-        inferred = _infer_company_name(Path("palantir_10k.txt"), text)
-
-        self.assertEqual(inferred, "Palantir")
-
-    def test_infer_company_name_prefers_filename_even_when_text_mentions_another_company(self):
-        text = "ITEM 1. BUSINESS\nMicrosoft is a technology company.\n"
-
-        inferred = _infer_company_name(Path("google_10k.txt"), text)
-
-        self.assertEqual(inferred, "Google")
-
+class LLMExtractorTests(unittest.TestCase):
     def test_payload_audit_counts_malformed_and_ontology_rejections(self):
         payload = {
             "triples": [
-                {"subject": "Microsoft", "subject_type": "Company", "relation": "OFFERS", "object": "Azure", "object_type": "Offering"},
-                {"subject": "Microsoft", "subject_type": "Company", "relation": "SERVES", "object": "startups", "object_type": "CustomerType"},
+                {
+                    "subject": "Microsoft",
+                    "subject_type": "Company",
+                    "relation": "OFFERS",
+                    "object": "Azure",
+                    "object_type": "Offering",
+                },
+                {
+                    "subject": "Microsoft",
+                    "subject_type": "Company",
+                    "relation": "SERVES",
+                    "object": "startups",
+                    "object_type": "CustomerType",
+                },
                 {"subject": "Microsoft", "subject_type": "Company", "relation": "OFFERS", "object": "Copilot"},
                 "not-a-dict",
             ]
@@ -468,8 +217,24 @@ class PipelineComponentTests(unittest.TestCase):
     def test_aggregate_extraction_audits_sums_counts(self):
         aggregated = aggregate_extraction_audits(
             [
-                {"raw_triple_count": 2, "malformed_triple_count": 1, "ontology_rejected_triple_count": 0, "duplicate_triple_count": 0, "kept_triple_count": 1, "invalid_issue_counts": {"empty_subject": 1}, "payload_parse_recovered": True},
-                {"raw_triple_count": 3, "malformed_triple_count": 0, "ontology_rejected_triple_count": 2, "duplicate_triple_count": 1, "kept_triple_count": 0, "invalid_issue_counts": {"non_canonical_label": 2}, "payload_parse_recovered": False},
+                {
+                    "raw_triple_count": 2,
+                    "malformed_triple_count": 1,
+                    "ontology_rejected_triple_count": 0,
+                    "duplicate_triple_count": 0,
+                    "kept_triple_count": 1,
+                    "invalid_issue_counts": {"empty_subject": 1},
+                    "payload_parse_recovered": True,
+                },
+                {
+                    "raw_triple_count": 3,
+                    "malformed_triple_count": 0,
+                    "ontology_rejected_triple_count": 2,
+                    "duplicate_triple_count": 1,
+                    "kept_triple_count": 0,
+                    "invalid_issue_counts": {"non_canonical_label": 2},
+                    "payload_parse_recovered": False,
+                },
             ]
         )
 
@@ -541,99 +306,6 @@ class PipelineComponentTests(unittest.TestCase):
                 {"role": "assistant", "content": "asst"},
             ],
         )
-
-    def test_local_provider_defaults_to_lm_studio_shape(self):
-        settings = resolve_model_settings(provider="local")
-
-        self.assertEqual(settings.provider, "local")
-        self.assertEqual(settings.model, "local-model")
-        self.assertEqual(settings.base_url, "http://localhost:1234/v1")
-        self.assertEqual(settings.api_mode, "chat_completions")
-        self.assertEqual(settings.api_key, "lm-studio")
-        self.assertIsNone(settings.max_output_tokens)
-
-    def test_opencode_go_normalizes_full_endpoint_url(self):
-        settings = resolve_model_settings(
-            provider="opencode-go",
-            model="kimi-k2.5",
-            base_url="https://opencode.ai/zen/go/v1/chat/completions",
-            api_key="secret",
-        )
-
-        self.assertEqual(settings.base_url, "https://opencode.ai/zen/go/v1")
-        self.assertEqual(settings.api_mode, "chat_completions")
-        self.assertEqual(settings.max_output_tokens, 20000)
-
-    def test_opencode_go_normalizes_full_messages_endpoint_url(self):
-        settings = resolve_model_settings(
-            provider="opencode-go",
-            model="minimax-m2.7",
-            base_url="https://opencode.ai/zen/go/v1/messages",
-            api_key="secret",
-        )
-
-        self.assertEqual(settings.base_url, "https://opencode.ai/zen/go/v1")
-        self.assertEqual(settings.api_mode, "messages")
-        self.assertEqual(settings.max_output_tokens, 20000)
-
-    def test_opencode_go_defaults_to_kimi(self):
-        settings = resolve_model_settings(
-            provider="opencode-go",
-            api_key="secret",
-        )
-
-        self.assertEqual(settings.model, "kimi-k2.5")
-        self.assertEqual(settings.api_mode, "chat_completions")
-
-    def test_opencode_go_reads_api_key_from_environment(self):
-        with patch.dict(environ, {"OPENCODE_API_KEY": "env-secret"}, clear=True):
-            settings = resolve_model_settings(
-                provider="opencode-go",
-                model="kimi-k2.5",
-            )
-
-        self.assertEqual(settings.api_key, "env-secret")
-        self.assertEqual(settings.max_output_tokens, 20000)
-
-    def test_opencode_go_honors_explicit_output_cap(self):
-        settings = resolve_model_settings(
-            provider="opencode-go",
-            model="kimi-k2.5",
-            api_key="secret",
-            max_output_tokens=1024,
-        )
-
-        self.assertEqual(settings.max_output_tokens, 1024)
-
-    def test_opencode_go_accepts_mimo_as_explicit_override(self):
-        settings = resolve_model_settings(
-            provider="opencode-go",
-            model="mimo-v2-pro",
-            api_key="secret",
-        )
-
-        self.assertEqual(settings.model, "mimo-v2-pro")
-        self.assertEqual(settings.api_mode, "chat_completions")
-
-    def test_opencode_go_accepts_human_friendly_model_aliases(self):
-        settings = resolve_model_settings(
-            provider="opencode-go",
-            model="MiniMax M2.7",
-            api_key="secret",
-        )
-
-        self.assertEqual(settings.model, "minimax-m2.7")
-        self.assertEqual(settings.api_mode, "messages")
-
-    def test_opencode_go_accepts_prefixed_model_ids(self):
-        settings = resolve_model_settings(
-            provider="opencode-go",
-            model="opencode-go/kimi-k2.5",
-            api_key="secret",
-        )
-
-        self.assertEqual(settings.model, "kimi-k2.5")
-        self.assertEqual(settings.api_mode, "chat_completions")
 
     def test_messages_request_payload_keeps_conversation_history_shape(self):
         payload = LLMExtractor._messages_request_payload(
@@ -1155,100 +827,6 @@ class PipelineComponentTests(unittest.TestCase):
         self.assertEqual(len(result.pass2_channels_extraction.triples), 0)
         self.assertEqual(len(result.final_extraction.triples), 0)
 
-    def test_main_only_pass1_writes_artifacts_and_loads_by_default(self):
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            tmp_path = Path(tmp_dir)
-            filing_path = tmp_path / "microsoft_10k.txt"
-            filing_path.write_text("ITEM 1. BUSINESS\nMicrosoft does business.\n", encoding="utf-8")
-            run_dir = tmp_path / "outputs" / "run"
-            resolved_triple = Triple(
-                subject="Microsoft",
-                subject_type="Company",
-                relation="HAS_SEGMENT",
-                object="Intelligent Cloud",
-                object_type="BusinessSegment",
-            )
-
-            fake_result = CanonicalPipelineResult(
-                success=True,
-                skeleton_extraction=KnowledgeGraphExtraction(
-                    extraction_notes="skeleton",
-                    triples=[resolved_triple],
-                ),
-            )
-            fake_extractor = SimpleNamespace(
-                extract_canonical_pipeline=MagicMock(return_value=fake_result),
-            )
-            fake_validation_report = {
-                "valid_triples": [resolved_triple.model_dump()],
-                "summary": {
-                    "invalid_triple_count": 0,
-                    "duplicate_triple_count": 0,
-                },
-            }
-
-            load_call: dict[str, object] = {}
-
-            class FakeNeo4jLoader:
-                def __init__(self, uri, user, password):
-                    self.uri = uri
-                    self.user = user
-                    self.password = password
-
-                def clear_graph(self):
-                    pass
-
-                def setup_constraints(self):
-                    pass
-
-                def load_triples(self, triples, company_name):
-                    load_call["company_name"] = company_name
-                    load_call["triple_count"] = len(triples)
-                    return len(triples)
-
-                def close(self):
-                    pass
-
-            with patch.object(main_module, "_build_run_dir", return_value=run_dir), patch.object(
-                main_module, "resolve_model_settings"
-            ) as mock_resolve, patch.object(main_module, "LLMExtractor", return_value=fake_extractor), patch.object(
-                main_module, "resolve_entities", return_value=[resolved_triple]
-            ), patch.object(
-                main_module, "validate_triples", return_value=fake_validation_report
-            ), patch.dict(
-                sys.modules, {"neo4j_loader": SimpleNamespace(Neo4jLoader=FakeNeo4jLoader)}
-            ), patch.object(
-                sys, "argv", ["main.py", str(filing_path), "--output-dir", str(tmp_path / "outputs"), "--only-pass1"]
-            ):
-                mock_resolve.return_value = SimpleNamespace(
-                    provider="local",
-                    model="local-model",
-                    base_url="http://localhost:1234/v1",
-                    api_mode="chat_completions",
-                    api_key="lm-studio",
-                    max_output_tokens=None,
-                )
-                exit_code = main_module.main()
-
-            self.assertEqual(exit_code, 0)
-            self.assertTrue((run_dir / "skeleton_extraction.json").exists())
-            self.assertFalse((run_dir / "pass2_channels_extraction.json").exists())
-            self.assertTrue((run_dir / "resolved_triples.json").exists())
-            self.assertTrue((run_dir / "validation_report.json").exists())
-
-            summary = json.loads((run_dir / "run_summary.json").read_text(encoding="utf-8"))
-            self.assertTrue(summary["pass1_only"])
-            self.assertEqual(summary["stage_count"], 4)
-            self.assertFalse(summary["skip_neo4j"])
-            self.assertEqual(summary["status"], "success")
-            self.assertEqual(summary["loaded_triple_count"], 1)
-            self.assertEqual(load_call["company_name"], "Microsoft")
-            self.assertEqual(load_call["triple_count"], 1)
-
-            mock_resolve.assert_called_once()
-            fake_extractor.extract_canonical_pipeline.assert_called_once()
-            self.assertTrue(fake_extractor.extract_canonical_pipeline.call_args.kwargs["stop_after_pass1"])
-
     def test_extract_canonical_pipeline_runs_two_reflection_stages(self):
         extractor = LLMExtractor(
             base_url="http://localhost:1234/v1",
@@ -1257,6 +835,8 @@ class PipelineComponentTests(unittest.TestCase):
             provider="local",
             api_mode="chat_completions",
         )
+        from runtime.main import PipelineConsole
+
         lines: list[str] = []
         console = PipelineConsole(printer=lines.append)
         extractor.progress_callback = console.handle_progress
@@ -1346,15 +926,6 @@ class PipelineComponentTests(unittest.TestCase):
         self.assertTrue(any("triples added:" in line and "0" in line for line in lines))
         self.assertTrue(any("triples removed:" in line and "1" in line for line in lines))
 
-    def test_opencode_go_rejects_unsupported_models(self):
-        with self.assertRaises(ValueError) as ctx:
-            resolve_model_settings(
-                provider="opencode-go",
-                model="glm-5.1",
-                api_key="secret",
-            )
-
-        self.assertIn("Unsupported opencode-go model", str(ctx.exception))
 
 if __name__ == "__main__":
     unittest.main()

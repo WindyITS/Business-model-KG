@@ -1,10 +1,7 @@
 import sys
 import unittest
 import types
-from pathlib import Path
 from unittest.mock import patch
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 if "neo4j" not in sys.modules:
     neo4j_module = types.ModuleType("neo4j")
