@@ -38,15 +38,15 @@ The workflow was:
 
 In practice, agents handled orchestration, expansion, and verification, while the dataset logic itself stayed curated at the intent, fixture, and query-pattern level rather than accepted from blind auto-generation.
 
-## Public And Private Surfaces
+## Release Surfaces
 
-The repo is intentionally split so the public side explains the dataset clearly while the release machinery stays out of the way:
+The repo now keeps both the workflow narrative and the HF export helper in one public place:
 
-- public GitHub repo: KG pipeline, ontology, dataset docs, and the workflow narrative
+- public GitHub repo: KG pipeline, ontology, dataset docs, and the HF packaging/export helper
 - Hugging Face dataset repo: machine-readable dataset release
-- private branch or private repo: packaging, export, and publish automation
+- local `dist/` export tree: generated upload bundle, intentionally ignored from git
 
-That keeps the provenance visible to anyone landing on the project without turning the main repo into a release-operations workspace.
+That keeps the provenance and release workflow visible to anyone landing on the project while still keeping generated release artifacts out of version control.
 
 ## Tooling
 
