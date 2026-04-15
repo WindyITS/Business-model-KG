@@ -8,9 +8,10 @@ Current status:
 
 - the active dataset build is complete
 - the final readiness assessment is documented in [`readiness_v3.md`](./readiness_v3.md)
-- the canonical machine-readable artifacts live under [`datasets/text2cypher/`](../../../datasets/text2cypher/README.md)
-- the train-facing `messages` export lives under `datasets/text2cypher/v3/training/`
-- the held-out evaluation export lives under `datasets/text2cypher/v3/evaluation/`
+- the machine-readable artifacts are generated locally under `datasets/text2cypher/v3/`
+- the train-facing `messages` export is written to `datasets/text2cypher/v3/training/`
+- the held-out evaluation export is written to `datasets/text2cypher/v3/evaluation/`
+- the export step publishes that local build output to Hugging Face via `scripts/export_hf_text2cypher_dataset.py`
 - the next engineering step is model training and evaluation rather than more dataset scaffolding
 
 The target runtime behavior is:
@@ -412,11 +413,12 @@ Additional recommended checks:
 The intended training path is:
 
 1. fine-tune directly on this repo's ontology-specific dataset
-2. use `datasets/text2cypher/v3/training/train_messages.jsonl` as the training split
-3. evaluate on `datasets/text2cypher/v3/evaluation/test_messages.jsonl`
-4. use the Apple Silicon MLX LoRA pipeline as the default local implementation path for `google/gemma-4-E4B-it`
+2. build the local dataset workspace under `datasets/text2cypher/v3/`
+3. use `datasets/text2cypher/v3/training/train_messages.jsonl` as the training split
+4. evaluate on `datasets/text2cypher/v3/evaluation/test_messages.jsonl`
+5. use the Apple Silicon MLX LoRA pipeline as the default local implementation path for `google/gemma-4-E4B-it`
 
-No public warm-up stage is planned. The goal is for the model to learn this KG's query contract directly from the checked-in corpus rather than from a broader mixed-schema Cypher dataset.
+No public warm-up stage is planned. The goal is for the model to learn this KG's query contract directly from the locally built corpus rather than from a broader mixed-schema Cypher dataset.
 
 Implementation note:
 

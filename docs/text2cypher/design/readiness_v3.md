@@ -4,23 +4,23 @@
 
 `Text2Cypher v3` is ready for fine-tuning and evaluation.
 
-The train/eval contract is now explicit:
+The train/eval contract is now explicit in the local build output:
 
-- train on [`train_messages.jsonl`](../../../datasets/text2cypher/v3/training/train_messages.jsonl)
-- evaluate on [`test_messages.jsonl`](../../../datasets/text2cypher/v3/evaluation/test_messages.jsonl)
+- train on `datasets/text2cypher/v3/training/train_messages.jsonl`
+- evaluate on `datasets/text2cypher/v3/evaluation/test_messages.jsonl`
 
 This release removes the previously duplicated trainer rows, adds a hard-query training extension, and introduces a brand-new held-out evaluation set with leakage checks.
 
 ## Final Artifacts
 
-- training corpus: [`training_examples.jsonl`](../../../datasets/text2cypher/v3/training/training_examples.jsonl)
-- train messages: [`train_messages.jsonl`](../../../datasets/text2cypher/v3/training/train_messages.jsonl)
-- held-out test examples: [`test_examples.jsonl`](../../../datasets/text2cypher/v3/evaluation/test_examples.jsonl)
-- held-out test messages: [`test_messages.jsonl`](../../../datasets/text2cypher/v3/evaluation/test_messages.jsonl)
-- validation report: [`bound_seed_validation_report.json`](../../../datasets/text2cypher/v3/reports/bound_seed_validation_report.json)
-- train manifest: [`sft_manifest.json`](../../../datasets/text2cypher/v3/reports/sft_manifest.json)
-- held-out manifest: [`heldout_test_manifest.json`](../../../datasets/text2cypher/v3/reports/heldout_test_manifest.json)
-- leakage report: [`leakage_report.json`](../../../datasets/text2cypher/v3/reports/leakage_report.json)
+- training corpus: `datasets/text2cypher/v3/training/training_examples.jsonl`
+- train messages: `datasets/text2cypher/v3/training/train_messages.jsonl`
+- held-out test examples: `datasets/text2cypher/v3/evaluation/test_examples.jsonl`
+- held-out test messages: `datasets/text2cypher/v3/evaluation/test_messages.jsonl`
+- validation report: `datasets/text2cypher/v3/reports/bound_seed_validation_report.json`
+- train manifest: `datasets/text2cypher/v3/reports/sft_manifest.json`
+- held-out manifest: `datasets/text2cypher/v3/reports/heldout_test_manifest.json`
+- leakage report: `datasets/text2cypher/v3/reports/leakage_report.json`
 
 ## Counts
 
@@ -61,4 +61,4 @@ Current result:
 
 ## Recommendation
 
-Use `v3` for the next fine-tuning run.
+Use the locally built `v3` dataset for the next fine-tuning run, then export the release bundle to Hugging Face.

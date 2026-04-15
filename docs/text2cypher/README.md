@@ -2,7 +2,7 @@
 
 This folder holds the prose documentation for the supervised text-to-Cypher dataset.
 
-Machine-readable artifacts live under [`datasets/text2cypher/`](../../datasets/text2cypher/README.md), not in `docs/`. The canonical corpus and the generated `messages.jsonl` / split-specific message exports all live there.
+Machine-readable artifacts are built locally under `datasets/text2cypher/v3/` and exported to Hugging Face with [`scripts/export_hf_text2cypher_dataset.py`](../../scripts/export_hf_text2cypher_dataset.py). The generated dataset directories are intentionally not tracked in git.
 
 ## Canonical Docs
 
@@ -13,33 +13,41 @@ Machine-readable artifacts live under [`datasets/text2cypher/`](../../datasets/t
 - [Readiness assessment: v3](./design/readiness_v3.md)
 - [MLX LoRA fine-tuning guide](./fine_tuning_mlx.md)
 
-## Active V3 Artifacts
+## Local V3 Build Output
 
-- [Fixture instances](../../datasets/text2cypher/v3/source/fixture_instances.jsonl)
-- [Bound seed examples](../../datasets/text2cypher/v3/source/bound_seed_examples.jsonl)
-- [Validation report](../../datasets/text2cypher/v3/reports/bound_seed_validation_report.json)
-- [Train manifest](../../datasets/text2cypher/v3/reports/sft_manifest.json)
-- [Held-out manifest](../../datasets/text2cypher/v3/reports/heldout_test_manifest.json)
-- [Leakage report](../../datasets/text2cypher/v3/reports/leakage_report.json)
-- [Training corpus](../../datasets/text2cypher/v3/training/training_examples.jsonl)
-- [Train messages](../../datasets/text2cypher/v3/training/train_messages.jsonl)
-- [Held-out test messages](../../datasets/text2cypher/v3/evaluation/test_messages.jsonl)
+Run the local dataset build first:
+
+```bash
+./venv/bin/python scripts/build_text2cypher_dataset.py
+```
+
+That writes the current `v3` artifact set under `datasets/text2cypher/v3/`, including:
+
+- `source/fixture_instances.jsonl`
+- `source/bound_seed_examples.jsonl`
+- `reports/bound_seed_validation_report.json`
+- `reports/sft_manifest.json`
+- `reports/heldout_test_manifest.json`
+- `reports/leakage_report.json`
+- `training/training_examples.jsonl`
+- `training/train_messages.jsonl`
+- `evaluation/test_messages.jsonl`
 
 ## Release Surfaces
 
-- active release: [`datasets/text2cypher/v3/`](../../datasets/text2cypher/README.md)
-- train-facing SFT export: [`datasets/text2cypher/v3/training/train_messages.jsonl`](../../datasets/text2cypher/v3/training/train_messages.jsonl)
-- held-out evaluation set: [`datasets/text2cypher/v3/evaluation/test_messages.jsonl`](../../datasets/text2cypher/v3/evaluation/test_messages.jsonl)
+- local generated dataset workspace: `datasets/text2cypher/v3/`
+- HF release bundle workspace: `dist/huggingface/text2cypher-v3/`
 - public GitHub repo: KG pipeline, ontology, dataset docs, and the workflow narrative
-- Hugging Face dataset repo: the release bundle consumed by trainers and evaluators
+- Hugging Face dataset repo: the published release consumed by trainers and evaluators
 
 ## Fine-Tuning Workflow
 
 The current local fine-tuning path is:
 
-1. prepare MLX-ready `chat` JSONL from the `v3` message exports
-2. fine-tune `google/gemma-4-E4B-it` with LoRA on Apple Silicon via `mlx-lm`
-3. score the held-out set by JSON validity, structured match, and optional Neo4j execution
+1. build the local `v3` dataset workspace
+2. prepare MLX-ready `chat` JSONL from the `v3` message exports
+3. fine-tune `google/gemma-4-E4B-it` with LoRA on Apple Silicon via `mlx-lm`
+4. score the held-out set by JSON validity, structured match, and optional Neo4j execution
 
 See [MLX LoRA fine-tuning guide](./fine_tuning_mlx.md) for the exact commands and output locations.
 
@@ -60,11 +68,12 @@ In practice, agents handled orchestration, expansion, and verification, while th
 
 ## Release Workflow
 
-The repo keeps the workflow narrative public, while allowing the packaging notes/templates to stay local:
+The repo keeps the workflow narrative public while keeping generated release material local:
 
-- public GitHub repo: KG pipeline, ontology, dataset docs, and the workflow narrative
-- Hugging Face dataset repo: canonical corpus plus the generated SFT-ready training view
+- public GitHub repo: KG pipeline, ontology, dataset docs, builder/validator code, and the export workflow
+- local dataset workspace: generated `datasets/text2cypher/v3/` artifacts, intentionally kept out of git
 - local packaging templates and `dist/` export tree: generated release material, intentionally kept out of git
+- Hugging Face dataset repo: the published corpus plus the generated SFT-ready training view
 
 That keeps the provenance visible to anyone landing on the project while still keeping release-operation details out of version control.
 
@@ -83,4 +92,4 @@ Important runtime distinction:
 
 ## Dataset Root
 
-The active machine-readable dataset release lives in `datasets/text2cypher/v3/`.
+The default local dataset root is `datasets/text2cypher/v3/`.

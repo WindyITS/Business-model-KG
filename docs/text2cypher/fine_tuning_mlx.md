@@ -4,15 +4,17 @@ This repo includes a local Apple Silicon fine-tuning path for the text-to-Cypher
 
 The default workflow is:
 
-1. prepare the `v3` chat dataset as MLX-ready `train.jsonl` / `test.jsonl`
-2. run LoRA fine-tuning against `google/gemma-4-E4B-it`
-3. evaluate the adapter on the held-out `v3` set with JSON, Cypher, params, and optional Neo4j execution checks
+1. build the local `v3` dataset workspace
+2. prepare the `v3` chat dataset as MLX-ready `train.jsonl` / `test.jsonl`
+3. run LoRA fine-tuning against `google/gemma-4-E4B-it`
+4. evaluate the adapter on the held-out `v3` set with JSON, Cypher, params, and optional Neo4j execution checks
 
 Recommended first run:
 
-1. `./venv/bin/python scripts/prepare_text2cypher_mlx_dataset.py --force`
-2. `./venv/bin/python scripts/train_text2cypher_mlx_lora.py`
-3. `./venv/bin/python scripts/evaluate_text2cypher_mlx_adapter.py --adapter-path outputs/text2cypher_mlx/gemma4_e4b/adapters --force`
+1. `./venv/bin/python scripts/build_text2cypher_dataset.py`
+2. `./venv/bin/python scripts/prepare_text2cypher_mlx_dataset.py --force`
+3. `./venv/bin/python scripts/train_text2cypher_mlx_lora.py`
+4. `./venv/bin/python scripts/evaluate_text2cypher_mlx_adapter.py --adapter-path outputs/text2cypher_mlx/gemma4_e4b/adapters --force`
 
 ## Install
 
@@ -35,9 +37,10 @@ Reference: [MLX LoRA guide](https://github.com/ml-explore/mlx-lm/blob/main/mlx_l
 
 ## Prepare The Dataset
 
-Build the MLX-ready chat dataset from the canonical `v3` release:
+Build the local dataset workspace first, then prepare the MLX-ready chat dataset:
 
 ```bash
+./venv/bin/python scripts/build_text2cypher_dataset.py
 ./venv/bin/python scripts/prepare_text2cypher_mlx_dataset.py --force
 ```
 

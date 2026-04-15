@@ -86,13 +86,13 @@ def _build_summary(dataset_root: Path) -> dict:
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Export the active text2cypher dataset into an HF-ready directory."
+        description="Export the local text2cypher dataset build into an HF-ready directory."
     )
     parser.add_argument(
         "--dataset-root",
         type=Path,
         default=DEFAULT_DATASET_ROOT,
-        help="Path to the canonical text2cypher dataset root.",
+        help="Path to the local text2cypher dataset build root.",
     )
     parser.add_argument(
         "--packaging-root",

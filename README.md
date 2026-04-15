@@ -4,7 +4,7 @@ A local pipeline for turning SEC 10-K business sections into a standardized busi
 
 The repo is organized around two maintained surfaces:
 - one canonical extraction/runtime stack
-- one structured text-to-Cypher dataset with a canonical corpus plus generated SFT/message exports
+- one structured text-to-Cypher dataset workflow with generated corpus and SFT/message exports
 
 ## What The Pipeline Extracts
 
@@ -128,7 +128,7 @@ scripts/
   evaluate_text2cypher_mlx_adapter.py
                           MLX held-out evaluation
   export_hf_text2cypher_dataset.py
-                          local export helper for HF-ready release assembly from the canonical corpus and message exports
+                          local export helper for HF-ready release assembly from the generated dataset workspace
 
 tests/
   test_pipeline_components.py
@@ -141,15 +141,16 @@ tests/
 The supervised text-to-Cypher corpus is now split by role:
 
 - prose and design docs live in [`docs/text2cypher/`](./docs/text2cypher/README.md)
-- the active machine-readable release lives in [`datasets/text2cypher/v3/`](./datasets/text2cypher/README.md)
-- the packaging script copies those artifacts into the Hugging Face release bundle
+- local machine-readable artifacts are generated under `datasets/text2cypher/v3/`
+- the export script copies that local build output into the Hugging Face release bundle under `dist/huggingface/text2cypher-v3/`
 
 Training guidance:
 - the fine-tuning plan is to use this repo's dataset only
-- `datasets/text2cypher/v3/training/train_messages.jsonl` is the train-facing SFT corpus
-- `datasets/text2cypher/v3/evaluation/test_messages.jsonl` is the held-out evaluation set
+- build the dataset locally with [`scripts/build_text2cypher_dataset.py`](./scripts/build_text2cypher_dataset.py) before training or validation
+- `datasets/text2cypher/v3/training/train_messages.jsonl` is the train-facing SFT corpus once the local build exists
+- `datasets/text2cypher/v3/evaluation/test_messages.jsonl` is the held-out evaluation set once the local build exists
 
-The dataset validator implementation in [`src/text2cypher/validation.py`](./src/text2cypher/validation.py) now defaults to the active `v3` artifact set under `datasets/text2cypher/v3/`. The legacy [`src/validate_text2cypher_dataset.py`](./src/validate_text2cypher_dataset.py) entrypoint remains as a compatibility wrapper.
+The dataset validator implementation in [`src/text2cypher/validation.py`](./src/text2cypher/validation.py) defaults to the local `v3` build output under `datasets/text2cypher/v3/`. The legacy [`src/validate_text2cypher_dataset.py`](./src/validate_text2cypher_dataset.py) entrypoint remains as a compatibility wrapper.
 
 ## Fine-Tuning On Apple Silicon
 
@@ -183,11 +184,12 @@ That means the dataset is not just a pile of question-query pairs. It is a check
 
 For public distribution, the repo now uses a single-branch flow:
 
-- keep this GitHub repo focused on the KG pipeline, ontology, dataset documentation, and the public dataset workflow
+- keep this GitHub repo focused on the KG pipeline, ontology, dataset docs, and the build/export workflow
+- build dataset artifacts locally under `datasets/text2cypher/v3/`, but keep those generated version directories out of git
 - publish the machine-readable text-to-Cypher corpus, including the generated `messages.jsonl` SFT view, as a dedicated Hugging Face dataset release
-- keep local packaging/upload templates outside the public tracked repo surface
+- keep local packaging/upload templates and `dist/` release bundles outside the public tracked repo surface
 
-In other words, the public repo explains the dataset and its provenance, Hugging Face remains the publication target for the canonical corpus plus trainer-facing message exports, and local packaging notes/templates stay private.
+In other words, the public repo explains and builds the dataset, the local workspace holds generated artifacts, and Hugging Face is the publication target for the actual release bundle.
 
 ## Quickstart
 

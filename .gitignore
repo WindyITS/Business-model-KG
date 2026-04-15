@@ -26,6 +26,7 @@ venv/
 outputs/
 dist/
 packaging/
+datasets/text2cypher/v*/
 docs/_bound_seed_example_drafts/
 docs/_bound_seed_example_v1_drafts/
 docs/_fixture_instance_drafts/
