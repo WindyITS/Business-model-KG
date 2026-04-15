@@ -101,7 +101,6 @@ datasets/
   text2cypher/
     README.md             machine-readable dataset layout
     v2/                   canonical training corpus and reports
-    archive/v0/           archived prototype artifacts
 
 tests/
   test_pipeline_components.py
@@ -115,9 +114,23 @@ The supervised text-to-Cypher corpus is now split by role:
 
 - prose and design docs live in [`docs/text2cypher/`](./docs/text2cypher/README.md)
 - canonical machine-readable V2 artifacts live in [`datasets/text2cypher/v2/`](./datasets/text2cypher/README.md)
-- archived prototype snapshots live in `datasets/text2cypher/archive/v0/`
 
 The dataset validator in [`src/validate_text2cypher_dataset.py`](./src/validate_text2cypher_dataset.py) now defaults to the canonical V2 artifact set under `datasets/text2cypher/v2/`.
+
+## How The Dataset Was Built
+
+`Text2Cypher v2` was built through an agent-orchestrated, spec-first workflow rather than through a blind auto-generation loop.
+
+The generation flow was:
+
+1. define query families and intent-level semantic tasks
+2. author synthetic graph fixtures where those tasks are answerable, ambiguous, or unsupported on purpose
+3. write gold parameterized Cypher for each intent
+4. bind those intents to concrete synthetic values
+5. validate the queries against Neo4j-backed synthetic graphs
+6. expand the natural-language side with multiple user phrasings, including messier analyst-style prompts and refusal cases
+
+That means the dataset is not just a pile of question-query pairs. It is a checked mapping from task to graph pattern to Cypher to user phrasing. Agents handled orchestration, expansion, and repeated validation runs, while the fixture design, intent inventory, and gold query patterns were curated deliberately.
 
 ## Public Dataset Release
 
@@ -127,15 +140,7 @@ For public distribution, the recommended split is:
 - publish the machine-readable text-to-Cypher dataset as a dedicated Hugging Face dataset release
 - keep the dataset build, validation, and packaging automation in a private branch or private repo
 
-The text-to-Cypher dataset itself was built through an agent-orchestrated, spec-first workflow:
-
-- define query families and intent-level semantic tasks
-- author synthetic graph fixtures where those tasks are answerable, ambiguous, or unsupported on purpose
-- write gold parameterized Cypher for each intent
-- validate those queries against Neo4j-backed synthetic graphs
-- expand the natural-language side with multiple user phrasings, including messier analyst-style requests and refusal cases
-
-That keeps the public story simple while preserving reproducibility for future dataset revisions.
+In other words, the public repo should explain the dataset and its provenance, the machine-readable release should live on Hugging Face, and the packaging workflow should stay private.
 
 ## Quickstart
 

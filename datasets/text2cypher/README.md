@@ -4,6 +4,8 @@ This directory contains the machine-readable artifacts for the text-to-Cypher su
 
 The dataset/database itself was built through agent orchestration over authored query families, synthetic graph fixtures, validated gold Cypher, and expanded user-question variants. See [`../../docs/text2cypher/README.md`](../../docs/text2cypher/README.md) for the full build workflow.
 
+This directory is the canonical in-repo copy of the released artifacts. The public workflow explanation lives in [`../../docs/text2cypher/README.md`](../../docs/text2cypher/README.md), while the Hugging Face packaging/export automation is kept separate from the public dataset surface.
+
 ## Layout
 
 - `v2/`
@@ -14,7 +16,5 @@ The dataset/database itself was built through agent orchestration over authored 
   Validation outputs and split metadata.
 - `v2/training/`
   The full training corpus plus train, dev, and test split exports.
-- `archive/v0/`
-  Older prototype artifacts kept for provenance only.
 
 Use [`../../docs/text2cypher/README.md`](../../docs/text2cypher/README.md) for the prose design docs and high-level dataset roadmap.

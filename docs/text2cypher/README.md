@@ -23,9 +23,9 @@ Machine-readable artifacts live under [`datasets/text2cypher/`](../../datasets/t
 - [Dev split](../../datasets/text2cypher/v2/training/dev.jsonl)
 - [Test split](../../datasets/text2cypher/v2/training/test.jsonl)
 
-## How It Was Built
+## Workflow
 
-This text-to-Cypher dataset/database was built through agent orchestration rather than a fully autonomous self-generation loop.
+This text-to-Cypher dataset was built through agent orchestration, but not through a fully autonomous self-generation loop. The semantics were authored and validated deliberately.
 
 The workflow was:
 
@@ -36,21 +36,30 @@ The workflow was:
 - validate the gold queries against Neo4j-backed synthetic graphs
 - expand the natural-language side with multiple user phrasings, including messier analyst-style prompts and refusal cases
 
-In practice, the agents handled orchestration, expansion, and verification, but the dataset logic was still curated at the intent, fixture, and query-pattern level rather than accepted from blind auto-generation.
+In practice, agents handled orchestration, expansion, and verification, while the dataset logic itself stayed curated at the intent, fixture, and query-pattern level rather than accepted from blind auto-generation.
+
+## Public And Private Surfaces
+
+The repo is intentionally split so the public side explains the dataset clearly while the release machinery stays out of the way:
+
+- public GitHub repo: KG pipeline, ontology, dataset docs, and the workflow narrative
+- Hugging Face dataset repo: machine-readable dataset release
+- private branch or private repo: packaging, export, and publish automation
+
+That keeps the provenance visible to anyone landing on the project without turning the main repo into a release-operations workspace.
 
 ## Tooling
 
 Dataset validation entrypoint:
+
 - [`src/validate_text2cypher_dataset.py`](../../src/validate_text2cypher_dataset.py)
 
-Graph comparison and Neo4j inspection:
-- [`src/evaluate_graph.py`](../../src/evaluate_graph.py)
-
 Important runtime distinction:
+
 - the text-to-Cypher validator still loads one synthetic fixture graph at a time into Neo4j
 - the current harness now supports `company_name`-scoped `BusinessSegment` and `Offering` nodes, `node_id`-based relationship loading, and place helper arrays such as `within_places` and `includes_places`
 - that means the validator is now much closer to the production query contract, even though it remains fixture-isolated rather than operating over a single shared multi-company database
 
-## Archive
+## Dataset Root
 
-Legacy prototype snapshots are kept in `datasets/text2cypher/archive/v0/` for provenance, and `v2/` is the active dataset root.
+The active machine-readable dataset release lives in `datasets/text2cypher/v2/`.
