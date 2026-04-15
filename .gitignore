@@ -19,6 +19,7 @@ venv/
 
 # Outputs / scratch
 outputs/
+dist/
 docs/_bound_seed_example_drafts/
 docs/_bound_seed_example_v1_drafts/
 docs/_fixture_instance_drafts/
