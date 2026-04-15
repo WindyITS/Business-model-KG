@@ -119,6 +119,24 @@ The supervised text-to-Cypher corpus is now split by role:
 
 The dataset validator in [`src/validate_text2cypher_dataset.py`](./src/validate_text2cypher_dataset.py) now defaults to the canonical V2 artifact set under `datasets/text2cypher/v2/`.
 
+## Public Dataset Release
+
+For public distribution, the recommended split is:
+
+- keep this GitHub repo focused on the KG pipeline, ontology, and dataset documentation
+- publish the machine-readable text-to-Cypher dataset as a dedicated Hugging Face dataset release
+- keep the dataset build, validation, and packaging automation in a private branch or private repo
+
+The text-to-Cypher dataset itself was built through an agent-orchestrated, spec-first workflow:
+
+- define query families and intent-level semantic tasks
+- author synthetic graph fixtures where those tasks are answerable, ambiguous, or unsupported on purpose
+- write gold parameterized Cypher for each intent
+- validate those queries against Neo4j-backed synthetic graphs
+- expand the natural-language side with multiple user phrasings, including messier analyst-style requests and refusal cases
+
+That keeps the public story simple while preserving reproducibility for future dataset revisions.
+
 ## Quickstart
 
 Requirements:
