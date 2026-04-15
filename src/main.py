@@ -237,43 +237,7 @@ def _build_run_dir(output_dir: Path, source_file: Path, mode: str) -> Path:
     return run_dir
 
 
-def _looks_like_company_name(candidate: str) -> bool:
-    candidate = candidate.strip(" ,.-")
-    if not candidate or len(candidate) > 80:
-        return False
-
-    tokens = [token.strip("()[]{}\"'.,") for token in candidate.split()]
-    tokens = [token for token in tokens if token]
-    if not 1 <= len(tokens) <= 8:
-        return False
-
-    connector_words = {"&", "and", "of", "the"}
-    signal_tokens = 0
-    for token in tokens:
-        if token.casefold() in connector_words:
-            continue
-        if token[0].isupper() or "." in token or any(char.isdigit() for char in token):
-            signal_tokens += 1
-            continue
-        return False
-
-    return signal_tokens > 0
-
-
-def _infer_company_name(source_file: Path, full_text: str) -> str:
-    for line in full_text.splitlines()[:40]:
-        stripped = line.strip()
-        if not stripped:
-            continue
-        lowered = stripped.lower()
-        if lowered.startswith("item ") or lowered.startswith("part "):
-            continue
-        marker = " is "
-        if marker in lowered:
-            company = stripped[: lowered.index(marker)].strip(" ,.-")
-            if _looks_like_company_name(company):
-                return company
-
+def _infer_company_name(source_file: Path, _full_text: str) -> str:
     stem = source_file.stem.replace("_10k", "").replace("_", " ").strip()
     return stem.title()
 

@@ -245,14 +245,14 @@ class PipelineComponentTests(unittest.TestCase):
         )
         self.assertTrue(any("llm:" in line and "starting attempt 2/3" in line for line in lines))
 
-    def test_infer_company_name_accepts_short_issuer_line(self):
+    def test_infer_company_name_uses_filename_stem(self):
         text = "ITEM 1. BUSINESS\nMicrosoft is a technology company.\n"
 
         inferred = _infer_company_name(Path("microsoft_10k.txt"), text)
 
         self.assertEqual(inferred, "Microsoft")
 
-    def test_infer_company_name_falls_back_when_line_is_descriptive_prose(self):
+    def test_infer_company_name_ignores_filing_text(self):
         text = (
             "ITEM 1. BUSINESS\n"
             "We have built four principal software platforms, Palantir Gotham and Palantir Foundry, "
@@ -262,6 +262,13 @@ class PipelineComponentTests(unittest.TestCase):
         inferred = _infer_company_name(Path("palantir_10k.txt"), text)
 
         self.assertEqual(inferred, "Palantir")
+
+    def test_infer_company_name_prefers_filename_even_when_text_mentions_another_company(self):
+        text = "ITEM 1. BUSINESS\nMicrosoft is a technology company.\n"
+
+        inferred = _infer_company_name(Path("google_10k.txt"), text)
+
+        self.assertEqual(inferred, "Google")
 
     def test_payload_audit_counts_malformed_and_ontology_rejections(self):
         payload = {
