@@ -12,8 +12,6 @@ This directory contains the machine-readable artifacts for the text-to-Cypher su
   Validation outputs and split metadata.
 - `v2/training/`
   The full training corpus plus train, dev, and test split exports.
-- `v1/`
-  The superseded first full release, kept for provenance and comparison.
 - `archive/v0/`
   Older prototype artifacts kept for provenance only.
 

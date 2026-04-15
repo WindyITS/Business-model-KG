@@ -2,7 +2,7 @@
 
 ## Verdict
 
-The rebuilt dataset is ready for fine-tuning and materially stronger than the superseded `v1` release.
+The rebuilt dataset is ready for fine-tuning.
 
 This `v2` corpus is training-ready because it now combines:
 
@@ -81,9 +81,9 @@ Split sizes:
 - dev: `547` rows, `15` intents, `52` source examples
 - test: `1,261` rows, `21` intents, `95` source examples
 
-## Why V2 Is Better Than V1
+## What V2 Fixes
 
-`v2` fixes the most important contract mismatches from `v1`:
+`v2` fixes the most important contract mismatches in the older dataset build:
 
 - it trains company-scoped inventory lookup against composite identities instead of bare-name-only fixtures
 - it teaches hierarchy-aware place matching instead of exact-place-only geography

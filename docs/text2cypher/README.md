@@ -38,4 +38,4 @@ Important runtime distinction:
 
 ## Archive
 
-Legacy prototype snapshots are kept in `datasets/text2cypher/archive/v0/` for provenance, `v1/` remains as the superseded first release, and `v2/` is the active dataset root.
+Legacy prototype snapshots are kept in `datasets/text2cypher/archive/v0/` for provenance, and `v2/` is the active dataset root.
