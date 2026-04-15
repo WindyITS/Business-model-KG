@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import time
 from collections import defaultdict
 from pathlib import Path
 
@@ -13,7 +14,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from text2cypher_mlx_lora import (
+from text2cypher.mlx import (
     DEFAULT_ADAPTER_PATH,
     DEFAULT_ENABLE_THINKING,
     DEFAULT_EVAL_OUTPUT_ROOT,
@@ -58,6 +59,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--neo4j-uri", type=str, default=None)
     parser.add_argument("--neo4j-user", type=str, default="neo4j")
     parser.add_argument("--neo4j-password", type=str, default="password")
+    parser.add_argument(
+        "--progress-every",
+        type=int,
+        default=1,
+        help="Update the visible progress display every N rows.",
+    )
     return parser.parse_args(argv)
 
 
@@ -119,6 +126,49 @@ def _prediction_export_row(result: dict[str, object]) -> dict[str, object]:
     }
 
 
+def _format_seconds(seconds: float) -> str:
+    rounded = max(0, int(seconds))
+    minutes, secs = divmod(rounded, 60)
+    hours, minutes = divmod(minutes, 60)
+    if hours:
+        return f"{hours:02d}:{minutes:02d}:{secs:02d}"
+    return f"{minutes:02d}:{secs:02d}"
+
+
+class ProgressPrinter:
+    def __init__(self, *, total: int, label: str, stream: object = sys.stdout):
+        self.total = total
+        self.label = label
+        self.stream = stream
+        self.start_time = time.monotonic()
+        self.last_render_length = 0
+        self.is_tty = getattr(stream, "isatty", lambda: False)()
+
+    def update(self, current: int, *, valid_json_rows: int, structured_match_rows: int) -> None:
+        elapsed = max(0.001, time.monotonic() - self.start_time)
+        rate = current / elapsed if current else 0.0
+        remaining = max(0, self.total - current)
+        eta_seconds = remaining / rate if rate > 0 else 0.0
+        filled = int((current / self.total) * 24) if self.total else 24
+        bar = "#" * filled + "-" * (24 - filled)
+        line = (
+            f"{self.label} [{bar}] {current}/{self.total} "
+            f"elapsed={_format_seconds(elapsed)} eta={_format_seconds(eta_seconds)} "
+            f"valid_json={valid_json_rows} structured={structured_match_rows}"
+        )
+
+        if self.is_tty:
+            padded = line.ljust(self.last_render_length)
+            print(f"\r{padded}", end="", file=self.stream, flush=True)
+            self.last_render_length = len(padded)
+        else:
+            print(line, file=self.stream, flush=True)
+
+    def finish(self) -> None:
+        if self.is_tty:
+            print(file=self.stream, flush=True)
+
+
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     output_root = args.output_root.resolve()
@@ -150,7 +200,10 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     row_results: list[dict[str, object]] = []
-    for message_row in message_rows:
+    progress = ProgressPrinter(total=len(message_rows), label="Generating")
+    valid_json_rows = 0
+    structured_match_rows = 0
+    for index, message_row in enumerate(message_rows, start=1):
         raw_output = generate_output_with_loaded_model(
             model=model,
             tokenizer=tokenizer,
@@ -160,6 +213,8 @@ def main(argv: list[str] | None = None) -> int:
             enable_thinking=args.enable_thinking,
         )
         metrics = score_prediction_payload(raw_output, gold_completion=message_row["completion"])
+        valid_json_rows += int(metrics["valid_json"])
+        structured_match_rows += int(metrics["structured_match"])
         row_results.append(
             {
                 "message_row": message_row,
@@ -169,8 +224,16 @@ def main(argv: list[str] | None = None) -> int:
                 "execution": None,
             }
         )
+        if index == 1 or index == len(message_rows) or index % max(1, args.progress_every) == 0:
+            progress.update(
+                index,
+                valid_json_rows=valid_json_rows,
+                structured_match_rows=structured_match_rows,
+            )
+    progress.finish()
 
     if args.neo4j_uri:
+        print("Running execution checks...", flush=True)
         fixture_rows = load_jsonl(args.fixtures_path.resolve())
         row_results = evaluate_execution_matches(
             row_results=row_results,

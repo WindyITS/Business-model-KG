@@ -10,7 +10,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from text2cypher_dataset_v2.builder import main
+from text2cypher.dataset.v2.builder import main
 
 
 if __name__ == "__main__":

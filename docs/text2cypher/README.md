@@ -72,7 +72,8 @@ That keeps the provenance visible to anyone landing on the project while still k
 
 Dataset validation entrypoint:
 
-- [`src/validate_text2cypher_dataset.py`](../../src/validate_text2cypher_dataset.py)
+- implementation: [`src/text2cypher/validation.py`](../../src/text2cypher/validation.py)
+- compatibility wrapper: [`src/validate_text2cypher_dataset.py`](../../src/validate_text2cypher_dataset.py)
 
 Important runtime distinction:
 

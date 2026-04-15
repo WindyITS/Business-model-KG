@@ -8,8 +8,8 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from text2cypher_dataset_v2.builder import DatasetBuildError, build_dataset, load_dataset_specs, write_dataset
-from text2cypher_dataset_v2.models import (
+from text2cypher.dataset.v2.builder import DatasetBuildError, build_dataset, load_dataset_specs, write_dataset
+from text2cypher.dataset.v2.models import (
     DatasetSpec,
     FixtureEdgeSpec,
     FixtureNodeSpec,
@@ -193,7 +193,7 @@ class Text2CypherDatasetBuilderTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             output_root = Path(tmp_dir) / "dataset"
             modules = _module_map(("module_coverage", spec))
-            with patch("text2cypher_dataset_v2.builder.importlib.import_module", side_effect=lambda name: modules[name]):
+            with patch("text2cypher.dataset.v2.builder.importlib.import_module", side_effect=lambda name: modules[name]):
                 with self.assertRaisesRegex(DatasetBuildError, r"train|coverage"):
                     loaded_spec = load_dataset_specs(["module_coverage"])
                     build_dataset(loaded_spec, output_root)
@@ -228,7 +228,7 @@ class Text2CypherDatasetBuilderTests(unittest.TestCase):
 
         modules = _module_map(("module_a", first), ("module_b", second))
 
-        with patch("text2cypher_dataset_v2.builder.importlib.import_module", side_effect=lambda name: modules[name]):
+        with patch("text2cypher.dataset.v2.builder.importlib.import_module", side_effect=lambda name: modules[name]):
             with self.assertRaisesRegex(DatasetBuildError, r"duplicate question|conflict"):
                 spec = load_dataset_specs(["module_a", "module_b"])
                 with tempfile.TemporaryDirectory() as tmp_dir:

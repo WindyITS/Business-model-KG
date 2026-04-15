@@ -60,8 +60,8 @@ The canonical node and relation schema lives in [`configs/ontology.json`](../con
 
 In practice, though, the production ontology is enforced through three layers together:
 - the formal schema and canonical labels
-- the staged extraction and reflection prompts in [`src/llm_extractor.py`](../src/llm_extractor.py)
-- the runtime validator in [`src/ontology_validator.py`](../src/ontology_validator.py)
+- the staged extraction pipeline in [`src/llm/`](../src/llm/) with canonical prompt templates in [`src/llm_extraction/pipelines/canonical/templates/`](../src/llm_extraction/pipelines/canonical/templates/)
+- the runtime validator in [`src/ontology/validator.py`](../src/ontology/validator.py)
 
 This document records the full effective behavior of the maintained pipeline, not just the raw schema file.
 

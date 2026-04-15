@@ -12,7 +12,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from text2cypher_mlx_lora import (
+from text2cypher.mlx import (
     DEFAULT_ADAPTER_PATH,
     DEFAULT_BATCH_SIZE,
     DEFAULT_GRAD_ACCUMULATION_STEPS,

@@ -45,8 +45,8 @@ The canonical runtime follows a few consistent rules:
 
 This means the effective behavior of the pipeline comes from three layers together:
 - the formal schema in [`configs/ontology.json`](./configs/ontology.json)
-- the staged extraction and reflection prompts in [`src/llm_extractor.py`](./src/llm_extractor.py)
-- the final normalization and structural enforcement in [`src/ontology_validator.py`](./src/ontology_validator.py)
+- the staged extraction and reflection pipeline under [`src/llm/`](./src/llm/) with prompt templates in [`src/llm_extraction/pipelines/canonical/templates/`](./src/llm_extraction/pipelines/canonical/templates/)
+- the final normalization and structural enforcement in [`src/ontology/validator.py`](./src/ontology/validator.py)
 
 ## Canonical Extraction Pipeline
 
@@ -77,16 +77,32 @@ Runtime notes:
 
 ```text
 src/
-  llm_extractor.py        canonical prompt pipeline
-  main.py                 CLI entrypoint
-  ontology_config.py      canonical ontology loader
-  ontology_validator.py   ontology validation and structural checks
+  runtime/
+    main.py               runtime CLI implementation
+    model_provider.py     provider/model resolution
+    entity_resolver.py    light entity normalization
+  llm/
+    extractor.py          generic LLM calling and extraction facade
+  llm_extraction/
+    pipelines/canonical/
+                          canonical pipeline orchestration and prompt templates
+  ontology/
+    config.py             canonical ontology loader
+    validator.py          ontology validation and structural checks
+    place_hierarchy.py    place normalization and hierarchy helpers
+  graph/
+    neo4j_loader.py       Neo4j loading
+    evaluate_graph.py     graph evaluation utilities
+  text2cypher/
+    dataset/v2/           dataset builder, models, specs, paraphrases
+    mlx/                  MLX fine-tuning and evaluation helpers
+    validation.py         validates gold Cypher against synthetic fixtures
+
+  main.py                 compatibility CLI wrapper
+  llm_extractor.py        compatibility extractor wrapper
+  ontology_validator.py   compatibility validator wrapper
   validate_text2cypher_dataset.py
-                          validates gold Cypher against synthetic fixtures
-  entity_resolver.py      light entity normalization
-  place_hierarchy.py      place normalization and query metadata helpers
-  neo4j_loader.py         Neo4j loading
-  evaluate_graph.py       graph evaluation utilities
+                          compatibility validator wrapper
 
 configs/
   ontology.json           canonical ontology config
@@ -103,6 +119,14 @@ datasets/
     v3/                   active training corpus, evaluation set, and reports
 
 scripts/
+  build_text2cypher_dataset.py
+                          dataset build entrypoint
+  prepare_text2cypher_mlx_dataset.py
+                          MLX dataset preparation
+  train_text2cypher_mlx_lora.py
+                          MLX LoRA training entrypoint
+  evaluate_text2cypher_mlx_adapter.py
+                          MLX held-out evaluation
   export_hf_text2cypher_dataset.py
                           local export helper for HF-ready release assembly from the canonical corpus and message exports
 
@@ -125,7 +149,7 @@ Training guidance:
 - `datasets/text2cypher/v3/training/train_messages.jsonl` is the train-facing SFT corpus
 - `datasets/text2cypher/v3/evaluation/test_messages.jsonl` is the held-out evaluation set
 
-The dataset validator in [`src/validate_text2cypher_dataset.py`](./src/validate_text2cypher_dataset.py) now defaults to the active `v3` artifact set under `datasets/text2cypher/v3/`.
+The dataset validator implementation in [`src/text2cypher/validation.py`](./src/text2cypher/validation.py) now defaults to the active `v3` artifact set under `datasets/text2cypher/v3/`. The legacy [`src/validate_text2cypher_dataset.py`](./src/validate_text2cypher_dataset.py) entrypoint remains as a compatibility wrapper.
 
 ## Fine-Tuning On Apple Silicon
 

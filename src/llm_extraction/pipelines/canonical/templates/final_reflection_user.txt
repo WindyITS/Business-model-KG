@@ -1,0 +1,37 @@
+<workflow_step>
+REFLECTION 2 - FILING RECONCILIATION
+</workflow_step>
+
+<objective>
+Review the rule-compliant draft graph against the full filing and return the final canonical graph.
+</objective>
+
+<company_name>
+{{company_name}}
+</company_name>
+
+<current_graph>
+{{current_graph}}
+</current_graph>
+
+<review_instruction>
+Act exactly as the system prompt instructs.
+Start from the current graph exactly as provided.
+You are supervising and editing an existing draft graph, not performing first-pass extraction from scratch.
+Favor minimal, targeted corrections over broad rewrites.
+Use the full filing to audit the graph against the filing, the ontology, the ontology rules, and the canonical label definitions.
+Every retained or added triple must adhere to the ontology.
+Preserve existing triples by default when they are ontology-valid and plausibly supported by the filing.
+If a triple conflicts with ontology scope, relation, hierarchy, or normalization rules, remove or correct it.
+If a **BusinessSegment** points to both a family parent and that parent's child, keep only the **first-order offering** at segment scope and keep the child under its offering parent.
+Only remove a triple when it is clearly contradicted, clearly unsupported after considering the whole filing, or clearly invalid under the ontology.
+Do not drop an entire relation family just because support is broad or distributed across multiple parts of the filing.
+Review the current graph relation by relation and fix only what is actually wrong.
+In this step you may prune unsupported triples, resolve context-dependent conflicts, and add clearly missing facts.
+Correct, remove, keep, and add triples only as needed to produce the final canonical graph.
+</review_instruction>
+
+<format_reminder>
+Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array.
+Do not use markdown code blocks (```json).
+</format_reminder>

@@ -17,7 +17,7 @@ if "neo4j" not in sys.modules:
     neo4j_module.GraphDatabase = _GraphDatabase
     sys.modules["neo4j"] = neo4j_module
 
-from validate_text2cypher_dataset import SyntheticGraphLoader
+from text2cypher.validation import SyntheticGraphLoader
 
 
 class _FakeResult:
@@ -95,7 +95,7 @@ class ValidateText2CypherDatasetTests(unittest.TestCase):
             ],
         }
 
-        with patch("validate_text2cypher_dataset.GraphDatabase.driver", return_value=fake_driver):
+        with patch("text2cypher.validation.GraphDatabase.driver", return_value=fake_driver):
             loader = SyntheticGraphLoader("bolt://example", "neo4j", "password")
             try:
                 loader.setup_constraints()
@@ -156,7 +156,7 @@ class ValidateText2CypherDatasetTests(unittest.TestCase):
             recorded["auth"] = auth
             return _FakeDriver()
 
-        with patch("validate_text2cypher_dataset.GraphDatabase.driver", side_effect=_driver):
+        with patch("text2cypher.validation.GraphDatabase.driver", side_effect=_driver):
             loader = SyntheticGraphLoader("http://localhost:7474", "neo4j", "password")
             loader.close()
 
