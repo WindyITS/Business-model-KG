@@ -414,8 +414,14 @@ The intended training path is:
 1. fine-tune directly on this repo's ontology-specific dataset
 2. use `datasets/text2cypher/v3/training/train_messages.jsonl` as the training split
 3. evaluate on `datasets/text2cypher/v3/evaluation/test_messages.jsonl`
+4. use the Apple Silicon MLX LoRA pipeline as the default local implementation path for `google/gemma-4-E4B-it`
 
 No public warm-up stage is planned. The goal is for the model to learn this KG's query contract directly from the checked-in corpus rather than from a broader mixed-schema Cypher dataset.
+
+Implementation note:
+
+- the local training/evaluation workflow is documented in `docs/text2cypher/fine_tuning_mlx.md`
+- the held-out set is suitable as a hard-query benchmark, but it is not yet a full refusal benchmark
 
 ## Deliverables
 
@@ -433,4 +439,4 @@ The dataset effort should produce:
 
 ## Immediate Next Step
 
-Start from the intent catalog and create a synthetic fixture library that can instantiate the selected families with ontology-valid invented names and structures.
+Run the first Gemma `E4B` LoRA baseline on the checked-in `v3` dataset, then compare held-out JSON validity, structured match, and execution accuracy before tuning the training hyperparameters further.

@@ -127,6 +127,18 @@ Training guidance:
 
 The dataset validator in [`src/validate_text2cypher_dataset.py`](./src/validate_text2cypher_dataset.py) now defaults to the active `v3` artifact set under `datasets/text2cypher/v3/`.
 
+## Fine-Tuning On Apple Silicon
+
+The repo now includes a local Apple Silicon LoRA pipeline for `google/gemma-4-E4B-it` using `mlx-lm`.
+
+The intended flow is:
+
+1. prepare the MLX-ready chat dataset with [`scripts/prepare_text2cypher_mlx_dataset.py`](./scripts/prepare_text2cypher_mlx_dataset.py)
+2. train adapters with [`scripts/train_text2cypher_mlx_lora.py`](./scripts/train_text2cypher_mlx_lora.py)
+3. score the held-out set with [`scripts/evaluate_text2cypher_mlx_adapter.py`](./scripts/evaluate_text2cypher_mlx_adapter.py)
+
+The detailed workflow, defaults, and commands live in [`docs/text2cypher/fine_tuning_mlx.md`](./docs/text2cypher/fine_tuning_mlx.md).
+
 ## How The Dataset Was Built
 
 `Text2Cypher v3` was built through an agent-orchestrated, spec-first workflow rather than through a blind auto-generation loop, then extended with a hard-query train cohort and a separate held-out evaluation cohort.
@@ -167,6 +179,12 @@ Setup:
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+```
+
+To use the Apple Silicon LoRA training path as well:
+
+```bash
+pip install -r requirements-mlx-lora.txt
 ```
 
 Run the extraction pipeline:

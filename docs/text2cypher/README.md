@@ -11,6 +11,7 @@ Machine-readable artifacts live under [`datasets/text2cypher/`](../../datasets/t
 - [Intent inventory](./design/intent_cases_by_family.md)
 - [Fixture library](./design/fixture_library.md)
 - [Readiness assessment: v3](./design/readiness_v3.md)
+- [MLX LoRA fine-tuning guide](./fine_tuning_mlx.md)
 
 ## Active V3 Artifacts
 
@@ -31,6 +32,16 @@ Machine-readable artifacts live under [`datasets/text2cypher/`](../../datasets/t
 - held-out evaluation set: [`datasets/text2cypher/v3/evaluation/test_messages.jsonl`](../../datasets/text2cypher/v3/evaluation/test_messages.jsonl)
 - public GitHub repo: KG pipeline, ontology, dataset docs, and the workflow narrative
 - Hugging Face dataset repo: the release bundle consumed by trainers and evaluators
+
+## Fine-Tuning Workflow
+
+The current local fine-tuning path is:
+
+1. prepare MLX-ready `chat` JSONL from the `v3` message exports
+2. fine-tune `google/gemma-4-E4B-it` with LoRA on Apple Silicon via `mlx-lm`
+3. score the held-out set by JSON validity, structured match, and optional Neo4j execution
+
+See [MLX LoRA fine-tuning guide](./fine_tuning_mlx.md) for the exact commands and output locations.
 
 ## Workflow
 
