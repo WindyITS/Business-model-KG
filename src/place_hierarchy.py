@@ -1,19 +1,13 @@
 import re
 import unicodedata
-from collections import deque
-from functools import lru_cache
 from typing import Iterable
 
-
-PLACE_HIERARCHY_RELATION = "WITHIN"
-EXACT_PLACE_MATCH = "exact"
-BROADER_PLACE_MATCH = "broader_region"
 
 WHITESPACE_RE = re.compile(r"\s+")
 QUOTE_CHARS = "\"'`“”‘’ "
 
-# Query-time taxonomy only: extraction remains canonical `Company -> OPERATES_IN -> Place`.
-# This covers the ontology's macro-regions, U.S. states plus D.C., and a broad sovereign-country set.
+# Place normalization only. This covers the ontology's macro-regions, U.S. states plus D.C.,
+# and a broad sovereign-country set so aliases resolve to canonical place labels.
 _MACRO_REGION_PARENTS: dict[str, tuple[str, ...]] = {
     "Africa": ("EMEA",),
     "Asia Pacific": ("APAC",),
@@ -518,67 +512,3 @@ def normalize_place_name(name: str) -> str:
     if key in _PLACE_ALIASES:
         return _PLACE_ALIASES[key]
     return _CANONICAL_PLACE_NAMES.get(key, cleaned)
-
-
-PLACE_PARENTS = {
-    normalize_place_name(place): tuple(normalize_place_name(parent) for parent in parents)
-    for place, parents in _RAW_PLACE_PARENTS.items()
-}
-
-
-def place_parents(place: str) -> tuple[str, ...]:
-    return PLACE_PARENTS.get(normalize_place_name(place), ())
-
-
-@lru_cache(maxsize=None)
-def place_ancestors(place: str) -> tuple[str, ...]:
-    normalized_place = normalize_place_name(place)
-    queue = deque(place_parents(normalized_place))
-    ancestors: list[str] = []
-    seen: set[str] = set()
-
-    while queue:
-        current = queue.popleft()
-        if current in seen:
-            continue
-        seen.add(current)
-        ancestors.append(current)
-        queue.extend(place_parents(current))
-
-    return tuple(ancestors)
-
-
-def expand_place_query(place: str) -> tuple[str, ...]:
-    normalized_place = normalize_place_name(place)
-    return (normalized_place, *place_ancestors(normalized_place))
-
-
-def classify_place_match(requested_place: str, company_place: str) -> str | None:
-    requested = normalize_place_name(requested_place)
-    company = normalize_place_name(company_place)
-    if requested == company:
-        return EXACT_PLACE_MATCH
-    if company in place_ancestors(requested):
-        return BROADER_PLACE_MATCH
-    return None
-
-
-def place_hierarchy_edges(place_names: Iterable[str]) -> tuple[tuple[str, str], ...]:
-    edges: set[tuple[str, str]] = set()
-    stack: list[str] = []
-    for place in place_names:
-        normalized = normalize_place_name(place)
-        if normalized:
-            stack.append(normalized)
-    seen: set[str] = set()
-
-    while stack:
-        place = stack.pop()
-        if place in seen:
-            continue
-        seen.add(place)
-        for parent in place_parents(place):
-            edges.add((place, parent))
-            stack.append(parent)
-
-    return tuple(sorted(edges))

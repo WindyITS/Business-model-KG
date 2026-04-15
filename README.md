@@ -56,7 +56,7 @@ src/
   validate_text2cypher_dataset.py
                           validates gold Cypher against synthetic fixtures
   entity_resolver.py      light entity normalization
-  place_hierarchy.py      query-time place taxonomy and match helpers
+  place_hierarchy.py      place normalization helpers
   neo4j_loader.py         Neo4j loading
   evaluate_graph.py       graph evaluation utilities
 
@@ -158,30 +158,14 @@ Neo4j Browser:
 - `http://localhost:7474`
 - default credentials: `neo4j / password`
 
-## Geography Rollups
+## Geography
 
-The extractor keeps geography canonical at `Company-[:OPERATES_IN]->Place`, but the Neo4j
-loaders also materialize an internal `Place-[:WITHIN]->Place` hierarchy for query-time
-expansion.
+The extractor and Neo4j loader keep geography canonical at
+`Company-[:OPERATES_IN]->Place`.
 
-The deterministic hierarchy now covers the approved macro-regions, all U.S. states plus
-`District of Columbia`, and a broad sovereign-country set with common aliases.
-
-That lets a country query surface broader regional tags without rewriting the extracted
-facts. For example, an `Italy` lookup can return companies tagged `Italy`, `Europe`,
-`European Union`, or `EMEA`, while still marking which rows are broader matches:
-
-```cypher
-MATCH (requested:Place {name: $place})
-MATCH (requested)-[:WITHIN*0..]->(matched:Place)<-[:OPERATES_IN]-(company:Company)
-WITH company, MIN(CASE WHEN matched.name = requested.name THEN 0 ELSE 1 END) AS match_rank
-RETURN company.name AS company,
-       CASE match_rank
-         WHEN 0 THEN 'exact'
-         ELSE 'broader_region'
-       END AS geography_match
-ORDER BY match_rank, company
-```
+No derived place hierarchy is materialized in Neo4j. Places are normalized to canonical
+ontology values during validation and load, but queries operate only on the places that
+were actually extracted.
 
 ## Output Artifacts
 

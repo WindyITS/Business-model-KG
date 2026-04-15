@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Tuple
 
 from neo4j import GraphDatabase
-from place_hierarchy import PLACE_HIERARCHY_RELATION, place_hierarchy_edges
 
 
 ALLOWED_NODE_LABELS = {
@@ -190,12 +189,9 @@ class SyntheticGraphLoader:
         validate_fixture_shape(fixture)
         nodes_by_label: Dict[str, List[Dict[str, str]]] = defaultdict(list)
         node_lookup = {node["node_id"]: node for node in fixture["nodes"]}
-        place_names: set[str] = set()
 
         for node in fixture["nodes"]:
             nodes_by_label[node["label"]].append({"name": node["name"]})
-            if node["label"] == "Place":
-                place_names.add(node["name"])
 
         edges_by_signature: Dict[Tuple[str, str, str], List[Dict[str, str]]] = defaultdict(list)
         for edge in fixture["edges"]:
@@ -224,18 +220,6 @@ class SyntheticGraphLoader:
                     MERGE (source)-[:{rel_type}]->(target)
                     """,
                     rows=rows,
-                ).consume()
-
-            place_edges = place_hierarchy_edges(place_names)
-            if place_edges:
-                session.run(
-                    f"""
-                    UNWIND $rows AS row
-                    MERGE (child:Place {{name: row.child}})
-                    MERGE (parent:Place {{name: row.parent}})
-                    MERGE (child)-[:{PLACE_HIERARCHY_RELATION}]->(parent)
-                    """,
-                    rows=[{"child": child, "parent": parent} for child, parent in place_edges],
                 ).consume()
 
     def run_query(self, cypher: str, params: Dict[str, Any]) -> Tuple[List[str], List[Dict[str, Any]]]:

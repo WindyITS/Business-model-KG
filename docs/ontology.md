@@ -257,33 +257,8 @@ The extractor still emits only canonical `Company-[:OPERATES_IN]->Place` facts.
 
 In some cases, that canonical `Place` may be an approved macro-region selected from a clearly exhaustive country list when the roll-up is unambiguous and the individual countries do not add distinct business signal.
 
-For downstream querying, Neo4j may also materialize an internal `Place-[:WITHIN]->Place`
-hierarchy so a country query can expand to broader tagged regions without inventing new
-`OPERATES_IN` triples.
-
-The deterministic hierarchy may cover approved macro-regions, all U.S. states plus
-`District of Columbia`, and a broad sovereign-country set with common aliases.
-
-Example:
-- query place: `Italy`
-- exact company tag: `Italy`
-- broader tagged matches: `Europe`, `European Union`, `EMEA`
-
-Recommended Cypher pattern:
-
-```cypher
-MATCH (requested:Place {name: $place})
-MATCH (requested)-[:WITHIN*0..]->(matched:Place)<-[:OPERATES_IN]-(company:Company)
-WITH company, MIN(CASE WHEN matched.name = requested.name THEN 0 ELSE 1 END) AS match_rank
-RETURN company.name AS company,
-       CASE match_rank
-         WHEN 0 THEN 'exact'
-         ELSE 'broader_region'
-       END AS geography_match
-ORDER BY match_rank, company
-```
-
-This keeps broader regional coverage visible, but tagged distinctly from exact place matches.
+For downstream querying, Neo4j keeps only canonical `Company-[:OPERATES_IN]->Place`
+facts. No derived place hierarchy is materialized.
 
 ## Canonical Extraction Rules
 
