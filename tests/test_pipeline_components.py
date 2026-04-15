@@ -1072,7 +1072,10 @@ class PipelineComponentTests(unittest.TestCase):
         self.assertEqual(len(captured_messages), 5)
 
         pass1_prompt = captured_messages[0][1]["content"]
-        self.assertIn("do not compress explicit offering lists into summary labels.", pass1_prompt)
+        self.assertIn(
+            "do not compress explicit offering lists into invented summary labels, but if the filing itself uses a named parent heading for the list, keep that named heading as the parent offering.",
+            pass1_prompt,
+        )
         self.assertIn("BusinessSegment -> OFFERS -> Offering is the primary segment-offering edge.", pass1_prompt)
         self.assertIn("reason carefully about product families", pass1_prompt)
 
