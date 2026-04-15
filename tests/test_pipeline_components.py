@@ -6,17 +6,19 @@ from datetime import datetime, timezone
 from os import environ
 from pathlib import Path
 from types import SimpleNamespace
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import httpx
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
+import main as main_module
 import llm_extractor as llm_extractor_module
 from entity_resolver import clean_entity_name as clean_resolved_entity_name, resolve_entities
 from evaluate_graph import _load_triples_from_json, evaluate
 from openai import InternalServerError
 from llm_extractor import (
     LLMExtractor,
+    CanonicalPipelineResult,
     KnowledgeGraphExtraction,
     Triple,
     _canonical_pipeline_system_prompt,
@@ -1098,6 +1100,138 @@ class PipelineComponentTests(unittest.TestCase):
         pass4_prompt = captured_messages[4][1]["content"]
         self.assertIn("U.S. -> United States", pass4_prompt)
         self.assertIn("do not use PARTNERS_WITH for suppliers, customers, competitors, ecosystem mentions, or channel relationships.", pass4_prompt)
+
+    def test_extract_canonical_pipeline_can_stop_after_pass1(self):
+        extractor = LLMExtractor(
+            base_url="http://localhost:1234/v1",
+            api_key="lm-studio",
+            model="local-model",
+            provider="local",
+            api_mode="chat_completions",
+        )
+        skeleton = KnowledgeGraphExtraction(
+            extraction_notes="skeleton",
+            triples=[
+                Triple(
+                    subject="Microsoft",
+                    subject_type="Company",
+                    relation="HAS_SEGMENT",
+                    object="Intelligent Cloud",
+                    object_type="BusinessSegment",
+                )
+            ],
+        )
+        call_count = 0
+
+        def structured_side_effect(**kwargs):
+            nonlocal call_count
+            call_count += 1
+            return skeleton, "raw skeleton", 1, {"kept_triple_count": 1}
+
+        with patch.object(extractor, "_call_structured_messages", side_effect=structured_side_effect), patch.object(
+            extractor, "reflect_extraction"
+        ) as mock_reflection:
+            result = extractor.extract_canonical_pipeline(
+                full_text="filing",
+                company_name="Microsoft",
+                max_retries=2,
+                stop_after_pass1=True,
+            )
+
+        self.assertTrue(result.success)
+        self.assertEqual(result.skeleton_extraction.model_dump(), skeleton.model_dump())
+        self.assertEqual(call_count, 1)
+        mock_reflection.assert_not_called()
+        self.assertEqual(len(result.pass2_channels_extraction.triples), 0)
+        self.assertEqual(len(result.final_extraction.triples), 0)
+
+    def test_main_only_pass1_writes_artifacts_and_loads_by_default(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            filing_path = tmp_path / "microsoft_10k.txt"
+            filing_path.write_text("ITEM 1. BUSINESS\nMicrosoft does business.\n", encoding="utf-8")
+            run_dir = tmp_path / "outputs" / "run"
+            resolved_triple = Triple(
+                subject="Microsoft",
+                subject_type="Company",
+                relation="HAS_SEGMENT",
+                object="Intelligent Cloud",
+                object_type="BusinessSegment",
+            )
+
+            fake_result = CanonicalPipelineResult(
+                success=True,
+                skeleton_extraction=KnowledgeGraphExtraction(
+                    extraction_notes="skeleton",
+                    triples=[resolved_triple],
+                ),
+            )
+            fake_extractor = SimpleNamespace(
+                extract_canonical_pipeline=MagicMock(return_value=fake_result),
+            )
+            fake_validation_report = {
+                "valid_triples": [resolved_triple.model_dump()],
+                "summary": {
+                    "invalid_triple_count": 0,
+                    "duplicate_triple_count": 0,
+                },
+            }
+
+            class FakeNeo4jLoader:
+                def __init__(self, uri, user, password):
+                    self.uri = uri
+                    self.user = user
+                    self.password = password
+
+                def clear_graph(self):
+                    pass
+
+                def setup_constraints(self):
+                    pass
+
+                def load_triples(self, triples):
+                    return len(triples)
+
+                def close(self):
+                    pass
+
+            with patch.object(main_module, "_build_run_dir", return_value=run_dir), patch.object(
+                main_module, "resolve_model_settings"
+            ) as mock_resolve, patch.object(main_module, "LLMExtractor", return_value=fake_extractor), patch.object(
+                main_module, "resolve_entities", return_value=[resolved_triple]
+            ), patch.object(
+                main_module, "validate_triples", return_value=fake_validation_report
+            ), patch.dict(
+                sys.modules, {"neo4j_loader": SimpleNamespace(Neo4jLoader=FakeNeo4jLoader)}
+            ), patch.object(
+                sys, "argv", ["main.py", str(filing_path), "--output-dir", str(tmp_path / "outputs"), "--only-pass1"]
+            ):
+                mock_resolve.return_value = SimpleNamespace(
+                    provider="local",
+                    model="local-model",
+                    base_url="http://localhost:1234/v1",
+                    api_mode="chat_completions",
+                    api_key="lm-studio",
+                    max_output_tokens=None,
+                )
+                exit_code = main_module.main()
+
+            self.assertEqual(exit_code, 0)
+            self.assertTrue((run_dir / "skeleton_extraction.json").exists())
+            self.assertFalse((run_dir / "pass2_channels_extraction.json").exists())
+            self.assertTrue((run_dir / "resolved_triples.json").exists())
+            self.assertTrue((run_dir / "validation_report.json").exists())
+
+            summary = json.loads((run_dir / "run_summary.json").read_text(encoding="utf-8"))
+            self.assertTrue(summary["pass1_only"])
+            self.assertEqual(summary["stage_count"], 4)
+            self.assertFalse(summary["skip_neo4j"])
+            self.assertEqual(summary["status"], "success")
+            self.assertEqual(summary["loaded_triple_count"], 1)
+
+            mock_resolve.assert_called_once()
+            fake_extractor.extract_canonical_pipeline.assert_called_once()
+            self.assertTrue(fake_extractor.extract_canonical_pipeline.call_args.kwargs["stop_after_pass1"])
 
     def test_extract_canonical_pipeline_runs_two_reflection_stages(self):
         extractor = LLMExtractor(

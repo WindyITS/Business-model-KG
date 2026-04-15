@@ -82,6 +82,7 @@ class PipelineConsole:
         provider: str,
         model: str,
         neo4j_enabled: bool,
+        run_scope: str | None = None,
         llm_token_cap: int | None = None,
     ) -> None:
         self._run_started_at = perf_counter()
@@ -98,6 +99,8 @@ class PipelineConsole:
         self._printer(f"Pipeline:  {pipeline}")
         self._printer(f"Provider:  {provider}")
         self._printer(f"Model:     {model}")
+        if run_scope:
+            self._printer(f"Scope:     {run_scope}")
         self._printer(f"Neo4j:     {neo4j_status}")
         self._printer("")
 
@@ -285,6 +288,11 @@ def main() -> int:
         help="Extraction pipeline to run. Only the canonical production pipeline is supported.",
     )
     parser.add_argument("--max-retries", type=int, default=3, help="Maximum LLM retries per call.")
+    parser.add_argument(
+        "--only-pass1",
+        action="store_true",
+        help="Run only Pass 1, then resolve/validate and load Neo4j unless --skip-neo4j is also set.",
+    )
     parser.add_argument("--output-dir", type=str, default="outputs", help="Directory where run artifacts are written.")
     parser.add_argument("--skip-neo4j", action="store_true", help="Skip Neo4j loading and only write extraction artifacts.")
     parser.add_argument("--clear-neo4j", action="store_true", help="Clear the Neo4j database before loading triples. Use with care.")
@@ -295,7 +303,9 @@ def main() -> int:
     ontology_version = "canonical"
     run_started_at = datetime.now(timezone.utc)
     run_dir = _build_run_dir(Path(args.output_dir), source_file, mode)
-    console = PipelineConsole()
+    run_scope = "pass1-only" if args.only_pass1 else None
+    console = PipelineConsole(total_stages=4 if args.only_pass1 else TOTAL_STAGES)
+    effective_skip_neo4j = args.skip_neo4j
     summary: dict[str, Any] = {
         "status": "running",
         "mode": mode,
@@ -306,6 +316,10 @@ def main() -> int:
         "requested_model": args.model,
         "requested_base_url": args.base_url,
         "requested_max_output_tokens": args.max_output_tokens,
+        "pass1_only": args.only_pass1,
+        "stage_count": 4 if args.only_pass1 else TOTAL_STAGES,
+        "run_scope": run_scope,
+        "skip_neo4j": effective_skip_neo4j,
         "started_at": run_started_at.isoformat(),
     }
     _write_json(run_dir / "run_summary.json", summary)
@@ -336,7 +350,8 @@ def main() -> int:
             pipeline=args.pipeline,
             provider=model_settings.provider,
             model=model_settings.model,
-            neo4j_enabled=not args.skip_neo4j,
+            neo4j_enabled=not effective_skip_neo4j,
+            run_scope=run_scope,
             llm_token_cap=model_settings.max_output_tokens,
         )
 
@@ -376,6 +391,7 @@ def main() -> int:
             full_text=full_text,
             company_name=company_name,
             max_retries=args.max_retries,
+            stop_after_pass1=args.only_pass1,
         )
         if not chat_result.success:
             raise ExtractionError(chat_result.error or "Canonical pipeline failed.")
@@ -386,96 +402,110 @@ def main() -> int:
                 "extraction_notes": chat_result.skeleton_extraction.extraction_notes,
             },
         )
-        _write_json(
-            run_dir / "pass2_channels_extraction.json",
-            {
-                "triples": [t.model_dump() for t in chat_result.pass2_channels_extraction.triples],
-                "extraction_notes": chat_result.pass2_channels_extraction.extraction_notes,
-            },
-        )
-        _write_json(
-            run_dir / "pass2_revenue_extraction.json",
-            {
-                "triples": [t.model_dump() for t in chat_result.pass2_revenue_extraction.triples],
-                "extraction_notes": chat_result.pass2_revenue_extraction.extraction_notes,
-            },
-        )
-        _write_json(
-            run_dir / "pass2_commercial_extraction.json",
-            {
-                "triples": [t.model_dump() for t in chat_result.pass2_extraction.triples],
-                "extraction_notes": chat_result.pass2_extraction.extraction_notes,
-            },
-        )
-        _write_json(
-            run_dir / "pass3_serves_extraction.json",
-            {
-                "triples": [t.model_dump() for t in chat_result.pass3_serves_extraction.triples],
-                "extraction_notes": chat_result.pass3_serves_extraction.extraction_notes,
-            },
-        )
-        _write_json(
-            run_dir / "pass4_corporate_extraction.json",
-            {
-                "triples": [t.model_dump() for t in chat_result.pass4_corporate_extraction.triples],
-                "extraction_notes": chat_result.pass4_corporate_extraction.extraction_notes,
-            },
-        )
-        _write_json(
-            run_dir / "pre_reflection_extraction.json",
-            {
-                "triples": [t.model_dump() for t in chat_result.pre_reflection_extraction.triples],
-                "extraction_notes": chat_result.pre_reflection_extraction.extraction_notes,
-            },
-        )
-        _write_json(
-            run_dir / "rule_reflection_extraction.json",
-            {
-                "triples": [t.model_dump() for t in chat_result.rule_reflection_extraction.triples],
-                "extraction_notes": chat_result.rule_reflection_extraction.extraction_notes,
-                "attempts_used": chat_result.rule_reflection_attempts_used,
-                "raw_response": chat_result.raw_rule_reflection_response,
-            },
-        )
-        _write_json(
-            run_dir / "reflection_extraction.json",
-            {
-                "triples": [t.model_dump() for t in chat_result.final_extraction.triples],
-                "extraction_notes": chat_result.final_extraction.extraction_notes,
-                "attempts_used": chat_result.final_reflection_attempts_used,
-                "raw_response": chat_result.raw_final_reflection_response,
-            },
-        )
-        extractions = [chat_result.final_extraction]
-        extraction_payload = {
-            "skeleton_extraction": chat_result.skeleton_extraction.model_dump(),
-            "pass2_channels_extraction": chat_result.pass2_channels_extraction.model_dump(),
-            "pass2_revenue_extraction": chat_result.pass2_revenue_extraction.model_dump(),
-            "pass2_extraction": chat_result.pass2_extraction.model_dump(),
-            "pass3_serves_extraction": chat_result.pass3_serves_extraction.model_dump(),
-            "pass4_corporate_extraction": chat_result.pass4_corporate_extraction.model_dump(),
-            "pre_reflection_extraction": chat_result.pre_reflection_extraction.model_dump(),
-            "rule_reflection_extraction": chat_result.rule_reflection_extraction.model_dump(),
-            "final_extraction": chat_result.final_extraction.model_dump(),
-        }
-        stage_audits = {
-            "skeleton": chat_result.skeleton_audit,
-            "pass2_channels": chat_result.pass2_channels_audit,
-            "pass2_revenue": chat_result.pass2_revenue_audit,
-            "pass2_commercial": chat_result.pass2_audit,
-            "pass3_serves": chat_result.pass3_serves_audit,
-            "pass4_corporate": chat_result.pass4_corporate_audit,
-            "pre_reflection": chat_result.pre_reflection_audit,
-            "rule_reflection": chat_result.rule_reflection_audit,
-            "reflection": chat_result.final_reflection_audit,
-        }
-        final_output_audit = chat_result.final_reflection_audit
+        if args.only_pass1:
+            extractions = [chat_result.skeleton_extraction]
+            extraction_payload = {
+                "skeleton_extraction": chat_result.skeleton_extraction.model_dump(),
+            }
+            stage_audits = {
+                "skeleton": chat_result.skeleton_audit,
+            }
+            final_output_audit = chat_result.skeleton_audit
+            resolve_stage_index = 3
+            load_stage_index = 4
+        else:
+            _write_json(
+                run_dir / "pass2_channels_extraction.json",
+                {
+                    "triples": [t.model_dump() for t in chat_result.pass2_channels_extraction.triples],
+                    "extraction_notes": chat_result.pass2_channels_extraction.extraction_notes,
+                },
+            )
+            _write_json(
+                run_dir / "pass2_revenue_extraction.json",
+                {
+                    "triples": [t.model_dump() for t in chat_result.pass2_revenue_extraction.triples],
+                    "extraction_notes": chat_result.pass2_revenue_extraction.extraction_notes,
+                },
+            )
+            _write_json(
+                run_dir / "pass2_commercial_extraction.json",
+                {
+                    "triples": [t.model_dump() for t in chat_result.pass2_extraction.triples],
+                    "extraction_notes": chat_result.pass2_extraction.extraction_notes,
+                },
+            )
+            _write_json(
+                run_dir / "pass3_serves_extraction.json",
+                {
+                    "triples": [t.model_dump() for t in chat_result.pass3_serves_extraction.triples],
+                    "extraction_notes": chat_result.pass3_serves_extraction.extraction_notes,
+                },
+            )
+            _write_json(
+                run_dir / "pass4_corporate_extraction.json",
+                {
+                    "triples": [t.model_dump() for t in chat_result.pass4_corporate_extraction.triples],
+                    "extraction_notes": chat_result.pass4_corporate_extraction.extraction_notes,
+                },
+            )
+            _write_json(
+                run_dir / "pre_reflection_extraction.json",
+                {
+                    "triples": [t.model_dump() for t in chat_result.pre_reflection_extraction.triples],
+                    "extraction_notes": chat_result.pre_reflection_extraction.extraction_notes,
+                },
+            )
+            _write_json(
+                run_dir / "rule_reflection_extraction.json",
+                {
+                    "triples": [t.model_dump() for t in chat_result.rule_reflection_extraction.triples],
+                    "extraction_notes": chat_result.rule_reflection_extraction.extraction_notes,
+                    "attempts_used": chat_result.rule_reflection_attempts_used,
+                    "raw_response": chat_result.raw_rule_reflection_response,
+                },
+            )
+            _write_json(
+                run_dir / "reflection_extraction.json",
+                {
+                    "triples": [t.model_dump() for t in chat_result.final_extraction.triples],
+                    "extraction_notes": chat_result.final_extraction.extraction_notes,
+                    "attempts_used": chat_result.final_reflection_attempts_used,
+                    "raw_response": chat_result.raw_final_reflection_response,
+                },
+            )
+            extractions = [chat_result.final_extraction]
+            extraction_payload = {
+                "skeleton_extraction": chat_result.skeleton_extraction.model_dump(),
+                "pass2_channels_extraction": chat_result.pass2_channels_extraction.model_dump(),
+                "pass2_revenue_extraction": chat_result.pass2_revenue_extraction.model_dump(),
+                "pass2_extraction": chat_result.pass2_extraction.model_dump(),
+                "pass3_serves_extraction": chat_result.pass3_serves_extraction.model_dump(),
+                "pass4_corporate_extraction": chat_result.pass4_corporate_extraction.model_dump(),
+                "pre_reflection_extraction": chat_result.pre_reflection_extraction.model_dump(),
+                "rule_reflection_extraction": chat_result.rule_reflection_extraction.model_dump(),
+                "final_extraction": chat_result.final_extraction.model_dump(),
+            }
+            stage_audits = {
+                "skeleton": chat_result.skeleton_audit,
+                "pass2_channels": chat_result.pass2_channels_audit,
+                "pass2_revenue": chat_result.pass2_revenue_audit,
+                "pass2_commercial": chat_result.pass2_audit,
+                "pass3_serves": chat_result.pass3_serves_audit,
+                "pass4_corporate": chat_result.pass4_corporate_audit,
+                "pre_reflection": chat_result.pre_reflection_audit,
+                "rule_reflection": chat_result.rule_reflection_audit,
+                "reflection": chat_result.final_reflection_audit,
+            }
+            final_output_audit = chat_result.final_reflection_audit
+            resolve_stage_index = 9
+            load_stage_index = 10
 
         _write_json(run_dir / "extractions.json", extraction_payload)
         _write_json(run_dir / "extraction_audits.json", stage_audits)
         _write_json(run_dir / "final_output_validation_report.json", final_output_audit)
 
-        console.start_stage(9, "Resolve + validate")
+        console.start_stage(resolve_stage_index, "Resolve + validate")
         resolved_triples = resolve_entities(extractions)
         if not resolved_triples:
             raise ExtractionError("Extraction completed but produced zero resolved triples.")
@@ -511,7 +541,7 @@ def main() -> int:
         )
 
         loaded_triples = 0
-        console.start_stage(10, "Load Neo4j")
+        console.start_stage(load_stage_index, "Load Neo4j")
         if args.skip_neo4j:
             console.finish_stage(status="skipped", details=[("load", "skipped by request")])
         else:
@@ -541,6 +571,7 @@ def main() -> int:
                 "finished_at": datetime.now(timezone.utc).isoformat(),
                 "chunk_count": len(chunks),
                 "extraction_count": len(extractions),
+                "skeleton_triple_count": len(chat_result.skeleton_extraction.triples),
                 "final_output_raw_triple_count": int(final_output_audit.get("raw_triple_count", 0)),
                 "final_output_malformed_triple_count": int(final_output_audit.get("malformed_triple_count", 0)),
                 "final_output_ontology_rejected_triple_count": int(
@@ -577,6 +608,7 @@ def main() -> int:
                 "status": "failed",
                 "finished_at": datetime.now(timezone.utc).isoformat(),
                 "error": str(exc),
+                "pass1_only": args.only_pass1,
             }
         )
         _write_json(run_dir / "run_summary.json", summary)

@@ -1303,6 +1303,7 @@ class LLMExtractor:
         full_text: str,
         company_name: str | None = None,
         max_retries: int = 2,
+        stop_after_pass1: bool = False,
     ) -> CanonicalPipelineResult:
         pipeline_system_prompt = _canonical_pipeline_system_prompt(full_text)
 
@@ -1377,6 +1378,14 @@ class LLMExtractor:
             self._emit_progress("stage_failed", error=str(exc))
             return CanonicalPipelineResult(success=False, error=str(exc))
         self._emit_progress("stage_complete", details=[("result", f"{len(skeleton_extraction.triples)} triples")])
+        if stop_after_pass1:
+            return CanonicalPipelineResult(
+                success=True,
+                skeleton_extraction=skeleton_extraction,
+                skeleton_audit=skeleton_audit,
+                raw_skeleton_response=raw_skeleton_response,
+                skeleton_attempts_used=skeleton_attempts_used,
+            )
 
         self._emit_progress(
             "stage_start",
