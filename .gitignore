@@ -15,11 +15,17 @@ __pycache__/
 venv/
 .venv/
 .env
+.env.*
+!.env.example
 .python-version
+
+# Local tool config
+.claude/settings.local.json
 
 # Outputs / scratch
 outputs/
 dist/
+packaging/
 docs/_bound_seed_example_drafts/
 docs/_bound_seed_example_v1_drafts/
 docs/_fixture_instance_drafts/
@@ -31,3 +37,11 @@ docs/_training_example_v1_drafts/
 
 # Notebook / editor leftovers
 .ipynb_checkpoints/
+.vscode/
+.idea/
+*.tmp
+*.bak
+*.orig
+*.rej
+*.swp
+*.swo

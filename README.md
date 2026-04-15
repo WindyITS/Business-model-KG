@@ -102,13 +102,9 @@ datasets/
     README.md             machine-readable dataset layout
     v2/                   canonical training corpus and reports
 
-packaging/
-  huggingface/
-    text2cypher-v2/      HF dataset card, upload notes, and release templates
-
 scripts/
   export_hf_text2cypher_dataset.py
-                          assembles an HF-ready release tree under dist/
+                          local export helper for HF-ready release assembly
 
 tests/
   test_pipeline_components.py
@@ -144,11 +140,11 @@ That means the dataset is not just a pile of question-query pairs. It is a check
 
 For public distribution, the repo now uses a single-branch flow:
 
-- keep this GitHub repo focused on the KG pipeline, ontology, dataset documentation, and HF export helpers
+- keep this GitHub repo focused on the KG pipeline, ontology, dataset documentation, and the public dataset workflow
 - publish the machine-readable text-to-Cypher dataset as a dedicated Hugging Face dataset release
-- use [`scripts/export_hf_text2cypher_dataset.py`](./scripts/export_hf_text2cypher_dataset.py) together with [`packaging/huggingface/text2cypher-v2/`](./packaging/huggingface/text2cypher-v2/README.md) to assemble the uploadable release tree locally
+- keep local packaging/upload templates outside the public tracked repo surface
 
-In other words, the public repo explains the dataset, its provenance, and the release workflow, while Hugging Face remains the place where the machine-readable dataset is actually published.
+In other words, the public repo explains the dataset and its provenance, Hugging Face remains the publication target for the machine-readable release, and local packaging notes/templates stay private.
 
 ## Quickstart
 

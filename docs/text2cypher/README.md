@@ -40,13 +40,13 @@ In practice, agents handled orchestration, expansion, and verification, while th
 
 ## Release Surfaces
 
-The repo now keeps both the workflow narrative and the HF export helper in one public place:
+The repo keeps the workflow narrative public, while allowing the packaging notes/templates to stay local:
 
-- public GitHub repo: KG pipeline, ontology, dataset docs, and the HF packaging/export helper
+- public GitHub repo: KG pipeline, ontology, dataset docs, and the workflow narrative
 - Hugging Face dataset repo: machine-readable dataset release
-- local `dist/` export tree: generated upload bundle, intentionally ignored from git
+- local packaging templates and `dist/` export tree: generated release material, intentionally kept out of git
 
-That keeps the provenance and release workflow visible to anyone landing on the project while still keeping generated release artifacts out of version control.
+That keeps the provenance visible to anyone landing on the project while still keeping release-operation details out of version control.
 
 ## Tooling
 
