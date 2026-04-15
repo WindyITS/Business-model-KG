@@ -368,7 +368,6 @@ def build_spec() -> DatasetSpec:
             difficulty="medium",
             split="train",
             paraphrases=(
-                "Who supplies Asteron Analytics?",
                 "Which vendors are behind Asteron Analytics?",
                 "Who ships stuff to Asteron Analytics?",
                 "Who's on the supply side for Asteron Analytics?",
@@ -445,7 +444,6 @@ def build_spec() -> DatasetSpec:
                 "Which offerings belong to Atlas?",
                 "List Atlas's offerings.",
                 "What does Atlas offer?",
-                "How many offerings does Atlas have?",
                 "Show Atlas's offerings.",
                 "Which products are under Atlas?",
             ),

@@ -10,9 +10,22 @@ Machine-readable artifacts live under [`datasets/text2cypher/`](../../datasets/t
 - [Coverage grid](./design/coverage_grid.md)
 - [Intent inventory](./design/intent_cases_by_family.md)
 - [Fixture library](./design/fixture_library.md)
-- [Readiness assessment](./design/readiness_v2.md)
+- [Readiness assessment: v3](./design/readiness_v3.md)
+- [Readiness assessment: v2](./design/readiness_v2.md)
 
-## Canonical V2 Artifacts
+## Active V3 Artifacts
+
+- [Fixture instances](../../datasets/text2cypher/v3/source/fixture_instances.jsonl)
+- [Bound seed examples](../../datasets/text2cypher/v3/source/bound_seed_examples.jsonl)
+- [Validation report](../../datasets/text2cypher/v3/reports/bound_seed_validation_report.json)
+- [Train manifest](../../datasets/text2cypher/v3/reports/sft_manifest.json)
+- [Held-out manifest](../../datasets/text2cypher/v3/reports/heldout_test_manifest.json)
+- [Leakage report](../../datasets/text2cypher/v3/reports/leakage_report.json)
+- [Training corpus](../../datasets/text2cypher/v3/training/training_examples.jsonl)
+- [Train messages](../../datasets/text2cypher/v3/training/train_messages.jsonl)
+- [Held-out test messages](../../datasets/text2cypher/v3/evaluation/test_messages.jsonl)
+
+## Historical V2 Artifacts
 
 - [Fixture instances](../../datasets/text2cypher/v2/source/fixture_instances.jsonl)
 - [Bound seed examples](../../datasets/text2cypher/v2/source/bound_seed_examples.jsonl)
@@ -30,8 +43,10 @@ Machine-readable artifacts live under [`datasets/text2cypher/`](../../datasets/t
 
 ## Release Surfaces
 
-- canonical corpus: [`datasets/text2cypher/v2/`](../../datasets/text2cypher/README.md)
-- model-facing SFT export: [`datasets/text2cypher/v2/training/messages.jsonl`](../../datasets/text2cypher/v2/training/messages.jsonl) plus the split-specific `*_messages.jsonl` files
+- active release: [`datasets/text2cypher/v3/`](../../datasets/text2cypher/README.md)
+- train-facing SFT export: [`datasets/text2cypher/v3/training/train_messages.jsonl`](../../datasets/text2cypher/v3/training/train_messages.jsonl)
+- held-out evaluation set: [`datasets/text2cypher/v3/evaluation/test_messages.jsonl`](../../datasets/text2cypher/v3/evaluation/test_messages.jsonl)
+- historical predecessor: [`datasets/text2cypher/v2/`](../../datasets/text2cypher/README.md)
 - public GitHub repo: KG pipeline, ontology, dataset docs, and the workflow narrative
 - Hugging Face dataset repo: the release bundle consumed by trainers and evaluators
 
@@ -74,4 +89,4 @@ Important runtime distinction:
 
 ## Dataset Root
 
-The active machine-readable dataset release lives in `datasets/text2cypher/v2/`.
+The active machine-readable dataset release lives in `datasets/text2cypher/v3/`.

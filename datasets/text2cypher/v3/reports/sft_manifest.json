@@ -1,0 +1,33 @@
+{
+  "dataset_path": "datasets/text2cypher/v3/training/messages.jsonl",
+  "system_prompt": "Translate the user request into read-only Cypher for this business-model knowledge graph. Output compact JSON only. For answerable requests return {\"answerable\": true, \"cypher\": \"...\", \"params\": {...}}. For unsupported or ambiguous requests return {\"answerable\": false, \"reason\": \"...\"}.",
+  "assistant_contract": {
+    "answerable": {
+      "keys": [
+        "answerable",
+        "cypher",
+        "params"
+      ]
+    },
+    "refusal": {
+      "keys": [
+        "answerable",
+        "reason"
+      ]
+    }
+  },
+  "counts": {
+    "source_training_rows": 5004,
+    "sft_rows": 5004,
+    "duplicate_prompt_rows_merged": 0,
+    "answerable_rows": 4825,
+    "refusal_rows": 179
+  },
+  "split_counts": {
+    "train": {
+      "rows": 5004,
+      "answerable_rows": 4825,
+      "refusal_rows": 179
+    }
+  }
+}

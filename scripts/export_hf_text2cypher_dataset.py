@@ -46,17 +46,25 @@ def _build_summary(dataset_root: Path) -> dict:
     source_path = dataset_root / "source" / "bound_seed_examples.jsonl"
     training_path = dataset_root / "training" / "training_examples.jsonl"
     messages_path = dataset_root / "training" / "messages.jsonl"
+    heldout_messages_path = dataset_root / "evaluation" / "test_messages.jsonl"
     manifest_path = dataset_root / "reports" / "training_split_manifest.json"
     sft_manifest_path = dataset_root / "reports" / "sft_manifest.json"
+    heldout_manifest_path = dataset_root / "reports" / "heldout_test_manifest.json"
 
     fixtures = _load_jsonl(fixture_path)
     source_rows = _load_jsonl(source_path)
     training_rows = _load_jsonl(training_path)
     message_rows = _load_jsonl(messages_path) if messages_path.exists() else []
+    heldout_message_rows = _load_jsonl(heldout_messages_path) if heldout_messages_path.exists() else []
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     sft_manifest = json.loads(sft_manifest_path.read_text(encoding="utf-8")) if sft_manifest_path.exists() else {}
+    heldout_manifest = (
+        json.loads(heldout_manifest_path.read_text(encoding="utf-8"))
+        if heldout_manifest_path.exists()
+        else {}
+    )
 
-    return {
+    summary = {
         "dataset_root": str(dataset_root.relative_to(ROOT)),
         "fixtures": len(fixtures),
         "source_examples": len(source_rows),
@@ -70,9 +78,13 @@ def _build_summary(dataset_root: Path) -> dict:
         "message_split_counts": sft_manifest.get("split_counts", {}),
         "duplicate_prompt_rows_merged": sft_manifest.get("counts", {}).get("duplicate_prompt_rows_merged", 0),
     }
+    if heldout_message_rows or heldout_manifest:
+        summary["heldout_message_examples"] = len(heldout_message_rows)
+        summary["heldout_message_split_counts"] = heldout_manifest.get("split_counts", {})
+    return summary
 
 
-def parse_args() -> argparse.Namespace:
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Export the text2cypher v2 dataset into an HF-ready directory."
     )
@@ -99,11 +111,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Overwrite the output directory if it already exists.",
     )
-    return parser.parse_args()
+    return parser.parse_args(argv)
 
 
-def main() -> int:
-    args = parse_args()
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv)
     dataset_root = args.dataset_root.resolve()
     packaging_root = args.packaging_root.resolve()
     output_root = args.output_root.resolve()
@@ -129,6 +141,8 @@ def main() -> int:
     _copy_tree(dataset_root / "source", output_root / "source")
     _copy_tree(dataset_root / "reports", output_root / "reports")
     _copy_tree(dataset_root / "training", output_root / "training")
+    if (dataset_root / "evaluation").exists():
+        _copy_tree(dataset_root / "evaluation", output_root / "evaluation")
 
     _copy_file_if_exists(packaging_root / "README.md", output_root / "README.md")
     _copy_file_if_exists(packaging_root / ".gitattributes", output_root / ".gitattributes")

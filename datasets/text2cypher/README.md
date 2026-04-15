@@ -8,8 +8,16 @@ This directory is the canonical in-repo copy of the released corpus and its gene
 
 ## Layout
 
+- `v3/`
+  The active dataset release with a dedicated training artifact and a separate held-out evaluation set.
+- `v3/training/`
+  The fine-tuning corpus, centered on `train_messages.jsonl`.
+- `v3/evaluation/`
+  The brand-new held-out evaluation corpus, centered on `test_messages.jsonl`.
+- `v3/reports/`
+  Train/eval manifests plus a leakage report.
 - `v2/`
-  The canonical dataset release used for current validation, training, and evaluation.
+  The audited predecessor release retained for comparison and provenance.
 - `v2/source/`
   Synthetic fixture instances plus bound gold examples.
 - `v2/reports/`

@@ -117,19 +117,20 @@ tests/
 The supervised text-to-Cypher corpus is now split by role:
 
 - prose and design docs live in [`docs/text2cypher/`](./docs/text2cypher/README.md)
-- canonical machine-readable V2 corpus plus generated `messages.jsonl` trainer view live in [`datasets/text2cypher/v2/`](./datasets/text2cypher/README.md)
+- the active machine-readable release lives in [`datasets/text2cypher/v3/`](./datasets/text2cypher/README.md)
+- the audited predecessor remains available in [`datasets/text2cypher/v2/`](./datasets/text2cypher/README.md)
 - the packaging script copies those artifacts into the Hugging Face release bundle
 
 Training guidance:
 - the fine-tuning plan is to use this repo's dataset only
-- `train_messages.jsonl` is the train-facing SFT corpus
-- `dev_messages.jsonl` and `test_messages.jsonl` remain held out for evaluation
+- `datasets/text2cypher/v3/training/train_messages.jsonl` is the train-facing SFT corpus
+- `datasets/text2cypher/v3/evaluation/test_messages.jsonl` is the held-out evaluation set
 
-The dataset validator in [`src/validate_text2cypher_dataset.py`](./src/validate_text2cypher_dataset.py) now defaults to the canonical V2 artifact set under `datasets/text2cypher/v2/`.
+The dataset validator in [`src/validate_text2cypher_dataset.py`](./src/validate_text2cypher_dataset.py) still defaults to `v2`, but it can validate `v3` by pointing it at the `datasets/text2cypher/v3/source/` artifacts.
 
 ## How The Dataset Was Built
 
-`Text2Cypher v2` was built through an agent-orchestrated, spec-first workflow rather than through a blind auto-generation loop.
+`Text2Cypher v3` was built through the same agent-orchestrated, spec-first workflow as `v2`, then extended with a hard-query train cohort and a separate held-out evaluation cohort.
 
 The generation flow was:
 
@@ -139,6 +140,7 @@ The generation flow was:
 4. bind those intents to concrete synthetic values
 5. validate the queries against Neo4j-backed synthetic graphs
 6. expand the natural-language side with multiple user phrasings, including messier analyst-style prompts and refusal cases
+7. add a hard-query training extension and a fresh held-out evaluation set with leakage checks
 
 That means the dataset is not just a pile of question-query pairs. It is a checked mapping from task to graph pattern to Cypher to user phrasing. Agents handled orchestration, expansion, and repeated validation runs, while the fixture design, intent inventory, and gold query patterns were curated deliberately.
 

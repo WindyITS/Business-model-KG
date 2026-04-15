@@ -411,7 +411,8 @@ Additional recommended checks:
 The intended training path is:
 
 1. fine-tune directly on this repo's ontology-specific dataset
-2. use `train_messages.jsonl` as the training split and keep `dev_messages.jsonl` and `test_messages.jsonl` held out for evaluation
+2. use `datasets/text2cypher/v3/training/train_messages.jsonl` as the training split
+3. evaluate on `datasets/text2cypher/v3/evaluation/test_messages.jsonl`
 
 No public warm-up stage is planned. The goal is for the model to learn this KG's query contract directly from the checked-in corpus rather than from a broader mixed-schema Cypher dataset.
 
@@ -426,7 +427,7 @@ The dataset effort should produce:
 - paraphrase-expanded training set
 - negative example set
 - generated `messages.jsonl` SFT export suitable for fine-tuning
-- train/validation/test splits by `intent_id`
+- dedicated held-out evaluation set
 - evaluation harness based on execution accuracy
 
 ## Immediate Next Step

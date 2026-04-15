@@ -2,6 +2,8 @@
 
 ## Verdict
 
+This is the historical `v2` note. The active fine-tuning release is now [`readiness_v3.md`](./readiness_v3.md).
+
 The rebuilt canonical corpus is ready for high-quality fine-tuning, and the checked-in `messages.jsonl` export already gives the little model the right trainer-facing contract.
 
 The training plan is to use this dataset only. No external Cypher warm-up corpus is required before the ontology-specific fine-tune.
@@ -51,12 +53,12 @@ This is the primary readiness gate, and `v2` clears it completely.
 
 ### Canonical Training Layer
 
-- `4,494` total training rows
+- `4,492` total training rows
 - `421` source examples
 - question-variant distribution per source example:
-  - `8` examples with `5` variants
+  - `9` examples with `5` variants
   - `48` examples with `6` variants
-  - `186` examples with `7` variants
+  - `185` examples with `7` variants
   - `179` examples with `16` variants
 
 The variant mix is intentionally uneven because the core, rollup, and refusal surfaces now use different phrasing budgets and different levels of messy-user augmentation.
@@ -64,22 +66,22 @@ The variant mix is intentionally uneven because the core, rollup, and refusal su
 ### Complexity Mix
 
 - `548` low-difficulty rows
-- `1,987` medium-difficulty rows
-- `1,959` high-difficulty rows
+- `1,986` medium-difficulty rows
+- `1,958` high-difficulty rows
 
 This is the right shape for a small model that needs both syntax stability and deeper graph reasoning.
 
 ### Answerability Mix
 
-- canonical corpus: `4,313` answerable rows and `181` refusal rows
-- `messages.jsonl`: `4,313` answerable rows and `179` refusal rows, with `2` duplicate-prompt rows merged into a single trainer target
+- canonical corpus: `4,313` answerable rows and `179` refusal rows
+- `messages.jsonl`: `4,313` answerable rows and `179` refusal rows, with `0` duplicate-prompt rows merged
 
 Refusal coverage spans:
 
-- `108` `not_in_graph`
+- `107` `not_in_graph`
 - `13` `no_entity_anchor`
 - `13` `ambiguous_entity`
-- `47` `ambiguous_scope`
+- `46` `ambiguous_scope`
 
 ### Split Integrity
 

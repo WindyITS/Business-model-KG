@@ -3,12 +3,12 @@
   "split_unit": "intent_id",
   "split_counts": {
     "train": {
-      "rows": 2828,
+      "rows": 2827,
       "intents": 77,
       "source_examples": 283
     },
     "dev": {
-      "rows": 675,
+      "rows": 674,
       "intents": 16,
       "source_examples": 60
     },
@@ -16,6 +16,11 @@
       "rows": 991,
       "intents": 19,
       "source_examples": 78
+    },
+    "heldout_test": {
+      "rows": 0,
+      "intents": 0,
+      "source_examples": 0
     }
   },
   "family_intent_split_counts": {

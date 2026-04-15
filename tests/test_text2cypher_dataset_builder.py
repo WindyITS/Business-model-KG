@@ -234,6 +234,81 @@ class Text2CypherDatasetBuilderTests(unittest.TestCase):
                 with tempfile.TemporaryDirectory() as tmp_dir:
                     build_dataset(spec, Path(tmp_dir) / "dataset")
 
+    def test_write_dataset_with_heldout_split_emits_separate_evaluation_files(self):
+        spec = DatasetSpec(
+            fixtures=[_fixture("fx_builder_train"), _fixture("fx_builder_heldout")],
+            source_examples=[
+                _answerable_example(
+                    example_id="qf01_train_row",
+                    intent_id="qf01_train_row",
+                    family_id="QF01",
+                    fixture_id="fx_builder_train",
+                    question="How many business segments does Acme Systems have in the train pool?",
+                    split="train",
+                ),
+                _answerable_example(
+                    example_id="qf99_heldout_row",
+                    intent_id="qf99_heldout_row",
+                    family_id="QF01",
+                    fixture_id="fx_builder_heldout",
+                    question="How many business segments does Acme Systems have in the held-out set?",
+                    split="heldout_test",
+                ),
+            ],
+        )
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            output_root = Path(tmp_dir) / "dataset"
+            dataset = build_dataset(spec, output_root)
+            write_dataset(dataset, output_root)
+
+            self.assertTrue((output_root / "training" / "train_messages.jsonl").exists())
+            self.assertTrue((output_root / "evaluation" / "test_messages.jsonl").exists())
+            self.assertTrue((output_root / "reports" / "heldout_test_manifest.json").exists())
+            self.assertTrue((output_root / "reports" / "leakage_report.json").exists())
+
+            train_rows = [
+                json.loads(line)
+                for line in (output_root / "training" / "train_messages.jsonl").read_text(encoding="utf-8").splitlines()
+                if line.strip()
+            ]
+            heldout_rows = [
+                json.loads(line)
+                for line in (output_root / "evaluation" / "test_messages.jsonl").read_text(encoding="utf-8").splitlines()
+                if line.strip()
+            ]
+            self.assertEqual(len(train_rows), 1)
+            self.assertEqual(len(heldout_rows), 1)
+            self.assertEqual(train_rows[0]["split"], "train")
+            self.assertEqual(heldout_rows[0]["split"], "heldout_test")
+
+    def test_build_dataset_rejects_question_overlap_between_train_and_heldout(self):
+        spec = DatasetSpec(
+            fixtures=[_fixture("fx_builder_train_overlap"), _fixture("fx_builder_heldout_overlap")],
+            source_examples=[
+                _answerable_example(
+                    example_id="qf01_train_overlap",
+                    intent_id="qf01_train_overlap",
+                    family_id="QF01",
+                    fixture_id="fx_builder_train_overlap",
+                    question="Which segments does Acme Systems have?",
+                    split="train",
+                ),
+                _answerable_example(
+                    example_id="qf99_heldout_overlap",
+                    intent_id="qf99_heldout_overlap",
+                    family_id="QF01",
+                    fixture_id="fx_builder_heldout_overlap",
+                    question="Which segments does Acme Systems have?",
+                    split="heldout_test",
+                ),
+            ],
+        )
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            with self.assertRaisesRegex(DatasetBuildError, r"leaks into the training pool|leakage"):
+                build_dataset(spec, Path(tmp_dir) / "dataset")
+
 
 if __name__ == "__main__":
     unittest.main()

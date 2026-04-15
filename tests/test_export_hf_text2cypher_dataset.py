@@ -93,6 +93,36 @@ class ExportText2CypherDatasetTests(unittest.TestCase):
             )
             _write_jsonl(dataset_root / "training" / "dev.jsonl", [])
             _write_jsonl(dataset_root / "training" / "test.jsonl", [])
+            _write_jsonl(
+                dataset_root / "evaluation" / "test_messages.jsonl",
+                [
+                    {
+                        "messages": [
+                            {"role": "system", "content": "Translate to Cypher and return JSON only."},
+                            {"role": "user", "content": "Which companies operate in Iberia and monetize via subscription?"},
+                            {
+                                "role": "assistant",
+                                "content": json.dumps(
+                                    {
+                                        "answerable": True,
+                                        "cypher": "MATCH ...",
+                                        "params": {"place": "Iberia", "revenue_model": "subscription"},
+                                    }
+                                ),
+                            },
+                        ],
+                        "metadata": {
+                            "example_id": "heldout_1",
+                            "intent_id": "heldout_qf31_export",
+                            "answerable": True,
+                        },
+                    }
+                ],
+            )
+            _write_jsonl(
+                dataset_root / "evaluation" / "test_examples.jsonl",
+                [{"training_example_id": "heldout_1__v00"}],
+            )
             (dataset_root / "reports").mkdir(parents=True, exist_ok=True)
             (dataset_root / "reports" / "training_split_manifest.json").write_text(
                 json.dumps(
@@ -108,6 +138,18 @@ class ExportText2CypherDatasetTests(unittest.TestCase):
             )
             (dataset_root / "reports" / "bound_seed_validation_report.json").write_text(
                 json.dumps({"summary": {"passed": 1, "failed": 0}}),
+                encoding="utf-8",
+            )
+            (dataset_root / "reports" / "heldout_test_manifest.json").write_text(
+                json.dumps(
+                    {
+                        "dataset_path": str(dataset_root / "evaluation" / "test_messages.jsonl"),
+                        "split_counts": {
+                            "heldout_test": {"rows": 1, "answerable_rows": 1, "refusal_rows": 0}
+                        },
+                    },
+                    indent=2,
+                ),
                 encoding="utf-8",
             )
 
@@ -130,6 +172,7 @@ class ExportText2CypherDatasetTests(unittest.TestCase):
             self.assertEqual(exit_code, 0)
             exported_messages = output_root / "training" / "messages.jsonl"
             self.assertTrue(exported_messages.exists())
+            self.assertTrue((output_root / "evaluation" / "test_messages.jsonl").exists())
             exported_rows = [
                 json.loads(line)
                 for line in exported_messages.read_text(encoding="utf-8").splitlines()
@@ -148,6 +191,7 @@ class ExportText2CypherDatasetTests(unittest.TestCase):
             )
             summary = json.loads((output_root / "release_summary.json").read_text(encoding="utf-8"))
             self.assertEqual(summary["training_examples"], 1)
+            self.assertEqual(summary["heldout_message_examples"], 1)
 
 
 if __name__ == "__main__":

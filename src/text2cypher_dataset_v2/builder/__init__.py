@@ -24,7 +24,9 @@ DEFAULT_SPEC_MODULES = (
     "text2cypher_dataset_v2.spec_negative",
 )
 DEFAULT_OUTPUT_ROOT = Path("datasets/text2cypher/v2")
-SPLIT_ORDER = ("train", "dev", "test")
+TRAINING_POOL_SPLITS = ("train", "dev", "test")
+HELDOUT_SPLIT = "heldout_test"
+SOURCE_SPLIT_ORDER = TRAINING_POOL_SPLITS + (HELDOUT_SPLIT,)
 PARAM_PATTERN = re.compile(r"\$([A-Za-z_][A-Za-z0-9_]*)")
 SFT_SYSTEM_PROMPT = (
     "Translate the user request into read-only Cypher for this business-model knowledge graph. "
@@ -36,6 +38,12 @@ SFT_SYSTEM_PROMPT = (
 
 class DatasetBuildError(ValueError):
     pass
+
+
+def _collapse_source_split(split: str, *, has_heldout: bool) -> str:
+    if has_heldout and split in TRAINING_POOL_SPLITS:
+        return "train"
+    return split
 
 
 def _jsonable(value: Any) -> Any:
@@ -290,7 +298,7 @@ def _validate_spec_shapes(fixtures: Sequence[Dict[str, Any]], source_examples: S
             raise DatasetBuildError("Source examples must include example_id and intent_id")
         if not isinstance(example["question_canonical"], str) or not example["question_canonical"].strip():
             raise DatasetBuildError(f"Example {example['example_id']} must include question_canonical")
-        if example["split"] not in SPLIT_ORDER:
+        if example["split"] not in SOURCE_SPLIT_ORDER:
             raise DatasetBuildError(
                 f"Example {example['example_id']} has unsupported split {example['split']!r}"
             )
@@ -358,6 +366,7 @@ def _serialize_source_row(source: Dict[str, Any]) -> Dict[str, Any]:
         "refusal_reason": source["refusal_reason"],
         "result_shape": source["result_shape"],
         "difficulty": source["difficulty"],
+        "split": source["split"],
     }
     return _jsonable(row)
 
@@ -405,7 +414,7 @@ def _build_split_manifest(source_examples: Sequence[Dict[str, Any]], training_ro
         family_split_intents[source["family_id"]][split].add(source["intent_id"])
 
     split_counts: dict[str, dict[str, int]] = {}
-    for split in SPLIT_ORDER:
+    for split in SOURCE_SPLIT_ORDER:
         split_rows = [row for row in training_rows if row["intent_id"] in split_to_intents.get(split, set())]
         split_counts[split] = {
             "rows": len(split_rows),
@@ -452,6 +461,7 @@ def _validate_training_question_contracts(
     training_rows: Sequence[Dict[str, Any]],
     intent_split_map: Dict[str, str],
 ) -> None:
+    has_heldout = any(split == HELDOUT_SPLIT for split in intent_split_map.values())
     question_to_rows: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in training_rows:
         question_to_rows[_normalize_question_text(row["question"])].append(row)
@@ -462,7 +472,10 @@ def _validate_training_question_contracts(
         completions = {_assistant_output_text(row) for row in rows}
         if len(completions) > 1:
             conflicting_questions.append(rows[0]["question"])
-        splits = {intent_split_map[row["intent_id"]] for row in rows}
+        splits = {
+            _collapse_source_split(intent_split_map[row["intent_id"]], has_heldout=has_heldout)
+            for row in rows
+        }
         if len(splits) > 1:
             leaked_questions.append(rows[0]["question"])
 
@@ -480,13 +493,57 @@ def _validate_training_question_contracts(
         )
 
 
+def _build_leakage_report(
+    training_rows: Sequence[Dict[str, Any]],
+    intent_split_map: Dict[str, str],
+) -> dict[str, Any] | None:
+    if not any(split == HELDOUT_SPLIT for split in intent_split_map.values()):
+        return None
+
+    train_rows = [
+        row for row in training_rows if intent_split_map[row["intent_id"]] in TRAINING_POOL_SPLITS
+    ]
+    heldout_rows = [
+        row for row in training_rows if intent_split_map[row["intent_id"]] == HELDOUT_SPLIT
+    ]
+
+    normalized_train_questions = {_normalize_question_text(row["question"]) for row in train_rows}
+    normalized_heldout_questions = {_normalize_question_text(row["question"]) for row in heldout_rows}
+    overlapping_questions = sorted(normalized_train_questions & normalized_heldout_questions)
+
+    train_fixture_ids = {row["fixture_id"] for row in train_rows if row["fixture_id"]}
+    heldout_fixture_ids = {row["fixture_id"] for row in heldout_rows if row["fixture_id"]}
+    overlapping_fixture_ids = sorted(train_fixture_ids & heldout_fixture_ids)
+
+    train_graph_ids = {row["graph_id"] for row in train_rows if row["graph_id"]}
+    heldout_graph_ids = {row["graph_id"] for row in heldout_rows if row["graph_id"]}
+    overlapping_graph_ids = sorted(train_graph_ids & heldout_graph_ids)
+
+    report = {
+        "train_rows": len(train_rows),
+        "heldout_rows": len(heldout_rows),
+        "normalized_question_overlap_count": len(overlapping_questions),
+        "normalized_question_overlap_examples": overlapping_questions[:10],
+        "fixture_overlap_count": len(overlapping_fixture_ids),
+        "fixture_overlap_examples": overlapping_fixture_ids[:10],
+        "graph_overlap_count": len(overlapping_graph_ids),
+        "graph_overlap_examples": overlapping_graph_ids[:10],
+    }
+    if overlapping_questions or overlapping_fixture_ids or overlapping_graph_ids:
+        raise DatasetBuildError(
+            "held-out evaluation set leaks into the training pool; inspect leakage_report.json details"
+        )
+    return report
+
+
 def _build_sft_rows(
     training_rows: Sequence[Dict[str, Any]],
     intent_split_map: Dict[str, str],
 ) -> list[dict[str, Any]]:
+    has_heldout = any(split == HELDOUT_SPLIT for split in intent_split_map.values())
     grouped_rows: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
     for row in training_rows:
-        split = intent_split_map[row["intent_id"]]
+        split = _collapse_source_split(intent_split_map[row["intent_id"]], has_heldout=has_heldout)
         completion = _assistant_output_text(row)
         grouped_rows[(split, row["question"], completion)].append(row)
 
@@ -541,9 +598,10 @@ def _build_sft_manifest(
     sft_rows: Sequence[Dict[str, Any]],
     training_rows: Sequence[Dict[str, Any]],
     dataset_path: Path,
+    split_order: Sequence[str],
 ) -> Dict[str, Any]:
     split_counts: dict[str, dict[str, int]] = {}
-    for split in SPLIT_ORDER:
+    for split in split_order:
         rows = [row for row in sft_rows if row["split"] == split]
         split_counts[split] = {
             "rows": len(rows),
@@ -569,6 +627,16 @@ def _build_sft_manifest(
     }
 
 
+def _partition_rows_by_role(
+    rows: Sequence[Dict[str, Any]],
+    *,
+    split_key: str,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    training_pool_rows = [row for row in rows if row[split_key] in TRAINING_POOL_SPLITS or row[split_key] == "train"]
+    heldout_rows = [row for row in rows if row[split_key] == HELDOUT_SPLIT]
+    return training_pool_rows, heldout_rows
+
+
 def _write_jsonl(path: Path, rows: Iterable[Dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as handle:
@@ -581,8 +649,8 @@ def build_dataset(spec: DatasetSpec, output_root: Path = DEFAULT_OUTPUT_ROOT) ->
     fixtures = [_serialize_fixture_row(_normalize_fixture(fixture)) for fixture in spec.fixtures]
     normalized_source_examples = [_normalize_source_example(source) for source in spec.source_examples]
     source_examples = [_serialize_source_row(source) for source in normalized_source_examples]
-    training_rows = _build_training_rows(normalized_source_examples)
-    for row in training_rows:
+    all_training_rows = _build_training_rows(normalized_source_examples)
+    for row in all_training_rows:
         if row["answerable"] and row["gold_cypher"] is None:
             raise DatasetBuildError(f"Training row {row['training_example_id']} is answerable but missing gold_cypher")
         if not row["answerable"] and row["gold_cypher"] is not None:
@@ -593,42 +661,70 @@ def build_dataset(spec: DatasetSpec, output_root: Path = DEFAULT_OUTPUT_ROOT) ->
             )
 
     seen_training_ids = set()
-    for row in training_rows:
+    for row in all_training_rows:
         training_id = row["training_example_id"]
         if training_id in seen_training_ids:
             raise DatasetBuildError(f"Duplicate training_example_id detected: {training_id}")
         seen_training_ids.add(training_id)
 
-    training_rows.sort(key=lambda row: (row["intent_id"], row["source_example_id"], row["variant_index"]))
+    all_training_rows.sort(key=lambda row: (row["intent_id"], row["source_example_id"], row["variant_index"]))
     source_examples.sort(key=lambda row: (row["fixture_id"] or "", row["intent_id"], row["example_id"]))
     fixtures.sort(key=lambda row: (row["fixture_id"], row["graph_id"]))
 
     manifest = _build_split_manifest(
         normalized_source_examples,
-        training_rows,
+        all_training_rows,
         output_root / "training" / "training_examples.jsonl",
     )
-    _validate_training_question_contracts(training_rows, manifest["intent_split_map"])
+    _validate_training_question_contracts(all_training_rows, manifest["intent_split_map"])
     _validate_train_family_coverage(manifest)
-    sft_rows = _build_sft_rows(training_rows, manifest["intent_split_map"])
-    sft_manifest = _build_sft_manifest(
-        sft_rows,
-        training_rows,
-        output_root / "training" / "messages.jsonl",
+    leakage_report = _build_leakage_report(all_training_rows, manifest["intent_split_map"])
+    has_heldout = leakage_report is not None
+    sft_rows = _build_sft_rows(all_training_rows, manifest["intent_split_map"])
+
+    training_rows, heldout_rows = _partition_rows_by_role(
+        [
+            {**row, "output_split": _collapse_source_split(manifest["intent_split_map"][row["intent_id"]], has_heldout=has_heldout)}
+            for row in all_training_rows
+        ],
+        split_key="output_split",
     )
+    training_rows = [{k: v for k, v in row.items() if k != "output_split"} for row in training_rows]
+    heldout_rows = [{k: v for k, v in row.items() if k != "output_split"} for row in heldout_rows]
+
+    training_sft_rows, heldout_sft_rows = _partition_rows_by_role(sft_rows, split_key="split")
+    sft_manifest = _build_sft_manifest(
+        training_sft_rows if has_heldout else sft_rows,
+        training_rows if has_heldout else all_training_rows,
+        output_root / "training" / "messages.jsonl",
+        split_order=("train",) if has_heldout else TRAINING_POOL_SPLITS,
+    )
+    heldout_sft_manifest = None
+    if heldout_sft_rows:
+        heldout_sft_manifest = _build_sft_manifest(
+            heldout_sft_rows,
+            heldout_rows,
+            output_root / "evaluation" / "test_messages.jsonl",
+            split_order=(HELDOUT_SPLIT,),
+        )
     return {
         "fixtures": fixtures,
         "source_examples": source_examples,
         "training_examples": training_rows,
         "split_manifest": manifest,
-        "sft_examples": sft_rows,
+        "heldout_examples": heldout_rows,
+        "sft_examples": training_sft_rows,
+        "heldout_sft_examples": heldout_sft_rows,
         "sft_manifest": sft_manifest,
+        "heldout_sft_manifest": heldout_sft_manifest,
+        "leakage_report": leakage_report,
     }
 
 
 def write_dataset(dataset: dict[str, Any], output_root: Path = DEFAULT_OUTPUT_ROOT) -> None:
     source_root = output_root / "source"
     training_root = output_root / "training"
+    evaluation_root = output_root / "evaluation"
     reports_root = output_root / "reports"
 
     _write_jsonl(source_root / "fixture_instances.jsonl", dataset["fixtures"])
@@ -636,18 +732,24 @@ def write_dataset(dataset: dict[str, Any], output_root: Path = DEFAULT_OUTPUT_RO
     _write_jsonl(training_root / "training_examples.jsonl", dataset["training_examples"])
     _write_jsonl(training_root / "messages.jsonl", dataset["sft_examples"])
 
-    split_rows: dict[str, list[dict[str, Any]]] = {split: [] for split in SPLIT_ORDER}
-    for row in dataset["training_examples"]:
-        source_split = dataset["split_manifest"]["intent_split_map"][row["intent_id"]]
-        split_rows[source_split].append(row)
-    for split in SPLIT_ORDER:
-        _write_jsonl(training_root / f"{split}.jsonl", split_rows[split])
+    has_heldout = bool(dataset.get("heldout_sft_examples"))
+    if has_heldout:
+        _write_jsonl(training_root / "train_messages.jsonl", dataset["sft_examples"])
+        _write_jsonl(evaluation_root / "test_examples.jsonl", dataset["heldout_examples"])
+        _write_jsonl(evaluation_root / "test_messages.jsonl", dataset["heldout_sft_examples"])
+    else:
+        split_rows: dict[str, list[dict[str, Any]]] = {split: [] for split in TRAINING_POOL_SPLITS}
+        for row in dataset["training_examples"]:
+            source_split = dataset["split_manifest"]["intent_split_map"][row["intent_id"]]
+            split_rows[source_split].append(row)
+        for split in TRAINING_POOL_SPLITS:
+            _write_jsonl(training_root / f"{split}.jsonl", split_rows[split])
 
-    sft_split_rows: dict[str, list[dict[str, Any]]] = {split: [] for split in SPLIT_ORDER}
-    for row in dataset["sft_examples"]:
-        sft_split_rows[row["split"]].append(row)
-    for split in SPLIT_ORDER:
-        _write_jsonl(training_root / f"{split}_messages.jsonl", sft_split_rows[split])
+        sft_split_rows: dict[str, list[dict[str, Any]]] = {split: [] for split in TRAINING_POOL_SPLITS}
+        for row in dataset["sft_examples"]:
+            sft_split_rows[row["split"]].append(row)
+        for split in TRAINING_POOL_SPLITS:
+            _write_jsonl(training_root / f"{split}_messages.jsonl", sft_split_rows[split])
 
     reports_root.mkdir(parents=True, exist_ok=True)
     (reports_root / "training_split_manifest.json").write_text(
@@ -658,6 +760,16 @@ def write_dataset(dataset: dict[str, Any], output_root: Path = DEFAULT_OUTPUT_RO
         json.dumps(dataset["sft_manifest"], indent=2, ensure_ascii=False),
         encoding="utf-8",
     )
+    if dataset.get("heldout_sft_manifest") is not None:
+        (reports_root / "heldout_test_manifest.json").write_text(
+            json.dumps(dataset["heldout_sft_manifest"], indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
+    if dataset.get("leakage_report") is not None:
+        (reports_root / "leakage_report.json").write_text(
+            json.dumps(dataset["leakage_report"], indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -690,5 +802,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         "training_examples": len(dataset["training_examples"]),
         "sft_examples": len(dataset["sft_examples"]),
     }
+    if dataset.get("heldout_examples"):
+        summary["heldout_examples"] = len(dataset["heldout_examples"])
+    if dataset.get("heldout_sft_examples"):
+        summary["heldout_sft_examples"] = len(dataset["heldout_sft_examples"])
     print(json.dumps(summary, indent=2, ensure_ascii=False))
     return 0

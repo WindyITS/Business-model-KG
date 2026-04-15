@@ -17,9 +17,9 @@
     }
   },
   "counts": {
-    "source_training_rows": 4494,
+    "source_training_rows": 4492,
     "sft_rows": 4492,
-    "duplicate_prompt_rows_merged": 2,
+    "duplicate_prompt_rows_merged": 0,
     "answerable_rows": 4313,
     "refusal_rows": 179
   },
