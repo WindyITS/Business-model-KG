@@ -25,8 +25,12 @@ Preserve the strong business-model structure, then add only defensible detail th
 - do not add details from outside knowledge
 - do not create artificial completeness; empty arrays are allowed
 - before returning, review whether any item is present only because it was mentioned once without business-model importance; if so, remove it
+- keep the same section order and heading names as the current memo
+- keep the artifact as plain memo text, not JSON
+- if a list is empty, write `- none`
 </augmentation_rules>
 
 <format_reminder>
-Return ONLY the full JSON object for the analyst memo.
+Return ONLY the full memo text.
+Do not return JSON.
 </format_reminder>

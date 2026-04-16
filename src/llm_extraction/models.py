@@ -82,14 +82,7 @@ class AnalystCorporateScope(BaseModel):
 
 
 class AnalystBusinessModelMemo(BaseModel):
-    company_name: str = ""
-    analytical_frame: str = ""
-    frame_support: AnalystEvidence = Field(default_factory=AnalystEvidence)
-    segments: list[AnalystSegment] = Field(default_factory=list)
-    offerings: list[AnalystOffering] = Field(default_factory=list)
-    corporate_scope: AnalystCorporateScope = Field(default_factory=AnalystCorporateScope)
-    open_questions: list[str] = Field(default_factory=list)
-    memo_notes: list[str] = Field(default_factory=list)
+    content: str = ""
 
 
 class CanonicalPipelineResult(ExtractionPipelineResult):

@@ -83,15 +83,15 @@ Runtime notes:
 High-level flow:
 
 1. Read the filing text, infer `company_name` from the input filename, and write `chunks.json`
-2. `Analyst memo 1`: build the foundational business-model memo
-3. `Analyst memo 2`: augment that memo with additional defensible detail
+2. `Analyst memo 1`: build the foundational business-model memo as structured plain text
+3. `Analyst memo 2`: augment that memo with additional defensible detail, still as structured plain text
 4. `Graph compilation`: convert the memo into ontology-valid triples
 5. `Critique`: prune overreach and overly neat structure
 6. Resolve surface forms, revalidate the final graph, and write final artifacts
 7. Optionally load the graph into Neo4j
 
 Runtime notes:
-- the memo is a first-class structured artifact, not just hidden reasoning
+- the memo is a first-class structured plain-text artifact, not just hidden reasoning
 - the memo explicitly separates filing support, analyst inference, and uncertainty
 - the analyst runtime treats the ontology as the target graph structure, not as a literal paragraph-extraction cage
 - `--only-pass1` is intentionally canonical-only because the analyst pipeline's first pass is a memo rather than a loadable graph

@@ -251,12 +251,10 @@ class RuntimeMainTests(unittest.TestCase):
             fake_result = AnalystPipelineResult(
                 success=True,
                 foundation_memo=AnalystBusinessModelMemo(
-                    company_name="Microsoft",
-                    analytical_frame="Cloud and software franchises drive the business.",
+                    content="ANALYTICAL FRAME\nSummary:\nCloud and software franchises drive the business.\n",
                 ),
                 augmented_memo=AnalystBusinessModelMemo(
-                    company_name="Microsoft",
-                    analytical_frame="Cloud and software franchises drive the business.",
+                    content="ANALYTICAL FRAME\nSummary:\nCloud and software franchises drive the business.\n",
                 ),
                 compiled_graph_extraction=KnowledgeGraphExtraction(
                     extraction_notes="compiled",
@@ -299,8 +297,8 @@ class RuntimeMainTests(unittest.TestCase):
                 exit_code = main_module.main()
 
             self.assertEqual(exit_code, 0)
-            self.assertTrue((run_dir / "analyst_memo_foundation.json").exists())
-            self.assertTrue((run_dir / "analyst_memo_augmented.json").exists())
+            self.assertTrue((run_dir / "analyst_memo_foundation.md").exists())
+            self.assertTrue((run_dir / "analyst_memo_augmented.md").exists())
             self.assertTrue((run_dir / "analyst_graph_compilation.json").exists())
             self.assertTrue((run_dir / "analyst_graph_critique.json").exists())
             self.assertTrue((run_dir / "resolved_triples.json").exists())
@@ -308,8 +306,8 @@ class RuntimeMainTests(unittest.TestCase):
             summary = json.loads((run_dir / "run_summary.json").read_text(encoding="utf-8"))
             self.assertEqual(summary["stage_count"], 7)
             self.assertEqual(summary["status"], "success")
-            self.assertEqual(summary["analyst_segment_count"], 0)
-            self.assertEqual(summary["analyst_offering_count"], 0)
+            self.assertGreater(summary["foundation_memo_character_count"], 0)
+            self.assertGreater(summary["augmented_memo_character_count"], 0)
             self.assertTrue(summary["skip_neo4j"])
 
             mock_resolve.assert_called_once()

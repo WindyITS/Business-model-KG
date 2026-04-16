@@ -360,8 +360,8 @@ def _prepare_pipeline_artifacts(
         }
 
     if isinstance(chat_result, AnalystPipelineResult):
-        _write_json(run_dir / "analyst_memo_foundation.json", chat_result.foundation_memo.model_dump(mode="json"))
-        _write_json(run_dir / "analyst_memo_augmented.json", chat_result.augmented_memo.model_dump(mode="json"))
+        (run_dir / "analyst_memo_foundation.md").write_text(chat_result.foundation_memo.content, encoding="utf-8")
+        (run_dir / "analyst_memo_augmented.md").write_text(chat_result.augmented_memo.content, encoding="utf-8")
         _write_graph_extraction_artifact(
             run_dir / "analyst_graph_compilation.json",
             extraction=chat_result.compiled_graph_extraction,
@@ -377,8 +377,8 @@ def _prepare_pipeline_artifacts(
         return {
             "extractions": [chat_result.final_extraction],
             "extraction_payload": {
-                "foundation_memo": chat_result.foundation_memo.model_dump(mode="json"),
-                "augmented_memo": chat_result.augmented_memo.model_dump(mode="json"),
+                "foundation_memo": chat_result.foundation_memo.content,
+                "augmented_memo": chat_result.augmented_memo.content,
                 "compiled_graph_extraction": chat_result.compiled_graph_extraction.model_dump(),
                 "final_extraction": chat_result.final_extraction.model_dump(),
             },
@@ -392,8 +392,8 @@ def _prepare_pipeline_artifacts(
             "resolve_stage_index": 6,
             "load_stage_index": 7,
             "summary_metrics": {
-                "analyst_segment_count": len(chat_result.augmented_memo.segments),
-                "analyst_offering_count": len(chat_result.augmented_memo.offerings),
+                "foundation_memo_character_count": len(chat_result.foundation_memo.content),
+                "augmented_memo_character_count": len(chat_result.augmented_memo.content),
             },
         }
 

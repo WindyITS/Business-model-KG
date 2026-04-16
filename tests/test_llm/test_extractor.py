@@ -164,6 +164,52 @@ class LLMExtractorTests(unittest.TestCase):
             ],
         )
 
+    def test_text_call_accepts_non_json_memo_output(self):
+        extractor = LLMExtractor(
+            base_url="http://localhost:1234/v1",
+            api_key="lm-studio",
+            model="local-model",
+            provider="local",
+            api_mode="chat_completions",
+        )
+        events: list[tuple[str, dict[str, object]]] = []
+        extractor.progress_callback = lambda event, **payload: events.append((event, payload))
+        extractor.client = SimpleNamespace(
+            chat=SimpleNamespace(
+                completions=SimpleNamespace(
+                    create=lambda **kwargs: SimpleNamespace(
+                        choices=[
+                            SimpleNamespace(
+                                finish_reason="stop",
+                                message=SimpleNamespace(
+                                    content="ANALYTICAL FRAME\nSummary:\nA plain-text memo.\n",
+                                    refusal=None,
+                                ),
+                            )
+                        ],
+                        usage=SimpleNamespace(completion_tokens=12),
+                    )
+                )
+            )
+        )
+
+        content, attempts_used, audit = extractor._call_text_messages(
+            messages=[{"role": "user", "content": "write a memo"}],
+            max_retries=2,
+        )
+
+        self.assertEqual(content, "ANALYTICAL FRAME\nSummary:\nA plain-text memo.")
+        self.assertEqual(attempts_used, 1)
+        self.assertEqual(audit["format"], "text")
+        self.assertEqual(audit["line_count"], 3)
+        self.assertEqual(
+            events,
+            [
+                ("llm_call_start", {"attempt": 1, "max_retries": 2}),
+                ("llm_call_complete", {"attempt": 1, "max_retries": 2, "tokens": 12}),
+            ],
+        )
+
     def test_merge_relation_subset_into_base_replaces_only_allowed_relations(self):
         base = KnowledgeGraphExtraction(
             extraction_notes="base",

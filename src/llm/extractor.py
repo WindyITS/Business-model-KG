@@ -605,6 +605,146 @@ class LLMExtractor:
             raise ExtractionError(f"Failed after {max_retries} attempts. Last error: {last_error}")
         raise ExtractionError(f"Failed after {max_retries} attempts")
 
+    def _call_text_messages(
+        self,
+        *,
+        messages: list[dict[str, str]],
+        max_retries: int,
+        temperature: float = 0.0,
+    ) -> tuple[str, int, dict[str, Any]]:
+        request_messages = self._prepare_messages_for_provider(messages, self.provider)
+        call_label = "text"
+        last_error: Exception | None = None
+        for message in reversed(request_messages):
+            if message.get("role") != "user":
+                continue
+            for line in message.get("content", "").splitlines():
+                stripped = line.strip()
+                if stripped:
+                    call_label = stripped[:120]
+                    break
+            if call_label != "text":
+                break
+
+        for attempt in range(1, max_retries + 1):
+            self._emit_progress("llm_call_start", attempt=attempt, max_retries=max_retries)
+            try:
+                content = ""
+                token_count: int | None = None
+                if self.api_mode == "responses":
+                    call_kwargs = {
+                        "model": self.model,
+                        "input": request_messages,
+                        "temperature": temperature,
+                    }
+                    response = self.client.responses.create(**call_kwargs)
+                    status = getattr(response, "status", None)
+                    usage = getattr(response, "usage", None)
+                    output_tokens = getattr(usage, "output_tokens", None) if usage is not None else None
+                    token_count = output_tokens
+                    logger.info(
+                        "Text call %s attempt %s/%s status=%s output_tokens=%s",
+                        call_label,
+                        attempt,
+                        max_retries,
+                        status,
+                        output_tokens,
+                    )
+                    refusal_text = self._responses_refusal_text(response)
+                    if refusal_text:
+                        raise ExtractionError(f"Model refused request: {refusal_text}")
+                    content = self._responses_output_text(response)
+                elif self.api_mode == "messages":
+                    content, token_count = self._call_messages_api(
+                        request_messages=request_messages,
+                        temperature=temperature,
+                        call_label=call_label,
+                        attempt=attempt,
+                        max_retries=max_retries,
+                        return_token_count=True,
+                    )
+                else:
+                    call_kwargs = {
+                        "model": self.model,
+                        "messages": request_messages,
+                        "temperature": temperature,
+                    }
+                    if self.max_output_tokens is not None:
+                        call_kwargs["max_tokens"] = self.max_output_tokens
+                    response = self.client.chat.completions.create(**call_kwargs)
+                    choice = response.choices[0]
+                    finish_reason = getattr(choice, "finish_reason", None)
+                    usage = getattr(response, "usage", None)
+                    completion_tokens = getattr(usage, "completion_tokens", None) if usage is not None else None
+                    token_count = completion_tokens
+                    logger.info(
+                        "Text call %s attempt %s/%s finish_reason=%s completion_tokens=%s",
+                        call_label,
+                        attempt,
+                        max_retries,
+                        finish_reason,
+                        completion_tokens,
+                    )
+                    refusal_text = getattr(choice.message, "refusal", None)
+                    if refusal_text:
+                        raise ExtractionError(f"Model refused request: {refusal_text}")
+                    content = choice.message.content or ""
+
+                content = self._strip_code_fence(content or "").strip()
+                if not content:
+                    raise ExtractionError("Model returned empty text content.")
+                audit = {
+                    "content_length": len(content),
+                    "line_count": len(content.splitlines()),
+                    "format": "text",
+                }
+                self._emit_progress(
+                    "llm_call_complete",
+                    attempt=attempt,
+                    max_retries=max_retries,
+                    tokens=token_count,
+                )
+                return content, attempt, audit
+            except ExtractionError as exc:
+                last_error = exc
+                self._emit_progress(
+                    "llm_call_error",
+                    attempt=attempt,
+                    max_retries=max_retries,
+                    error=str(exc),
+                    will_retry=attempt < max_retries,
+                )
+                logger.warning(
+                    "Text call %s failed on attempt %s/%s: %s",
+                    call_label,
+                    attempt,
+                    max_retries,
+                    exc,
+                )
+            except Exception as exc:
+                last_error = exc
+                diagnostics = self._http_exception_diagnostics(exc)
+                if diagnostics:
+                    logger.warning(
+                        "HTTP diagnostics for %s attempt %s/%s: %s",
+                        call_label,
+                        attempt,
+                        max_retries,
+                        diagnostics,
+                    )
+                self._emit_progress(
+                    "llm_call_error",
+                    attempt=attempt,
+                    max_retries=max_retries,
+                    error=str(exc),
+                    will_retry=attempt < max_retries,
+                )
+                logger.warning("LLM API error for %s on attempt %s/%s: %s", call_label, attempt, max_retries, exc)
+
+        if last_error is not None:
+            raise ExtractionError(f"Failed after {max_retries} attempts. Last error: {last_error}")
+        raise ExtractionError(f"Failed after {max_retries} attempts")
+
     @staticmethod
     def _lenient_model_from_payload(
         schema_model: type[BaseModel],

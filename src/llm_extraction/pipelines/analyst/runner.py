@@ -68,12 +68,39 @@ class AnalystPipelineRunner:
     def _stage_complete_details(self, payload: Any) -> list[tuple[str, Any]]:
         if isinstance(payload, AnalystBusinessModelMemo):
             return [
-                ("segments", len(payload.segments)),
-                ("offerings", len(payload.offerings)),
+                ("memo chars", len(payload.content)),
+                ("memo lines", len(payload.content.splitlines())),
             ]
         if isinstance(payload, KnowledgeGraphExtraction):
             return [("result", f"{len(payload.triples)} triples")]
         return []
+
+    def _run_text_stage(
+        self,
+        *,
+        index: int,
+        title: str,
+        user_prompt: str,
+        system_prompt: str,
+        max_retries: int,
+        details: list[tuple[str, Any]] | None = None,
+    ) -> tuple[AnalystBusinessModelMemo, str, int, dict[str, Any]]:
+        self.extractor._emit_progress(
+            "stage_start",
+            index=index,
+            title=title,
+            details=details,
+        )
+        memo_text, attempts_used, audit = self.extractor._call_text_messages(
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            max_retries=max_retries,
+        )
+        memo = AnalystBusinessModelMemo(content=memo_text)
+        self.extractor._emit_progress("stage_complete", details=self._stage_complete_details(memo))
+        return memo, memo_text, attempts_used, audit
 
     def _run_structured_stage(
         self,
@@ -124,22 +151,17 @@ class AnalystPipelineRunner:
         state = AnalystPipelineState()
         pipeline_system_prompt = analyst_pipeline_system_prompt(full_text)
 
-        foundation_fallback = AnalystBusinessModelMemo(company_name=company_name or "").model_dump_json()
-
         try:
             (
                 state.foundation_memo,
                 state.raw_foundation_memo_response,
                 state.foundation_memo_attempts_used,
                 state.foundation_memo_audit,
-            ) = self._run_structured_stage(
+            ) = self._run_text_stage(
                 index=2,
                 title="Analyst memo 1 - Core structure",
                 user_prompt=analyst_memo_foundation_prompt(company_name),
                 system_prompt=pipeline_system_prompt,
-                schema_name="AnalystBusinessModelMemo",
-                schema_model=AnalystBusinessModelMemo,
-                fallback_payload=foundation_fallback,
                 max_retries=max_retries,
                 details=[("artifact", "AnalystBusinessModelMemo")],
             )
@@ -147,7 +169,7 @@ class AnalystPipelineRunner:
             self.extractor._emit_progress("stage_failed", error=str(exc))
             return state.to_result(success=False, error=str(exc))
 
-        foundation_memo_json = self.extractor._compact_json(state.foundation_memo.model_dump(mode="json"))
+        foundation_memo_text = state.foundation_memo.content
 
         try:
             (
@@ -155,14 +177,11 @@ class AnalystPipelineRunner:
                 state.raw_augmented_memo_response,
                 state.augmented_memo_attempts_used,
                 state.augmented_memo_audit,
-            ) = self._run_structured_stage(
+            ) = self._run_text_stage(
                 index=3,
                 title="Analyst memo 2 - Detail augmentation",
-                user_prompt=analyst_memo_augmentation_prompt(company_name, foundation_memo_json),
+                user_prompt=analyst_memo_augmentation_prompt(company_name, foundation_memo_text),
                 system_prompt=pipeline_system_prompt,
-                schema_name="AnalystBusinessModelMemo",
-                schema_model=AnalystBusinessModelMemo,
-                fallback_payload=foundation_fallback,
                 max_retries=max_retries,
                 details=[("artifact", "AnalystBusinessModelMemo")],
             )
@@ -170,7 +189,7 @@ class AnalystPipelineRunner:
             self.extractor._emit_progress("stage_failed", error=str(exc))
             return state.to_result(success=False, error=str(exc))
 
-        augmented_memo_json = self.extractor._compact_json(state.augmented_memo.model_dump(mode="json"))
+        augmented_memo_text = state.augmented_memo.content
 
         try:
             (
@@ -181,7 +200,7 @@ class AnalystPipelineRunner:
             ) = self._run_structured_stage(
                 index=4,
                 title="Graph compilation",
-                user_prompt=analyst_graph_compilation_prompt(company_name, augmented_memo_json),
+                user_prompt=analyst_graph_compilation_prompt(company_name, augmented_memo_text),
                 system_prompt=pipeline_system_prompt,
                 schema_name="KnowledgeGraphExtraction",
                 schema_model=KnowledgeGraphExtraction,
@@ -213,7 +232,7 @@ class AnalystPipelineRunner:
             system_prompt=pipeline_system_prompt,
             user_prompt=analyst_graph_critique_prompt(
                 company_name,
-                augmented_memo_json,
+                augmented_memo_text,
                 self.extractor._compact_json(state.compiled_graph_extraction.model_dump(mode="json")),
             ),
             stage_label="Analyst critique",
