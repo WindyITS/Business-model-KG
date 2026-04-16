@@ -82,11 +82,15 @@ MEMO NOTES
 - keep only the offerings that matter to the core structure in this first pass
 - if a named offering family, suite, platform, or franchise is itself one of the core organizing units of the business, include it even in this first pass
 - if a core offering family clearly contains a few material child offerings named in the filing, include those child offerings explicitly rather than leaving the family undecomposed
+- if a core offering clearly contains stable named variants, tiers, editions, plans, form factors, or line families, include those child offerings even when the filing presents them through current release names
+- normalize annual, release-specific, or version-specific names into durable family-level or variant-level child offerings when that yields a more stable business-model structure than using the transient label verbatim
 - if a core franchise is split across materially different sub-businesses, preserve the family and the split children when that decomposition is central to understanding the business model
 - if a named franchise is described as distinct in the filing, keep it as its own offering rather than subordinating it under a broader horizontal platform just because its cloud services or professional services are reported inside that platform's bucket
 - any offering that should exist as a first-order graph node or as a parent family for another first-order offering must have its own full `[Offering]` block
 - prefer named products, brands, platforms, suites, and franchises over generic category labels such as broad functional buckets or accounting-style rollups
 - do not use segment_anchors on child offerings just to restate inheritance from a parent offering
+- do not populate `Channels` on a segment-anchored offering just to restate the same distribution channels already carried by the segment; use offering-level channels only when the filing supports a differentiated channel pattern or the offering has no clear segment anchor
+- in `Operating Geographies`, prefer `Worldwide` when the filing clearly supports global operations and a longer geography list would only mirror segment coverage rather than add distinct corporate-scope signal
 - use canonical labels exactly for CustomerType, Channel, and RevenueModel; otherwise omit
 - explicit_support should capture what the filing clearly supports
 - analyst_inference should capture your synthesis only when it is tightly grounded in the filing

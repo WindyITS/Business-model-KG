@@ -47,6 +47,20 @@ class OntologyValidatorTests(unittest.TestCase):
         self.assertTrue(result["is_valid"])
         self.assertEqual(result["normalized_triple"]["object"], "United States")
 
+    def test_normalizes_global_place_alias_to_worldwide(self):
+        triple = {
+            "subject": "Microsoft",
+            "subject_type": "Company",
+            "relation": "OPERATES_IN",
+            "object": "global",
+            "object_type": "Place",
+        }
+
+        result = validate_triple(triple)
+
+        self.assertTrue(result["is_valid"])
+        self.assertEqual(result["normalized_triple"]["object"], "Worldwide")
+
     def test_rejects_non_canonical_customer_type(self):
         triple = {
             "subject": "Intelligent Cloud",

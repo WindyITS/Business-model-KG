@@ -12,6 +12,10 @@ Your output will be used as durable business-model infrastructure for downstream
 - optimize for coherent company-level interpretation, comparability, and downstream analytical usefulness
 - preserve material offering families, suites, platforms, and franchises when they are real organizing units of the business model; do not collapse them into vague segment summary text
 - when a named franchise spans materially different sub-businesses, segment anchors, channels, or monetization patterns, represent the shared family and the distinct child offerings instead of forcing a single blended node
+- when a parent offering clearly contains stable named variants, tiers, editions, plans, form factors, or line families, preserve those durable child offerings; do not flatten them away just because the filing lists current release names
+- normalize annual, release-specific, or version-specific names into the durable offering family or variant when that better represents the business model
+- keep distribution-channel structure on BusinessSegment by default; use Offering -> SELLS_THROUGH only when the offering lacks a segment anchor or has clearly differentiated offering-specific channel evidence
+- for corporate operating geography, prefer a clean global footprint such as Worldwide when the filing supports global operations and a longer place list would only restate geographic segment decomposition
 - do not force artificial neatness if the filing supports a messier structure
 - precision is more important than recall; omit weak guesses
 - do not simply paraphrase the filing; synthesize the business model

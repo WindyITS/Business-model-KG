@@ -20,6 +20,7 @@ class PlaceHierarchyTests(unittest.TestCase):
     def test_normalize_place_name_applies_documented_aliases(self):
         self.assertEqual(normalize_place_name("U.S."), "United States")
         self.assertEqual(normalize_place_name("asia-pacific"), "Asia Pacific")
+        self.assertEqual(normalize_place_name("global"), "Worldwide")
 
     def test_aliases_cover_common_country_variants(self):
         self.assertEqual(normalize_place_name("Czechia"), "Czech Republic")
@@ -37,6 +38,7 @@ class PlaceHierarchyTests(unittest.TestCase):
         self.assertIn("Europe", ancestors)
         self.assertIn("European Union", ancestors)
         self.assertIn("EMEA", ancestors)
+        self.assertIn("Worldwide", ancestors)
 
     def test_place_descendants_capture_narrower_members_for_europe(self):
         descendants = place_descendants("Europe")
@@ -44,6 +46,15 @@ class PlaceHierarchyTests(unittest.TestCase):
         self.assertIn("Italy", descendants)
         self.assertIn("Germany", descendants)
         self.assertIn("Western Europe", descendants)
+
+    def test_place_descendants_capture_global_footprint_members_for_worldwide(self):
+        descendants = place_descendants("Worldwide")
+
+        self.assertIn("Americas", descendants)
+        self.assertIn("EMEA", descendants)
+        self.assertIn("APAC", descendants)
+        self.assertIn("Italy", descendants)
+        self.assertIn("United States", descendants)
 
     def test_place_query_properties_use_within_and_includes_arrays(self):
         italy = place_query_properties("Italy")

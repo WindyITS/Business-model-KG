@@ -52,6 +52,7 @@ Do not use:
 - preserve family-level offerings that appear in the memo as real offering nodes; do not flatten parent-child offering structure into only leaf offerings
 - preserve split-franchise hierarchy when the memo supports it; if a franchise is modeled as a family plus differentiated children, keep that structure in the graph
 - preserve distinct named franchises as standalone offerings when the memo frames them as standalone platforms or businesses, even if the memo also mentions their cloud or services lines inside a broader horizontal parent
+- preserve durable child families and variants from the memo; when the memo normalizes current release names into stable product, plan, tier, edition, or line families, keep those stable child nodes rather than reverting to transient labels
 - do not use Company -> OFFERS unless the memo clearly requires it as a true fallback
 - compile these relations when support is strong enough:
   - Company -> HAS_SEGMENT -> each segment
@@ -59,7 +60,7 @@ Do not use:
   - Offering -> OFFERS -> child offering when `Parent Offering` or `Child Offerings` makes the hierarchy supportable
   - BusinessSegment -> SERVES -> segment customer_types
   - BusinessSegment -> SELLS_THROUGH -> segment channels
-  - Offering -> SELLS_THROUGH -> offering-specific channels
+  - Offering -> SELLS_THROUGH -> offering-specific channels only when the offering lacks a segment anchor or the memo shows a differentiated channel pattern not already carried by the anchored segment
   - Offering -> MONETIZES_VIA -> offering revenue_models
   - Company -> OPERATES_IN -> corporate_scope operating_geographies
   - Company -> PARTNERS_WITH -> corporate_scope key_partners
@@ -67,6 +68,8 @@ Do not use:
 - do not materialize a parent offering node that appears only as a reference inside `Parent Offering` unless that parent also has its own full `[Offering]` block
 - if a candidate child is only a broad descriptive bucket, accounting rollup, or unnamed generic category rather than a stable named offering family from the memo, omit it
 - if an offering has a parent_offering and only appears under that parent, do not also create a direct segment -> offering edge unless the memo independently supports that direct anchor
+- do not compile offering-level channels that merely restate inherited segment distribution
+- if the memo uses `Worldwide` or another macro geography to express the company's corporate footprint, preserve that cleaner geography instead of exploding it into many narrower places
 - prefer omission over weak guesses
 </compilation_rules>
 

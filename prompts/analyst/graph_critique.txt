@@ -57,8 +57,11 @@ Do not use:
 - do not prune defensible parent-child offering hierarchy merely to make the graph smaller or tidier
 - preserve split-franchise decomposition when the memo supports a family plus materially differentiated child offerings
 - preserve distinct named franchises as standalone offerings when the memo presents them that way; do not keep hierarchy that demotes them under broader reporting buckets without strong memo support
+- preserve durable family and variant hierarchy from the memo; do not collapse stable child offerings into a single parent node or into transient release-specific names
 - remove parent nodes that were materialized only from `Parent Offering` references without their own full offering block
 - remove child offerings that are only broad bucket labels or generic categories rather than stable offering nodes
+- remove offering-level `SELLS_THROUGH` edges when they merely restate segment-level distribution for a segment-anchored offering
+- if the graph mechanically expanded a global corporate footprint into a long geography list without distinct memo support, prune it back toward the memo-supported macro geography such as `Worldwide`
 - do not introduce outside knowledge
 - do not replace omitted evidence with generic summary language
 - precision is more important than recall

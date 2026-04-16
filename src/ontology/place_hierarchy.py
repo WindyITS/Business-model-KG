@@ -16,10 +16,14 @@ BROADER_PLACE_MATCH = "broader_region"
 # Place normalization only. This covers the ontology's macro-regions, U.S. states plus D.C.,
 # and a broad sovereign-country set so aliases resolve to canonical place labels.
 _MACRO_REGION_PARENTS: dict[str, tuple[str, ...]] = {
+    "APAC": ("Worldwide",),
     "Africa": ("EMEA",),
+    "Americas": ("Worldwide",),
+    "Asia": ("Worldwide",),
     "Asia Pacific": ("APAC",),
     "Caribbean": ("Americas",),
     "Central America": ("Latin America", "Americas"),
+    "EMEA": ("Worldwide",),
     "Eastern Europe": ("Europe", "EMEA"),
     "Europe": ("EMEA",),
     "European Union": ("Europe", "EMEA"),
@@ -28,6 +32,7 @@ _MACRO_REGION_PARENTS: dict[str, tuple[str, ...]] = {
     "North America": ("Americas",),
     "South America": ("Americas",),
     "Southeast Asia": ("Asia", "Asia Pacific", "APAC"),
+    "Worldwide": (),
     "Western Europe": ("Europe", "EMEA"),
 }
 
@@ -480,6 +485,10 @@ _RAW_PLACE_ALIASES = {
     "Washington, DC": "District of Columbia",
     "asia-pacific": "Asia Pacific",
     "emea": "EMEA",
+    "global": "Worldwide",
+    "world wide": "Worldwide",
+    "world-wide": "Worldwide",
+    "worldwide": "Worldwide",
 }
 
 
