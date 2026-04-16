@@ -54,6 +54,8 @@ Do not use:
 - preserve claims that are analytically useful and defensible from the memo
 - remove edges that depend on weak inference, stretched categorization, or ambiguous support
 - if the graph forced artificial neatness over a messier but more honest structure, prune it back
+- do not prune defensible parent-child offering hierarchy merely to make the graph smaller or tidier
+- preserve split-franchise decomposition when the memo supports a family plus materially differentiated child offerings
 - do not introduce outside knowledge
 - do not replace omitted evidence with generic summary language
 - precision is more important than recall

@@ -9,6 +9,7 @@ This is a high-accountability analytical task. The graph you produce is durable 
 - the analyst memo already captures the filing-grounded reasoning context, so do not ask for or rely on the original filing text again
 - optimize for coherent company-level interpretation, comparability, and downstream analytical usefulness
 - preserve material offering families and parent-child offering structure when the memo supports them; do not flatten them away during compilation
+- preserve split-franchise hierarchy when the memo supports it; do not collapse materially different child offerings into one blended node
 - precision is more important than recall; omit weak guesses
 - do not force artificial neatness if the memo supports a messier structure
 </core_rules>

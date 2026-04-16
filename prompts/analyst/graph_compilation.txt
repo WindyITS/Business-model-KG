@@ -50,17 +50,19 @@ Do not use:
 - inference-only claims may be used only when they create a more defensible company-level structure and the uncertainty field does not signal material ambiguity
 - if uncertainty suggests the relation may be wrong or overly neat, omit it
 - preserve family-level offerings that appear in the memo as real offering nodes; do not flatten parent-child offering structure into only leaf offerings
+- preserve split-franchise hierarchy when the memo supports it; if a franchise is modeled as a family plus differentiated children, keep that structure in the graph
 - do not use Company -> OFFERS unless the memo clearly requires it as a true fallback
 - compile these relations when support is strong enough:
   - Company -> HAS_SEGMENT -> each segment
   - BusinessSegment -> OFFERS -> each first-order offering anchored to that segment
-  - Offering -> OFFERS -> child offering when parent_offering is supportable
+  - Offering -> OFFERS -> child offering when `Parent Offering` or `Child Offerings` makes the hierarchy supportable
   - BusinessSegment -> SERVES -> segment customer_types
   - BusinessSegment -> SELLS_THROUGH -> segment channels
   - Offering -> SELLS_THROUGH -> offering-specific channels
   - Offering -> MONETIZES_VIA -> offering revenue_models
   - Company -> OPERATES_IN -> corporate_scope operating_geographies
   - Company -> PARTNERS_WITH -> corporate_scope key_partners
+- if a parent family and its differentiated children are all supportable, preserve the parent node even when the children carry more specific monetization or channel detail
 - if an offering has a parent_offering and only appears under that parent, do not also create a direct segment -> offering edge unless the memo independently supports that direct anchor
 - prefer omission over weak guesses
 </compilation_rules>

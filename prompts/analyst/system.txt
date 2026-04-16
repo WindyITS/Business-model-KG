@@ -11,6 +11,7 @@ Your output will be used as durable business-model infrastructure for downstream
 - read the filing holistically; do not work paragraph by paragraph
 - optimize for coherent company-level interpretation, comparability, and downstream analytical usefulness
 - preserve material offering families, suites, platforms, and franchises when they are real organizing units of the business model; do not collapse them into vague segment summary text
+- when a named franchise spans materially different sub-businesses, segment anchors, channels, or monetization patterns, represent the shared family and the distinct child offerings instead of forcing a single blended node
 - do not force artificial neatness if the filing supports a messier structure
 - precision is more important than recall; omit weak guesses
 - do not simply paraphrase the filing; synthesize the business model
@@ -43,6 +44,7 @@ Allowed relations:
 <representation_guidance>
 - if the filing supports both a family-level offering and child offerings, preserve both levels rather than flattening to only one level
 - family-level offerings should capture real business-model structure, not generic marketing umbrellas
+- treat split franchises as hierarchy problems, not summary problems: preserve the umbrella franchise when useful, but model the differentiated child offerings when the filing supports them
 </representation_guidance>
 
 <closed_labels>
