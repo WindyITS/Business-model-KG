@@ -17,12 +17,12 @@ DEFAULT_TEST_MESSAGES_PATH = DATASET_ROOT / "evaluation" / "test_messages.jsonl"
 DEFAULT_TEST_EXAMPLES_PATH = DATASET_ROOT / "evaluation" / "test_examples.jsonl"
 DEFAULT_FIXTURES_PATH = DATASET_ROOT / "source" / "fixture_instances.jsonl"
 
-DEFAULT_PIPELINE_ROOT = ROOT / "outputs" / "text2cypher_mlx" / "qwen3_8b"
+DEFAULT_PIPELINE_ROOT = ROOT / "outputs" / "text2cypher_mlx" / "qwen3_4b"
 DEFAULT_PREPARED_DATA_ROOT = DEFAULT_PIPELINE_ROOT / "dataset"
 DEFAULT_ADAPTER_PATH = DEFAULT_PIPELINE_ROOT / "adapters"
 DEFAULT_EVAL_OUTPUT_ROOT = DEFAULT_PIPELINE_ROOT / "evaluation"
 
-DEFAULT_MODEL_ID = "Qwen/Qwen3-8B"
+DEFAULT_MODEL_ID = "Qwen/Qwen3-4B"
 DEFAULT_TRAIN_ITERS = 5000
 DEFAULT_BATCH_SIZE = 1
 DEFAULT_GRAD_ACCUMULATION_STEPS = 4
@@ -32,6 +32,13 @@ DEFAULT_ENABLE_THINKING = False
 
 _JSON_FENCE_RE = re.compile(r"```(?:json)?\s*(.*?)```", flags=re.IGNORECASE | re.DOTALL)
 _CYTHER_WHITESPACE_RE = re.compile(r"\s+")
+_NODE_PATTERN_RE = re.compile(
+    r"\((?P<alias>[A-Za-z_][A-Za-z0-9_]*)?\s*:(?P<label>Company|BusinessSegment|Offering|CustomerType|Channel|RevenueModel|Place)"
+    r"(?P<props>\s*\{[^{}]*\})?\)"
+)
+_BUSINESS_SEGMENT_SCOPE_RE = re.compile(
+    r"\((?P<alias>[A-Za-z_][A-Za-z0-9_]*)\s*:\s*BusinessSegment\s*\{\s*company_name\s*:\s*(?P<company>[A-Za-z_][A-Za-z0-9_]*)\.name\s*\}\)"
+)
 
 
 def load_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -282,6 +289,98 @@ def normalize_cypher(cypher: str) -> str:
     return _CYTHER_WHITESPACE_RE.sub(" ", cypher).strip()
 
 
+def _alias_is_referenced_outside_span(text: str, alias: str, span: tuple[int, int]) -> bool:
+    pattern = re.compile(rf"\b{re.escape(alias)}\b")
+    for match in pattern.finditer(text):
+        if match.start() >= span[0] and match.end() <= span[1]:
+            continue
+        return True
+    return False
+
+
+def _strip_unused_node_aliases(cypher: str) -> str:
+    updated = cypher
+    while True:
+        changed = False
+        pieces: list[str] = []
+        cursor = 0
+        for match in _NODE_PATTERN_RE.finditer(updated):
+            alias = match.group("alias")
+            if not alias or _alias_is_referenced_outside_span(updated, alias, match.span()):
+                continue
+            pieces.append(updated[cursor : match.start()])
+            props = match.group("props") or ""
+            pieces.append(f"(:{match.group('label')}{props})")
+            cursor = match.end()
+            changed = True
+        if not changed:
+            return updated
+        pieces.append(updated[cursor:])
+        updated = "".join(pieces)
+
+
+def _has_redundant_businesssegment_scope(cypher: str, *, alias: str, company_alias: str) -> bool:
+    lhs = re.compile(rf"\b{re.escape(alias)}\.company_name\s*=\s*{re.escape(company_alias)}\.name\b")
+    rhs = re.compile(rf"\b{re.escape(company_alias)}\.name\s*=\s*{re.escape(alias)}\.company_name\b")
+    return bool(lhs.search(cypher) or rhs.search(cypher))
+
+
+def _drop_redundant_businesssegment_scope(cypher: str) -> str:
+    updated = cypher
+    while True:
+        changed = False
+        pieces: list[str] = []
+        cursor = 0
+        for match in _BUSINESS_SEGMENT_SCOPE_RE.finditer(updated):
+            alias = match.group("alias")
+            company_alias = match.group("company")
+            if not _has_redundant_businesssegment_scope(updated, alias=alias, company_alias=company_alias):
+                continue
+            pieces.append(updated[cursor : match.start()])
+            pieces.append(f"({alias}:BusinessSegment)")
+            cursor = match.end()
+            changed = True
+        if not changed:
+            return updated
+        pieces.append(updated[cursor:])
+        updated = "".join(pieces)
+
+
+def _canonicalize_single_company_alias(cypher: str) -> str:
+    aliases = {
+        match.group("alias")
+        for match in _NODE_PATTERN_RE.finditer(cypher)
+        if match.group("label") == "Company" and match.group("alias")
+    }
+    if len(aliases) != 1:
+        return cypher
+
+    alias = next(iter(aliases))
+    if alias == "company":
+        return cypher
+
+    updated = cypher
+    updated = re.sub(
+        rf"\({re.escape(alias)}(\s*:\s*Company\b)",
+        r"(company\1",
+        updated,
+    )
+    updated = re.sub(rf"\({re.escape(alias)}\)", "(company)", updated)
+    updated = re.sub(rf"\b{re.escape(alias)}\.", "company.", updated)
+    return updated
+
+
+def normalize_cypher_semantic(cypher: str) -> str:
+    normalized = normalize_cypher(cypher)
+    while True:
+        rewritten = _canonicalize_single_company_alias(normalized)
+        rewritten = _strip_unused_node_aliases(_drop_redundant_businesssegment_scope(rewritten))
+        rewritten = normalize_cypher(rewritten)
+        if rewritten == normalized:
+            return rewritten
+        normalized = rewritten
+
+
 def normalize_json_value(value: Any) -> Any:
     if isinstance(value, dict):
         return {key: normalize_json_value(value[key]) for key in sorted(value)}
@@ -295,6 +394,17 @@ def normalize_completion_payload(payload: dict[str, Any]) -> dict[str, Any]:
     normalized: dict[str, Any] = {"answerable": answerable}
     if answerable is True:
         normalized["cypher"] = normalize_cypher(str(payload.get("cypher", "")))
+        normalized["params"] = normalize_json_value(payload.get("params", {}))
+    elif answerable is False:
+        normalized["reason"] = payload.get("reason")
+    return normalized
+
+
+def normalize_completion_payload_semantic(payload: dict[str, Any]) -> dict[str, Any]:
+    answerable = payload.get("answerable")
+    normalized: dict[str, Any] = {"answerable": answerable}
+    if answerable is True:
+        normalized["cypher"] = normalize_cypher_semantic(str(payload.get("cypher", "")))
         normalized["params"] = normalize_json_value(payload.get("params", {}))
     elif answerable is False:
         normalized["reason"] = payload.get("reason")
@@ -317,7 +427,9 @@ def score_prediction_payload(
         "params_exact_match": False,
         "cypher_exact_match": False,
         "cypher_normalized_match": False,
+        "cypher_semantic_match": False,
         "structured_match": False,
+        "structured_semantic_match": False,
         "parsed_payload": parsed_payload,
         "extracted_json": extracted_json,
     }
@@ -326,6 +438,7 @@ def score_prediction_payload(
 
     metrics["answerable_match"] = parsed_payload.get("answerable") == gold_payload.get("answerable")
     metrics["structured_match"] = normalize_completion_payload(parsed_payload) == normalize_completion_payload(gold_payload)
+    metrics["structured_semantic_match"] = normalize_completion_payload_semantic(parsed_payload) == normalize_completion_payload_semantic(gold_payload)
 
     if gold_payload.get("answerable") is False:
         metrics["reason_match"] = parsed_payload.get("reason") == gold_payload.get("reason")
@@ -341,6 +454,7 @@ def score_prediction_payload(
     if isinstance(predicted_cypher, str) and isinstance(gold_cypher, str):
         metrics["cypher_exact_match"] = predicted_cypher == gold_cypher
         metrics["cypher_normalized_match"] = normalize_cypher(predicted_cypher) == normalize_cypher(gold_cypher)
+        metrics["cypher_semantic_match"] = normalize_cypher_semantic(predicted_cypher) == normalize_cypher_semantic(gold_cypher)
 
     return metrics
 
@@ -363,7 +477,9 @@ def summarize_prediction_metrics(row_results: Sequence[dict[str, Any]]) -> dict[
     params_match_rows = sum(result["metrics"]["params_exact_match"] for result in answerable_rows)
     cypher_exact_rows = sum(result["metrics"]["cypher_exact_match"] for result in answerable_rows)
     cypher_normalized_rows = sum(result["metrics"]["cypher_normalized_match"] for result in answerable_rows)
+    cypher_semantic_rows = sum(result["metrics"]["cypher_semantic_match"] for result in answerable_rows)
     structured_match_rows = sum(result["metrics"]["structured_match"] for result in row_results)
+    structured_semantic_match_rows = sum(result["metrics"]["structured_semantic_match"] for result in row_results)
 
     execution_rows = [result for result in row_results if result.get("execution") is not None]
     execution_match_rows = sum(bool(result["execution"]["matched"]) for result in execution_rows)
@@ -384,8 +500,12 @@ def summarize_prediction_metrics(row_results: Sequence[dict[str, Any]]) -> dict[
         "cypher_exact_match_rate": _format_rate(cypher_exact_rows, len(answerable_rows)),
         "cypher_normalized_match_rows": cypher_normalized_rows,
         "cypher_normalized_match_rate": _format_rate(cypher_normalized_rows, len(answerable_rows)),
+        "cypher_semantic_match_rows": cypher_semantic_rows,
+        "cypher_semantic_match_rate": _format_rate(cypher_semantic_rows, len(answerable_rows)),
         "structured_match_rows": structured_match_rows,
         "structured_match_rate": _format_rate(structured_match_rows, total_rows),
+        "structured_semantic_match_rows": structured_semantic_match_rows,
+        "structured_semantic_match_rate": _format_rate(structured_semantic_match_rows, total_rows),
         "execution_rows": len(execution_rows),
         "execution_match_rows": execution_match_rows,
         "execution_match_rate": _format_rate(execution_match_rows, len(execution_rows)),
@@ -395,7 +515,7 @@ def summarize_prediction_metrics(row_results: Sequence[dict[str, Any]]) -> dict[
 def generate_model_output_for_messages(
     *,
     model_path: str,
-    adapter_path: Path,
+    adapter_path: Path | None,
     messages: Sequence[dict[str, Any]],
     max_tokens: int = DEFAULT_MAX_TOKENS,
     enable_thinking: bool = DEFAULT_ENABLE_THINKING,
@@ -414,7 +534,7 @@ def generate_model_output_for_messages(
 def load_mlx_model_and_tokenizer(
     *,
     model_path: str,
-    adapter_path: Path,
+    adapter_path: Path | None,
 ) -> tuple[Any, Any, Any]:
     try:
         from mlx_lm import generate, load
@@ -423,7 +543,10 @@ def load_mlx_model_and_tokenizer(
             "mlx-lm is not installed. Install it with `pip install \"mlx-lm[train]\"` before running the MLX pipeline."
         ) from exc
 
-    model, tokenizer = load(model_path, adapter_path=str(adapter_path))
+    if adapter_path is None:
+        model, tokenizer = load(model_path)
+    else:
+        model, tokenizer = load(model_path, adapter_path=str(adapter_path))
     return model, tokenizer, generate
 
 

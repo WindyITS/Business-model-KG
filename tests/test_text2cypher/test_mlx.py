@@ -1,6 +1,7 @@
 import json
 import sys
 import tempfile
+import types
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -8,6 +9,8 @@ from unittest import mock
 from text2cypher.mlx import (
     build_mlx_lora_command,
     extract_json_dict,
+    load_mlx_model_and_tokenizer,
+    normalize_cypher_semantic,
     prepare_mlx_chat_dataset,
     score_prediction_payload,
 )
@@ -112,7 +115,7 @@ class Text2CypherMlxLoraTests(unittest.TestCase):
 
     def test_build_mlx_lora_command_uses_masked_chat_defaults(self):
         command = build_mlx_lora_command(
-            model="Qwen/Qwen3-8B",
+            model="Qwen/Qwen3-4B",
             data_dir=Path("/tmp/mlx_data"),
             adapter_path=Path("/tmp/adapters"),
             iters=123,
@@ -196,6 +199,136 @@ class Text2CypherMlxLoraTests(unittest.TestCase):
         self.assertFalse(metrics["cypher_exact_match"])
         self.assertTrue(metrics["cypher_normalized_match"])
         self.assertTrue(metrics["structured_match"])
+
+    def test_load_mlx_model_and_tokenizer_supports_base_model_without_adapter(self):
+        fake_load = mock.Mock(return_value=("model", "tokenizer"))
+        fake_generate = object()
+        fake_module = types.SimpleNamespace(load=fake_load, generate=fake_generate)
+
+        with mock.patch.dict(sys.modules, {"mlx_lm": fake_module}):
+            model, tokenizer, generate_fn = load_mlx_model_and_tokenizer(
+                model_path="Qwen/Qwen3-4B",
+                adapter_path=None,
+            )
+
+        fake_load.assert_called_once_with("Qwen/Qwen3-4B")
+        self.assertEqual(model, "model")
+        self.assertEqual(tokenizer, "tokenizer")
+        self.assertIs(generate_fn, fake_generate)
+
+    def test_normalize_cypher_semantic_allows_equivalent_qf19_direct_membership(self):
+        gold = (
+            "MATCH (c:Company)-[:HAS_SEGMENT]->(s:BusinessSegment)-[:SERVES]->"
+            "(ct:CustomerType {name: $customer_type}) "
+            "MATCH (s)-[:SELLS_THROUGH]->(ch:Channel {name: $channel}) "
+            "MATCH (s)-[:OFFERS]->(o:Offering {name: $offering}) "
+            "WHERE s.company_name = c.name AND o.company_name = c.name "
+            "RETURN DISTINCT c.name AS company, s.name AS segment ORDER BY company, segment"
+        )
+        predicted = (
+            "MATCH (c:Company)-[:HAS_SEGMENT]->(s:BusinessSegment {company_name: c.name})-[:SERVES]->"
+            "(:CustomerType {name: $customer_type}) "
+            "MATCH (s)-[:SELLS_THROUGH]->(:Channel {name: $channel}) "
+            "MATCH (s)-[:OFFERS]->(o:Offering {name: $offering}) "
+            "WHERE s.company_name = c.name AND o.company_name = c.name "
+            "RETURN DISTINCT c.name AS company, s.name AS segment ORDER BY company, segment"
+        )
+
+        self.assertEqual(normalize_cypher_semantic(predicted), normalize_cypher_semantic(gold))
+
+    def test_score_prediction_payload_reports_semantic_match_for_equivalent_qf19(self):
+        gold_completion = (
+            '{"answerable":true,"cypher":"MATCH (c:Company)-[:HAS_SEGMENT]->'
+            '(s:BusinessSegment)-[:SERVES]->(ct:CustomerType {name: $customer_type}) '
+            'MATCH (s)-[:SELLS_THROUGH]->(ch:Channel {name: $channel}) '
+            'MATCH (s)-[:OFFERS]->(o:Offering {name: $offering}) '
+            'WHERE s.company_name = c.name AND o.company_name = c.name '
+            'RETURN DISTINCT c.name AS company, s.name AS segment ORDER BY company, segment",'
+            '"params":{"channel":"direct sales","customer_type":"IT professionals","offering":"Dovetail Core"}}'
+        )
+        prediction = (
+            '{"answerable":true,"cypher":"MATCH (c:Company)-[:HAS_SEGMENT]->'
+            '(s:BusinessSegment {company_name: c.name})-[:SERVES]->(:CustomerType {name: $customer_type}) '
+            'MATCH (s)-[:SELLS_THROUGH]->(:Channel {name: $channel}) '
+            'MATCH (s)-[:OFFERS]->(o:Offering {name: $offering}) '
+            'WHERE s.company_name = c.name AND o.company_name = c.name '
+            'RETURN DISTINCT c.name AS company, s.name AS segment ORDER BY company, segment",'
+            '"params":{"customer_type":"IT professionals","channel":"direct sales","offering":"Dovetail Core"}}'
+        )
+
+        metrics = score_prediction_payload(prediction, gold_completion=gold_completion)
+        self.assertFalse(metrics["structured_match"])
+        self.assertFalse(metrics["cypher_normalized_match"])
+        self.assertTrue(metrics["cypher_semantic_match"])
+        self.assertTrue(metrics["structured_semantic_match"])
+
+    def test_score_prediction_payload_keeps_descendant_qf19_mismatch_as_non_semantic(self):
+        gold_completion = (
+            '{"answerable":true,"cypher":"MATCH (c:Company)-[:HAS_SEGMENT]->'
+            '(s:BusinessSegment)-[:SERVES]->(ct:CustomerType {name: $customer_type}) '
+            'MATCH (s)-[:SELLS_THROUGH]->(ch:Channel {name: $channel}) '
+            'MATCH (s)-[:OFFERS]->(o:Offering {name: $offering}) '
+            'WHERE s.company_name = c.name AND o.company_name = c.name '
+            'RETURN DISTINCT c.name AS company, s.name AS segment ORDER BY company, segment",'
+            '"params":{"channel":"direct sales","customer_type":"IT professionals","offering":"Dovetail Core"}}'
+        )
+        prediction = (
+            '{"answerable":true,"cypher":"MATCH (c:Company)-[:HAS_SEGMENT]->'
+            '(s:BusinessSegment {company_name: c.name})-[:SERVES]->(:CustomerType {name: $customer_type}) '
+            'MATCH (s)-[:SELLS_THROUGH]->(:Channel {name: $channel}) '
+            'MATCH (s)-[:OFFERS]->(root:Offering {company_name: c.name}) '
+            'MATCH (root)-[:OFFERS*0..]->(o:Offering {company_name: c.name, name: $offering}) '
+            'RETURN DISTINCT c.name AS company, s.name AS segment ORDER BY company, segment",'
+            '"params":{"customer_type":"IT professionals","channel":"direct sales","offering":"Dovetail Core"}}'
+        )
+
+        metrics = score_prediction_payload(prediction, gold_completion=gold_completion)
+        self.assertFalse(metrics["cypher_semantic_match"])
+        self.assertFalse(metrics["structured_semantic_match"])
+
+    def test_normalize_cypher_semantic_allows_company_alias_variation_in_qf19(self):
+        gold = (
+            "MATCH (c:Company)-[:HAS_SEGMENT]->(s:BusinessSegment)-[:SERVES]->"
+            "(ct:CustomerType {name: $customer_type}) "
+            "MATCH (s)-[:SELLS_THROUGH]->(ch:Channel {name: $channel}) "
+            "MATCH (s)-[:OFFERS]->(o:Offering {name: $offering}) "
+            "WHERE s.company_name = c.name AND o.company_name = c.name "
+            "RETURN DISTINCT c.name AS company, s.name AS segment ORDER BY company, segment"
+        )
+        predicted = (
+            "MATCH (company:Company)-[:HAS_SEGMENT]->(s:BusinessSegment {company_name: company.name})-[:SERVES]->"
+            "(:CustomerType {name: $customer_type}) "
+            "MATCH (s)-[:SELLS_THROUGH]->(:Channel {name: $channel}) "
+            "MATCH (s)-[:OFFERS]->(o:Offering {name: $offering}) "
+            "WHERE s.company_name = company.name AND o.company_name = company.name "
+            "RETURN DISTINCT company.name AS company, s.name AS segment ORDER BY company, segment"
+        )
+
+        self.assertEqual(normalize_cypher_semantic(predicted), normalize_cypher_semantic(gold))
+
+    def test_score_prediction_payload_reports_semantic_match_for_company_alias_variation(self):
+        gold_completion = (
+            '{"answerable":true,"cypher":"MATCH (c:Company)-[:HAS_SEGMENT]->'
+            '(s:BusinessSegment)-[:SERVES]->(ct:CustomerType {name: $customer_type}) '
+            'MATCH (s)-[:SELLS_THROUGH]->(ch:Channel {name: $channel}) '
+            'MATCH (s)-[:OFFERS]->(o:Offering {name: $offering}) '
+            'WHERE s.company_name = c.name AND o.company_name = c.name '
+            'RETURN DISTINCT c.name AS company, s.name AS segment ORDER BY company, segment",'
+            '"params":{"channel":"direct sales","customer_type":"IT professionals","offering":"Dovetail Core"}}'
+        )
+        prediction = (
+            '{"answerable":true,"cypher":"MATCH (company:Company)-[:HAS_SEGMENT]->'
+            '(s:BusinessSegment {company_name: company.name})-[:SERVES]->(:CustomerType {name: $customer_type}) '
+            'MATCH (s)-[:SELLS_THROUGH]->(:Channel {name: $channel}) '
+            'MATCH (s)-[:OFFERS]->(o:Offering {name: $offering}) '
+            'WHERE s.company_name = company.name AND o.company_name = company.name '
+            'RETURN DISTINCT company.name AS company, s.name AS segment ORDER BY company, segment",'
+            '"params":{"customer_type":"IT professionals","channel":"direct sales","offering":"Dovetail Core"}}'
+        )
+
+        metrics = score_prediction_payload(prediction, gold_completion=gold_completion)
+        self.assertTrue(metrics["cypher_semantic_match"])
+        self.assertTrue(metrics["structured_semantic_match"])
 
 
 if __name__ == "__main__":

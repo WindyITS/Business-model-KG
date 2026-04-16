@@ -417,7 +417,7 @@ The intended training path is:
 3. use `datasets/text2cypher/v3/training/train_messages.jsonl` as the training split
 4. use `datasets/text2cypher/v3/training/valid_messages.jsonl` as the in-training validation split
 5. evaluate on `datasets/text2cypher/v3/evaluation/test_messages.jsonl`
-6. use the Apple Silicon MLX LoRA pipeline as the default local implementation path for `Qwen/Qwen3-8B`
+6. use the Apple Silicon MLX LoRA pipeline as the default local implementation path for `Qwen/Qwen3-4B`
 
 No public warm-up stage is planned. The goal is for the model to learn this KG's query contract directly from the locally built corpus rather than from a broader mixed-schema Cypher dataset.
 

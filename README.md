@@ -201,7 +201,7 @@ The dataset validator implementation in [`src/text2cypher/validation.py`](./src/
 
 ## Fine-Tuning On Apple Silicon
 
-The repo now includes a local Apple Silicon LoRA pipeline for `Qwen/Qwen3-8B` using `mlx-lm`.
+The repo now includes a local Apple Silicon LoRA pipeline for `Qwen/Qwen3-4B` using `mlx-lm`.
 
 The intended flow is:
 

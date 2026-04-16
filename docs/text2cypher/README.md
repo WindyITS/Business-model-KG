@@ -48,7 +48,7 @@ The current local fine-tuning path is:
 
 1. build the local `v3` dataset workspace
 2. prepare MLX-ready `chat` JSONL from the `v3` message exports
-3. fine-tune `Qwen/Qwen3-8B` with LoRA on Apple Silicon via `mlx-lm`
+3. fine-tune `Qwen/Qwen3-4B` with LoRA on Apple Silicon via `mlx-lm`
 4. score the held-out set by JSON validity, structured match, and optional Neo4j execution
 
 See [MLX LoRA fine-tuning guide](./fine_tuning_mlx.md) for the exact commands and output locations.

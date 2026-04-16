@@ -28,10 +28,15 @@ from text2cypher.mlx import (
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Generate held-out predictions with an MLX LoRA adapter and score them against text2cypher v3."
+        description="Generate held-out predictions with an MLX model, optionally with a LoRA adapter, and score them against text2cypher v3."
     )
     parser.add_argument("--model", type=str, default=DEFAULT_MODEL_ID)
     parser.add_argument("--adapter-path", type=Path, default=DEFAULT_ADAPTER_PATH)
+    parser.add_argument(
+        "--base-only",
+        action="store_true",
+        help="Evaluate the base model without loading any adapter weights.",
+    )
     parser.add_argument("--eval-messages-path", type=Path, default=DEFAULT_TEST_MESSAGES_PATH)
     parser.add_argument("--eval-examples-path", type=Path, default=DEFAULT_TEST_EXAMPLES_PATH)
     parser.add_argument("--fixtures-path", type=Path, default=DEFAULT_FIXTURES_PATH)
@@ -81,6 +86,8 @@ def _group_summary(row_results: list[dict[str, object]], field: str) -> dict[str
         "groups_with_all_valid_json": count_all("valid_json"),
         "groups_with_all_structured_match": count_all("structured_match"),
         "groups_with_any_structured_match": count_any("structured_match"),
+        "groups_with_all_structured_semantic_match": count_all("structured_semantic_match"),
+        "groups_with_any_structured_semantic_match": count_any("structured_semantic_match"),
     }
     if execution_rows:
         summary["groups_with_all_execution_match"] = sum(
@@ -165,6 +172,7 @@ class ProgressPrinter:
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     output_root = args.output_root.resolve()
+    resolved_adapter_path = None if args.base_only else args.adapter_path.resolve()
     if output_root.exists():
         if not args.force:
             raise FileExistsError(
@@ -189,7 +197,7 @@ def main(argv: list[str] | None = None) -> int:
 
     model, tokenizer, generate_fn = load_mlx_model_and_tokenizer(
         model_path=args.model,
-        adapter_path=args.adapter_path.resolve(),
+        adapter_path=resolved_adapter_path,
     )
 
     row_results: list[dict[str, object]] = []
@@ -242,7 +250,7 @@ def main(argv: list[str] | None = None) -> int:
 
     summary = {
         "model": args.model,
-        "adapter_path": str(args.adapter_path.resolve()),
+        "adapter_path": str(resolved_adapter_path) if resolved_adapter_path is not None else None,
         "eval_messages_path": str(args.eval_messages_path.resolve()),
         "eval_examples_path": str(args.eval_examples_path.resolve()),
         "rows": summarize_prediction_metrics(row_results),
