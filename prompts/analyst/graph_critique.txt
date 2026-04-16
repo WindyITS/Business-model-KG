@@ -19,6 +19,36 @@ The goal is to keep the useful analyst synthesis while removing claims that are 
 {{current_graph}}
 </current_graph>
 
+<output_contract>
+Return ONLY one raw JSON object with this exact shape:
+
+{
+  "extraction_notes": "brief note",
+  "triples": [
+    {
+      "subject": "node name",
+      "subject_type": "EXACT_NODE_TYPE",
+      "relation": "EXACT_RELATION",
+      "object": "node name or canonical label",
+      "object_type": "EXACT_NODE_TYPE"
+    }
+  ]
+}
+
+Every triple must be an object with exactly these keys:
+- subject
+- subject_type
+- relation
+- object
+- object_type
+
+Do not use:
+- `predicate` instead of `relation`
+- tuple or array triples
+- extra evidence markers inside triples
+- omitted node types
+</output_contract>
+
 <critique_rules>
 - focus on reducing overreach, not on expanding coverage
 - preserve claims that are analytically useful and defensible from the memo
@@ -32,4 +62,5 @@ The goal is to keep the useful analyst synthesis while removing claims that are 
 <format_reminder>
 Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array.
 Do not use markdown code blocks.
+The response must start with `{` and end with `}`.
 </format_reminder>

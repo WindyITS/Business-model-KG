@@ -140,7 +140,12 @@ class AnalystPipelineRunnerTests(unittest.TestCase):
         self.assertIn("<current_memo>", captured_messages[1][1]["content"])
         self.assertIn("keep the artifact as plain memo text, not JSON", captured_messages[1][1]["content"])
         self.assertIn("inference-only claims may be used only", captured_messages[2][1]["content"])
+        self.assertIn('"subject_type": "EXACT_NODE_TYPE"', captured_messages[2][1]["content"])
+        self.assertIn("Do not use:", captured_messages[2][1]["content"])
+        self.assertIn("`predicate` instead of `relation`", captured_messages[2][1]["content"])
         self.assertIn("focus on reducing overreach", critique_prompts["user"])
+        self.assertIn('"subject_type": "EXACT_NODE_TYPE"', critique_prompts["user"])
+        self.assertIn("tuple or array triples", critique_prompts["user"])
 
         self.assertIn("[02/07] Analyst memo 1 - Core structure", lines)
         self.assertIn("[05/07] Critique - Overreach review", lines)
