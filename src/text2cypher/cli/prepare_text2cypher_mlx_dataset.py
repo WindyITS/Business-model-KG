@@ -6,6 +6,7 @@ from pathlib import Path
 
 from text2cypher.mlx import (
     DEFAULT_PREPARED_DATA_ROOT,
+    DEFAULT_VALID_MESSAGES_PATH,
     DEFAULT_TEST_MESSAGES_PATH,
     DEFAULT_TRAIN_MESSAGES_PATH,
     prepare_mlx_chat_dataset,
@@ -21,6 +22,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         type=Path,
         default=DEFAULT_TRAIN_MESSAGES_PATH,
         help="Path to the train_messages.jsonl artifact.",
+    )
+    parser.add_argument(
+        "--valid-messages-path",
+        type=Path,
+        default=DEFAULT_VALID_MESSAGES_PATH,
+        help="Path to the valid_messages.jsonl artifact.",
     )
     parser.add_argument(
         "--test-messages-path",
@@ -46,6 +53,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     manifest = prepare_mlx_chat_dataset(
         train_messages_path=args.train_messages_path.resolve(),
+        valid_messages_path=args.valid_messages_path.resolve(),
         test_messages_path=args.test_messages_path.resolve(),
         output_root=args.output_root.resolve(),
         force=args.force,

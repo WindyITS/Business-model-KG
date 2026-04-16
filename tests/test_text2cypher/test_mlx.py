@@ -3,6 +3,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from text2cypher.mlx import (
     build_mlx_lora_command,
@@ -10,6 +11,7 @@ from text2cypher.mlx import (
     prepare_mlx_chat_dataset,
     score_prediction_payload,
 )
+from text2cypher.cli.prepare_text2cypher_mlx_dataset import main as prepare_cli_main
 
 
 def _write_jsonl(path: Path, rows: list[dict]) -> None:
@@ -44,10 +46,11 @@ def _messages_row(*, example_id: str, split: str, prompt: str, completion: str) 
 
 
 class Text2CypherMlxLoraTests(unittest.TestCase):
-    def test_prepare_mlx_chat_dataset_writes_train_and_test_jsonl(self):
+    def test_prepare_mlx_chat_dataset_writes_train_valid_and_test_jsonl(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp_root = Path(tmp_dir)
             train_path = tmp_root / "train_messages.jsonl"
+            valid_path = tmp_root / "valid_messages.jsonl"
             test_path = tmp_root / "test_messages.jsonl"
             output_root = tmp_root / "mlx_data"
 
@@ -59,6 +62,17 @@ class Text2CypherMlxLoraTests(unittest.TestCase):
                         split="train",
                         prompt="Which company serves developers?",
                         completion='{"answerable":true,"cypher":"MATCH ...","params":{"customer_type":"developers"}}',
+                    )
+                ],
+            )
+            _write_jsonl(
+                valid_path,
+                [
+                    _messages_row(
+                        example_id="valid_row",
+                        split="valid",
+                        prompt="Which company partners with Acme?",
+                        completion='{"answerable":true,"cypher":"MATCH ...","params":{"company":"Acme"}}',
                     )
                 ],
             )
@@ -76,24 +90,29 @@ class Text2CypherMlxLoraTests(unittest.TestCase):
 
             manifest = prepare_mlx_chat_dataset(
                 train_messages_path=train_path,
+                valid_messages_path=valid_path,
                 test_messages_path=test_path,
                 output_root=output_root,
             )
 
             self.assertEqual(manifest["counts"]["train_rows"], 1)
+            self.assertEqual(manifest["counts"]["valid_rows"], 1)
             self.assertEqual(manifest["counts"]["test_rows"], 1)
 
             train_rows = [json.loads(line) for line in (output_root / "train.jsonl").read_text(encoding="utf-8").splitlines()]
+            valid_rows = [json.loads(line) for line in (output_root / "valid.jsonl").read_text(encoding="utf-8").splitlines()]
             test_rows = [json.loads(line) for line in (output_root / "test.jsonl").read_text(encoding="utf-8").splitlines()]
 
             self.assertEqual(train_rows[0]["id"], "train_row")
+            self.assertEqual(valid_rows[0]["id"], "valid_row")
             self.assertEqual(test_rows[0]["id"], "test_row")
             self.assertEqual(train_rows[0]["messages"][-1]["role"], "assistant")
+            self.assertEqual(valid_rows[0]["split"], "valid")
             self.assertEqual(test_rows[0]["metadata"]["example_id"], "test_row")
 
     def test_build_mlx_lora_command_uses_masked_chat_defaults(self):
         command = build_mlx_lora_command(
-            model="google/gemma-4-E4B-it",
+            model="Qwen/Qwen3-8B",
             data_dir=Path("/tmp/mlx_data"),
             adapter_path=Path("/tmp/adapters"),
             iters=123,
@@ -103,13 +122,55 @@ class Text2CypherMlxLoraTests(unittest.TestCase):
             extra_args=("--seed", "7"),
         )
 
-        self.assertEqual(command[:3], [sys.executable, "-m", "mlx_lm.lora"])
+        self.assertEqual(command[:4], [sys.executable, "-m", "mlx_lm", "lora"])
         self.assertIn("--train", command)
         self.assertIn("--mask-prompt", command)
         self.assertIn("--grad-checkpoint", command)
         self.assertIn("--iters", command)
         self.assertIn("123", command)
         self.assertEqual(command[-2:], ["--seed", "7"])
+
+    def test_prepare_cli_passes_valid_messages_path(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_root = Path(tmp_dir)
+            train_path = tmp_root / "train_messages.jsonl"
+            valid_path = tmp_root / "valid_messages.jsonl"
+            test_path = tmp_root / "test_messages.jsonl"
+            output_root = tmp_root / "mlx_data"
+
+            _write_jsonl(
+                train_path,
+                [_messages_row(example_id="train_row", split="train", prompt="train", completion='{"answerable":false,"reason":"x"}')],
+            )
+            _write_jsonl(
+                valid_path,
+                [_messages_row(example_id="valid_row", split="valid", prompt="valid", completion='{"answerable":false,"reason":"x"}')],
+            )
+            _write_jsonl(
+                test_path,
+                [_messages_row(example_id="test_row", split="heldout_test", prompt="test", completion='{"answerable":false,"reason":"x"}')],
+            )
+
+            with mock.patch("sys.stdout.write"):
+                exit_code = prepare_cli_main(
+                    [
+                        "--train-messages-path",
+                        str(train_path),
+                        "--valid-messages-path",
+                        str(valid_path),
+                        "--test-messages-path",
+                        str(test_path),
+                        "--output-root",
+                        str(output_root),
+                    ]
+                )
+
+            self.assertEqual(exit_code, 0)
+            self.assertTrue((output_root / "valid.jsonl").exists())
+            manifest = json.loads((output_root / "manifest.json").read_text(encoding="utf-8"))
+            self.assertEqual(manifest["counts"]["train_rows"], 1)
+            self.assertEqual(manifest["counts"]["valid_rows"], 1)
+            self.assertEqual(manifest["counts"]["test_rows"], 1)
 
     def test_extract_json_dict_recovers_final_json_object_from_reasoning_text(self):
         text = "<think>Need to reason a bit.</think>\n{\"answerable\":false,\"reason\":\"not_in_graph\"}"

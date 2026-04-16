@@ -7,6 +7,7 @@
 The train/eval contract is now explicit in the local build output:
 
 - train on `datasets/text2cypher/v3/training/train_messages.jsonl`
+- validate during training on `datasets/text2cypher/v3/training/valid_messages.jsonl`
 - evaluate on `datasets/text2cypher/v3/evaluation/test_messages.jsonl`
 
 This release removes the previously duplicated trainer rows, adds a hard-query training extension, and introduces a brand-new held-out evaluation set with leakage checks.
@@ -15,6 +16,8 @@ This release removes the previously duplicated trainer rows, adds a hard-query t
 
 - training corpus: `datasets/text2cypher/v3/training/training_examples.jsonl`
 - train messages: `datasets/text2cypher/v3/training/train_messages.jsonl`
+- valid examples: `datasets/text2cypher/v3/training/valid_examples.jsonl`
+- valid messages: `datasets/text2cypher/v3/training/valid_messages.jsonl`
 - held-out test examples: `datasets/text2cypher/v3/evaluation/test_examples.jsonl`
 - held-out test messages: `datasets/text2cypher/v3/evaluation/test_messages.jsonl`
 - validation report: `datasets/text2cypher/v3/reports/bound_seed_validation_report.json`
@@ -28,7 +31,8 @@ This release removes the previously duplicated trainer rows, adds a hard-query t
 - `485` source examples
 - `485 / 485` execution validation passed
 - `5,004` training rows
-- `5,004` train-facing SFT rows
+- `4,904` train-facing SFT rows
+- `100` validation SFT rows
 - `512` held-out evaluation rows
 - `0` duplicate prompt merges
 
@@ -55,6 +59,7 @@ Current result:
 ## Why V3 Is Better For Training
 
 - it trains on the full audited base corpus rather than only the old `train` fold
+- it now reserves a clean `100`-row validation split for in-training checkpoint selection
 - it adds `512` extra hard-query training rows
 - it preserves a separate held-out evaluation set of `512` fresh rows
 - it no longer relies on duplicate prompt merges in the trainer-facing export

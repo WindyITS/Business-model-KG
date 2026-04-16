@@ -12,16 +12,17 @@ from typing import Any, Iterable, Sequence
 ROOT = Path(__file__).resolve().parents[3]
 DATASET_ROOT = ROOT / "datasets" / "text2cypher" / "v3"
 DEFAULT_TRAIN_MESSAGES_PATH = DATASET_ROOT / "training" / "train_messages.jsonl"
+DEFAULT_VALID_MESSAGES_PATH = DATASET_ROOT / "training" / "valid_messages.jsonl"
 DEFAULT_TEST_MESSAGES_PATH = DATASET_ROOT / "evaluation" / "test_messages.jsonl"
 DEFAULT_TEST_EXAMPLES_PATH = DATASET_ROOT / "evaluation" / "test_examples.jsonl"
 DEFAULT_FIXTURES_PATH = DATASET_ROOT / "source" / "fixture_instances.jsonl"
 
-DEFAULT_PIPELINE_ROOT = ROOT / "outputs" / "text2cypher_mlx" / "gemma4_e4b"
+DEFAULT_PIPELINE_ROOT = ROOT / "outputs" / "text2cypher_mlx" / "qwen3_8b"
 DEFAULT_PREPARED_DATA_ROOT = DEFAULT_PIPELINE_ROOT / "dataset"
 DEFAULT_ADAPTER_PATH = DEFAULT_PIPELINE_ROOT / "adapters"
 DEFAULT_EVAL_OUTPUT_ROOT = DEFAULT_PIPELINE_ROOT / "evaluation"
 
-DEFAULT_MODEL_ID = "google/gemma-4-E4B-it"
+DEFAULT_MODEL_ID = "Qwen/Qwen3-8B"
 DEFAULT_TRAIN_ITERS = 5000
 DEFAULT_BATCH_SIZE = 1
 DEFAULT_GRAD_ACCUMULATION_STEPS = 4
@@ -80,12 +81,14 @@ def _prepared_mlx_rows(message_rows: Sequence[dict[str, Any]]) -> list[dict[str,
 
 def prepare_mlx_chat_dataset(
     train_messages_path: Path = DEFAULT_TRAIN_MESSAGES_PATH,
+    valid_messages_path: Path = DEFAULT_VALID_MESSAGES_PATH,
     test_messages_path: Path = DEFAULT_TEST_MESSAGES_PATH,
     output_root: Path = DEFAULT_PREPARED_DATA_ROOT,
     *,
     force: bool = False,
 ) -> dict[str, Any]:
     train_rows = _prepared_mlx_rows(load_jsonl(train_messages_path))
+    valid_rows = _prepared_mlx_rows(load_jsonl(valid_messages_path)) if valid_messages_path.exists() else []
     test_rows = _prepared_mlx_rows(load_jsonl(test_messages_path))
 
     if output_root.exists():
@@ -106,18 +109,23 @@ def prepare_mlx_chat_dataset(
     output_root.mkdir(parents=True, exist_ok=True)
 
     train_output_path = output_root / "train.jsonl"
+    valid_output_path = output_root / "valid.jsonl"
     test_output_path = output_root / "test.jsonl"
     write_jsonl(train_output_path, train_rows)
+    if valid_rows:
+        write_jsonl(valid_output_path, valid_rows)
     write_jsonl(test_output_path, test_rows)
 
     manifest = {
         "dataset_root": str(output_root),
         "source_files": {
             "train_messages_path": str(train_messages_path),
+            "valid_messages_path": str(valid_messages_path),
             "test_messages_path": str(test_messages_path),
         },
         "counts": {
             "train_rows": len(train_rows),
+            "valid_rows": len(valid_rows),
             "test_rows": len(test_rows),
         },
         "format": "chat",
@@ -151,7 +159,8 @@ def build_mlx_lora_command(
     command = [
         python_bin or sys.executable,
         "-m",
-        "mlx_lm.lora",
+        "mlx_lm",
+        "lora",
         "--model",
         model,
         "--train",
@@ -195,7 +204,8 @@ def build_mlx_test_command(
     command = [
         python_bin or sys.executable,
         "-m",
-        "mlx_lm.lora",
+        "mlx_lm",
+        "lora",
         "--model",
         model,
         "--adapter-path",

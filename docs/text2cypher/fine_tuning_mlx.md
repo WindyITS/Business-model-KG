@@ -1,12 +1,12 @@
 # MLX LoRA Fine-Tuning
 
-This repo includes a local Apple Silicon fine-tuning path for the text-to-Cypher dataset using `mlx-lm` and `google/gemma-4-E4B-it`.
+This repo includes a local Apple Silicon fine-tuning path for the text-to-Cypher dataset using `mlx-lm` and `Qwen/Qwen3-8B`.
 
 The default workflow is:
 
 1. build the local `v3` dataset workspace
-2. prepare the `v3` chat dataset as MLX-ready `train.jsonl` / `test.jsonl`
-3. run LoRA fine-tuning against `google/gemma-4-E4B-it`
+2. prepare the `v3` chat dataset as MLX-ready `train.jsonl` / `valid.jsonl` / `test.jsonl`
+3. run LoRA fine-tuning against `Qwen/Qwen3-8B`
 4. evaluate the adapter on the held-out `v3` set with JSON, Cypher, params, and optional Neo4j execution checks
 
 Recommended first run:
@@ -14,7 +14,7 @@ Recommended first run:
 1. `./venv/bin/text2cypher-build`
 2. `./venv/bin/text2cypher-prepare-mlx --force`
 3. `./venv/bin/text2cypher-train-mlx`
-4. `./venv/bin/text2cypher-evaluate-mlx --adapter-path outputs/text2cypher_mlx/gemma4_e4b/adapters --force`
+4. `./venv/bin/text2cypher-evaluate-mlx --adapter-path outputs/text2cypher_mlx/qwen3_8b/adapters --force`
 
 ## Install
 
@@ -46,12 +46,15 @@ Build the local dataset workspace first, then prepare the MLX-ready chat dataset
 
 By default this writes:
 
-- `outputs/text2cypher_mlx/gemma4_e4b/dataset/train.jsonl`
-- `outputs/text2cypher_mlx/gemma4_e4b/dataset/test.jsonl`
+- `outputs/text2cypher_mlx/qwen3_8b/dataset/train.jsonl`
+- `outputs/text2cypher_mlx/qwen3_8b/dataset/valid.jsonl`
+- `outputs/text2cypher_mlx/qwen3_8b/dataset/test.jsonl`
 
 Each row keeps the model-facing `messages` list as the training signal and preserves prompt/completion metadata for later scoring.
 
-## Train Gemma 4 E4B
+The current local split shape is `4904` train rows, `100` validation rows, and `512` held-out test rows.
+
+## Train Qwen 3 8B
 
 Launch a first LoRA run:
 
@@ -61,7 +64,7 @@ Launch a first LoRA run:
 
 The default training shape is conservative for a laptop:
 
-- model: `google/gemma-4-E4B-it`
+- model: `Qwen/Qwen3-8B`
 - fine-tune type: `lora`
 - iterations: `5000`
 - batch size: `1`
@@ -72,7 +75,7 @@ The default training shape is conservative for a laptop:
 
 Prompt masking is intentional. The dataset is a `chat` corpus and the loss should land on the assistant JSON only, not on the system or user text.
 
-The default adapter output path is `outputs/text2cypher_mlx/gemma4_e4b/adapters`.
+The default adapter output path is `outputs/text2cypher_mlx/qwen3_8b/adapters`.
 
 For a quick smoke run:
 
@@ -86,20 +89,22 @@ To run MLX test loss on the held-out set after training:
 ./venv/bin/text2cypher-train-mlx --run-test-loss
 ```
 
+Because the prepared dataset now includes `valid.jsonl`, MLX can also use the validation split during training instead of warning that validation data is missing.
+
 ## Evaluate The Adapter
 
 Run held-out generation and score the predictions:
 
 ```bash
 ./venv/bin/text2cypher-evaluate-mlx \
-  --adapter-path outputs/text2cypher_mlx/gemma4_e4b/adapters \
+  --adapter-path outputs/text2cypher_mlx/qwen3_8b/adapters \
   --force
 ```
 
 This writes:
 
-- `outputs/text2cypher_mlx/gemma4_e4b/evaluation/predictions.jsonl`
-- `outputs/text2cypher_mlx/gemma4_e4b/evaluation/summary.json`
+- `outputs/text2cypher_mlx/qwen3_8b/evaluation/predictions.jsonl`
+- `outputs/text2cypher_mlx/qwen3_8b/evaluation/summary.json`
 
 The evaluator reports:
 
@@ -116,7 +121,7 @@ To include execution-based checking:
 
 ```bash
 ./venv/bin/text2cypher-evaluate-mlx \
-  --adapter-path outputs/text2cypher_mlx/gemma4_e4b/adapters \
+  --adapter-path outputs/text2cypher_mlx/qwen3_8b/adapters \
   --neo4j-uri http://localhost:7474 \
   --force
 ```
@@ -135,7 +140,7 @@ If you want to experiment with inference-time reasoning anyway, the evaluator su
 
 ```bash
 ./venv/bin/text2cypher-evaluate-mlx \
-  --adapter-path outputs/text2cypher_mlx/gemma4_e4b/adapters \
+  --adapter-path outputs/text2cypher_mlx/qwen3_8b/adapters \
   --enable-thinking \
   --force
 ```

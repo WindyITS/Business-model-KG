@@ -194,19 +194,22 @@ Training guidance:
 - the fine-tuning plan is to use this repo's dataset only
 - build the dataset locally with `text2cypher-build` or [`scripts/text2cypher/build_text2cypher_dataset.py`](./scripts/text2cypher/build_text2cypher_dataset.py) before training or validation
 - `datasets/text2cypher/v3/training/train_messages.jsonl` is the train-facing SFT corpus once the local build exists
+- `datasets/text2cypher/v3/training/valid_messages.jsonl` is the in-training validation split for checkpoint selection and loss tracking
 - `datasets/text2cypher/v3/evaluation/test_messages.jsonl` is the held-out evaluation set once the local build exists
 
 The dataset validator implementation in [`src/text2cypher/validation.py`](./src/text2cypher/validation.py) defaults to the local `v3` build output under `datasets/text2cypher/v3/`. The legacy [`src/validate_text2cypher_dataset.py`](./src/validate_text2cypher_dataset.py) entrypoint remains as a compatibility wrapper.
 
 ## Fine-Tuning On Apple Silicon
 
-The repo now includes a local Apple Silicon LoRA pipeline for `google/gemma-4-E4B-it` using `mlx-lm`.
+The repo now includes a local Apple Silicon LoRA pipeline for `Qwen/Qwen3-8B` using `mlx-lm`.
 
 The intended flow is:
 
 1. prepare the MLX-ready chat dataset with `text2cypher-prepare-mlx` or [`scripts/text2cypher/prepare_text2cypher_mlx_dataset.py`](./scripts/text2cypher/prepare_text2cypher_mlx_dataset.py)
 2. train adapters with `text2cypher-train-mlx` or [`scripts/text2cypher/train_text2cypher_mlx_lora.py`](./scripts/text2cypher/train_text2cypher_mlx_lora.py)
 3. score the held-out set with `text2cypher-evaluate-mlx` or [`scripts/text2cypher/evaluate_text2cypher_mlx_adapter.py`](./scripts/text2cypher/evaluate_text2cypher_mlx_adapter.py)
+
+The current local `v3` build shape is `4904` train rows, `100` validation rows, and `512` held-out test rows.
 
 The detailed workflow, defaults, and commands live in [`docs/text2cypher/fine_tuning_mlx.md`](./docs/text2cypher/fine_tuning_mlx.md).
 

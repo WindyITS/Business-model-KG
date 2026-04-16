@@ -28,23 +28,48 @@ DEFAULT_SPEC_MODULES = (
 DEFAULT_OUTPUT_ROOT = Path("datasets/text2cypher/v3")
 TRAINING_POOL_SPLITS = ("train", "dev", "test")
 HELDOUT_SPLIT = "heldout_test"
+VALIDATION_SPLIT = "valid"
+VALIDATION_TARGET_ROWS = 100
+VALIDATION_CANDIDATE_SPLITS = ("dev",)
 SOURCE_SPLIT_ORDER = TRAINING_POOL_SPLITS + (HELDOUT_SPLIT,)
 PARAM_PATTERN = re.compile(r"\$([A-Za-z_][A-Za-z0-9_]*)")
 SFT_SYSTEM_PROMPT = (
     "Translate the user request into read-only Cypher for a business-model knowledge graph built from "
     "company business descriptions. The graph is about how companies are structured, what they offer, "
     "who they serve, how they sell, how they monetize, where they operate, and which companies they "
-    "partner with. Use only this ontology: Company, BusinessSegment, Offering, CustomerType, Channel, "
-    "RevenueModel, and Place. Core relationships are Company-[:HAS_SEGMENT]->BusinessSegment, "
-    "Company-[:OFFERS]->Offering for company-level offerings, BusinessSegment-[:OFFERS]->Offering, "
-    "Offering-[:OFFERS]->Offering for offering families, BusinessSegment-[:SERVES]->CustomerType, "
-    "BusinessSegment-[:SELLS_THROUGH]->Channel, Offering-[:MONETIZES_VIA]->RevenueModel, "
-    "Company-[:OPERATES_IN]->Place, and Company-[:PARTNERS_WITH]->Company. BusinessSegment and "
-    "Offering are company-scoped by company_name; Channel, CustomerType, RevenueModel, and Place are "
-    "global by name. Geography is canonical at Company-[:OPERATES_IN]->Place; Place may use "
-    "within_places and includes_places helper arrays instead of hierarchy edges. Use Cypher parameters "
-    "for user-provided values. Do not invent suppliers, named customers, employees, prices, revenue "
-    "amounts, time series, or unsupported relations. Output compact JSON only. "
+    "partner with. Use only these exact node labels: Company, BusinessSegment, Offering, CustomerType, "
+    "Channel, RevenueModel, and Place. Use only these exact relationship types and exact casing: "
+    "HAS_SEGMENT, OFFERS, SERVES, SELLS_THROUGH, MONETIZES_VIA, OPERATES_IN, and PARTNERS_WITH. If a "
+    "label or relationship is not listed here, it does not exist in the KG. Never invent labels, "
+    "properties, relationship names, wildcard edges, anonymous relationship patterns, arrows such as "
+    "[:]-->>, or casing variants such as HAS_segment. The ontology is segment-centered: structure "
+    "normally lives on Company-[:HAS_SEGMENT]->BusinessSegment-[:OFFERS]->Offering; SERVES and "
+    "SELLS_THROUGH live on BusinessSegment; MONETIZES_VIA lives only on Offering; OPERATES_IN and "
+    "PARTNERS_WITH stay company-level; Company-[:OFFERS]->Offering is only for explicit company-level "
+    "offering questions. Offering families use Offering-[:OFFERS]->Offering recursively. When a query "
+    "needs descendants under a root offering, use (root)-[:OFFERS*0..]->(o:Offering {company_name: "
+    "company.name}). BusinessSegment and Offering are company-scoped by company_name, so when matching "
+    "them under a company use {company_name: company.name} or {company_name: $company} as appropriate. "
+    "Channel, CustomerType, RevenueModel, and Place are global by name. Geography is canonical at "
+    "Company-[:OPERATES_IN]->Place; Place may use within_places and includes_places helper arrays "
+    "instead of hierarchy edges. Use Cypher parameters for user-provided values and do not rename the "
+    "canonical parameter keys: company, segment, offering, customer_type, channel, revenue_model, and "
+    "place. Return requested scalar columns, not whole nodes. Use stable aliases such as company, "
+    "segment, offering, customer_type, channel, revenue_model, place, boolean aliases like is_match, "
+    "and count aliases like segment_count or offering_count. For list queries prefer RETURN DISTINCT "
+    "... ORDER BY .... Canonical idioms matter. For place-plus-revenue company queries, use the pattern "
+    "MATCH (company:Company)-[:OPERATES_IN]->(place:Place {name: $place}) MATCH "
+    "(company)-[:HAS_SEGMENT]->(:BusinessSegment {company_name: company.name})-[:OFFERS]->"
+    "(root:Offering {company_name: company.name}) MATCH (root)-[:OFFERS*0..]->"
+    "(o:Offering {company_name: company.name})-[:MONETIZES_VIA]->"
+    "(r:RevenueModel {name: $revenue_model}) RETURN DISTINCT company.name AS company ORDER BY company. "
+    "For segment intersection queries over customer type, channel, and offering, use the pattern MATCH "
+    "(c:Company)-[:HAS_SEGMENT]->(s:BusinessSegment {company_name: c.name})-[:SERVES]->"
+    "(:CustomerType {name: $customer_type}) MATCH (s)-[:SELLS_THROUGH]->(:Channel {name: $channel}) "
+    "MATCH (s)-[:OFFERS]->(:Offering {company_name: c.name, name: $offering}) RETURN DISTINCT c.name "
+    "AS company, s.name AS segment ORDER BY company, segment. Do not invent suppliers, named "
+    "customers, employees, prices, revenue amounts, time series, or unsupported relations. Output "
+    "compact JSON only. "
     'For answerable requests return {"answerable": true, "cypher": "...", "params": {...}}. '
     'For unsupported or ambiguous requests return {"answerable": false, "reason": "..."}.' 
 )
@@ -54,10 +79,21 @@ class DatasetBuildError(ValueError):
     pass
 
 
-def _collapse_source_split(split: str, *, has_heldout: bool) -> str:
-    if has_heldout and split in TRAINING_POOL_SPLITS:
-        return "train"
-    return split
+def _resolve_output_split(
+    intent_id: str,
+    intent_split_map: Dict[str, str],
+    *,
+    validation_intents: set[str],
+    has_heldout: bool,
+) -> str:
+    split = intent_split_map[intent_id]
+    if not has_heldout:
+        return split
+    if split == HELDOUT_SPLIT:
+        return HELDOUT_SPLIT
+    if intent_id in validation_intents:
+        return VALIDATION_SPLIT
+    return "train"
 
 
 def _jsonable(value: Any) -> Any:
@@ -474,7 +510,10 @@ def _validate_train_family_coverage(manifest: Dict[str, Any]) -> None:
 def _validate_training_question_contracts(
     training_rows: Sequence[Dict[str, Any]],
     intent_split_map: Dict[str, str],
+    *,
+    validation_intents: set[str] | None = None,
 ) -> None:
+    validation_intents = validation_intents or set()
     has_heldout = any(split == HELDOUT_SPLIT for split in intent_split_map.values())
     question_to_rows: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in training_rows:
@@ -487,7 +526,12 @@ def _validate_training_question_contracts(
         if len(completions) > 1:
             conflicting_questions.append(rows[0]["question"])
         splits = {
-            _collapse_source_split(intent_split_map[row["intent_id"]], has_heldout=has_heldout)
+            _resolve_output_split(
+                row["intent_id"],
+                intent_split_map,
+                validation_intents=validation_intents,
+                has_heldout=has_heldout,
+            )
             for row in rows
         }
         if len(splits) > 1:
@@ -553,11 +597,19 @@ def _build_leakage_report(
 def _build_sft_rows(
     training_rows: Sequence[Dict[str, Any]],
     intent_split_map: Dict[str, str],
+    *,
+    validation_intents: set[str] | None = None,
 ) -> list[dict[str, Any]]:
+    validation_intents = validation_intents or set()
     has_heldout = any(split == HELDOUT_SPLIT for split in intent_split_map.values())
     grouped_rows: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
     for row in training_rows:
-        split = _collapse_source_split(intent_split_map[row["intent_id"]], has_heldout=has_heldout)
+        split = _resolve_output_split(
+            row["intent_id"],
+            intent_split_map,
+            validation_intents=validation_intents,
+            has_heldout=has_heldout,
+        )
         completion = _assistant_output_text(row)
         grouped_rows[(split, row["question"], completion)].append(row)
 
@@ -613,6 +665,8 @@ def _build_sft_manifest(
     training_rows: Sequence[Dict[str, Any]],
     dataset_path: Path,
     split_order: Sequence[str],
+    *,
+    validation_selection: dict[str, Any] | None = None,
 ) -> Dict[str, Any]:
     split_counts: dict[str, dict[str, int]] = {}
     for split in split_order:
@@ -638,17 +692,61 @@ def _build_sft_manifest(
             "refusal_rows": sum(not row["metadata"]["answerable"] for row in sft_rows),
         },
         "split_counts": split_counts,
+        "validation_selection": validation_selection,
     }
 
-
-def _partition_rows_by_role(
-    rows: Sequence[Dict[str, Any]],
+def _select_validation_intents(
+    sft_rows: Sequence[Dict[str, Any]],
+    intent_split_map: Dict[str, str],
     *,
-    split_key: str,
-) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    training_pool_rows = [row for row in rows if row[split_key] in TRAINING_POOL_SPLITS or row[split_key] == "train"]
-    heldout_rows = [row for row in rows if row[split_key] == HELDOUT_SPLIT]
-    return training_pool_rows, heldout_rows
+    target_rows: int = VALIDATION_TARGET_ROWS,
+    candidate_splits: Sequence[str] = VALIDATION_CANDIDATE_SPLITS,
+) -> dict[str, Any] | None:
+    if target_rows <= 0:
+        return None
+
+    candidate_counts: dict[str, int] = defaultdict(int)
+    candidate_families: dict[str, str] = {}
+    for row in sft_rows:
+        intent_id = row["metadata"]["intent_id"]
+        if intent_split_map.get(intent_id) not in candidate_splits:
+            continue
+        candidate_counts[intent_id] += 1
+        candidate_families[intent_id] = row["metadata"]["family_id"]
+
+    if not candidate_counts:
+        return None
+
+    items = sorted(candidate_counts.items(), key=lambda item: (item[1], item[0]))
+    subsets: dict[int, tuple[str, ...]] = {0: ()}
+    for intent_id, count in items:
+        next_subsets = dict(subsets)
+        for total, chosen in subsets.items():
+            new_total = total + count
+            candidate = chosen + (intent_id,)
+            existing = next_subsets.get(new_total)
+            if existing is None or candidate < existing:
+                next_subsets[new_total] = candidate
+        subsets = next_subsets
+
+    best_total, best_intents = min(
+        subsets.items(),
+        key=lambda item: (
+            abs(item[0] - target_rows),
+            item[0] < target_rows,
+            item[0],
+            len(item[1]),
+            item[1],
+        ),
+    )
+    selected_intents = sorted(best_intents)
+    return {
+        "target_rows": target_rows,
+        "selected_rows": best_total,
+        "candidate_splits": list(candidate_splits),
+        "selected_intent_ids": selected_intents,
+        "selected_family_ids": sorted({candidate_families[intent_id] for intent_id in selected_intents}),
+    }
 
 
 def _write_jsonl(path: Path, rows: Iterable[Dict[str, Any]]) -> None:
@@ -690,28 +788,60 @@ def build_dataset(spec: DatasetSpec, output_root: Path = DEFAULT_OUTPUT_ROOT) ->
         all_training_rows,
         output_root / "training" / "training_examples.jsonl",
     )
-    _validate_training_question_contracts(all_training_rows, manifest["intent_split_map"])
-    _validate_train_family_coverage(manifest)
     leakage_report = _build_leakage_report(all_training_rows, manifest["intent_split_map"])
     has_heldout = leakage_report is not None
-    sft_rows = _build_sft_rows(all_training_rows, manifest["intent_split_map"])
-
-    training_rows, heldout_rows = _partition_rows_by_role(
-        [
-            {**row, "output_split": _collapse_source_split(manifest["intent_split_map"][row["intent_id"]], has_heldout=has_heldout)}
-            for row in all_training_rows
-        ],
-        split_key="output_split",
+    provisional_sft_rows = _build_sft_rows(all_training_rows, manifest["intent_split_map"])
+    validation_selection = (
+        _select_validation_intents(provisional_sft_rows, manifest["intent_split_map"])
+        if has_heldout
+        else None
     )
-    training_rows = [{k: v for k, v in row.items() if k != "output_split"} for row in training_rows]
+    validation_intents = set(validation_selection["selected_intent_ids"]) if validation_selection else set()
+
+    _validate_training_question_contracts(
+        all_training_rows,
+        manifest["intent_split_map"],
+        validation_intents=validation_intents,
+    )
+    _validate_train_family_coverage(manifest)
+    sft_rows = _build_sft_rows(
+        all_training_rows,
+        manifest["intent_split_map"],
+        validation_intents=validation_intents,
+    )
+
+    rows_with_output_split = [
+        {
+            **row,
+            "output_split": _resolve_output_split(
+                row["intent_id"],
+                manifest["intent_split_map"],
+                validation_intents=validation_intents,
+                has_heldout=has_heldout,
+            ),
+        }
+        for row in all_training_rows
+    ]
+    training_pool_rows = [row for row in rows_with_output_split if row["output_split"] in {"train", VALIDATION_SPLIT}]
+    train_rows = [row for row in rows_with_output_split if row["output_split"] == "train"]
+    validation_rows = [row for row in rows_with_output_split if row["output_split"] == VALIDATION_SPLIT]
+    heldout_rows = [row for row in rows_with_output_split if row["output_split"] == HELDOUT_SPLIT]
+
+    training_rows = [{k: v for k, v in row.items() if k != "output_split"} for row in training_pool_rows]
+    train_rows = [{k: v for k, v in row.items() if k != "output_split"} for row in train_rows]
+    validation_rows = [{k: v for k, v in row.items() if k != "output_split"} for row in validation_rows]
     heldout_rows = [{k: v for k, v in row.items() if k != "output_split"} for row in heldout_rows]
 
-    training_sft_rows, heldout_sft_rows = _partition_rows_by_role(sft_rows, split_key="split")
+    training_sft_rows = [row for row in sft_rows if row["split"] in {"train", VALIDATION_SPLIT}]
+    train_sft_rows = [row for row in sft_rows if row["split"] == "train"]
+    validation_sft_rows = [row for row in sft_rows if row["split"] == VALIDATION_SPLIT]
+    heldout_sft_rows = [row for row in sft_rows if row["split"] == HELDOUT_SPLIT]
     sft_manifest = _build_sft_manifest(
         training_sft_rows if has_heldout else sft_rows,
         training_rows if has_heldout else all_training_rows,
         output_root / "training" / "messages.jsonl",
-        split_order=("train",) if has_heldout else TRAINING_POOL_SPLITS,
+        split_order=("train", VALIDATION_SPLIT) if has_heldout and validation_sft_rows else ("train",) if has_heldout else TRAINING_POOL_SPLITS,
+        validation_selection=validation_selection,
     )
     heldout_sft_manifest = None
     if heldout_sft_rows:
@@ -725,13 +855,18 @@ def build_dataset(spec: DatasetSpec, output_root: Path = DEFAULT_OUTPUT_ROOT) ->
         "fixtures": fixtures,
         "source_examples": source_examples,
         "training_examples": training_rows,
+        "train_examples": train_rows,
+        "validation_examples": validation_rows,
         "split_manifest": manifest,
         "heldout_examples": heldout_rows,
         "sft_examples": training_sft_rows,
+        "train_sft_examples": train_sft_rows,
+        "validation_sft_examples": validation_sft_rows,
         "heldout_sft_examples": heldout_sft_rows,
         "sft_manifest": sft_manifest,
         "heldout_sft_manifest": heldout_sft_manifest,
         "leakage_report": leakage_report,
+        "validation_selection": validation_selection,
     }
 
 
@@ -748,7 +883,12 @@ def write_dataset(dataset: dict[str, Any], output_root: Path = DEFAULT_OUTPUT_RO
 
     has_heldout = bool(dataset.get("heldout_sft_examples"))
     if has_heldout:
-        _write_jsonl(training_root / "train_messages.jsonl", dataset["sft_examples"])
+        _write_jsonl(training_root / "train_examples.jsonl", dataset["train_examples"])
+        _write_jsonl(training_root / "train_messages.jsonl", dataset["train_sft_examples"])
+        if dataset.get("validation_examples"):
+            _write_jsonl(training_root / "valid_examples.jsonl", dataset["validation_examples"])
+        if dataset.get("validation_sft_examples"):
+            _write_jsonl(training_root / "valid_messages.jsonl", dataset["validation_sft_examples"])
         _write_jsonl(evaluation_root / "test_examples.jsonl", dataset["heldout_examples"])
         _write_jsonl(evaluation_root / "test_messages.jsonl", dataset["heldout_sft_examples"])
     else:
@@ -794,7 +934,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "--output-root",
         type=Path,
         default=DEFAULT_OUTPUT_ROOT,
-        help="Canonical dataset root to write.",
+        help="Local dataset root to write.",
     )
     parser.add_argument(
         "--spec-module",
@@ -816,6 +956,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         "training_examples": len(dataset["training_examples"]),
         "sft_examples": len(dataset["sft_examples"]),
     }
+    if dataset.get("validation_examples") is not None:
+        summary["validation_examples"] = len(dataset["validation_examples"])
+    if dataset.get("validation_sft_examples") is not None:
+        summary["validation_sft_examples"] = len(dataset["validation_sft_examples"])
     if dataset.get("heldout_examples"):
         summary["heldout_examples"] = len(dataset["heldout_examples"])
     if dataset.get("heldout_sft_examples"):

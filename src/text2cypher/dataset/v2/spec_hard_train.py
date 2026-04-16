@@ -392,14 +392,7 @@ def build_spec() -> DatasetSpec:
         "RETURN COUNT(DISTINCT c.name + '|' + s.name) AS segment_count"
     )
     qf31_revenue_cypher = (
-        "MATCH (company:Company)-[:OPERATES_IN]->(place:Place) "
-        "WITH company, "
-        "CASE "
-        "WHEN place.name = $place THEN 0 "
-        "WHEN $place IN coalesce(place.includes_places, []) THEN 1 "
-        "WHEN $place IN coalesce(place.within_places, []) THEN 2 "
-        "ELSE NULL END AS match_rank "
-        "WHERE match_rank IS NOT NULL "
+        "MATCH (company:Company)-[:OPERATES_IN]->(place:Place {name: $place}) "
         "MATCH (company)-[:HAS_SEGMENT]->(:BusinessSegment {company_name: company.name})-[:OFFERS]->"
         "(root:Offering {company_name: company.name}) "
         "MATCH (root)-[:OFFERS*0..]->(o:Offering {company_name: company.name})-[:MONETIZES_VIA]->"

@@ -12,6 +12,7 @@ from text2cypher.mlx import (
     DEFAULT_MODEL_ID,
     DEFAULT_NUM_LAYERS,
     DEFAULT_PREPARED_DATA_ROOT,
+    DEFAULT_VALID_MESSAGES_PATH,
     DEFAULT_TEST_MESSAGES_PATH,
     DEFAULT_TRAIN_ITERS,
     DEFAULT_TRAIN_MESSAGES_PATH,
@@ -43,6 +44,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         type=Path,
         default=DEFAULT_TEST_MESSAGES_PATH,
         help="Path to the held-out test_messages.jsonl artifact used for test-loss evaluation.",
+    )
+    parser.add_argument(
+        "--valid-messages-path",
+        type=Path,
+        default=DEFAULT_VALID_MESSAGES_PATH,
+        help="Path to the valid_messages.jsonl artifact used for in-training validation.",
     )
     parser.add_argument(
         "--data-root",
@@ -148,6 +155,7 @@ def main(argv: list[str] | None = None) -> int:
     if not args.skip_prepare:
         prepared_manifest = prepare_mlx_chat_dataset(
             train_messages_path=args.train_messages_path.resolve(),
+            valid_messages_path=args.valid_messages_path.resolve(),
             test_messages_path=args.test_messages_path.resolve(),
             output_root=data_root,
             force=args.force_prepare,
