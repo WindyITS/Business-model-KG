@@ -330,6 +330,23 @@ Neo4j Browser:
 - `http://localhost:7474`
 - default credentials: `neo4j / password`
 
+Generate a read-only Cypher query from a natural-language question:
+
+```bash
+./venv/bin/kg-query-cypher "Which companies sell to developers through direct sales?"
+```
+
+Generate the query and run it against the current Neo4j database:
+
+```bash
+./venv/bin/kg-query "Which companies sell to developers through direct sales?"
+```
+
+Both commands reuse the same provider/model options as `kg-pipeline`. `kg-query` returns rows from the
+live database as plain text, while `kg-query-cypher` returns a runnable plain-text Cypher query with the
+generated params already inlined. Progress and error messages are printed to stderr so stdout stays easy
+to pipe or copy.
+
 ## Neo4j Node Scoping
 
 When the loader writes to Neo4j:

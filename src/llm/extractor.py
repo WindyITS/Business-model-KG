@@ -810,6 +810,27 @@ class LLMExtractor:
             ontology_version=ontology_version,
         )
 
+    def generate_structured_output(
+        self,
+        *,
+        messages: list[dict[str, str]],
+        schema_name: str,
+        schema_model: type[BaseModel],
+        fallback_payload: str,
+        max_retries: int,
+        temperature: float = 0.0,
+        ontology_version: str = "canonical",
+    ) -> tuple[BaseModel, str | None, int, dict[str, Any]]:
+        return self._call_structured_messages(
+            messages=messages,
+            schema_name=schema_name,
+            schema_model=schema_model,
+            fallback_payload=fallback_payload,
+            max_retries=max_retries,
+            temperature=temperature,
+            ontology_version=ontology_version,
+        )
+
     def reflect_extraction(
         self,
         *,
