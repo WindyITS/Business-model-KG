@@ -11,6 +11,7 @@ This is a high-accountability analytical task. The graph you produce is durable 
 - preserve split-franchise hierarchy when the memo supports it; do not collapse materially different child offerings into one blended node
 - preserve distinct named franchises as standalone nodes when the memo treats them as standalone businesses or platforms; do not demote them beneath broader cloud or services parents because of reporting-bucket phrasing alone
 - preserve durable family and variant substructure when the memo treats it as stable offering hierarchy; do not collapse it back into one top-level node or into transient release-specific names
+- when compiling from the memo, for each [Segment] block and each [Offering] block, read the entire block and consider all subsections before emitting triples
 - keep channel structure on BusinessSegment by default; use offering-level channel edges only when the memo shows a differentiated offering-specific channel pattern or no segment anchor exists
 - keep corporate geography clean; prefer memo-supported global scope such as Worldwide over mechanically expanded place lists
 - avoid generic bucket-label pseudo-offerings when cleaner named hierarchy is available in the memo

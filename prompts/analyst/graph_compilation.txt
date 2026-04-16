@@ -54,6 +54,7 @@ Do not use:
 - preserve distinct named franchises as standalone offerings when the memo frames them as standalone platforms or businesses, even if the memo also mentions their cloud or services lines inside a broader horizontal parent
 - preserve durable child families and variants from the memo; when the memo normalizes current release names into stable product, plan, tier, edition, or line families, keep those stable child nodes rather than reverting to transient labels
 - preserve depth when the memo supports it, but do not add speculative structure just to make the graph feel more complete
+- for each [Segment] block and each [Offering] block, read the entire block to avoid missing information and consider every non-empty subsection before emitting triples
 - do not use Company -> OFFERS unless the memo clearly requires it as a true fallback
 - compile these relations when support is strong enough:
   - Company -> HAS_SEGMENT -> each segment
