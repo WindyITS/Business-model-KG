@@ -41,6 +41,7 @@ Keep the same markdown structure unless the filing supports a better business-mo
 - remove offering-level `Channels` that merely restate inherited segment distribution; keep offering channels only when the filing supports a differentiated channel pattern or the offering truly lacks a segment anchor
 - if the company clearly operates globally, prefer a clean corporate-scope geography such as `Worldwide` over a mechanically expanded list derived from geographic segment definitions
 - your role here is to improve and deepen the memo, not to perform an abstract correctness audit detached from business-model usefulness
+- confident inference on customer types is allowed when product, platform, ecosystem, distribution, or support language strongly implies a commercially served constituency, even if the filing does not name that customer type directly in its generic markets sentence; use the closest canonical label and omit weak guesses
 - if a claim remains plausible but weak, keep it out rather than filling space
 - do not turn this into a long filing summary
 - do not add details from outside knowledge

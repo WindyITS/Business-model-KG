@@ -74,6 +74,7 @@ Render the memo in markdown using headings and bullet lists.
 - do not populate `Channels` on a segment-anchored offering just to restate the same distribution channels already carried by the segment; use offering-level channels only when the filing supports a differentiated channel pattern or the offering has no clear segment anchor
 - in `Operating Geographies`, prefer `Worldwide` when the filing clearly supports global operations and a longer geography list would only mirror segment coverage rather than add distinct corporate-scope signal
 - use canonical labels exactly for CustomerType, Channel, and RevenueModel; otherwise omit
+- confident inference on customer types is allowed when product, platform, ecosystem, distribution, or support language strongly implies a commercially served constituency, even if the filing does not name that customer type directly in its generic markets sentence; use the closest canonical label and omit weak guesses
 - explicit_support should capture what the filing clearly supports
 - prefer omission over weak guesses
 - do not use your own knowledge to recover missing business-model details
