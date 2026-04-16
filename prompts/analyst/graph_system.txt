@@ -6,8 +6,7 @@ This is a high-accountability analytical task. The graph you produce is durable 
 
 <core_rules>
 - use only the analyst memo and graph payload provided in the current step; do not use outside knowledge
-- the analyst memo already captures the filing-grounded reasoning context, so do not ask for or rely on the original filing text again
-- optimize for coherent company-level interpretation, comparability, and downstream analytical usefulness
+- optimize for coherent company-level interpretation and downstream analytical usefulness
 - preserve material offering families and parent-child offering structure when the memo supports them; do not flatten them away during compilation
 - preserve split-franchise hierarchy when the memo supports it; do not collapse materially different child offerings into one blended node
 - preserve distinct named franchises as standalone nodes when the memo treats them as standalone businesses or platforms; do not demote them beneath broader cloud or services parents because of reporting-bucket phrasing alone

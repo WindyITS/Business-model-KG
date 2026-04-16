@@ -3,7 +3,7 @@ STAGE 2 - GRAPH COMPILATION
 </workflow_step>
 
 <objective>
-Convert the analyst memo into an ontology-valid business-model graph.
+Convert the analyst memo into an in-depth ontology-valid business-model graph.
 </objective>
 
 <company_name>
@@ -46,13 +46,14 @@ Do not use:
 
 <compilation_rules>
 - use the analyst memo text as the source structure; do not invent new nodes or relations outside it
-- the memo may contain both explicit support and analyst inference; explicit support is preferred
-- inference-only claims may be used only when they create a more defensible company-level structure and the uncertainty field does not signal material ambiguity
-- if uncertainty suggests the relation may be wrong or overly neat, omit it
+- the memo may contain both support and analyst inference; support is preferred
+- inference-only claims may be used only when they create a more defensible company-level structure and the ambiguity field does not signal material ambiguity
+- if ambiguity suggests the relation may be wrong or overly neat, omit it
 - preserve family-level offerings that appear in the memo as real offering nodes; do not flatten parent-child offering structure into only leaf offerings
 - preserve split-franchise hierarchy when the memo supports it; if a franchise is modeled as a family plus differentiated children, keep that structure in the graph
 - preserve distinct named franchises as standalone offerings when the memo frames them as standalone platforms or businesses, even if the memo also mentions their cloud or services lines inside a broader horizontal parent
 - preserve durable child families and variants from the memo; when the memo normalizes current release names into stable product, plan, tier, edition, or line families, keep those stable child nodes rather than reverting to transient labels
+- preserve depth when the memo supports it, but do not add speculative structure just to make the graph feel more complete
 - do not use Company -> OFFERS unless the memo clearly requires it as a true fallback
 - compile these relations when support is strong enough:
   - Company -> HAS_SEGMENT -> each segment
