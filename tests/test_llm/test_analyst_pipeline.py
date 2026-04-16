@@ -48,8 +48,6 @@ class AnalystPipelineRunnerTests(unittest.TestCase):
                 "ANALYTICAL FRAME\n"
                 "Summary:\nMicrosoft organizes the business around major software and cloud franchises.\n"
                 "Explicit Support:\n- Azure is described inside the cloud business.\n"
-                "Analyst Inference / Synthesis:\n- none\n"
-                "Uncertainty / Ambiguity:\n- none\n"
             ),
         )
         augmented_memo = AnalystBusinessModelMemo(
@@ -59,8 +57,6 @@ class AnalystPipelineRunnerTests(unittest.TestCase):
                 + "[Segment] Intelligent Cloud\n"
                 + "Role in Business Model:\nRuns the cloud infrastructure and platform business.\n"
                 + "Explicit Support:\n- Azure is described inside the cloud business.\n"
-                + "Analyst Inference / Synthesis:\n- none\n"
-                + "Uncertainty / Ambiguity:\n- none\n"
                 + "Customer Types:\n- none\n"
                 + "Channels:\n- resellers | Partners extend enterprise distribution.\n"
             )
@@ -145,13 +141,14 @@ class AnalystPipelineRunnerTests(unittest.TestCase):
         self.assertIn("stable named variants, tiers, editions, plans, form factors, or line families", captured_messages[0][0]["content"])
         self.assertIn("normalize annual, release-specific, or version-specific names", captured_messages[0][0]["content"])
         self.assertIn("prefer a clean global footprint such as Worldwide", captured_messages[0][0]["content"])
-        self.assertIn("support, analyst inference, and ambiguity distinct", captured_messages[0][0]["content"])
         self.assertIn("there can be 2+ layers", captured_messages[0][0]["content"])
         self.assertNotIn("comparability", captured_messages[0][0]["content"])
         self.assertNotIn("<json_rules>", captured_messages[0][0]["content"])
         self.assertIn("Return a structured markdown memo, not JSON", captured_messages[0][1]["content"])
         self.assertIn("# ANALYTICAL FRAME", captured_messages[0][1]["content"])
         self.assertIn("## Summary:", captured_messages[0][1]["content"])
+        self.assertNotIn("## Analyst Inference / Synthesis:", captured_messages[0][1]["content"])
+        self.assertNotIn("## Uncertainty / Ambiguity:", captured_messages[0][1]["content"])
         self.assertIn("Child Offerings:", captured_messages[0][1]["content"])
         self.assertIn("must have its own full `[Offering]` block", captured_messages[0][1]["content"])
         self.assertIn("stable named variants, tiers, editions, plans, form factors, or line families", captured_messages[0][1]["content"])
@@ -174,7 +171,8 @@ class AnalystPipelineRunnerTests(unittest.TestCase):
         self.assertIn("remove offering-level `Channels` that merely restate inherited segment distribution", captured_messages[1][1]["content"])
         self.assertIn("prefer a clean corporate-scope geography such as `Worldwide`", captured_messages[1][1]["content"])
         self.assertIn("your role here is to improve and deepen the memo", captured_messages[1][1]["content"])
-        self.assertIn("support, analyst inference, and ambiguity are clearly separated", captured_messages[1][1]["content"])
+        self.assertNotIn("Analyst Inference / Synthesis", captured_messages[1][1]["content"])
+        self.assertNotIn("Uncertainty / Ambiguity", captured_messages[1][1]["content"])
         self.assertIn("add any missing material family-level offerings", captured_messages[1][1]["content"])
         self.assertIn("restore any distinct named franchise", captured_messages[1][1]["content"])
         self.assertIn("keep the artifact as markdown memo text, not JSON", captured_messages[1][1]["content"])

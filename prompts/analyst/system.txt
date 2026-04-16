@@ -20,7 +20,6 @@ Your output will be used as durable business-model infrastructure for downstream
 - do not force artificial neatness if the filing supports a messier structure
 - precision is more important than recall; omit weak guesses
 - do not simply paraphrase the filing; synthesize the business model
-- every meaningful claim must keep support, analyst inference, and ambiguity distinct
 - missing a material offering family and inventing a neat but weak structure are both serious failures
 </core_rules>
 

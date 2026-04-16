@@ -20,6 +20,7 @@ This is an expansion pass, not a correctness-review pass: deepen and sharpen the
 Return the full memo again as structured markdown, not JSON.
 Keep the same section order and heading text as the current memo.
 Keep the same markdown structure unless the filing supports a better business-model structure.
+Do not include `# OPEN QUESTIONS` or `# MEMO NOTES`.
 </artifact_contract>
 
 <augmentation_rules>
@@ -41,7 +42,6 @@ Keep the same markdown structure unless the filing supports a better business-mo
 - remove offering-level `Channels` that merely restate inherited segment distribution; keep offering channels only when the filing supports a differentiated channel pattern or the offering truly lacks a segment anchor
 - if the company clearly operates globally, prefer a clean corporate-scope geography such as `Worldwide` over a mechanically expanded list derived from geographic segment definitions
 - your role here is to improve and deepen the memo, not to perform an abstract correctness audit detached from business-model usefulness
-- refine the support blocks so support, analyst inference, and ambiguity are clearly separated
 - if a claim remains plausible but weak, keep it out rather than filling space
 - do not turn this into a long filing summary
 - do not add details from outside knowledge

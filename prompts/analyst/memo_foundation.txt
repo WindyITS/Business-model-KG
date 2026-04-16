@@ -22,20 +22,12 @@ Render the memo in markdown using headings and bullet lists.
 ...
 ## Explicit Support:
 - ...
-## Analyst Inference / Synthesis:
-- ...
-## Uncertainty / Ambiguity:
-- ...
 
 # SEGMENTS
 ## [Segment] <name>
 ### Role in Business Model:
 ...
 ### Explicit Support:
-- ...
-### Analyst Inference / Synthesis:
-- ...
-### Uncertainty / Ambiguity:
 - ...
 ### Customer Types:
 - <canonical customer label> | <why it fits>
@@ -47,10 +39,6 @@ Render the memo in markdown using headings and bullet lists.
 ### Role in Business Model:
 ...
 ### Explicit Support:
-- ...
-### Analyst Inference / Synthesis:
-- ...
-### Uncertainty / Ambiguity:
 - ...
 ### Segment Anchors:
 - <segment name> | <why it belongs there>
@@ -68,12 +56,6 @@ Render the memo in markdown using headings and bullet lists.
 - <place> | <why it matters>
 ## Key Partners:
 - <company> | <why the partnership is meaningful>
-
-# OPEN QUESTIONS
-- ...
-
-# MEMO NOTES
-- ...
 </artifact_contract>
 
 <foundation_rules>
@@ -93,8 +75,6 @@ Render the memo in markdown using headings and bullet lists.
 - in `Operating Geographies`, prefer `Worldwide` when the filing clearly supports global operations and a longer geography list would only mirror segment coverage rather than add distinct corporate-scope signal
 - use canonical labels exactly for CustomerType, Channel, and RevenueModel; otherwise omit
 - explicit_support should capture what the filing clearly supports
-- analyst_inference should capture your synthesis only when it is tightly grounded in the filing
-- uncertainties should name real ambiguity, not generic caution
 - prefer omission over weak guesses
 - do not use your own knowledge to recover missing business-model details
 - if a list is empty, write `- none`
