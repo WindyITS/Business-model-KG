@@ -20,7 +20,6 @@ This is an expansion pass, not a correctness-review pass: deepen and sharpen the
 Return the full memo again as structured markdown, not JSON.
 Keep the same section order and heading text as the current memo.
 Keep the same markdown structure unless the filing supports a better business-model structure.
-Do not include `# OPEN QUESTIONS` or `# MEMO NOTES`.
 </artifact_contract>
 
 <augmentation_rules>
