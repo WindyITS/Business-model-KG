@@ -1,6 +1,6 @@
 import unittest
 
-from text2cypher.prompting import TEXT2CYPHER_SYSTEM_PROMPT
+from text2cypher.prompting import TEXT2CYPHER_REPAIR_SYSTEM_PROMPT, TEXT2CYPHER_SYSTEM_PROMPT
 
 
 class Text2CypherPromptingTests(unittest.TestCase):
@@ -13,6 +13,17 @@ class Text2CypherPromptingTests(unittest.TestCase):
         self.assertIn("preserve boolean semantics", prompt)
         self.assertIn("customer_type_1", prompt)
         self.assertIn("different segments or offerings of the same company", prompt)
+        self.assertIn("database architecture", prompt)
+        self.assertIn("geography-plus-channel segment query", prompt)
+        self.assertIn("includes_places", prompt)
+        self.assertIn("within_places", prompt)
+
+    def test_repair_prompt_is_short_and_schema_grounded(self):
+        prompt = TEXT2CYPHER_REPAIR_SYSTEM_PROMPT.casefold()
+        self.assertIn("make the smallest possible fix", prompt)
+        self.assertIn("compact json only", prompt)
+        self.assertIn("place-rollup pattern", prompt)
+        self.assertIn("customer_type_1", prompt)
 
 
 if __name__ == "__main__":

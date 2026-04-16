@@ -322,6 +322,56 @@ class RuntimeQueryTests(unittest.TestCase):
         self.assertIn("Running query on Neo4j...", rendered_error)
         mock_repair.assert_called_once()
 
+    def test_query_does_not_repair_empty_result_for_single_channel_geography_query(self):
+        stdout = io.StringIO()
+        stderr = io.StringIO()
+        result = Text2CypherQueryResult(
+            answerable=True,
+            cypher=(
+                "MATCH (company:Company)-[:OPERATES_IN]->(place:Place) "
+                "WITH company, CASE "
+                "WHEN place.name = $place THEN 0 "
+                "WHEN $place IN coalesce(place.includes_places, []) THEN 1 "
+                "WHEN $place IN coalesce(place.within_places, []) THEN 2 "
+                "ELSE NULL END AS match_rank "
+                "WHERE match_rank IS NOT NULL "
+                "MATCH (company)-[:HAS_SEGMENT]->(s:BusinessSegment {company_name: company.name})"
+                "-[:SELLS_THROUGH]->(:Channel {name: $channel}) "
+                "RETURN DISTINCT company.name AS company, s.name AS segment ORDER BY company, segment"
+            ),
+            params={"place": "United States", "channel": "marketplaces"},
+        )
+
+        with patch.object(query_module, "resolve_model_settings", return_value=self._model_settings()), patch.object(
+            query_module, "LLMExtractor", return_value=object()
+        ), patch.object(
+            query_module,
+            "generate_text2cypher_query",
+            return_value=(result, None, 1, {}),
+        ), patch.object(
+            query_module,
+            "preflight_live_query",
+            return_value="bolt://localhost:7687",
+        ), patch.object(
+            query_module,
+            "execute_live_query",
+            return_value=(["company", "segment"], [], "bolt://localhost:7687"),
+        ), patch.object(
+            query_module,
+            "repair_text2cypher_query",
+        ) as mock_repair, redirect_stdout(stdout), redirect_stderr(stderr):
+            exit_code = query_module.main_query(
+                ["Which company segments at companies operating in the United States sell through marketplaces?"]
+            )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stdout.getvalue(), "")
+        rendered_error = stderr.getvalue()
+        self.assertIn("Generating query...", rendered_error)
+        self.assertIn("Running query on Neo4j...", rendered_error)
+        self.assertIn("No rows returned from bolt://localhost:7687.", rendered_error)
+        mock_repair.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()

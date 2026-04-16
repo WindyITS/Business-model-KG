@@ -10,7 +10,7 @@ from llm.extractor import LLMExtractor
 from llm_extraction.models import ExtractionError
 from neo4j import GraphDatabase
 from pydantic import BaseModel, Field, model_validator
-from text2cypher.prompting import TEXT2CYPHER_SYSTEM_PROMPT
+from text2cypher.prompting import TEXT2CYPHER_REPAIR_SYSTEM_PROMPT, TEXT2CYPHER_SYSTEM_PROMPT
 from text2cypher.validation import normalize_neo4j_uri, validate_params_match, validate_read_only_cypher
 
 from .model_provider import resolve_model_settings
@@ -18,6 +18,8 @@ from .model_provider import resolve_model_settings
 QUERY_FALLBACK_PAYLOAD = '{"answerable": false, "reason": "generation_failed"}'
 PARAM_REF_RE = re.compile(r"\$([A-Za-z_][A-Za-z0-9_]*)")
 DEFAULT_REPAIR_ATTEMPTS = 2
+DEFAULT_QUERY_MAX_OUTPUT_TOKENS = 1200
+DEFAULT_REPAIR_MAX_OUTPUT_TOKENS = 700
 SEMANTIC_REPAIR_PARAM_PREFIXES = ("customer_type", "channel", "revenue_model", "offering")
 BOOLEAN_HINT_TOKENS = (" and ", " or ", " both ", " either ")
 
@@ -89,6 +91,21 @@ def generate_text2cypher_query(
     return result, raw_response, attempts_used, audit
 
 
+def _bounded_extractor(extractor: LLMExtractor, *, max_output_tokens: int) -> LLMExtractor:
+    current_limit = extractor.max_output_tokens
+    if current_limit is not None and current_limit <= max_output_tokens:
+        return extractor
+    return LLMExtractor(
+        base_url=extractor.base_url,
+        api_key=extractor.api_key,
+        model=extractor.model,
+        provider=extractor.provider,
+        api_mode=extractor.api_mode,
+        max_output_tokens=max_output_tokens,
+        progress_callback=extractor.progress_callback,
+    )
+
+
 def repair_text2cypher_query(
     *,
     question: str,
@@ -109,11 +126,10 @@ def repair_text2cypher_query(
         f"Previous answer:\n{previous_payload}\n\n"
         f"Failure details:\n{error_message}"
     )
-    result, raw_response, attempts_used, audit = extractor.generate_structured_output(
+    repair_extractor = _bounded_extractor(extractor, max_output_tokens=DEFAULT_REPAIR_MAX_OUTPUT_TOKENS)
+    result, raw_response, attempts_used, audit = repair_extractor.generate_structured_output(
         messages=[
-            {"role": "system", "content": TEXT2CYPHER_SYSTEM_PROMPT},
-            {"role": "user", "content": question},
-            {"role": "assistant", "content": previous_payload},
+            {"role": "system", "content": TEXT2CYPHER_REPAIR_SYSTEM_PROMPT},
             {"role": "user", "content": repair_instruction},
         ],
         schema_name="Text2CypherQueryResultRepair",
@@ -232,17 +248,18 @@ def _render_query_results(columns: list[str], rows: list[dict[str, Any]]) -> str
     return "\n".join(rendered_rows)
 
 
-def _has_semantic_repair_params(params: dict[str, Any]) -> bool:
+def _has_repeated_semantic_slot(params: dict[str, Any]) -> bool:
+    counts: dict[str, int] = {}
     for key in params:
         for prefix in SEMANTIC_REPAIR_PARAM_PREFIXES:
             if key == prefix or key.startswith(f"{prefix}_"):
-                return True
-    return False
+                counts[prefix] = counts.get(prefix, 0) + 1
+    return any(count > 1 for count in counts.values())
 
 
 def _should_attempt_empty_result_repair(question: str, result: Text2CypherQueryResult) -> bool:
     normalized_question = f" {question.casefold()} "
-    return _has_semantic_repair_params(result.params) or any(
+    return _has_repeated_semantic_slot(result.params) or any(
         token in normalized_question for token in BOOLEAN_HINT_TOKENS
     )
 
@@ -348,7 +365,7 @@ def _run(argv: list[str] | None, *, execute: bool) -> int:
             model=model_settings.model,
             provider=model_settings.provider,
             api_mode=model_settings.api_mode,
-            max_output_tokens=model_settings.max_output_tokens,
+            max_output_tokens=model_settings.max_output_tokens or DEFAULT_QUERY_MAX_OUTPUT_TOKENS,
         )
         _print_status("Generating query...")
         query_result, _raw_response, attempts_used, _audit = generate_text2cypher_query(
