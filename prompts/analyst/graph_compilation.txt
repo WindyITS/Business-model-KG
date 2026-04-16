@@ -49,6 +49,7 @@ Do not use:
 - the memo may contain both explicit support and analyst inference; explicit support is preferred
 - inference-only claims may be used only when they create a more defensible company-level structure and the uncertainty field does not signal material ambiguity
 - if uncertainty suggests the relation may be wrong or overly neat, omit it
+- preserve family-level offerings that appear in the memo as real offering nodes; do not flatten parent-child offering structure into only leaf offerings
 - do not use Company -> OFFERS unless the memo clearly requires it as a true fallback
 - compile these relations when support is strong enough:
   - Company -> HAS_SEGMENT -> each segment

@@ -4,7 +4,7 @@ STAGE 1B - ANALYST MEMO DETAIL AUGMENTATION
 
 <objective>
 Take the current analyst memo and improve it.
-Preserve the strong business-model structure, then add only defensible detail that materially improves usefulness.
+Preserve the strong business-model structure, then add only defensible detail that materially improves usefulness and makes the memo sufficiently detailed for graph compilation.
 </objective>
 
 <company_name>
@@ -18,12 +18,17 @@ Preserve the strong business-model structure, then add only defensible detail th
 <augmentation_rules>
 - return the entire memo again, not a patch
 - preserve prior structure by default; revise it only when the full filing supports a better interpretation
+- actively recover named offering families, suites, product lines, platforms, and franchises when they are material business-model structures rather than incidental mentions
 - add missing but defensible offerings, parent-offering structure, segment anchors, customer types, channels, revenue models, operating geographies, and meaningful partners
+- do not collapse important offering families into segment prose or generic summary text
+- when both a family-level offering and child offerings are supportable, keep the family-level offering and express the child relationship through `Parent Offering`
+- prefer business-model-relevant families and product lines over one-off features, implementation details, or promotional labels
 - refine the support blocks so explicit support, analyst inference, and uncertainties are clearly separated
 - if a claim remains plausible but weak, keep it out rather than filling space
 - do not turn this into a long filing summary
 - do not add details from outside knowledge
 - do not create artificial completeness; empty arrays are allowed
+- before returning, explicitly review whether the memo is still missing any material family-level offerings that a downstream analyst would need to understand the company's structure
 - before returning, review whether any item is present only because it was mentioned once without business-model importance; if so, remove it
 - keep the same section order and heading names as the current memo
 - keep the artifact as plain memo text, not JSON
