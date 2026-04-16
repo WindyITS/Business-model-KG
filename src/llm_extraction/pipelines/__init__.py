@@ -9,7 +9,12 @@ if TYPE_CHECKING:
 
 
 KNOWN_PIPELINES: tuple[str, ...] = ("canonical", "analyst")
-IMPLEMENTED_PIPELINES: tuple[str, ...] = ("canonical",)
+IMPLEMENTED_PIPELINES: tuple[str, ...] = ("canonical", "analyst")
+PASS1_SUPPORTED_PIPELINES: frozenset[str] = frozenset({"canonical"})
+PIPELINE_STAGE_COUNTS: dict[str, dict[str, int]] = {
+    "canonical": {"full": 10, "pass1": 4},
+    "analyst": {"full": 7},
+}
 
 
 def known_pipeline_names() -> tuple[str, ...]:
@@ -18,6 +23,22 @@ def known_pipeline_names() -> tuple[str, ...]:
 
 def implemented_pipeline_names() -> tuple[str, ...]:
     return IMPLEMENTED_PIPELINES
+
+
+def pipeline_supports_stop_after_pass1(pipeline: str) -> bool:
+    if pipeline not in KNOWN_PIPELINES:
+        raise ExtractionError(f"Unknown extraction pipeline: {pipeline}")
+    return pipeline in PASS1_SUPPORTED_PIPELINES
+
+
+def pipeline_stage_count(pipeline: str, *, stop_after_pass1: bool = False) -> int:
+    if pipeline not in KNOWN_PIPELINES:
+        raise ExtractionError(f"Unknown extraction pipeline: {pipeline}")
+    if stop_after_pass1:
+        if not pipeline_supports_stop_after_pass1(pipeline):
+            raise ExtractionError(f"Pipeline '{pipeline}' does not support stop_after_pass1.")
+        return PIPELINE_STAGE_COUNTS[pipeline]["pass1"]
+    return PIPELINE_STAGE_COUNTS[pipeline]["full"]
 
 
 def build_pipeline_runner(pipeline: str, extractor: "LLMExtractor") -> Any:
@@ -52,5 +73,7 @@ __all__ = [
     "build_pipeline_runner",
     "implemented_pipeline_names",
     "known_pipeline_names",
+    "pipeline_stage_count",
+    "pipeline_supports_stop_after_pass1",
     "run_extraction_pipeline",
 ]

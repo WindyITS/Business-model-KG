@@ -1,0 +1,40 @@
+<workflow_step>
+STAGE 2 - GRAPH COMPILATION
+</workflow_step>
+
+<objective>
+Convert the analyst memo into an ontology-valid business-model graph.
+</objective>
+
+<company_name>
+{{company_name}}
+</company_name>
+
+<analyst_memo>
+{{analyst_memo}}
+</analyst_memo>
+
+<compilation_rules>
+- use the analyst memo as the source structure; do not invent new nodes or relations outside it
+- the memo may contain both explicit support and analyst inference; explicit support is preferred
+- inference-only claims may be used only when they create a more defensible company-level structure and the uncertainty field does not signal material ambiguity
+- if uncertainty suggests the relation may be wrong or overly neat, omit it
+- do not use Company -> OFFERS unless the memo clearly requires it as a true fallback
+- compile these relations when support is strong enough:
+  - Company -> HAS_SEGMENT -> each segment
+  - BusinessSegment -> OFFERS -> each first-order offering anchored to that segment
+  - Offering -> OFFERS -> child offering when parent_offering is supportable
+  - BusinessSegment -> SERVES -> segment customer_types
+  - BusinessSegment -> SELLS_THROUGH -> segment channels
+  - Offering -> SELLS_THROUGH -> offering-specific channels
+  - Offering -> MONETIZES_VIA -> offering revenue_models
+  - Company -> OPERATES_IN -> corporate_scope operating_geographies
+  - Company -> PARTNERS_WITH -> corporate_scope key_partners
+- if an offering has a parent_offering and only appears under that parent, do not also create a direct segment -> offering edge unless the memo independently supports that direct anchor
+- prefer omission over weak guesses
+</compilation_rules>
+
+<format_reminder>
+Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array.
+Do not use markdown code blocks.
+</format_reminder>

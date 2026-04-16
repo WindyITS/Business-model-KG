@@ -1,0 +1,35 @@
+<workflow_step>
+STAGE 3 - GRAPH CRITIQUE
+</workflow_step>
+
+<objective>
+Review the compiled analyst graph for overreach and weak structure.
+The goal is to keep the useful analyst synthesis while removing claims that are too fragile, too neat, or not well supported by the filing-backed memo.
+</objective>
+
+<company_name>
+{{company_name}}
+</company_name>
+
+<analyst_memo>
+{{analyst_memo}}
+</analyst_memo>
+
+<current_graph>
+{{current_graph}}
+</current_graph>
+
+<critique_rules>
+- focus on reducing overreach, not on expanding coverage
+- preserve claims that are analytically useful and defensible from the memo
+- remove edges that depend on weak inference, stretched categorization, or ambiguous support
+- if the graph forced artificial neatness over a messier but more honest structure, prune it back
+- do not introduce outside knowledge
+- do not replace omitted evidence with generic summary language
+- precision is more important than recall
+</critique_rules>
+
+<format_reminder>
+Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array.
+Do not use markdown code blocks.
+</format_reminder>

@@ -1,7 +1,16 @@
 from llm_extraction.audit import aggregate_extraction_audits, audit_knowledge_graph_payload, normalize_lenient_payload
 from llm_extraction.models import (
+    AnalystBusinessModelMemo,
+    AnalystCanonicalLabelClaim,
+    AnalystCorporateScope,
+    AnalystEvidence,
+    AnalystNamedClaim,
+    AnalystOffering,
+    AnalystPipelineResult,
+    AnalystSegment,
     CanonicalPipelineResult,
     ExtractionError,
+    ExtractionPipelineResult,
     KnowledgeGraphExtraction,
     NodeType,
     RelationType,
@@ -9,8 +18,17 @@ from llm_extraction.models import (
 )
 
 __all__ = [
+    "AnalystBusinessModelMemo",
+    "AnalystCanonicalLabelClaim",
+    "AnalystCorporateScope",
+    "AnalystEvidence",
+    "AnalystNamedClaim",
+    "AnalystOffering",
+    "AnalystPipelineResult",
+    "AnalystSegment",
     "CanonicalPipelineResult",
     "ExtractionError",
+    "ExtractionPipelineResult",
     "KnowledgeGraphExtraction",
     "NodeType",
     "RelationType",

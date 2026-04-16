@@ -48,10 +48,14 @@ This means the effective behavior of the pipeline comes from three layers togeth
 - the staged extraction and reflection pipeline under [`src/llm/`](./src/llm/) and [`src/llm_extraction/pipelines/`](./src/llm_extraction/pipelines/) with prompt assets in [`prompts/canonical/`](./prompts/canonical/)
 - the final normalization and structural enforcement in [`src/ontology/validator.py`](./src/ontology/validator.py)
 
-## Canonical Extraction Pipeline
+## Extraction Pipelines
 
-The canonical runtime pipeline is the only implemented extraction pipeline today.
-An analyst-style sibling scaffold already exists under [`src/llm_extraction/pipelines/analyst/`](./src/llm_extraction/pipelines/analyst/) and [`prompts/analyst/`](./prompts/analyst/), but it is intentionally not implemented yet.
+The repo now ships two separate extraction pipelines:
+
+- `canonical`: the staged, ontology-constrained extraction runtime
+- `analyst`: a sibling runtime that first builds a structured analyst memo from the full filing, then compiles that memo into the ontology graph and runs a short overreach critique pass
+
+### Canonical Extraction Pipeline
 
 High-level flow:
 
@@ -74,6 +78,24 @@ Runtime notes:
 - if a reflection pass fails or returns an empty graph, the runtime falls back to the prior graph instead of hard-failing the whole run
 - `--only-pass1` stops after the structural skeleton, then still resolves, validates, and can still load to Neo4j unless `--skip-neo4j` is also set
 
+### Analyst Extraction Pipeline
+
+High-level flow:
+
+1. Read the filing text, infer `company_name` from the input filename, and write `chunks.json`
+2. `Analyst memo 1`: build the foundational business-model memo
+3. `Analyst memo 2`: augment that memo with additional defensible detail
+4. `Graph compilation`: convert the memo into ontology-valid triples
+5. `Critique`: prune overreach and overly neat structure
+6. Resolve surface forms, revalidate the final graph, and write final artifacts
+7. Optionally load the graph into Neo4j
+
+Runtime notes:
+- the memo is a first-class structured artifact, not just hidden reasoning
+- the memo explicitly separates filing support, analyst inference, and uncertainty
+- the analyst runtime treats the ontology as the target graph structure, not as a literal paragraph-extraction cage
+- `--only-pass1` is intentionally canonical-only because the analyst pipeline's first pass is a memo rather than a loadable graph
+
 ## Repo Layout
 
 ```text
@@ -90,7 +112,7 @@ src/
     pipelines/canonical/
                           canonical pipeline orchestration
     pipelines/analyst/
-                          future analyst pipeline scaffold
+                          analyst memo -> graph pipeline orchestration
   ontology/
     config.py             canonical ontology loader
     validator.py          ontology validation and structural checks
@@ -115,7 +137,7 @@ configs/
 prompts/
   README.md               prompt asset overview
   canonical/              canonical pipeline prompt assets
-  analyst/                future analyst pipeline prompt scaffold
+  analyst/                analyst pipeline prompt assets
 
 docs/
   ontology.md             canonical ontology specification
@@ -283,7 +305,7 @@ Provider notes:
 - `opencode-go` reads `--api-key` first, then `OPENCODE_GO_API_KEY`, then `OPENCODE_API_KEY`
 - for `opencode-go`, the runtime rewrites `system` messages to `user` messages for compatibility while keeping the rest of the pipeline flow unchanged
 - `opencode-go` defaults to `--max-output-tokens 20000`; override it if needed
-- the CLI currently exposes only the implemented `canonical` pipeline, even though the analyst scaffold already exists in the codebase
+- the CLI exposes both the `canonical` and `analyst` pipelines
 - every run writes `run_summary.json`; the console header shows pipeline, provider, and model, and LLM attempt summaries show token counts when available
 
 Useful CLI flags:

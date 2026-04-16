@@ -34,8 +34,65 @@ class KnowledgeGraphExtraction(BaseModel):
     triples: list[Triple] = Field(default_factory=list)
 
 
-class CanonicalPipelineResult(BaseModel):
+class ExtractionPipelineResult(BaseModel):
     success: bool
+    final_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
+    error: str | None = None
+
+
+class AnalystEvidence(BaseModel):
+    explicit_support: list[str] = Field(default_factory=list)
+    analyst_inference: list[str] = Field(default_factory=list)
+    uncertainties: list[str] = Field(default_factory=list)
+
+
+class AnalystNamedClaim(BaseModel):
+    name: str
+    rationale: str = ""
+    support: AnalystEvidence = Field(default_factory=AnalystEvidence)
+
+
+class AnalystCanonicalLabelClaim(BaseModel):
+    label: str
+    rationale: str = ""
+    support: AnalystEvidence = Field(default_factory=AnalystEvidence)
+
+
+class AnalystSegment(BaseModel):
+    name: str
+    role_in_business_model: str = ""
+    support: AnalystEvidence = Field(default_factory=AnalystEvidence)
+    customer_types: list[AnalystCanonicalLabelClaim] = Field(default_factory=list)
+    channels: list[AnalystCanonicalLabelClaim] = Field(default_factory=list)
+
+
+class AnalystOffering(BaseModel):
+    name: str
+    role_in_business_model: str = ""
+    support: AnalystEvidence = Field(default_factory=AnalystEvidence)
+    segment_anchors: list[AnalystNamedClaim] = Field(default_factory=list)
+    parent_offering: AnalystNamedClaim | None = None
+    channels: list[AnalystCanonicalLabelClaim] = Field(default_factory=list)
+    revenue_models: list[AnalystCanonicalLabelClaim] = Field(default_factory=list)
+
+
+class AnalystCorporateScope(BaseModel):
+    operating_geographies: list[AnalystNamedClaim] = Field(default_factory=list)
+    key_partners: list[AnalystNamedClaim] = Field(default_factory=list)
+
+
+class AnalystBusinessModelMemo(BaseModel):
+    company_name: str = ""
+    analytical_frame: str = ""
+    frame_support: AnalystEvidence = Field(default_factory=AnalystEvidence)
+    segments: list[AnalystSegment] = Field(default_factory=list)
+    offerings: list[AnalystOffering] = Field(default_factory=list)
+    corporate_scope: AnalystCorporateScope = Field(default_factory=AnalystCorporateScope)
+    open_questions: list[str] = Field(default_factory=list)
+    memo_notes: list[str] = Field(default_factory=list)
+
+
+class CanonicalPipelineResult(ExtractionPipelineResult):
     skeleton_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     pass2_channels_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     pass2_revenue_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
@@ -44,7 +101,6 @@ class CanonicalPipelineResult(BaseModel):
     pass4_corporate_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     pre_reflection_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     rule_reflection_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
-    final_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     skeleton_audit: dict[str, Any] = Field(default_factory=dict)
     pass2_channels_audit: dict[str, Any] = Field(default_factory=dict)
     pass2_revenue_audit: dict[str, Any] = Field(default_factory=dict)
@@ -70,7 +126,24 @@ class CanonicalPipelineResult(BaseModel):
     pass4_corporate_attempts_used: int = 0
     rule_reflection_attempts_used: int = 0
     final_reflection_attempts_used: int = 0
-    error: str | None = None
+
+
+class AnalystPipelineResult(ExtractionPipelineResult):
+    foundation_memo: AnalystBusinessModelMemo = Field(default_factory=AnalystBusinessModelMemo)
+    augmented_memo: AnalystBusinessModelMemo = Field(default_factory=AnalystBusinessModelMemo)
+    compiled_graph_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
+    foundation_memo_audit: dict[str, Any] = Field(default_factory=dict)
+    augmented_memo_audit: dict[str, Any] = Field(default_factory=dict)
+    compiled_graph_audit: dict[str, Any] = Field(default_factory=dict)
+    critique_audit: dict[str, Any] = Field(default_factory=dict)
+    raw_foundation_memo_response: str | None = None
+    raw_augmented_memo_response: str | None = None
+    raw_compiled_graph_response: str | None = None
+    raw_critique_response: str | None = None
+    foundation_memo_attempts_used: int = 0
+    augmented_memo_attempts_used: int = 0
+    compiled_graph_attempts_used: int = 0
+    critique_attempts_used: int = 0
 
 
 class ExtractionError(RuntimeError):

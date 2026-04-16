@@ -1,0 +1,32 @@
+<workflow_step>
+STAGE 1B - ANALYST MEMO DETAIL AUGMENTATION
+</workflow_step>
+
+<objective>
+Take the current analyst memo and improve it.
+Preserve the strong business-model structure, then add only defensible detail that materially improves usefulness.
+</objective>
+
+<company_name>
+{{company_name}}
+</company_name>
+
+<current_memo>
+{{current_memo}}
+</current_memo>
+
+<augmentation_rules>
+- return the entire memo again, not a patch
+- preserve prior structure by default; revise it only when the full filing supports a better interpretation
+- add missing but defensible offerings, parent-offering structure, segment anchors, customer types, channels, revenue models, operating geographies, and meaningful partners
+- refine the support blocks so explicit support, analyst inference, and uncertainties are clearly separated
+- if a claim remains plausible but weak, keep it out rather than filling space
+- do not turn this into a long filing summary
+- do not add details from outside knowledge
+- do not create artificial completeness; empty arrays are allowed
+- before returning, review whether any item is present only because it was mentioned once without business-model importance; if so, remove it
+</augmentation_rules>
+
+<format_reminder>
+Return ONLY the full JSON object for the analyst memo.
+</format_reminder>

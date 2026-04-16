@@ -1,0 +1,156 @@
+<workflow_step>
+STAGE 1A - ANALYST MEMO FOUNDATION
+</workflow_step>
+
+<objective>
+Build the foundational analyst business-model memo for the company.
+Focus first on the core organizing structure of how the company makes money and how its main businesses fit together.
+</objective>
+
+<company_name>
+{{company_name}}
+</company_name>
+
+<artifact_contract>
+Return ONLY a raw JSON object with this shape:
+
+{
+  "company_name": "string",
+  "analytical_frame": "short synthesis of the core business model",
+  "frame_support": {
+    "explicit_support": ["short filing-grounded support"],
+    "analyst_inference": ["short synthesis that is not directly stated"],
+    "uncertainties": ["ambiguities or competing interpretations"]
+  },
+  "segments": [
+    {
+      "name": "segment name",
+      "role_in_business_model": "why this segment matters in the company model",
+      "support": {
+        "explicit_support": [],
+        "analyst_inference": [],
+        "uncertainties": []
+      },
+      "customer_types": [
+        {
+          "label": "exact canonical CustomerType label",
+          "rationale": "why this label fits",
+          "support": {
+            "explicit_support": [],
+            "analyst_inference": [],
+            "uncertainties": []
+          }
+        }
+      ],
+      "channels": [
+        {
+          "label": "exact canonical Channel label",
+          "rationale": "why this label fits",
+          "support": {
+            "explicit_support": [],
+            "analyst_inference": [],
+            "uncertainties": []
+          }
+        }
+      ]
+    }
+  ],
+  "offerings": [
+    {
+      "name": "offering name",
+      "role_in_business_model": "what role the offering plays",
+      "support": {
+        "explicit_support": [],
+        "analyst_inference": [],
+        "uncertainties": []
+      },
+      "segment_anchors": [
+        {
+          "name": "segment name",
+          "rationale": "why this offering belongs under that segment",
+          "support": {
+            "explicit_support": [],
+            "analyst_inference": [],
+            "uncertainties": []
+          }
+        }
+      ],
+      "parent_offering": {
+        "name": "parent offering name",
+        "rationale": "why this is the parent",
+        "support": {
+          "explicit_support": [],
+          "analyst_inference": [],
+          "uncertainties": []
+        }
+      },
+      "channels": [
+        {
+          "label": "exact canonical Channel label",
+          "rationale": "why this label fits",
+          "support": {
+            "explicit_support": [],
+            "analyst_inference": [],
+            "uncertainties": []
+          }
+        }
+      ],
+      "revenue_models": [
+        {
+          "label": "exact canonical RevenueModel label",
+          "rationale": "why this label fits",
+          "support": {
+            "explicit_support": [],
+            "analyst_inference": [],
+            "uncertainties": []
+          }
+        }
+      ]
+    }
+  ],
+  "corporate_scope": {
+    "operating_geographies": [
+      {
+        "name": "place",
+        "rationale": "why this geography matters",
+        "support": {
+          "explicit_support": [],
+          "analyst_inference": [],
+          "uncertainties": []
+        }
+      }
+    ],
+    "key_partners": [
+      {
+        "name": "partner company",
+        "rationale": "why this is a meaningful partner relationship",
+        "support": {
+          "explicit_support": [],
+          "analyst_inference": [],
+          "uncertainties": []
+        }
+      }
+    ]
+  },
+  "open_questions": ["remaining ambiguity worth tracking"],
+  "memo_notes": ["short analyst notes"]
+}
+</artifact_contract>
+
+<foundation_rules>
+- this pass is for the fundamental structure, not exhaustive detail
+- choose the most defensible business-model anchors, even if the filing's reporting segmentation is not the best analytical frame
+- do not create decorative segments just to make the company look tidy
+- keep only the offerings that matter to the core structure in this first pass
+- do not use segment_anchors on child offerings just to restate inheritance from a parent offering
+- use canonical labels exactly for CustomerType, Channel, and RevenueModel; otherwise omit
+- explicit_support should capture what the filing clearly supports
+- analyst_inference should capture your synthesis only when it is tightly grounded in the filing
+- uncertainties should name real ambiguity, not generic caution
+- prefer omission over weak guesses
+- do not use your own knowledge to recover missing business-model details
+</foundation_rules>
+
+<format_reminder>
+Return ONLY the full JSON object for the analyst memo.
+</format_reminder>

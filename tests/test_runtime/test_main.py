@@ -6,7 +6,13 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
-from llm_extraction.models import CanonicalPipelineResult, KnowledgeGraphExtraction, Triple
+from llm_extraction.models import (
+    AnalystBusinessModelMemo,
+    AnalystPipelineResult,
+    CanonicalPipelineResult,
+    KnowledgeGraphExtraction,
+    Triple,
+)
 from runtime import main as main_module
 from runtime.main import (
     PipelineConsole,
@@ -21,6 +27,10 @@ class RuntimeMainTests(unittest.TestCase):
     def test_mode_name_is_canonical_pipeline(self):
         args = SimpleNamespace(pipeline="canonical")
         self.assertEqual(_mode_name(args), "canonical_pipeline")
+
+    def test_mode_name_is_analyst_pipeline(self):
+        args = SimpleNamespace(pipeline="analyst")
+        self.assertEqual(_mode_name(args), "analyst_pipeline")
 
     def test_format_duration_uses_compact_seconds_and_minutes(self):
         self.assertEqual(_format_duration(0.42), "0.4s")
@@ -223,6 +233,89 @@ class RuntimeMainTests(unittest.TestCase):
             mock_run_pipeline.assert_called_once()
             self.assertIs(mock_run_pipeline.call_args.kwargs["extractor"], fake_extractor)
             self.assertTrue(mock_run_pipeline.call_args.kwargs["stop_after_pass1"])
+
+    def test_main_analyst_pipeline_writes_memo_and_graph_artifacts(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            filing_path = tmp_path / "microsoft_10k.txt"
+            filing_path.write_text("ITEM 1. BUSINESS\nMicrosoft does business.\n", encoding="utf-8")
+            run_dir = tmp_path / "outputs" / "run"
+            resolved_triple = Triple(
+                subject="Microsoft",
+                subject_type="Company",
+                relation="HAS_SEGMENT",
+                object="Intelligent Cloud",
+                object_type="BusinessSegment",
+            )
+
+            fake_result = AnalystPipelineResult(
+                success=True,
+                foundation_memo=AnalystBusinessModelMemo(
+                    company_name="Microsoft",
+                    analytical_frame="Cloud and software franchises drive the business.",
+                ),
+                augmented_memo=AnalystBusinessModelMemo(
+                    company_name="Microsoft",
+                    analytical_frame="Cloud and software franchises drive the business.",
+                ),
+                compiled_graph_extraction=KnowledgeGraphExtraction(
+                    extraction_notes="compiled",
+                    triples=[resolved_triple],
+                ),
+                final_extraction=KnowledgeGraphExtraction(
+                    extraction_notes="final",
+                    triples=[resolved_triple],
+                ),
+                critique_audit={"kept_triple_count": 1, "raw_triple_count": 1},
+            )
+            fake_extractor = SimpleNamespace()
+            fake_validation_report = {
+                "valid_triples": [resolved_triple.model_dump()],
+                "summary": {
+                    "invalid_triple_count": 0,
+                    "duplicate_triple_count": 0,
+                },
+            }
+
+            with patch.object(main_module, "_build_run_dir", return_value=run_dir), patch.object(
+                main_module, "resolve_model_settings"
+            ) as mock_resolve, patch.object(main_module, "LLMExtractor", return_value=fake_extractor), patch.object(
+                main_module, "run_extraction_pipeline", return_value=fake_result
+            ) as mock_run_pipeline, patch.object(
+                main_module, "resolve_entities", return_value=[resolved_triple]
+            ), patch.object(
+                main_module, "validate_triples", return_value=fake_validation_report
+            ), patch(
+                "sys.argv", ["main.py", str(filing_path), "--pipeline", "analyst", "--output-dir", str(tmp_path / "outputs"), "--skip-neo4j"]
+            ):
+                mock_resolve.return_value = SimpleNamespace(
+                    provider="local",
+                    model="local-model",
+                    base_url="http://localhost:1234/v1",
+                    api_mode="chat_completions",
+                    api_key="lm-studio",
+                    max_output_tokens=None,
+                )
+                exit_code = main_module.main()
+
+            self.assertEqual(exit_code, 0)
+            self.assertTrue((run_dir / "analyst_memo_foundation.json").exists())
+            self.assertTrue((run_dir / "analyst_memo_augmented.json").exists())
+            self.assertTrue((run_dir / "analyst_graph_compilation.json").exists())
+            self.assertTrue((run_dir / "analyst_graph_critique.json").exists())
+            self.assertTrue((run_dir / "resolved_triples.json").exists())
+
+            summary = json.loads((run_dir / "run_summary.json").read_text(encoding="utf-8"))
+            self.assertEqual(summary["stage_count"], 7)
+            self.assertEqual(summary["status"], "success")
+            self.assertEqual(summary["analyst_segment_count"], 0)
+            self.assertEqual(summary["analyst_offering_count"], 0)
+            self.assertTrue(summary["skip_neo4j"])
+
+            mock_resolve.assert_called_once()
+            mock_run_pipeline.assert_called_once()
+            self.assertEqual(mock_run_pipeline.call_args.kwargs["pipeline"], "analyst")
+            self.assertFalse(mock_run_pipeline.call_args.kwargs["stop_after_pass1"])
 
 
 if __name__ == "__main__":

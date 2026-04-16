@@ -7,7 +7,14 @@ from collections.abc import Callable
 from typing import Any
 
 from llm_extraction.audit import aggregate_extraction_audits, audit_knowledge_graph_payload, normalize_lenient_payload
-from llm_extraction.models import CanonicalPipelineResult, ExtractionError, KnowledgeGraphExtraction, Triple
+from llm_extraction.models import (
+    AnalystPipelineResult,
+    CanonicalPipelineResult,
+    ExtractionError,
+    ExtractionPipelineResult,
+    KnowledgeGraphExtraction,
+    Triple,
+)
 from pydantic import BaseModel, ValidationError
 
 logger = logging.getLogger(__name__)
@@ -619,6 +626,23 @@ class LLMExtractor:
             )
             return model, audit
 
+        validation_error: ValidationError | None = None
+        candidate_payloads = [payload]
+        if normalized_payload is not payload:
+            candidate_payloads.append(normalized_payload)
+
+        for index, candidate_payload in enumerate(candidate_payloads):
+            try:
+                model = schema_model.model_validate(candidate_payload)
+                return model, {
+                    "schema_name": schema_model.__name__,
+                    "used_normalized_payload": index > 0,
+                }
+            except ValidationError as exc:
+                validation_error = exc
+
+        if validation_error is not None:
+            raise validation_error
         raise TypeError(f"Unsupported schema model for lenient payload parsing: {schema_model!r}")
 
     def _call_structured(
@@ -695,8 +719,10 @@ class LLMExtractor:
 
 
 __all__ = [
+    "AnalystPipelineResult",
     "CanonicalPipelineResult",
     "ExtractionError",
+    "ExtractionPipelineResult",
     "KnowledgeGraphExtraction",
     "LLMExtractor",
     "Triple",

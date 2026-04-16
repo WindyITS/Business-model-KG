@@ -1,5 +1,10 @@
-# Analyst Pipeline Prompt Scaffold
+# Analyst Pipeline Prompt Assets
 
-This folder is reserved for the future analyst-style extraction pipeline.
+This folder contains the prompt files for the analyst-style extraction pipeline.
 
-Add analyst-specific prompt files here when that pipeline is implemented.
+The analyst pipeline is intentionally separate from the canonical extractor:
+
+- stage 1A builds the foundational analyst memo
+- stage 1B augments that memo with defensible detail
+- stage 2 compiles the memo into ontology-valid graph output
+- a short critique pass removes overreach and weak structure

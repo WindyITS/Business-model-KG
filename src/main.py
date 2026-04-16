@@ -18,8 +18,10 @@ def _sync_runtime_main_module() -> None:
         sys.modules["graph.neo4j_loader"] = sys.modules["neo4j_loader"]
 
     for name in (
+        "AnalystPipelineResult",
         "CanonicalPipelineResult",
         "ExtractionError",
+        "ExtractionPipelineResult",
         "LLMExtractor",
         "PipelineConsole",
         "_build_run_dir",
