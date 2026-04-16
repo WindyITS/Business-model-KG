@@ -37,6 +37,18 @@ def analyst_pipeline_system_prompt(full_text: str) -> str:
     )
 
 
+def analyst_graph_system_prompt() -> str:
+    return _render(
+        "graph_system.txt",
+        canonical_customer_types_json=_json_list(CANONICAL_CUSTOMER_TYPES),
+        canonical_channels_json=_json_list(CANONICAL_CHANNELS),
+        canonical_revenue_models_json=_json_list(CANONICAL_REVENUE_MODELS),
+        customer_type_definitions=_definition_lines(CANONICAL_DEFINITIONS["CustomerType"]),
+        channel_definitions=_definition_lines(CANONICAL_DEFINITIONS["Channel"]),
+        revenue_model_definitions=_definition_lines(CANONICAL_DEFINITIONS["RevenueModel"]),
+    )
+
+
 def analyst_memo_foundation_prompt(company_name: str | None) -> str:
     return _render("memo_foundation.txt", company_name=company_name or "")
 

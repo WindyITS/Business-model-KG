@@ -400,6 +400,28 @@ def _prepare_pipeline_artifacts(
     raise TypeError(f"Unsupported pipeline result type: {type(chat_result)!r}")
 
 
+def _write_partial_pipeline_artifacts(run_dir: Path, chat_result: ExtractionPipelineResult) -> None:
+    if isinstance(chat_result, AnalystPipelineResult):
+        if chat_result.foundation_memo.content:
+            (run_dir / "analyst_memo_foundation.md").write_text(chat_result.foundation_memo.content, encoding="utf-8")
+        if chat_result.augmented_memo.content:
+            (run_dir / "analyst_memo_augmented.md").write_text(chat_result.augmented_memo.content, encoding="utf-8")
+        if chat_result.compiled_graph_extraction.triples or chat_result.raw_compiled_graph_response is not None:
+            _write_graph_extraction_artifact(
+                run_dir / "analyst_graph_compilation.json",
+                extraction=chat_result.compiled_graph_extraction,
+                attempts_used=chat_result.compiled_graph_attempts_used,
+                raw_response=chat_result.raw_compiled_graph_response,
+            )
+        if chat_result.final_extraction.triples or chat_result.raw_critique_response is not None:
+            _write_graph_extraction_artifact(
+                run_dir / "analyst_graph_critique.json",
+                extraction=chat_result.final_extraction,
+                attempts_used=chat_result.critique_attempts_used,
+                raw_response=chat_result.raw_critique_response,
+            )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Extract a business-model knowledge graph from SEC 10-K filings.")
     parser.add_argument("file_path", type=str, help="Path to the .txt file containing the 10-K business section.")
@@ -560,6 +582,7 @@ def main() -> int:
             stop_after_pass1=args.only_pass1,
         )
         if not chat_result.success:
+            _write_partial_pipeline_artifacts(run_dir, chat_result)
             raise ExtractionError(chat_result.error or f"{args.pipeline.title()} pipeline failed.")
 
         artifact_bundle = _prepare_pipeline_artifacts(

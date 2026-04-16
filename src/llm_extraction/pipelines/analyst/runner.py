@@ -10,6 +10,7 @@ from llm_extraction.models import (
 from llm_extraction.pipelines.analyst.prompts import (
     analyst_graph_compilation_prompt,
     analyst_graph_critique_prompt,
+    analyst_graph_system_prompt,
     analyst_memo_augmentation_prompt,
     analyst_memo_foundation_prompt,
     analyst_pipeline_system_prompt,
@@ -149,7 +150,8 @@ class AnalystPipelineRunner:
             )
 
         state = AnalystPipelineState()
-        pipeline_system_prompt = analyst_pipeline_system_prompt(full_text)
+        memo_system_prompt = analyst_pipeline_system_prompt(full_text)
+        graph_system_prompt = analyst_graph_system_prompt()
 
         try:
             (
@@ -161,7 +163,7 @@ class AnalystPipelineRunner:
                 index=2,
                 title="Analyst memo 1 - Core structure",
                 user_prompt=analyst_memo_foundation_prompt(company_name),
-                system_prompt=pipeline_system_prompt,
+                system_prompt=memo_system_prompt,
                 max_retries=max_retries,
                 details=[("artifact", "AnalystBusinessModelMemo")],
             )
@@ -181,7 +183,7 @@ class AnalystPipelineRunner:
                 index=3,
                 title="Analyst memo 2 - Detail augmentation",
                 user_prompt=analyst_memo_augmentation_prompt(company_name, foundation_memo_text),
-                system_prompt=pipeline_system_prompt,
+                system_prompt=memo_system_prompt,
                 max_retries=max_retries,
                 details=[("artifact", "AnalystBusinessModelMemo")],
             )
@@ -201,7 +203,7 @@ class AnalystPipelineRunner:
                 index=4,
                 title="Graph compilation",
                 user_prompt=analyst_graph_compilation_prompt(company_name, augmented_memo_text),
-                system_prompt=pipeline_system_prompt,
+                system_prompt=graph_system_prompt,
                 schema_name="KnowledgeGraphExtraction",
                 schema_model=KnowledgeGraphExtraction,
                 fallback_payload='{"extraction_notes":"Analyst graph compilation failed.","triples":[]}',
@@ -229,7 +231,7 @@ class AnalystPipelineRunner:
             company_name=company_name,
             max_retries=max_retries,
             strict=False,
-            system_prompt=pipeline_system_prompt,
+            system_prompt=graph_system_prompt,
             user_prompt=analyst_graph_critique_prompt(
                 company_name,
                 augmented_memo_text,

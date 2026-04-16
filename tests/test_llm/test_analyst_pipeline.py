@@ -143,9 +143,13 @@ class AnalystPipelineRunnerTests(unittest.TestCase):
         self.assertIn('"subject_type": "EXACT_NODE_TYPE"', captured_messages[2][1]["content"])
         self.assertIn("Do not use:", captured_messages[2][1]["content"])
         self.assertIn("`predicate` instead of `relation`", captured_messages[2][1]["content"])
+        self.assertIn("analyst memo already captures the filing-grounded reasoning context", captured_messages[2][0]["content"])
+        self.assertNotIn("<source_filing>", captured_messages[2][0]["content"])
         self.assertIn("focus on reducing overreach", critique_prompts["user"])
         self.assertIn('"subject_type": "EXACT_NODE_TYPE"', critique_prompts["user"])
         self.assertIn("tuple or array triples", critique_prompts["user"])
+        self.assertIn("analyst memo already captures the filing-grounded reasoning context", critique_prompts["system"])
+        self.assertNotIn("<source_filing>", critique_prompts["system"])
 
         self.assertIn("[02/07] Analyst memo 1 - Core structure", lines)
         self.assertIn("[05/07] Critique - Overreach review", lines)

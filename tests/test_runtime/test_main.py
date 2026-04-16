@@ -315,6 +315,52 @@ class RuntimeMainTests(unittest.TestCase):
             self.assertEqual(mock_run_pipeline.call_args.kwargs["pipeline"], "analyst")
             self.assertFalse(mock_run_pipeline.call_args.kwargs["stop_after_pass1"])
 
+    def test_main_analyst_pipeline_persists_partial_memos_on_failure(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            filing_path = tmp_path / "microsoft_10k.txt"
+            filing_path.write_text("ITEM 1. BUSINESS\nMicrosoft does business.\n", encoding="utf-8")
+            run_dir = tmp_path / "outputs" / "run"
+
+            failed_result = AnalystPipelineResult(
+                success=False,
+                foundation_memo=AnalystBusinessModelMemo(
+                    content="ANALYTICAL FRAME\nSummary:\nFoundation memo.\n",
+                ),
+                augmented_memo=AnalystBusinessModelMemo(
+                    content="ANALYTICAL FRAME\nSummary:\nAugmented memo.\n",
+                ),
+                error="Failed after 3 attempts. Last error: Empty response from model.",
+            )
+            fake_extractor = SimpleNamespace()
+
+            with patch.object(main_module, "_build_run_dir", return_value=run_dir), patch.object(
+                main_module, "resolve_model_settings"
+            ) as mock_resolve, patch.object(main_module, "LLMExtractor", return_value=fake_extractor), patch.object(
+                main_module, "run_extraction_pipeline", return_value=failed_result
+            ), patch(
+                "sys.argv", ["main.py", str(filing_path), "--pipeline", "analyst", "--output-dir", str(tmp_path / "outputs"), "--skip-neo4j"]
+            ):
+                mock_resolve.return_value = SimpleNamespace(
+                    provider="local",
+                    model="local-model",
+                    base_url="http://localhost:1234/v1",
+                    api_mode="chat_completions",
+                    api_key="lm-studio",
+                    max_output_tokens=None,
+                )
+                exit_code = main_module.main()
+
+            self.assertEqual(exit_code, 1)
+            self.assertTrue((run_dir / "analyst_memo_foundation.md").exists())
+            self.assertTrue((run_dir / "analyst_memo_augmented.md").exists())
+            self.assertFalse((run_dir / "analyst_graph_compilation.json").exists())
+
+            summary = json.loads((run_dir / "run_summary.json").read_text(encoding="utf-8"))
+            self.assertEqual(summary["status"], "failed")
+            self.assertIn("Empty response from model", summary["error"])
+            mock_resolve.assert_called_once()
+
 
 if __name__ == "__main__":
     unittest.main()
