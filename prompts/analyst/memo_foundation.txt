@@ -12,66 +12,67 @@ Focus first on the core organizing structure of how the company makes money and 
 </company_name>
 
 <artifact_contract>
-Return a structured plain-text memo, not JSON.
+Return a structured markdown memo, not JSON.
 
-Use this exact section order and keep the headings verbatim:
+Use this exact section order and keep the heading text verbatim.
+Render the memo in markdown using headings and bullet lists.
 
-ANALYTICAL FRAME
-Summary:
+# ANALYTICAL FRAME
+## Summary:
 ...
-Explicit Support:
+## Explicit Support:
 - ...
-Analyst Inference / Synthesis:
+## Analyst Inference / Synthesis:
 - ...
-Uncertainty / Ambiguity:
+## Uncertainty / Ambiguity:
 - ...
 
-SEGMENTS
-[Segment] <name>
-Role in Business Model:
+# SEGMENTS
+## [Segment] <name>
+### Role in Business Model:
 ...
-Explicit Support:
+### Explicit Support:
 - ...
-Analyst Inference / Synthesis:
+### Analyst Inference / Synthesis:
 - ...
-Uncertainty / Ambiguity:
+### Uncertainty / Ambiguity:
 - ...
-Customer Types:
+### Customer Types:
 - <canonical customer label> | <why it fits>
-Channels:
+### Channels:
 - <canonical channel label> | <why it fits>
 
-OFFERINGS
-[Offering] <name>
-Role in Business Model:
+# OFFERINGS
+## [Offering] <name>
+### Role in Business Model:
 ...
-Explicit Support:
+### Explicit Support:
 - ...
-Analyst Inference / Synthesis:
+### Analyst Inference / Synthesis:
 - ...
-Uncertainty / Ambiguity:
+### Uncertainty / Ambiguity:
 - ...
-Segment Anchors:
+### Segment Anchors:
 - <segment name> | <why it belongs there>
-Parent Offering:
+### Parent Offering:
 - <parent offering name> | <why this is the parent>
-Child Offerings:
+### Child Offerings:
 - <child offering name> | <why it belongs under this parent>
-Channels:
+### Channels:
 - <canonical channel label> | <why it fits>
-Revenue Models:
+### Revenue Models:
 - <canonical revenue-model label> | <why it fits>
 
-CORPORATE SCOPE
-Operating Geographies:
+# CORPORATE SCOPE
+## Operating Geographies:
 - <place> | <why it matters>
-Key Partners:
+## Key Partners:
 - <company> | <why the partnership is meaningful>
 
-OPEN QUESTIONS
+# OPEN QUESTIONS
 - ...
 
-MEMO NOTES
+# MEMO NOTES
 - ...
 </artifact_contract>
 
@@ -80,7 +81,6 @@ MEMO NOTES
 - choose the most defensible business-model anchors, even if the filing's reporting segmentation is not the best analytical frame
 - do not create decorative segments just to make the company look tidy
 - keep only the offerings that matter to the core structure in this first pass
-- if a named offering family, suite, platform, or franchise is itself one of the core organizing units of the business, include it even in this first pass
 - if a core offering family clearly contains a few material child offerings named in the filing, include those child offerings explicitly rather than leaving the family undecomposed
 - if a core offering clearly contains stable named variants, tiers, editions, plans, form factors, or line families, include those child offerings even when the filing presents them through current release names
 - normalize annual, release-specific, or version-specific names into durable family-level or variant-level child offerings when that yields a more stable business-model structure than using the transient label verbatim
@@ -101,6 +101,6 @@ MEMO NOTES
 </foundation_rules>
 
 <format_reminder>
-Return ONLY the memo text.
+Return ONLY the markdown memo.
 Do not return JSON.
 </format_reminder>

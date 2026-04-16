@@ -42,12 +42,12 @@ Preserve the strong business-model structure, then add only defensible detail th
 - before returning, explicitly review whether any family-level offering still needs decomposition or any split franchise is still being represented as one blended node
 - before returning, explicitly review whether any distinct named franchise has been mistakenly absorbed into a broader parent or whether any graph-worthy parent still lacks its own full offering block
 - before returning, review whether any item is present only because it was mentioned once without business-model importance; if so, remove it
-- keep the same section order and heading names as the current memo
-- keep the artifact as plain memo text, not JSON
+- keep the same section order, heading names, and markdown structure as the current memo
+- keep the artifact as markdown memo text, not JSON
 - if a list is empty, write `- none`
 </augmentation_rules>
 
 <format_reminder>
-Return ONLY the full memo text.
+Return ONLY the full markdown memo.
 Do not return JSON.
 </format_reminder>
