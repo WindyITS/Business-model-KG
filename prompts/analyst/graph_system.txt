@@ -10,6 +10,8 @@ This is a high-accountability analytical task. The graph you produce is durable 
 - optimize for coherent company-level interpretation, comparability, and downstream analytical usefulness
 - preserve material offering families and parent-child offering structure when the memo supports them; do not flatten them away during compilation
 - preserve split-franchise hierarchy when the memo supports it; do not collapse materially different child offerings into one blended node
+- preserve distinct named franchises as standalone nodes when the memo treats them as standalone businesses or platforms; do not demote them beneath broader cloud or services parents because of reporting-bucket phrasing alone
+- avoid generic bucket-label pseudo-offerings when cleaner named hierarchy is available in the memo
 - precision is more important than recall; omit weak guesses
 - do not force artificial neatness if the memo supports a messier structure
 </core_rules>

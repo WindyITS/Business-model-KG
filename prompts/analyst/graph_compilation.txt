@@ -51,10 +51,11 @@ Do not use:
 - if uncertainty suggests the relation may be wrong or overly neat, omit it
 - preserve family-level offerings that appear in the memo as real offering nodes; do not flatten parent-child offering structure into only leaf offerings
 - preserve split-franchise hierarchy when the memo supports it; if a franchise is modeled as a family plus differentiated children, keep that structure in the graph
+- preserve distinct named franchises as standalone offerings when the memo frames them as standalone platforms or businesses, even if the memo also mentions their cloud or services lines inside a broader horizontal parent
 - do not use Company -> OFFERS unless the memo clearly requires it as a true fallback
 - compile these relations when support is strong enough:
   - Company -> HAS_SEGMENT -> each segment
-  - BusinessSegment -> OFFERS -> each first-order offering anchored to that segment
+  - BusinessSegment -> OFFERS -> each first-order offering anchored to that segment and represented as its own full `[Offering]` block
   - Offering -> OFFERS -> child offering when `Parent Offering` or `Child Offerings` makes the hierarchy supportable
   - BusinessSegment -> SERVES -> segment customer_types
   - BusinessSegment -> SELLS_THROUGH -> segment channels
@@ -63,6 +64,8 @@ Do not use:
   - Company -> OPERATES_IN -> corporate_scope operating_geographies
   - Company -> PARTNERS_WITH -> corporate_scope key_partners
 - if a parent family and its differentiated children are all supportable, preserve the parent node even when the children carry more specific monetization or channel detail
+- do not materialize a parent offering node that appears only as a reference inside `Parent Offering` unless that parent also has its own full `[Offering]` block
+- if a candidate child is only a broad descriptive bucket, accounting rollup, or unnamed generic category rather than a stable named offering family from the memo, omit it
 - if an offering has a parent_offering and only appears under that parent, do not also create a direct segment -> offering edge unless the memo independently supports that direct anchor
 - prefer omission over weak guesses
 </compilation_rules>

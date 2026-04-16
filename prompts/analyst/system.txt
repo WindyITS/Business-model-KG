@@ -45,6 +45,8 @@ Allowed relations:
 - if the filing supports both a family-level offering and child offerings, preserve both levels rather than flattening to only one level
 - family-level offerings should capture real business-model structure, not generic marketing umbrellas
 - treat split franchises as hierarchy problems, not summary problems: preserve the umbrella franchise when useful, but model the differentiated child offerings when the filing supports them
+- distinguish business-model hierarchy from reporting-bucket inclusion: a distinct named franchise should not be demoted under a broader horizontal platform merely because the filing lists that franchise's cloud services or professional services inside the broader bucket
+- prefer stable named brands, platforms, suites, and product families over generic category labels when forming offering hierarchy
 </representation_guidance>
 
 <closed_labels>

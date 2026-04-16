@@ -24,8 +24,11 @@ Preserve the strong business-model structure, then add only defensible detail th
 - do not collapse important offering families into segment prose or generic summary text
 - when both a family-level offering and child offerings are supportable, keep the family-level offering and express the hierarchy explicitly through both `Child Offerings` on the parent and `Parent Offering` on the child
 - when a named franchise spans materially different sub-businesses, segment anchors, channels, or monetization patterns, prefer a parent family plus differentiated child offerings over a single blended offering
+- if a named franchise remains analytically distinct in the filing, do not demote it under a broader cloud, services, or reporting bucket merely because one of its revenue lines is listed there
+- if you introduce a parent family that should appear as a segment-level or graph-level node, give it its own full `[Offering]` block instead of only mentioning it inside `Parent Offering`
 - do not leave a top-level family node under-specified if the filing clearly names its important sub-offerings
-- prefer business-model-relevant families and product lines over one-off features, implementation details, or promotional labels
+- prefer business-model-relevant families and product lines over one-off features, implementation details, promotional labels, or generic bucket labels
+- avoid creating child offerings that are only broad descriptive categories unless the filing itself treats them as stable offering families or explicitly monetized sub-lines
 - refine the support blocks so explicit support, analyst inference, and uncertainties are clearly separated
 - if a claim remains plausible but weak, keep it out rather than filling space
 - do not turn this into a long filing summary
@@ -33,6 +36,7 @@ Preserve the strong business-model structure, then add only defensible detail th
 - do not create artificial completeness; empty arrays are allowed
 - before returning, explicitly review whether the memo is still missing any material family-level offerings that a downstream analyst would need to understand the company's structure
 - before returning, explicitly review whether any family-level offering still needs decomposition or any split franchise is still being represented as one blended node
+- before returning, explicitly review whether any distinct named franchise has been mistakenly absorbed into a broader parent or whether any graph-worthy parent still lacks its own full offering block
 - before returning, review whether any item is present only because it was mentioned once without business-model importance; if so, remove it
 - keep the same section order and heading names as the current memo
 - keep the artifact as plain memo text, not JSON
