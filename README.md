@@ -2,9 +2,8 @@
 
 A local pipeline for turning SEC 10-K business sections into a standardized business-model knowledge graph.
 
-The repo is organized around two maintained surfaces:
-- one canonical extraction/runtime stack
-- one structured text-to-Cypher dataset workflow with generated corpus and SFT/message exports
+The repo focuses on one maintained surface:
+- the extraction and runtime stack for building, validating, and querying the business-model graph
 
 ## What The Pipeline Extracts
 
@@ -50,7 +49,7 @@ This means the effective behavior of the pipeline comes from three layers togeth
 
 ## Extraction Pipelines
 
-The repo now ships two separate extraction pipelines:
+The repo ships two extraction pipelines:
 
 - `canonical`: the staged, ontology-constrained extraction runtime
 - `analyst`: a sibling runtime that first builds a structured analyst memo from the full filing, then compiles that memo into the ontology graph and runs a short overreach critique pass
@@ -96,12 +95,24 @@ Runtime notes:
 - the analyst runtime treats the ontology as the target graph structure, not as a literal paragraph-extraction cage
 - `--only-pass1` is intentionally canonical-only because the analyst pipeline's first pass is a memo rather than a loadable graph
 
+## Query Interface
+
+The runtime also includes a read-only natural-language query path for the live Neo4j graph:
+
+- `kg-query-cypher` renders a browser-ready Cypher query without executing it
+- `kg-query` generates the query, runs a Neo4j `EXPLAIN`, and then executes it
+
+The system prompt used for query generation lives in [`src/runtime/query_prompt.py`](./src/runtime/query_prompt.py), and the read-only Cypher guards live in [`src/runtime/cypher_validation.py`](./src/runtime/cypher_validation.py).
+
 ## Repo Layout
 
 ```text
 src/
   runtime/
     main.py               runtime CLI implementation
+    query.py              natural-language query CLI
+    query_prompt.py       prompt assets for query generation and repair
+    cypher_validation.py  read-only query guards and Neo4j URI normalization
     model_provider.py     provider/model resolution
     entity_resolver.py    light entity normalization
   llm/
@@ -120,16 +131,10 @@ src/
   graph/
     neo4j_loader.py       Neo4j loading
     evaluate_graph.py     graph evaluation utilities
-  text2cypher/
-    dataset/v2/           dataset builder, models, specs, paraphrases
-    mlx/                  MLX fine-tuning and evaluation helpers
-    validation.py         validates gold Cypher against synthetic fixtures
 
   main.py                 compatibility CLI wrapper
   llm_extractor.py        compatibility extractor wrapper
   ontology_validator.py   compatibility validator wrapper
-  validate_text2cypher_dataset.py
-                          compatibility validator wrapper
 
 configs/
   ontology.json           canonical ontology config
@@ -141,104 +146,18 @@ prompts/
 
 docs/
   ontology.md             canonical ontology specification
-  text2cypher/
-    README.md             dataset documentation and canonical entrypoints
-    design/               coverage, intent, fixture, and readiness docs
-
-datasets/
-  text2cypher/
-    README.md             machine-readable dataset layout
-    v3/                   active training corpus, evaluation set, and reports
-
-scripts/
-  text2cypher/
-    build_text2cypher_dataset.py
-                          dataset build entrypoint
-    prepare_text2cypher_mlx_dataset.py
-                          MLX dataset preparation
-    train_text2cypher_mlx_lora.py
-                          MLX LoRA training entrypoint
-    evaluate_text2cypher_mlx_adapter.py
-                          MLX held-out evaluation
-    export_hf_text2cypher_dataset.py
-                          local export helper for HF-ready release assembly from the generated dataset workspace
-  build_text2cypher_dataset.py
-  prepare_text2cypher_mlx_dataset.py
-  train_text2cypher_mlx_lora.py
-  evaluate_text2cypher_mlx_adapter.py
-  export_hf_text2cypher_dataset.py
-                          compatibility wrappers
 
 tests/
   test_runtime/
   test_llm/
   test_ontology/
   test_graph/
-  test_text2cypher/
 ```
 
 Pipeline structure notes:
 - prompt files are repo assets under `prompts/`, not embedded in `src/`
-- [`src/llm/extractor.py`](./src/llm/extractor.py) now handles transport, retries, JSON recovery, and parsing only
+- [`src/llm/extractor.py`](./src/llm/extractor.py) handles transport, retries, JSON recovery, and parsing only
 - pipeline-specific orchestration and prompt selection live under [`src/llm_extraction/pipelines/`](./src/llm_extraction/pipelines/)
-
-## Text2Cypher Dataset Assets
-
-The supervised text-to-Cypher corpus is now split by role:
-
-- prose and design docs live in [`docs/text2cypher/`](./docs/text2cypher/README.md)
-- local machine-readable artifacts are generated under `datasets/text2cypher/v3/`
-- the export script copies that local build output into the Hugging Face release bundle under `dist/huggingface/text2cypher-v3/`
-
-Training guidance:
-- the fine-tuning plan is to use this repo's dataset only
-- build the dataset locally with `text2cypher-build` or [`scripts/text2cypher/build_text2cypher_dataset.py`](./scripts/text2cypher/build_text2cypher_dataset.py) before training or validation
-- `datasets/text2cypher/v3/training/train_messages.jsonl` is the train-facing SFT corpus once the local build exists
-- `datasets/text2cypher/v3/training/valid_messages.jsonl` is the in-training validation split for checkpoint selection and loss tracking
-- `datasets/text2cypher/v3/evaluation/test_messages.jsonl` is the held-out evaluation set once the local build exists
-
-The dataset validator implementation in [`src/text2cypher/validation.py`](./src/text2cypher/validation.py) defaults to the local `v3` build output under `datasets/text2cypher/v3/`. The legacy [`src/validate_text2cypher_dataset.py`](./src/validate_text2cypher_dataset.py) entrypoint remains as a compatibility wrapper.
-
-## Fine-Tuning On Apple Silicon
-
-The repo now includes a local Apple Silicon LoRA pipeline for `Qwen/Qwen3-4B` using `mlx-lm`.
-
-The intended flow is:
-
-1. prepare the MLX-ready chat dataset with `text2cypher-prepare-mlx` or [`scripts/text2cypher/prepare_text2cypher_mlx_dataset.py`](./scripts/text2cypher/prepare_text2cypher_mlx_dataset.py)
-2. train adapters with `text2cypher-train-mlx` or [`scripts/text2cypher/train_text2cypher_mlx_lora.py`](./scripts/text2cypher/train_text2cypher_mlx_lora.py)
-3. score the held-out set with `text2cypher-evaluate-mlx` or [`scripts/text2cypher/evaluate_text2cypher_mlx_adapter.py`](./scripts/text2cypher/evaluate_text2cypher_mlx_adapter.py)
-
-The current local `v3` build shape is `4904` train rows, `100` validation rows, and `512` held-out test rows.
-
-The detailed workflow, defaults, and commands live in [`docs/text2cypher/fine_tuning_mlx.md`](./docs/text2cypher/fine_tuning_mlx.md).
-
-## How The Dataset Was Built
-
-`Text2Cypher v3` was built through an agent-orchestrated, spec-first workflow rather than through a blind auto-generation loop, then extended with a hard-query train cohort and a separate held-out evaluation cohort.
-
-The generation flow was:
-
-1. define query families and intent-level semantic tasks
-2. author synthetic graph fixtures where those tasks are answerable, ambiguous, or unsupported on purpose
-3. write gold parameterized Cypher for each intent
-4. bind those intents to concrete synthetic values
-5. validate the queries against Neo4j-backed synthetic graphs
-6. expand the natural-language side with multiple user phrasings, including messier analyst-style prompts and refusal cases
-7. add a hard-query training extension and a fresh held-out evaluation set with leakage checks
-
-That means the dataset is not just a pile of question-query pairs. It is a checked mapping from task to graph pattern to Cypher to user phrasing. Agents handled orchestration, expansion, and repeated validation runs, while the fixture design, intent inventory, and gold query patterns were curated deliberately.
-
-## Public Dataset Release
-
-For public distribution, the repo now uses a single-branch flow:
-
-- keep this GitHub repo focused on the KG pipeline, ontology, dataset docs, and the build/export workflow
-- build dataset artifacts locally under `datasets/text2cypher/v3/`, but keep those generated version directories out of git
-- publish the machine-readable text-to-Cypher corpus, including the generated `messages.jsonl` SFT view, as a dedicated Hugging Face dataset release
-- keep local packaging/upload templates and `dist/` release bundles outside the public tracked repo surface
-
-In other words, the public repo explains and builds the dataset, the local workspace holds generated artifacts, and Hugging Face is the publication target for the actual release bundle.
 
 ## Quickstart
 
@@ -256,11 +175,10 @@ source venv/bin/activate
 pip install -e .
 ```
 
-To use the Apple Silicon LoRA training path as well:
-
-```bash
-pip install -r requirements-mlx-lora.txt
-```
+That editable install creates the convenience commands in `venv/bin/`:
+- `kg-pipeline`
+- `kg-query`
+- `kg-query-cypher`
 
 Run the extraction pipeline:
 
@@ -278,6 +196,21 @@ Run only the structural skeleton:
 
 ```bash
 ./venv/bin/kg-pipeline data/microsoft_10k.txt --only-pass1 --skip-neo4j
+```
+
+Render a Cypher query without executing it:
+
+```bash
+./venv/bin/kg-query-cypher "Which company segments sell through marketplaces?"
+```
+
+Run a query against Neo4j:
+
+```bash
+./venv/bin/kg-query "Which company segments sell through marketplaces?" \
+  --neo4j-uri bolt://localhost:7687 \
+  --neo4j-user neo4j \
+  --neo4j-password password
 ```
 
 Run against OpenCode Go with a hosted open model:

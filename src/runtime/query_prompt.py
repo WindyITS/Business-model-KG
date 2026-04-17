@@ -24,7 +24,7 @@ _CHANNEL_LABELS = canonical_labels("Channel")
 _REVENUE_MODEL_LABELS = canonical_labels("RevenueModel")
 
 
-TEXT2CYPHER_SYSTEM_PROMPT = "\n\n".join(
+QUERY_SYSTEM_PROMPT = "\n\n".join(
     [
         (
             "You translate natural-language questions into compact JSON that contains a read-only Cypher "
@@ -171,7 +171,7 @@ TEXT2CYPHER_SYSTEM_PROMPT = "\n\n".join(
 )
 
 
-TEXT2CYPHER_REPAIR_SYSTEM_PROMPT = "\n\n".join(
+QUERY_REPAIR_SYSTEM_PROMPT = "\n\n".join(
     [
         (
             "You repair a previously generated JSON answer for the same production business-model "
@@ -195,4 +195,4 @@ TEXT2CYPHER_REPAIR_SYSTEM_PROMPT = "\n\n".join(
 )
 
 
-__all__ = ["TEXT2CYPHER_SYSTEM_PROMPT", "TEXT2CYPHER_REPAIR_SYSTEM_PROMPT"]
+__all__ = ["QUERY_SYSTEM_PROMPT", "QUERY_REPAIR_SYSTEM_PROMPT"]

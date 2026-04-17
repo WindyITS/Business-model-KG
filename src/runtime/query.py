@@ -10,10 +10,10 @@ from llm.extractor import LLMExtractor
 from llm_extraction.models import ExtractionError
 from neo4j import GraphDatabase
 from pydantic import BaseModel, Field, model_validator
-from text2cypher.prompting import TEXT2CYPHER_REPAIR_SYSTEM_PROMPT, TEXT2CYPHER_SYSTEM_PROMPT
-from text2cypher.validation import normalize_neo4j_uri, validate_params_match, validate_read_only_cypher
 
+from .cypher_validation import normalize_neo4j_uri, validate_params_match, validate_read_only_cypher
 from .model_provider import resolve_model_settings
+from .query_prompt import QUERY_REPAIR_SYSTEM_PROMPT, QUERY_SYSTEM_PROMPT
 
 QUERY_FALLBACK_PAYLOAD = '{"answerable": false, "reason": "generation_failed"}'
 PARAM_REF_RE = re.compile(r"\$([A-Za-z_][A-Za-z0-9_]*)")
@@ -24,14 +24,14 @@ SEMANTIC_REPAIR_PARAM_PREFIXES = ("customer_type", "channel", "revenue_model", "
 BOOLEAN_HINT_TOKENS = (" and ", " or ", " both ", " either ")
 
 
-class Text2CypherQueryResult(BaseModel):
+class QueryResult(BaseModel):
     answerable: bool
     cypher: str | None = None
     params: dict[str, Any] = Field(default_factory=dict)
     reason: str | None = None
 
     @model_validator(mode="after")
-    def _validate_contract(self) -> "Text2CypherQueryResult":
+    def _validate_contract(self) -> "QueryResult":
         if self.answerable:
             if not self.cypher or not self.cypher.strip():
                 raise ValueError("Answerable responses must include a non-empty cypher string.")
@@ -69,21 +69,21 @@ def _question_text(question_parts: list[str]) -> str:
 
 def _query_messages(question: str) -> list[dict[str, str]]:
     return [
-        {"role": "system", "content": TEXT2CYPHER_SYSTEM_PROMPT},
+        {"role": "system", "content": QUERY_SYSTEM_PROMPT},
         {"role": "user", "content": question},
     ]
 
 
-def generate_text2cypher_query(
+def generate_query(
     *,
     question: str,
     extractor: LLMExtractor,
     max_retries: int,
-) -> tuple[Text2CypherQueryResult, str | None, int, dict[str, Any]]:
+) -> tuple[QueryResult, str | None, int, dict[str, Any]]:
     result, raw_response, attempts_used, audit = extractor.generate_structured_output(
         messages=_query_messages(question),
-        schema_name="Text2CypherQueryResult",
-        schema_model=Text2CypherQueryResult,
+        schema_name="QueryResult",
+        schema_model=QueryResult,
         fallback_payload=QUERY_FALLBACK_PAYLOAD,
         max_retries=max_retries,
         temperature=0.0,
@@ -106,14 +106,14 @@ def _bounded_extractor(extractor: LLMExtractor, *, max_output_tokens: int) -> LL
     )
 
 
-def repair_text2cypher_query(
+def repair_query(
     *,
     question: str,
-    previous_result: Text2CypherQueryResult,
+    previous_result: QueryResult,
     error_message: str,
     extractor: LLMExtractor,
     max_retries: int,
-) -> tuple[Text2CypherQueryResult, str | None, int, dict[str, Any]]:
+) -> tuple[QueryResult, str | None, int, dict[str, Any]]:
     previous_payload = json.dumps(
         _json_safe(previous_result.model_dump(mode="json", exclude_none=True)),
         ensure_ascii=False,
@@ -129,11 +129,11 @@ def repair_text2cypher_query(
     repair_extractor = _bounded_extractor(extractor, max_output_tokens=DEFAULT_REPAIR_MAX_OUTPUT_TOKENS)
     result, raw_response, attempts_used, audit = repair_extractor.generate_structured_output(
         messages=[
-            {"role": "system", "content": TEXT2CYPHER_REPAIR_SYSTEM_PROMPT},
+            {"role": "system", "content": QUERY_REPAIR_SYSTEM_PROMPT},
             {"role": "user", "content": repair_instruction},
         ],
-        schema_name="Text2CypherQueryResultRepair",
-        schema_model=Text2CypherQueryResult,
+        schema_name="QueryResultRepair",
+        schema_model=QueryResult,
         fallback_payload=QUERY_FALLBACK_PAYLOAD,
         max_retries=max_retries,
         temperature=0.0,
@@ -141,7 +141,7 @@ def repair_text2cypher_query(
     return result, raw_response, attempts_used, audit
 
 
-def validate_generated_query(result: Text2CypherQueryResult) -> list[str]:
+def validate_generated_query(result: QueryResult) -> list[str]:
     if not result.answerable:
         return []
 
@@ -257,7 +257,7 @@ def _has_repeated_semantic_slot(params: dict[str, Any]) -> bool:
     return any(count > 1 for count in counts.values())
 
 
-def _should_attempt_empty_result_repair(question: str, result: Text2CypherQueryResult) -> bool:
+def _should_attempt_empty_result_repair(question: str, result: QueryResult) -> bool:
     normalized_question = f" {question.casefold()} "
     return _has_repeated_semantic_slot(result.params) or any(
         token in normalized_question for token in BOOLEAN_HINT_TOKENS
@@ -323,20 +323,20 @@ def _print_output(message: str) -> None:
 def _repair_or_none(
     *,
     question: str,
-    current_result: Text2CypherQueryResult,
+    current_result: QueryResult,
     error_message: str,
     extractor: LLMExtractor,
     max_retries: int,
     repair_attempt_index: int,
     repair_attempt_limit: int,
-) -> Text2CypherQueryResult | None:
+) -> QueryResult | None:
     if repair_attempt_index >= repair_attempt_limit:
         return None
 
     _print_status(
         f"Repairing query after error (attempt {repair_attempt_index + 1}/{repair_attempt_limit})..."
     )
-    repaired_result, _raw_response, _attempts_used, _audit = repair_text2cypher_query(
+    repaired_result, _raw_response, _attempts_used, _audit = repair_query(
         question=question,
         previous_result=current_result,
         error_message=error_message,
@@ -368,7 +368,7 @@ def _run(argv: list[str] | None, *, execute: bool) -> int:
             max_output_tokens=model_settings.max_output_tokens or DEFAULT_QUERY_MAX_OUTPUT_TOKENS,
         )
         _print_status("Generating query...")
-        query_result, _raw_response, attempts_used, _audit = generate_text2cypher_query(
+        query_result, _raw_response, attempts_used, _audit = generate_query(
             question=question,
             extractor=extractor,
             max_retries=args.max_retries,

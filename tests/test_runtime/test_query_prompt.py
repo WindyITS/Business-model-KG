@@ -1,11 +1,11 @@
 import unittest
 
-from text2cypher.prompting import TEXT2CYPHER_REPAIR_SYSTEM_PROMPT, TEXT2CYPHER_SYSTEM_PROMPT
+from runtime.query_prompt import QUERY_REPAIR_SYSTEM_PROMPT, QUERY_SYSTEM_PROMPT
 
 
-class Text2CypherPromptingTests(unittest.TestCase):
+class QueryPromptTests(unittest.TestCase):
     def test_system_prompt_requires_closed_label_normalization(self):
-        prompt = TEXT2CYPHER_SYSTEM_PROMPT.casefold()
+        prompt = QUERY_SYSTEM_PROMPT.casefold()
         self.assertIn("always normalize the user's wording to the exact canonical label", prompt)
         self.assertIn("government agencies", prompt)
         self.assertIn("healthcare organizations", prompt)
@@ -19,7 +19,7 @@ class Text2CypherPromptingTests(unittest.TestCase):
         self.assertIn("within_places", prompt)
 
     def test_repair_prompt_is_short_and_schema_grounded(self):
-        prompt = TEXT2CYPHER_REPAIR_SYSTEM_PROMPT.casefold()
+        prompt = QUERY_REPAIR_SYSTEM_PROMPT.casefold()
         self.assertIn("make the smallest possible fix", prompt)
         self.assertIn("compact json only", prompt)
         self.assertIn("place-rollup pattern", prompt)

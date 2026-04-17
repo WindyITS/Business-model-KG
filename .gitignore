@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
+*.egg-info/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
@@ -26,12 +27,6 @@ venv/
 outputs/
 dist/
 packaging/
-datasets/text2cypher/v*/
-docs/_bound_seed_example_drafts/
-docs/_bound_seed_example_v1_drafts/
-docs/_fixture_instance_drafts/
-docs/_fixture_instance_v1_drafts/
-docs/_training_example_v1_drafts/
 
 # OS
 .DS_Store

@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "business-model-kg"
 version = "0.1.0"
-description = "Local pipelines and dataset tooling for business-model knowledge graphs."
+description = "Local pipelines and runtime tooling for business-model knowledge graphs."
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
@@ -19,12 +19,6 @@ kg-pipeline = "runtime.main:main"
 kg-evaluate-graph = "graph.evaluate_graph:main"
 kg-query = "runtime.query:main_query"
 kg-query-cypher = "runtime.query:main_query_cypher"
-text2cypher-build = "text2cypher.cli.build_text2cypher_dataset:main"
-text2cypher-prepare-mlx = "text2cypher.cli.prepare_text2cypher_mlx_dataset:main"
-text2cypher-train-mlx = "text2cypher.cli.train_text2cypher_mlx_lora:main"
-text2cypher-evaluate-mlx = "text2cypher.cli.evaluate_text2cypher_mlx_adapter:main"
-text2cypher-export-hf = "text2cypher.cli.export_hf_text2cypher_dataset:main"
-text2cypher-validate = "text2cypher.cli.validate_text2cypher_dataset:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
@@ -38,8 +32,6 @@ py-modules = [
     "ontology_config",
     "ontology_validator",
     "place_hierarchy",
-    "text2cypher_mlx_lora",
-    "validate_text2cypher_dataset",
 ]
 
 [tool.setuptools.packages.find]
@@ -55,10 +47,6 @@ include = [
     "ontology.*",
     "runtime",
     "runtime.*",
-    "text2cypher",
-    "text2cypher.*",
-    "text2cypher_dataset_v2",
-    "text2cypher_dataset_v2.*",
 ]
 
 [tool.setuptools.package-data]

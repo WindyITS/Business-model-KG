@@ -5,7 +5,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from runtime import query as query_module
-from runtime.query import Text2CypherQueryResult
+from runtime.query import QueryResult
 
 
 class RuntimeQueryTests(unittest.TestCase):
@@ -27,9 +27,9 @@ class RuntimeQueryTests(unittest.TestCase):
             query_module, "LLMExtractor", return_value=object()
         ), patch.object(
             query_module,
-            "generate_text2cypher_query",
+            "generate_query",
             return_value=(
-                Text2CypherQueryResult(
+                QueryResult(
                     answerable=True,
                     cypher="MATCH (company:Company) RETURN company.name AS company",
                     params={},
@@ -56,9 +56,9 @@ class RuntimeQueryTests(unittest.TestCase):
             query_module, "LLMExtractor", return_value=object()
         ), patch.object(
             query_module,
-            "generate_text2cypher_query",
+            "generate_query",
             return_value=(
-                Text2CypherQueryResult(
+                QueryResult(
                     answerable=True,
                     cypher="MATCH (company:Company) RETURN company.name AS company ORDER BY company",
                     params={},
@@ -92,9 +92,9 @@ class RuntimeQueryTests(unittest.TestCase):
             query_module, "LLMExtractor", return_value=object()
         ), patch.object(
             query_module,
-            "generate_text2cypher_query",
+            "generate_query",
             return_value=(
-                Text2CypherQueryResult(answerable=False, reason="unsupported_request"),
+                QueryResult(answerable=False, reason="unsupported_request"),
                 None,
                 1,
                 {},
@@ -116,9 +116,9 @@ class RuntimeQueryTests(unittest.TestCase):
             query_module, "LLMExtractor", return_value=object()
         ), patch.object(
             query_module,
-            "generate_text2cypher_query",
+            "generate_query",
             return_value=(
-                Text2CypherQueryResult(
+                QueryResult(
                     answerable=True,
                     cypher="CREATE (company:Company {name: $company}) RETURN company.name AS company",
                     params={"company": "Acme"},
@@ -143,9 +143,9 @@ class RuntimeQueryTests(unittest.TestCase):
             query_module, "LLMExtractor", return_value=object()
         ), patch.object(
             query_module,
-            "generate_text2cypher_query",
+            "generate_query",
             return_value=(
-                Text2CypherQueryResult(
+                QueryResult(
                     answerable=True,
                     cypher="MATCH (company:Company {name: $company}) RETURN company.name AS company",
                     params={"company": "Acme"},
@@ -170,9 +170,9 @@ class RuntimeQueryTests(unittest.TestCase):
             query_module, "LLMExtractor", return_value=object()
         ), patch.object(
             query_module,
-            "generate_text2cypher_query",
+            "generate_query",
             return_value=(
-                Text2CypherQueryResult(
+                QueryResult(
                     answerable=True,
                     cypher=(
                         "MATCH (c:Company)-[:HAS_SEGMENT]->(s:BusinessSegment {company_name: c.name})"
@@ -201,7 +201,7 @@ class RuntimeQueryTests(unittest.TestCase):
     def test_query_repairs_after_neo4j_preflight_error(self):
         stdout = io.StringIO()
         stderr = io.StringIO()
-        bad_result = Text2CypherQueryResult(
+        bad_result = QueryResult(
             answerable=True,
             cypher=(
                 "MATCH (c:Company)-[:HAS_SEGMENT]->(s:BusinessSegment {company_name: c.name})"
@@ -211,7 +211,7 @@ class RuntimeQueryTests(unittest.TestCase):
             ),
             params={},
         )
-        fixed_result = Text2CypherQueryResult(
+        fixed_result = QueryResult(
             answerable=True,
             cypher=(
                 "MATCH (c:Company)-[:HAS_SEGMENT]->(s:BusinessSegment {company_name: c.name})"
@@ -227,11 +227,11 @@ class RuntimeQueryTests(unittest.TestCase):
             query_module, "LLMExtractor", return_value=object()
         ), patch.object(
             query_module,
-            "generate_text2cypher_query",
+            "generate_query",
             return_value=(bad_result, None, 1, {}),
         ), patch.object(
             query_module,
-            "repair_text2cypher_query",
+            "repair_query",
             return_value=(fixed_result, None, 1, {}),
         ) as mock_repair, patch.object(
             query_module,
@@ -260,7 +260,7 @@ class RuntimeQueryTests(unittest.TestCase):
     def test_query_repairs_after_empty_result_for_multi_customer_company_query(self):
         stdout = io.StringIO()
         stderr = io.StringIO()
-        bad_result = Text2CypherQueryResult(
+        bad_result = QueryResult(
             answerable=True,
             cypher=(
                 "MATCH (c:Company)-[:HAS_SEGMENT]->(s:BusinessSegment {company_name: c.name})"
@@ -273,7 +273,7 @@ class RuntimeQueryTests(unittest.TestCase):
                 "customer_type_2": "healthcare organizations",
             },
         )
-        fixed_result = Text2CypherQueryResult(
+        fixed_result = QueryResult(
             answerable=True,
             cypher=(
                 "MATCH (c:Company)-[:HAS_SEGMENT]->(s1:BusinessSegment {company_name: c.name})"
@@ -292,11 +292,11 @@ class RuntimeQueryTests(unittest.TestCase):
             query_module, "LLMExtractor", return_value=object()
         ), patch.object(
             query_module,
-            "generate_text2cypher_query",
+            "generate_query",
             return_value=(bad_result, None, 1, {}),
         ), patch.object(
             query_module,
-            "repair_text2cypher_query",
+            "repair_query",
             return_value=(fixed_result, None, 1, {}),
         ) as mock_repair, patch.object(
             query_module,
@@ -325,7 +325,7 @@ class RuntimeQueryTests(unittest.TestCase):
     def test_query_does_not_repair_empty_result_for_single_channel_geography_query(self):
         stdout = io.StringIO()
         stderr = io.StringIO()
-        result = Text2CypherQueryResult(
+        result = QueryResult(
             answerable=True,
             cypher=(
                 "MATCH (company:Company)-[:OPERATES_IN]->(place:Place) "
@@ -346,7 +346,7 @@ class RuntimeQueryTests(unittest.TestCase):
             query_module, "LLMExtractor", return_value=object()
         ), patch.object(
             query_module,
-            "generate_text2cypher_query",
+            "generate_query",
             return_value=(result, None, 1, {}),
         ), patch.object(
             query_module,
@@ -358,7 +358,7 @@ class RuntimeQueryTests(unittest.TestCase):
             return_value=(["company", "segment"], [], "bolt://localhost:7687"),
         ), patch.object(
             query_module,
-            "repair_text2cypher_query",
+            "repair_query",
         ) as mock_repair, redirect_stdout(stdout), redirect_stderr(stderr):
             exit_code = query_module.main_query(
                 ["Which company segments at companies operating in the United States sell through marketplaces?"]
