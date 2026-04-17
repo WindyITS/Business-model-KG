@@ -116,6 +116,7 @@ src/
     main.py               runtime CLI implementation
     query.py              natural-language query CLI
     neo4j_admin.py        selective Neo4j unload CLI
+    output_layout.py      company/pipeline output staging and promotion helpers
     query_prompt.py       prompt assets for query generation and repair
     cypher_validation.py  read-only query guards and Neo4j URI normalization
     model_provider.py     provider/model resolution
@@ -255,14 +256,17 @@ Provider notes:
 - `opencode-go` defaults to `--max-output-tokens 20000`; override it if needed
 - the CLI exposes both the `canonical` and `analyst` pipelines
 - every run writes `run_summary.json`; the console header shows pipeline, provider, and model, and LLM attempt summaries show token counts when available
+- successful Neo4j loads now replace the previous graph footprint for that same company by default; use `--clear-neo4j` only when you truly want to wipe the entire database first
 
 Useful CLI flags:
 - `--only-pass1`: stop after structural extraction, then still resolve/validate and optionally load
+- `--company-name`: override the inferred company name used for output folders and company-scoped Neo4j operations
 - `--max-retries`: change the retry budget per LLM call
 - `--base-url`: pass either an API root or a full endpoint URL; the runtime normalizes common suffixes
 - `--api-key`: override environment-based key resolution
 - `--max-output-tokens`: explicitly cap model output tokens
 - `--clear-neo4j`: clear the target database before loading
+- `--keep-current-output`: keep the current `latest/` output untouched and store this successful run under `runs/` instead; requires `--skip-neo4j`
 - `kg-neo4j-unload --company "Name"`: remove one company's loaded graph footprint while keeping other companies intact
 
 Load into Neo4j instead:
@@ -384,7 +388,34 @@ keeping the strongest match class.
 
 ## Output Artifacts
 
-Each run writes a timestamped directory under `outputs/`.
+Outputs are now organized by company and pipeline:
+
+```text
+outputs/
+  microsoft/
+    canonical/
+      latest/
+        ...
+      runs/
+        20260417T101500Z/
+          ...
+      failed/
+        20260417T103000Z/
+          ...
+    analyst/
+      latest/
+        ...
+```
+
+Default behavior:
+- a successful run stages artifacts first, then replaces `latest/` only after the run succeeds
+- the previous `latest/` output for that company and pipeline is removed on successful replacement
+- failed runs do not overwrite `latest/`; their artifacts are moved into `failed/`
+- `--keep-current-output --skip-neo4j` keeps the current `latest/` untouched and stores the successful run under `runs/` for testing or comparison
+
+The output folder name comes from the canonical company identity used for the run:
+- by default this is inferred from the input filename
+- you can override it with `--company-name`
 
 Canonical pipeline runs write artifacts such as:
 - `run_summary.json`

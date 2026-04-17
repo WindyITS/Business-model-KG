@@ -17,6 +17,7 @@ from llm_extraction.pipelines import (
     pipeline_stage_count,
     run_extraction_pipeline,
 )
+from .output_layout import OutputLayout, finalize_failed_run, finalize_successful_run, prepare_output_layout
 from .model_provider import resolve_model_settings
 from ontology.validator import validate_triples
 
@@ -283,16 +284,39 @@ def _mode_name(args: argparse.Namespace) -> str:
     return f"{args.pipeline}_pipeline"
 
 
-def _build_run_dir(output_dir: Path, source_file: Path, mode: str) -> Path:
-    timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    run_dir = output_dir / f"{source_file.stem}_{mode}_{timestamp}"
-    run_dir.mkdir(parents=True, exist_ok=True)
-    return run_dir
-
-
 def _infer_company_name(source_file: Path, _full_text: str) -> str:
     stem = source_file.stem.replace("_10k", "").replace("_", " ").strip()
     return stem.title()
+
+
+def _company_unload_count(unload_summary: dict[str, int | str]) -> int:
+    return sum(
+        int(unload_summary[key])
+        for key in (
+            "scoped_nodes_deleted",
+            "scoped_relationships_deleted",
+            "company_relationships_deleted",
+            "company_node_deleted",
+            "orphan_nodes_deleted",
+        )
+    )
+
+
+def _prepare_output_layout(
+    *,
+    output_dir: Path,
+    company_name: str,
+    pipeline: str,
+    keep_current_output: bool,
+    started_at: datetime,
+) -> OutputLayout:
+    return prepare_output_layout(
+        output_dir=output_dir,
+        company_name=company_name,
+        pipeline=pipeline,
+        keep_current_output=keep_current_output,
+        started_at=started_at,
+    )
 
 
 def _write_graph_extraction_artifact(
@@ -517,16 +541,38 @@ def main() -> int:
         action="store_true",
         help="Run only canonical Pass 1, then resolve/validate and load Neo4j unless --skip-neo4j is also set.",
     )
+    parser.add_argument(
+        "--company-name",
+        type=str,
+        default=None,
+        help="Override the inferred company name used for outputs and company-scoped Neo4j operations.",
+    )
     parser.add_argument("--output-dir", type=str, default="outputs", help="Directory where run artifacts are written.")
     parser.add_argument("--skip-neo4j", action="store_true", help="Skip Neo4j loading and only write extraction artifacts.")
     parser.add_argument("--clear-neo4j", action="store_true", help="Clear the Neo4j database before loading triples. Use with care.")
+    parser.add_argument(
+        "--keep-current-output",
+        action="store_true",
+        help="Keep the current latest output untouched and store this successful run under runs/ instead. Requires --skip-neo4j.",
+    )
     args = parser.parse_args()
+
+    if args.keep_current_output and not args.skip_neo4j:
+        parser.error("--keep-current-output requires --skip-neo4j so test outputs do not replace the live Neo4j graph.")
 
     source_file = Path(args.file_path)
     mode = _mode_name(args)
     ontology_version = "canonical"
     run_started_at = datetime.now(timezone.utc)
-    run_dir = _build_run_dir(Path(args.output_dir), source_file, mode)
+    company_name = args.company_name or _infer_company_name(source_file, "")
+    output_layout = _prepare_output_layout(
+        output_dir=Path(args.output_dir),
+        company_name=company_name,
+        pipeline=args.pipeline,
+        keep_current_output=args.keep_current_output,
+        started_at=run_started_at,
+    )
+    run_dir = output_layout.staging_dir
     run_scope = "pass1-only" if args.only_pass1 else None
     stage_count_error: ExtractionError | None = None
     try:
@@ -541,7 +587,11 @@ def main() -> int:
         "mode": mode,
         "ontology_version": ontology_version,
         "source_file": str(source_file),
-        "run_dir": str(run_dir),
+        "company_name": company_name,
+        "company_slug": output_layout.company_slug,
+        "run_dir": str(output_layout.planned_output_dir),
+        "staging_run_dir": str(run_dir),
+        "pipeline_output_dir": str(output_layout.root_dir),
         "provider": args.provider,
         "requested_model": args.model,
         "requested_base_url": args.base_url,
@@ -550,6 +600,7 @@ def main() -> int:
         "stage_count": stage_count,
         "run_scope": run_scope,
         "skip_neo4j": effective_skip_neo4j,
+        "keep_current_output": args.keep_current_output,
         "started_at": run_started_at.isoformat(),
     }
     _write_json(run_dir / "run_summary.json", summary)
@@ -579,7 +630,7 @@ def main() -> int:
         console.start_run(
             started_at=run_started_at,
             source_file=source_file,
-            run_dir=run_dir,
+            run_dir=output_layout.planned_output_dir,
             pipeline=args.pipeline,
             provider=model_settings.provider,
             model=model_settings.model,
@@ -591,7 +642,6 @@ def main() -> int:
         console.start_stage(1, "Read input")
         full_text = source_file.read_text(encoding="utf-8")
         chunks = [full_text]
-        company_name = _infer_company_name(source_file, full_text)
         _write_json(
             run_dir / "chunks.json",
             {
@@ -691,10 +741,13 @@ def main() -> int:
         else:
             loader = Neo4jLoader(uri=args.neo4j_uri, user=args.neo4j_user, password=args.neo4j_password)
             graph_cleared = False
+            unload_summary: dict[str, int | str] | None = None
             try:
                 if args.clear_neo4j:
                     loader.clear_graph()
                     graph_cleared = True
+                else:
+                    unload_summary = loader.unload_company(company_name)
                 loader.setup_constraints()
                 loaded_triples = loader.load_triples(resolved_triples, company_name=company_name)
             finally:
@@ -703,6 +756,12 @@ def main() -> int:
             neo4j_details: list[tuple[str, Any]] = []
             if graph_cleared:
                 neo4j_details.append(("database", "cleared before load"))
+            elif unload_summary is not None:
+                unloaded_items = _company_unload_count(unload_summary)
+                if unloaded_items:
+                    neo4j_details.append(("previous graph", f"replaced {unloaded_items} existing company graph items"))
+                else:
+                    neo4j_details.append(("previous graph", "no prior company graph found"))
             neo4j_details.append(("constraints", "checked"))
             neo4j_details.append(("triples loaded", loaded_triples))
             console.finish_stage(details=neo4j_details)
@@ -729,15 +788,17 @@ def main() -> int:
             }
         )
         summary.update(artifact_bundle["summary_metrics"])
-        _write_json(run_dir / "run_summary.json", summary)
-        console.complete_run(status="success", artifacts=run_dir, resolved_triples=len(resolved_triples))
+        final_run_dir = finalize_successful_run(output_layout)
+        summary["run_dir"] = str(final_run_dir)
+        _write_json(final_run_dir / "run_summary.json", summary)
+        console.complete_run(status="success", artifacts=final_run_dir, resolved_triples=len(resolved_triples))
         return 0
     except Exception as exc:
         if not console.header_printed:
             console.start_run(
                 started_at=run_started_at,
                 source_file=source_file,
-                run_dir=run_dir,
+                run_dir=output_layout.planned_output_dir,
                 pipeline=args.pipeline,
                 provider=str(summary.get("provider", args.provider)),
                 model=str(summary.get("model") or summary.get("requested_model") or "<default>"),
@@ -753,8 +814,10 @@ def main() -> int:
                 "pass1_only": args.only_pass1,
             }
         )
-        _write_json(run_dir / "run_summary.json", summary)
-        console.complete_run(status="failed", artifacts=run_dir, error=str(exc))
+        final_run_dir = finalize_failed_run(output_layout)
+        summary["run_dir"] = str(final_run_dir)
+        _write_json(final_run_dir / "run_summary.json", summary)
+        console.complete_run(status="failed", artifacts=final_run_dir, error=str(exc))
         return 1
 
 

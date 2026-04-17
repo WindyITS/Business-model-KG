@@ -37,6 +37,34 @@ class RuntimeMainTests(unittest.TestCase):
             max_output_tokens=None,
         )
 
+    @staticmethod
+    def _output_layout(
+        run_dir: Path,
+        *,
+        planned_output_dir: Path | None = None,
+        root_dir: Path | None = None,
+        company_name: str = "Microsoft",
+        company_slug: str = "microsoft",
+        pipeline: str = "canonical",
+        keep_current_output: bool = False,
+    ) -> SimpleNamespace:
+        root_dir = root_dir or run_dir.parent
+        return SimpleNamespace(
+            company_name=company_name,
+            company_slug=company_slug,
+            pipeline=pipeline,
+            run_token="run",
+            root_dir=root_dir,
+            latest_dir=root_dir / "latest",
+            runs_dir=root_dir / "runs",
+            failed_dir=root_dir / "failed",
+            staging_root=root_dir / ".staging",
+            staging_dir=run_dir,
+            preserved_run_dir=root_dir / "runs" / "run",
+            keep_current_output=keep_current_output,
+            planned_output_dir=planned_output_dir or run_dir,
+        )
+
     def test_mode_name_is_canonical_pipeline(self):
         args = SimpleNamespace(pipeline="canonical")
         self.assertEqual(_mode_name(args), "canonical_pipeline")
@@ -260,6 +288,17 @@ class RuntimeMainTests(unittest.TestCase):
                 def clear_graph(self):
                     pass
 
+                def unload_company(self, company_name):
+                    load_call["unloaded_company"] = company_name
+                    return {
+                        "company_name": company_name,
+                        "scoped_nodes_deleted": 1,
+                        "scoped_relationships_deleted": 2,
+                        "company_relationships_deleted": 0,
+                        "company_node_deleted": 1,
+                        "orphan_nodes_deleted": 0,
+                    }
+
                 def setup_constraints(self):
                     pass
 
@@ -271,7 +310,13 @@ class RuntimeMainTests(unittest.TestCase):
                 def close(self):
                     pass
 
-            with patch.object(main_module, "_build_run_dir", return_value=run_dir), patch.object(
+            layout = self._output_layout(run_dir)
+
+            with patch.object(main_module, "_prepare_output_layout", return_value=layout), patch.object(
+                main_module, "finalize_successful_run", return_value=run_dir
+            ), patch.object(
+                main_module, "finalize_failed_run", return_value=run_dir
+            ), patch.object(
                 main_module, "resolve_model_settings"
             ) as mock_resolve, patch.object(main_module, "LLMExtractor", return_value=fake_extractor), patch.object(
                 main_module, "run_extraction_pipeline", return_value=fake_result
@@ -301,6 +346,7 @@ class RuntimeMainTests(unittest.TestCase):
             self.assertEqual(summary["loaded_triple_count"], 1)
             self.assertEqual(load_call["company_name"], "Microsoft")
             self.assertEqual(load_call["triple_count"], 1)
+            self.assertEqual(load_call["unloaded_company"], "Microsoft")
 
             mock_resolve.assert_called_once()
             mock_run_pipeline.assert_called_once()
@@ -339,7 +385,13 @@ class RuntimeMainTests(unittest.TestCase):
                     "summary": {"invalid_triple_count": 0, "duplicate_triple_count": 0},
                 }
 
-            with patch.object(main_module, "_build_run_dir", return_value=run_dir), patch.object(
+            layout = self._output_layout(run_dir)
+
+            with patch.object(main_module, "_prepare_output_layout", return_value=layout), patch.object(
+                main_module, "finalize_successful_run", return_value=run_dir
+            ), patch.object(
+                main_module, "finalize_failed_run", return_value=run_dir
+            ), patch.object(
                 main_module, "resolve_model_settings", return_value=self._local_model_settings()
             ), patch.object(main_module, "LLMExtractor", return_value=fake_extractor), patch.object(
                 main_module, "run_extraction_pipeline", return_value=fake_result
@@ -358,6 +410,72 @@ class RuntimeMainTests(unittest.TestCase):
             self.assertFalse(captured_validation["require_text_grounding"])
             self.assertTrue(captured_validation["dedupe"])
             self.assertEqual(captured_validation["ontology_version"], "canonical")
+
+    def test_main_uses_company_name_override_for_outputs_and_pipeline(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            filing_path = tmp_path / "microsoft_10k.txt"
+            filing_path.write_text("ITEM 1. BUSINESS\nMicrosoft does business.\n", encoding="utf-8")
+            run_dir = tmp_path / "outputs" / "run"
+            resolved_triple = Triple(
+                subject="Microsoft",
+                subject_type="Company",
+                relation="HAS_SEGMENT",
+                object="Intelligent Cloud",
+                object_type="BusinessSegment",
+            )
+            fake_result = CanonicalPipelineResult(
+                success=True,
+                skeleton_extraction=KnowledgeGraphExtraction(
+                    extraction_notes="skeleton",
+                    triples=[resolved_triple],
+                ),
+            )
+            fake_extractor = SimpleNamespace()
+            layout = self._output_layout(
+                run_dir,
+                company_name="Microsoft Corporation",
+                company_slug="microsoft_corporation",
+            )
+
+            with patch.object(main_module, "_prepare_output_layout", return_value=layout) as mock_prepare_layout, patch.object(
+                main_module, "finalize_successful_run", return_value=run_dir
+            ), patch.object(
+                main_module, "finalize_failed_run", return_value=run_dir
+            ), patch.object(
+                main_module, "resolve_model_settings", return_value=self._local_model_settings()
+            ), patch.object(main_module, "LLMExtractor", return_value=fake_extractor), patch.object(
+                main_module, "run_extraction_pipeline", return_value=fake_result
+            ) as mock_run_pipeline, patch.object(
+                main_module, "resolve_entities", return_value=[resolved_triple]
+            ), patch.object(
+                main_module,
+                "validate_triples",
+                return_value={
+                    "valid_triples": [resolved_triple.model_dump()],
+                    "summary": {"invalid_triple_count": 0, "duplicate_triple_count": 0},
+                },
+            ), patch(
+                "sys.argv",
+                [
+                    "main.py",
+                    str(filing_path),
+                    "--output-dir",
+                    str(tmp_path / "outputs"),
+                    "--skip-neo4j",
+                    "--company-name",
+                    "Microsoft Corporation",
+                ],
+            ):
+                exit_code = main_module.main()
+
+            self.assertEqual(exit_code, 0)
+            mock_prepare_layout.assert_called_once()
+            self.assertEqual(mock_prepare_layout.call_args.kwargs["company_name"], "Microsoft Corporation")
+            self.assertEqual(mock_run_pipeline.call_args.kwargs["company_name"], "Microsoft Corporation")
+            summary = json.loads((run_dir / "run_summary.json").read_text(encoding="utf-8"))
+            self.assertEqual(summary["company_name"], "Microsoft Corporation")
+            self.assertEqual(summary["company_slug"], "microsoft_corporation")
 
     def test_main_fails_when_resolution_produces_zero_triples(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -381,7 +499,13 @@ class RuntimeMainTests(unittest.TestCase):
             )
             stdout = io.StringIO()
 
-            with patch.object(main_module, "_build_run_dir", return_value=run_dir), patch.object(
+            layout = self._output_layout(run_dir)
+
+            with patch.object(main_module, "_prepare_output_layout", return_value=layout), patch.object(
+                main_module, "finalize_successful_run", return_value=run_dir
+            ), patch.object(
+                main_module, "finalize_failed_run", return_value=run_dir
+            ), patch.object(
                 main_module, "resolve_model_settings", return_value=self._local_model_settings()
             ), patch.object(main_module, "LLMExtractor", return_value=SimpleNamespace()), patch.object(
                 main_module, "run_extraction_pipeline", return_value=fake_result
@@ -425,7 +549,13 @@ class RuntimeMainTests(unittest.TestCase):
             )
             stdout = io.StringIO()
 
-            with patch.object(main_module, "_build_run_dir", return_value=run_dir), patch.object(
+            layout = self._output_layout(run_dir)
+
+            with patch.object(main_module, "_prepare_output_layout", return_value=layout), patch.object(
+                main_module, "finalize_successful_run", return_value=run_dir
+            ), patch.object(
+                main_module, "finalize_failed_run", return_value=run_dir
+            ), patch.object(
                 main_module, "resolve_model_settings", return_value=self._local_model_settings()
             ), patch.object(main_module, "LLMExtractor", return_value=SimpleNamespace()), patch.object(
                 main_module, "run_extraction_pipeline", return_value=fake_result
@@ -494,7 +624,13 @@ class RuntimeMainTests(unittest.TestCase):
                 },
             }
 
-            with patch.object(main_module, "_build_run_dir", return_value=run_dir), patch.object(
+            layout = self._output_layout(run_dir, pipeline="analyst")
+
+            with patch.object(main_module, "_prepare_output_layout", return_value=layout), patch.object(
+                main_module, "finalize_successful_run", return_value=run_dir
+            ), patch.object(
+                main_module, "finalize_failed_run", return_value=run_dir
+            ), patch.object(
                 main_module, "resolve_model_settings"
             ) as mock_resolve, patch.object(main_module, "LLMExtractor", return_value=fake_extractor), patch.object(
                 main_module, "run_extraction_pipeline", return_value=fake_result
@@ -546,7 +682,13 @@ class RuntimeMainTests(unittest.TestCase):
             )
             fake_extractor = SimpleNamespace()
 
-            with patch.object(main_module, "_build_run_dir", return_value=run_dir), patch.object(
+            layout = self._output_layout(run_dir, pipeline="analyst")
+
+            with patch.object(main_module, "_prepare_output_layout", return_value=layout), patch.object(
+                main_module, "finalize_successful_run", return_value=run_dir
+            ), patch.object(
+                main_module, "finalize_failed_run", return_value=run_dir
+            ), patch.object(
                 main_module, "resolve_model_settings"
             ) as mock_resolve, patch.object(main_module, "LLMExtractor", return_value=fake_extractor), patch.object(
                 main_module, "run_extraction_pipeline", return_value=failed_result
@@ -565,6 +707,21 @@ class RuntimeMainTests(unittest.TestCase):
             self.assertEqual(summary["status"], "failed")
             self.assertIn("Empty response from model", summary["error"])
             mock_resolve.assert_called_once()
+
+    def test_main_keep_current_output_requires_skip_neo4j(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            filing_path = tmp_path / "microsoft_10k.txt"
+            filing_path.write_text("ITEM 1. BUSINESS\nMicrosoft does business.\n", encoding="utf-8")
+
+            with self.assertRaises(SystemExit) as exc:
+                with patch(
+                    "sys.argv",
+                    ["main.py", str(filing_path), "--keep-current-output"],
+                ):
+                    main_module.main()
+
+        self.assertEqual(exc.exception.code, 2)
 
 
 if __name__ == "__main__":
