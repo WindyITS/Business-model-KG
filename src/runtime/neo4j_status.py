@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from graph.neo4j_loader import Neo4jLoader
-from runtime.output_layout import OutputCompanyState, discover_output_company_states, refresh_output_manifests
+from runtime.output_layout import OutputCompanyState, discover_output_company_states
 
 
 @dataclass
@@ -92,7 +92,6 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--neo4j-password", type=str, default="password", help="Neo4j password.")
     args = parser.parse_args(argv)
 
-    refresh_output_manifests(args.output_dir, pipeline=args.pipeline)
     output_states = discover_output_company_states(args.output_dir, args.pipeline)
 
     loader = Neo4jLoader(uri=args.neo4j_uri, user=args.neo4j_user, password=args.neo4j_password)

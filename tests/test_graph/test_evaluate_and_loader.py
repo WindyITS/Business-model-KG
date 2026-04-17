@@ -2,7 +2,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 from graph.evaluate_graph import _load_triples_from_json, evaluate
 from graph.neo4j_loader import Neo4jLoader, _merge_node_clause, _orphan_prune_candidates
@@ -82,6 +82,8 @@ class GraphComponentTests(unittest.TestCase):
                 return _FakeResult(single_value={"relationship_count": 2})
             if "WHERE type(rel) IN $relation_types" in query and "DELETE rel" in query:
                 return _FakeResult()
+            if "REMOVE company.is_loaded_company" in query:
+                return _FakeResult()
             if "RETURN size(companies) AS deleted_count" in query:
                 return _FakeResult(single_value={"deleted_count": 1})
             if "RETURN size(nodes) AS deleted_count" in query:
@@ -116,6 +118,12 @@ class GraphComponentTests(unittest.TestCase):
                 {"label": "Company", "name": "Accenture"},
             ],
         )
+        remove_flag_call = next(
+            call
+            for call in session.run.call_args_list
+            if "REMOVE company.is_loaded_company" in call.args[0]
+        )
+        self.assertEqual(remove_flag_call.kwargs["company_name"], "Apple")
 
     def test_graph_counts_reports_nodes_and_relationships(self):
         loader = Neo4jLoader.__new__(Neo4jLoader)
@@ -154,6 +162,8 @@ class GraphComponentTests(unittest.TestCase):
         company_names = loader.list_loaded_companies()
 
         self.assertEqual(company_names, ["Apple", "Microsoft"])
+        self.assertIn("coalesce(company.is_loaded_company, false)", session.run.call_args.args[0])
+        self.assertEqual(session.run.call_args.kwargs["relation_types"], ["HAS_SEGMENT", "OFFERS", "OPERATES_IN", "PARTNERS_WITH"])
 
     def test_company_graph_counts_reports_existing_company_footprint(self):
         loader = Neo4jLoader.__new__(Neo4jLoader)
@@ -181,6 +191,56 @@ class GraphComponentTests(unittest.TestCase):
                 "relationship_count": 9,
             },
         )
+        self.assertEqual(session.run.call_args.kwargs["relation_types"], ["HAS_SEGMENT", "OFFERS", "OPERATES_IN", "PARTNERS_WITH"])
+
+    def test_replace_company_triples_commits_on_success(self):
+        loader = Neo4jLoader.__new__(Neo4jLoader)
+        tx = MagicMock()
+        session = MagicMock()
+        session.begin_transaction.return_value = tx
+        session_cm = MagicMock()
+        session_cm.__enter__.return_value = session
+        session_cm.__exit__.return_value = None
+        loader.driver = MagicMock()
+        loader.driver.session.return_value = session_cm
+
+        with patch.object(loader, "_unload_company_with_runner", return_value={"company_name": "Apple"}) as mock_unload, patch.object(
+            loader,
+            "_load_triples_with_runner",
+            return_value=3,
+        ) as mock_load:
+            summary, loaded = loader.replace_company_triples([], company_name="Apple")
+
+        self.assertEqual(summary, {"company_name": "Apple"})
+        self.assertEqual(loaded, 3)
+        mock_unload.assert_called_once_with(tx, "Apple")
+        mock_load.assert_called_once_with(tx, triples=[], company_name="Apple", batch_size=200)
+        tx.commit.assert_called_once()
+        tx.rollback.assert_not_called()
+        tx.close.assert_called_once()
+
+    def test_replace_company_triples_rolls_back_on_failure(self):
+        loader = Neo4jLoader.__new__(Neo4jLoader)
+        tx = MagicMock()
+        session = MagicMock()
+        session.begin_transaction.return_value = tx
+        session_cm = MagicMock()
+        session_cm.__enter__.return_value = session
+        session_cm.__exit__.return_value = None
+        loader.driver = MagicMock()
+        loader.driver.session.return_value = session_cm
+
+        with patch.object(loader, "_unload_company_with_runner", return_value={"company_name": "Apple"}), patch.object(
+            loader,
+            "_load_triples_with_runner",
+            side_effect=RuntimeError("boom"),
+        ):
+            with self.assertRaisesRegex(RuntimeError, "boom"):
+                loader.replace_company_triples([], company_name="Apple")
+
+        tx.commit.assert_not_called()
+        tx.rollback.assert_called_once()
+        tx.close.assert_called_once()
 
     def test_evaluator_accepts_resolved_triples_payload(self):
         payload = {

@@ -51,6 +51,24 @@ class Neo4jStatusTests(unittest.TestCase):
         fake_loader.list_loaded_companies.assert_called_once()
         fake_loader.close.assert_called_once()
 
+    def test_main_does_not_create_or_refresh_manifests(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            output_dir = Path(tmp_dir) / "outputs"
+            latest_dir = output_dir / "apple" / "analyst" / "latest"
+            self._write_run(latest_dir, company_name="Apple", source_file="data/apple_10k.txt")
+            manifest_path = output_dir / "apple" / "analyst" / "manifest.json"
+            self.assertFalse(manifest_path.exists())
+
+            fake_loader = MagicMock()
+            fake_loader.list_loaded_companies.return_value = []
+
+            with patch.object(neo4j_status, "Neo4jLoader", return_value=fake_loader):
+                exit_code = neo4j_status.main(["--output-dir", str(output_dir)])
+
+            self.assertFalse(manifest_path.exists())
+
+        self.assertEqual(exit_code, 0)
+
 
 if __name__ == "__main__":
     unittest.main()

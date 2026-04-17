@@ -174,6 +174,19 @@ def iter_latest_run_dirs(output_dir: Path, pipeline: str) -> list[Path]:
     return [state.latest_dir for state in discover_output_company_states(output_dir, pipeline) if state.latest_dir is not None]
 
 
+def _resolve_relative_run_selector(pipeline_root: Path, explicit_path: Path) -> Path:
+    if explicit_path.is_absolute():
+        raise ValueError("--run must stay within the selected company/pipeline output folder.")
+
+    resolved_root = pipeline_root.resolve()
+    resolved_candidate = (pipeline_root / explicit_path).resolve()
+    try:
+        resolved_candidate.relative_to(resolved_root)
+    except ValueError as exc:
+        raise ValueError("--run must stay within the selected company/pipeline output folder.") from exc
+    return resolved_candidate
+
+
 def resolve_company_run_dir(output_dir: Path, company_name: str, pipeline: str, run_selector: str | None = None) -> Path:
     pipeline_root = company_pipeline_root(output_dir, company_name, pipeline)
     if run_selector is None or run_selector == "latest":
@@ -181,10 +194,10 @@ def resolve_company_run_dir(output_dir: Path, company_name: str, pipeline: str, 
 
     explicit_path = Path(run_selector)
     if explicit_path.is_absolute():
-        return explicit_path
+        raise ValueError("--run must stay within the selected company/pipeline output folder.")
 
     if "/" in run_selector or "\\" in run_selector:
-        return (pipeline_root / explicit_path).resolve()
+        return _resolve_relative_run_selector(pipeline_root, explicit_path)
 
     runs_candidate = pipeline_root / "runs" / run_selector
     if runs_candidate.exists():
@@ -194,7 +207,7 @@ def resolve_company_run_dir(output_dir: Path, company_name: str, pipeline: str, 
     if failed_candidate.exists():
         return failed_candidate
 
-    return pipeline_root / explicit_path
+    return _resolve_relative_run_selector(pipeline_root, explicit_path)
 
 
 def _run_token(started_at: datetime) -> str:

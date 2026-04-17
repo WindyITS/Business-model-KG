@@ -746,10 +746,14 @@ def main() -> int:
                 if args.clear_neo4j:
                     loader.clear_graph()
                     graph_cleared = True
-                else:
-                    unload_summary = loader.unload_company(company_name)
                 loader.setup_constraints()
-                loaded_triples = loader.load_triples(resolved_triples, company_name=company_name)
+                if args.clear_neo4j:
+                    loaded_triples = loader.load_triples(resolved_triples, company_name=company_name)
+                else:
+                    unload_summary, loaded_triples = loader.replace_company_triples(
+                        resolved_triples,
+                        company_name=company_name,
+                    )
             finally:
                 loader.close()
 

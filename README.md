@@ -193,6 +193,14 @@ That editable install creates the convenience commands in `venv/bin/`:
 - `kg-neo4j-status`
 - `kg-neo4j-unload`
 
+If you already had the virtual environment before a new CLI command was added to the repo, rerun:
+
+```bash
+pip install -e .
+```
+
+That refreshes the `venv/bin/` entry points so the new commands appear there too.
+
 Prompt workflow notes:
 - an editable install keeps using the repo-level `prompts/` directory, so prompt iteration stays fast
 - a standard package install also works because the package now ships a bundled prompt fallback
@@ -302,6 +310,8 @@ Load one exact saved run for a company:
 ./venv/bin/kg-neo4j-load --company "Microsoft" --run 20260417T101500Z
 ```
 
+You can also pass a relative path inside that company's pipeline folder, but `--run` is intentionally limited to that folder. It will not jump to another company or to an arbitrary filesystem path.
+
 Use `--pipeline canonical` if you want the command to target canonical outputs instead of the default analyst outputs.
 Use `--yes` to skip the bulk-load warning when Neo4j already contains data.
 If you target one company with `--company` and that company is already loaded, the command now asks for confirmation before replacing that company graph.
@@ -312,6 +322,8 @@ Show which companies are currently loaded in Neo4j and which local outputs are r
 ./venv/bin/kg-neo4j-status
 ```
 
+`kg-neo4j-status` is read-only: it reports the current state but does not rewrite outputs or load/unload anything.
+
 Unload only one company's graph footprint from Neo4j:
 
 ```bash
@@ -319,6 +331,25 @@ Unload only one company's graph footprint from Neo4j:
 ```
 
 If you want to skip the confirmation prompt in automation or scripts, add `--yes`.
+
+## Neo4j Command Guide
+
+These are the main commands that touch Neo4j, and they are meant for different moments in the workflow:
+
+- `kg-pipeline <file>`: runs a new extraction. By default, if the run succeeds, it replaces that same company's currently loaded graph in Neo4j unless you add `--skip-neo4j`.
+- `kg-neo4j-load`: loads saved outputs from `outputs/` into Neo4j. With no extra flags it targets every `outputs/<company>/analyst/latest/` directory, warns before bulk-loading into a non-empty database, and keeps going if one company fails while reporting the failures at the end.
+- `kg-neo4j-load --company "Name"`: loads only that company's latest saved output for the selected pipeline. If that company is already loaded in Neo4j, the command asks before replacing it unless you pass `--yes`.
+- `kg-neo4j-load --company "Name" --run <token>`: loads one exact saved run from `runs/<token>` or `failed/<token>`, or a relative path inside that company's pipeline folder, instead of the latest output. This is mainly for debugging, testing, or comparing older runs.
+- `kg-neo4j-status`: compares Neo4j against the saved outputs for the selected pipeline. It tells you which companies are loaded, which are not, and, for the not-loaded ones, whether a latest output is ready to load. It is a reporting command only and does not modify outputs or Neo4j.
+- `kg-neo4j-unload --company "Name"`: removes only that company's graph footprint from Neo4j and leaves unrelated companies in place. It asks for confirmation unless you pass `--yes`.
+
+The most useful flags in practice are:
+
+- `--company-name` on `kg-pipeline` when the filename is not the company identity you want to use for outputs and Neo4j replacement.
+- `--pipeline canonical|analyst` on `kg-pipeline`, `kg-neo4j-load`, and `kg-neo4j-status` when you want to work with canonical outputs instead of the default analyst ones.
+- `--keep-current-output --skip-neo4j` on `kg-pipeline` when you want to save a test run under `runs/` without replacing the current `latest/` output or the live Neo4j graph.
+- `--clear-neo4j` on `kg-pipeline` only when you intentionally want to wipe the entire Neo4j database before loading.
+- `--yes` on `kg-neo4j-load` or `kg-neo4j-unload` when the command is running in automation or a non-interactive script.
 
 Neo4j Browser:
 - `http://localhost:7474`
@@ -459,11 +490,12 @@ Saved-output Neo4j load notes:
 - `kg-neo4j-load` defaults to the `analyst/latest` outputs because those are the preferred saved outputs for reload
 - with no `--company`, it loads every available `latest/` directory for the chosen pipeline
 - with `--company`, it loads that company's `latest/` directory for the chosen pipeline
-- with `--company --run <token>`, it loads an exact saved run under `runs/<token>` or `failed/<token>` for that company and pipeline
+- with `--company --run <token>`, it loads an exact saved run under `runs/<token>` or `failed/<token>` for that company and pipeline, or a relative path inside that same company/pipeline folder
 - the bulk `kg-neo4j-load` command warns before running if Neo4j already contains data
 - if a bulk load hits a problem for one company, it keeps going for the others and reports which companies failed
 - if a single-company load sees that the company is already present in Neo4j, it asks before replacing that company graph unless you pass `--yes`
-- `kg-neo4j-status` compares Neo4j against the saved outputs and tells you which companies are loaded, which are not, and whether a latest output is available to load
+- company replacement is transactional, so if the new load fails the previous live graph for that company is left untouched
+- `kg-neo4j-status` compares Neo4j against the saved outputs and tells you which companies are loaded, which are not, and whether a latest output is available to load; it does not rewrite manifests or change the graph
 
 Canonical pipeline runs write artifacts such as:
 - `run_summary.json`

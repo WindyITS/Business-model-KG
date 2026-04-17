@@ -245,7 +245,7 @@ def main(
         "--run",
         type=str,
         default=None,
-        help="Optional run selector used with --company. Use latest, a run token under runs/ or failed/, or a path under the company/pipeline folder.",
+        help="Optional run selector used with --company. Use latest, a run token under runs/ or failed/, or a relative path inside the company/pipeline folder.",
     )
     parser.add_argument("--neo4j-uri", type=str, default="bolt://localhost:7687", help="Neo4j connection URI.")
     parser.add_argument("--neo4j-user", type=str, default="neo4j", help="Neo4j username.")
@@ -309,8 +309,10 @@ def main(
         successful_targets = 0
         for target in targets:
             try:
-                unload_summary = loader.unload_company(target.company_name)
-                loaded_triple_count = loader.load_triples(target.triples, company_name=target.company_name)
+                unload_summary, loaded_triple_count = loader.replace_company_triples(
+                    target.triples,
+                    company_name=target.company_name,
+                )
             except Exception as exc:
                 failure = LoadFailure(company_name=target.company_name, run_dir=target.run_dir, error=str(exc))
                 failures.append(failure)

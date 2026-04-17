@@ -288,23 +288,26 @@ class RuntimeMainTests(unittest.TestCase):
                 def clear_graph(self):
                     pass
 
-                def unload_company(self, company_name):
+                def replace_company_triples(self, triples, company_name):
                     load_call["unloaded_company"] = company_name
-                    return {
-                        "company_name": company_name,
-                        "scoped_nodes_deleted": 1,
-                        "scoped_relationships_deleted": 2,
-                        "company_relationships_deleted": 0,
-                        "company_node_deleted": 1,
-                        "orphan_nodes_deleted": 0,
-                    }
+                    load_call["company_name"] = company_name
+                    load_call["triple_count"] = len(triples)
+                    return (
+                        {
+                            "company_name": company_name,
+                            "scoped_nodes_deleted": 1,
+                            "scoped_relationships_deleted": 2,
+                            "company_relationships_deleted": 0,
+                            "company_node_deleted": 1,
+                            "orphan_nodes_deleted": 0,
+                        },
+                        len(triples),
+                    )
 
                 def setup_constraints(self):
                     pass
 
                 def load_triples(self, triples, company_name):
-                    load_call["company_name"] = company_name
-                    load_call["triple_count"] = len(triples)
                     return len(triples)
 
                 def close(self):

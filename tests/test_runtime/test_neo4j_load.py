@@ -87,15 +87,17 @@ class Neo4jLoadTests(unittest.TestCase):
 
             fake_loader = MagicMock()
             fake_loader.graph_counts.return_value = {"node_count": 0, "relationship_count": 0}
-            fake_loader.unload_company.side_effect = lambda company_name: {
-                "company_name": company_name,
-                "scoped_nodes_deleted": 0,
-                "scoped_relationships_deleted": 0,
-                "company_relationships_deleted": 0,
-                "company_node_deleted": 0,
-                "orphan_nodes_deleted": 0,
-            }
-            fake_loader.load_triples.side_effect = lambda triples, company_name: len(triples)
+            fake_loader.replace_company_triples.side_effect = lambda triples, company_name: (
+                {
+                    "company_name": company_name,
+                    "scoped_nodes_deleted": 0,
+                    "scoped_relationships_deleted": 0,
+                    "company_relationships_deleted": 0,
+                    "company_node_deleted": 0,
+                    "orphan_nodes_deleted": 0,
+                },
+                len(triples),
+            )
             stdout = io.StringIO()
 
             with patch.object(neo4j_load, "Neo4jLoader", return_value=fake_loader), redirect_stdout(stdout):
@@ -105,11 +107,11 @@ class Neo4jLoadTests(unittest.TestCase):
         fake_loader.graph_counts.assert_called_once()
         fake_loader.setup_constraints.assert_called_once()
         self.assertEqual(
-            [call.args[0] for call in fake_loader.unload_company.call_args_list],
+            [call.kwargs["company_name"] for call in fake_loader.replace_company_triples.call_args_list],
             ["Apple", "Google"],
         )
         self.assertEqual(
-            [call.kwargs["company_name"] for call in fake_loader.load_triples.call_args_list],
+            [call.kwargs["company_name"] for call in fake_loader.replace_company_triples.call_args_list],
             ["Apple", "Google"],
         )
         rendered = stdout.getvalue()
@@ -131,15 +133,17 @@ class Neo4jLoadTests(unittest.TestCase):
                 "scoped_node_count": 0,
                 "relationship_count": 0,
             }
-            fake_loader.unload_company.return_value = {
-                "company_name": "Apple",
-                "scoped_nodes_deleted": 0,
-                "scoped_relationships_deleted": 0,
-                "company_relationships_deleted": 0,
-                "company_node_deleted": 0,
-                "orphan_nodes_deleted": 0,
-            }
-            fake_loader.load_triples.side_effect = lambda triples, company_name: len(triples)
+            fake_loader.replace_company_triples.return_value = (
+                {
+                    "company_name": "Apple",
+                    "scoped_nodes_deleted": 0,
+                    "scoped_relationships_deleted": 0,
+                    "company_relationships_deleted": 0,
+                    "company_node_deleted": 0,
+                    "orphan_nodes_deleted": 0,
+                },
+                1,
+            )
 
             with patch.object(neo4j_load, "Neo4jLoader", return_value=fake_loader):
                 exit_code = neo4j_load.main(["--output-dir", str(output_dir), "--company", "Apple"])
@@ -147,8 +151,8 @@ class Neo4jLoadTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         fake_loader.graph_counts.assert_not_called()
         fake_loader.company_graph_counts.assert_called_once_with("Apple")
-        fake_loader.unload_company.assert_called_once_with("Apple")
-        self.assertEqual(fake_loader.load_triples.call_args.kwargs["company_name"], "Apple")
+        fake_loader.replace_company_triples.assert_called_once()
+        self.assertEqual(fake_loader.replace_company_triples.call_args.kwargs["company_name"], "Apple")
         fake_loader.close.assert_called_once()
 
     def test_main_loads_exact_company_run_selector(self):
@@ -165,15 +169,17 @@ class Neo4jLoadTests(unittest.TestCase):
                 "scoped_node_count": 0,
                 "relationship_count": 0,
             }
-            fake_loader.unload_company.return_value = {
-                "company_name": "Apple",
-                "scoped_nodes_deleted": 0,
-                "scoped_relationships_deleted": 0,
-                "company_relationships_deleted": 0,
-                "company_node_deleted": 0,
-                "orphan_nodes_deleted": 0,
-            }
-            fake_loader.load_triples.side_effect = lambda triples, company_name: len(triples)
+            fake_loader.replace_company_triples.return_value = (
+                {
+                    "company_name": "Apple",
+                    "scoped_nodes_deleted": 0,
+                    "scoped_relationships_deleted": 0,
+                    "company_relationships_deleted": 0,
+                    "company_node_deleted": 0,
+                    "orphan_nodes_deleted": 0,
+                },
+                1,
+            )
             stdout = io.StringIO()
 
             with patch.object(neo4j_load, "Neo4jLoader", return_value=fake_loader), redirect_stdout(stdout):
@@ -190,7 +196,7 @@ class Neo4jLoadTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         self.assertIn(str(run_dir), stdout.getvalue())
-        fake_loader.unload_company.assert_called_once_with("Apple")
+        fake_loader.replace_company_triples.assert_called_once()
         fake_loader.close.assert_called_once()
 
     def test_main_prompts_before_replacing_already_loaded_company(self):
@@ -216,7 +222,7 @@ class Neo4jLoadTests(unittest.TestCase):
         self.assertEqual(exit_code, 1)
         self.assertIn("Aborted; nothing was loaded.", stderr.getvalue())
         fake_loader.company_graph_counts.assert_called_once_with("Apple")
-        fake_loader.unload_company.assert_not_called()
+        fake_loader.replace_company_triples.assert_not_called()
         fake_loader.close.assert_called_once()
 
     def test_main_bulk_load_reports_company_failures_and_continues(self):
@@ -227,21 +233,22 @@ class Neo4jLoadTests(unittest.TestCase):
 
             fake_loader = MagicMock()
             fake_loader.graph_counts.return_value = {"node_count": 0, "relationship_count": 0}
-            fake_loader.unload_company.side_effect = lambda company_name: {
-                "company_name": company_name,
-                "scoped_nodes_deleted": 0,
-                "scoped_relationships_deleted": 0,
-                "company_relationships_deleted": 0,
-                "company_node_deleted": 0,
-                "orphan_nodes_deleted": 0,
-            }
-
-            def load_triples_side_effect(triples, company_name):
+            def replace_company_triples_side_effect(triples, company_name):
                 if company_name == "Google":
                     raise RuntimeError("validation drift")
-                return len(triples)
+                return (
+                    {
+                        "company_name": company_name,
+                        "scoped_nodes_deleted": 0,
+                        "scoped_relationships_deleted": 0,
+                        "company_relationships_deleted": 0,
+                        "company_node_deleted": 0,
+                        "orphan_nodes_deleted": 0,
+                    },
+                    len(triples),
+                )
 
-            fake_loader.load_triples.side_effect = load_triples_side_effect
+            fake_loader.replace_company_triples.side_effect = replace_company_triples_side_effect
             stdout = io.StringIO()
             stderr = io.StringIO()
 
@@ -251,7 +258,7 @@ class Neo4jLoadTests(unittest.TestCase):
         self.assertEqual(exit_code, 1)
         self.assertIn('Loaded 1 of 2 "analyst" output(s) into Neo4j (1 triples total). 1 company could not be loaded.', stdout.getvalue())
         self.assertIn("Failed to load Google", stderr.getvalue())
-        self.assertEqual(fake_loader.unload_company.call_count, 2)
+        self.assertEqual(fake_loader.replace_company_triples.call_count, 2)
         fake_loader.close.assert_called_once()
 
 

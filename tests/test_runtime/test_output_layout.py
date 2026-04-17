@@ -128,6 +128,14 @@ class OutputLayoutTests(unittest.TestCase):
                 run_dir,
             )
 
+    def test_resolve_company_run_dir_rejects_paths_outside_company_pipeline_root(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            output_dir = Path(tmp_dir) / "outputs"
+            company_pipeline_root(output_dir, "Apple", "analyst").mkdir(parents=True, exist_ok=True)
+
+            with self.assertRaisesRegex(ValueError, "must stay within the selected company/pipeline output folder"):
+                resolve_company_run_dir(output_dir, "Apple", "analyst", "../../google/analyst/latest")
+
     def test_migrate_legacy_output_layout_moves_flat_directories_and_updates_summary(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
             output_dir = Path(tmp_dir) / "outputs"

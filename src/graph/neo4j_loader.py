@@ -1,6 +1,6 @@
 import logging
 from collections import defaultdict
-from typing import DefaultDict, List, Tuple
+from typing import Any, DefaultDict, List, Tuple
 
 from neo4j import GraphDatabase
 
@@ -23,6 +23,7 @@ ALLOWED_RELATION_TYPES = {
 }
 UNLOAD_COMPANY_RELATION_TYPES = ("HAS_SEGMENT", "OFFERS", "OPERATES_IN", "PARTNERS_WITH")
 UNLOAD_ORPHAN_PRUNE_LABELS = ("Company", "CustomerType", "Channel", "Place", "RevenueModel")
+LOADED_COMPANY_PROPERTY = "is_loaded_company"
 
 
 class Neo4jLoader:
@@ -54,6 +55,7 @@ class Neo4jLoader:
             rows = session.run(
                 """
                 MATCH (company:Company)
+                WHERE coalesce(company.is_loaded_company, false)
                 RETURN DISTINCT company.name AS company_name
                 UNION
                 MATCH (node)
@@ -61,7 +63,12 @@ class Neo4jLoader:
                   AND node.company_name IS NOT NULL
                   AND trim(node.company_name) <> ""
                 RETURN DISTINCT node.company_name AS company_name
-                """
+                UNION
+                MATCH (company:Company)-[rel]->()
+                WHERE type(rel) IN $relation_types
+                RETURN DISTINCT company.name AS company_name
+                """,
+                relation_types=list(UNLOAD_COMPANY_RELATION_TYPES),
             ).data()
         company_names = sorted(
             {
@@ -77,12 +84,27 @@ class Neo4jLoader:
             counts = session.run(
                 """
                 OPTIONAL MATCH (company:Company {name: $company_name})
+                WHERE coalesce(company.is_loaded_company, false)
+                   OR EXISTS {
+                       MATCH (company)-[rel]->()
+                       WHERE type(rel) IN $relation_types
+                   }
                 WITH count(company) AS company_node_count
                 OPTIONAL MATCH (scoped)
                 WHERE (scoped:BusinessSegment OR scoped:Offering) AND scoped.company_name = $company_name
                 WITH company_node_count, count(scoped) AS scoped_node_count
                 OPTIONAL MATCH (root)
-                WHERE (root:Company AND root.name = $company_name)
+                WHERE (
+                        root:Company
+                    AND root.name = $company_name
+                    AND (
+                        coalesce(root.is_loaded_company, false)
+                        OR EXISTS {
+                            MATCH (root)-[rel]->()
+                            WHERE type(rel) IN $relation_types
+                        }
+                    )
+                )
                    OR ((root:BusinessSegment OR root:Offering) AND root.company_name = $company_name)
                 OPTIONAL MATCH (root)-[rel]-()
                 RETURN
@@ -91,6 +113,7 @@ class Neo4jLoader:
                     count(DISTINCT rel) AS relationship_count
                 """,
                 company_name=company_name,
+                relation_types=list(UNLOAD_COMPANY_RELATION_TYPES),
             ).single()
         company_node_count = counts["company_node_count"] or 0
         scoped_node_count = counts["scoped_node_count"] or 0
@@ -136,6 +159,49 @@ class Neo4jLoader:
             logger.info("Checked/created uniqueness constraints.")
 
     def load_triples(self, triples: List[Triple], company_name: str, batch_size: int = 200) -> int:
+        with self.driver.session() as session:
+            total_loaded = self._load_triples_with_runner(
+                session,
+                triples=triples,
+                company_name=company_name,
+                batch_size=batch_size,
+            )
+        logger.info("Successfully loaded %s triples into Neo4j.", total_loaded)
+        return total_loaded
+
+    def replace_company_triples(
+        self,
+        triples: List[Triple],
+        company_name: str,
+        batch_size: int = 200,
+    ) -> tuple[dict[str, int | str], int]:
+        with self.driver.session() as session:
+            tx = session.begin_transaction()
+            try:
+                unload_summary = self._unload_company_with_runner(tx, company_name)
+                total_loaded = self._load_triples_with_runner(
+                    tx,
+                    triples=triples,
+                    company_name=company_name,
+                    batch_size=batch_size,
+                )
+                tx.commit()
+            except Exception:
+                tx.rollback()
+                raise
+            finally:
+                tx.close()
+        logger.info("Replaced Neo4j footprint for %s with %s triples.", company_name, total_loaded)
+        return unload_summary, total_loaded
+
+    def _load_triples_with_runner(
+        self,
+        runner: Any,
+        *,
+        triples: List[Triple],
+        company_name: str,
+        batch_size: int,
+    ) -> int:
         grouped_rows: DefaultDict[Tuple[str, str, str], List[dict]] = defaultdict(list)
         place_names: set[str] = set()
         skipped_triples = 0
@@ -162,165 +228,183 @@ class Neo4jLoader:
                 place_names.add(triple.object)
 
         total_loaded = 0
-        with self.driver.session() as session:
-            for (subject_type, relation, object_type), rows in grouped_rows.items():
-                subject_merge = _merge_node_clause(
-                    alias="subject",
-                    node_type=subject_type,
-                    name_field="subject_name",
-                    company_field="subject_company_name",
-                )
-                object_merge = _merge_node_clause(
-                    alias="object",
-                    node_type=object_type,
-                    name_field="object_name",
-                    company_field="object_company_name",
-                )
-                query = f"""
-                UNWIND $rows AS row
-                {subject_merge}
-                {object_merge}
-                MERGE (subject)-[:{relation}]->(object)
-                """
-                for start in range(0, len(rows), batch_size):
-                    batch = rows[start:start + batch_size]
-                    try:
-                        session.run(query, rows=batch).consume()
-                    except Exception as exc:  # pragma: no cover - exercised only with Neo4j.
-                        logger.error(
-                            "Failed to load batch for %s-%s-%s starting at index %s: %s",
-                            subject_type,
-                            relation,
-                            object_type,
-                            start,
-                            exc,
-                        )
-                        raise
-                    total_loaded += len(batch)
+        for (subject_type, relation, object_type), rows in grouped_rows.items():
+            subject_merge = _merge_node_clause(
+                alias="subject",
+                node_type=subject_type,
+                name_field="subject_name",
+                company_field="subject_company_name",
+            )
+            object_merge = _merge_node_clause(
+                alias="object",
+                node_type=object_type,
+                name_field="object_name",
+                company_field="object_company_name",
+            )
+            query = f"""
+            UNWIND $rows AS row
+            {subject_merge}
+            {object_merge}
+            MERGE (subject)-[:{relation}]->(object)
+            """
+            for start in range(0, len(rows), batch_size):
+                batch = rows[start:start + batch_size]
+                try:
+                    runner.run(query, rows=batch).consume()
+                except Exception as exc:  # pragma: no cover - exercised only with Neo4j.
+                    logger.error(
+                        "Failed to load batch for %s-%s-%s starting at index %s: %s",
+                        subject_type,
+                        relation,
+                        object_type,
+                        start,
+                        exc,
+                    )
+                    raise
+                total_loaded += len(batch)
 
-            if place_names:
-                session.run(
-                    f"""
-                    UNWIND $rows AS row
-                    MATCH (place:Place {{name: row.name}})
-                    SET place.{PLACE_WITHIN_PROPERTY} = row.{PLACE_WITHIN_PROPERTY},
-                        place.{PLACE_INCLUDES_PROPERTY} = row.{PLACE_INCLUDES_PROPERTY}
-                    """,
-                    rows=list(place_query_property_rows(place_names)),
-                ).consume()
+        if place_names:
+            runner.run(
+                f"""
+                UNWIND $rows AS row
+                MATCH (place:Place {{name: row.name}})
+                SET place.{PLACE_WITHIN_PROPERTY} = row.{PLACE_WITHIN_PROPERTY},
+                    place.{PLACE_INCLUDES_PROPERTY} = row.{PLACE_INCLUDES_PROPERTY}
+                """,
+                rows=list(place_query_property_rows(place_names)),
+            ).consume()
+
+        runner.run(
+            f"""
+            MERGE (company:Company {{name: $company_name}})
+            SET company.{LOADED_COMPANY_PROPERTY} = true
+            """,
+            company_name=company_name,
+        ).consume()
 
         if skipped_triples:
             logger.warning("Skipped %s triples due to invalid node/relation types.", skipped_triples)
-        logger.info("Successfully loaded %s triples into Neo4j.", total_loaded)
         return total_loaded
 
     def unload_company(self, company_name: str) -> dict[str, int | str]:
         """Remove one company's graph footprint while preserving unrelated shared graph state."""
-        candidate_rows: list[dict[str, str]] = []
         with self.driver.session() as session:
-            candidate_rows = session.run(
-                """
-                MATCH (root)
-                WHERE (root:Company AND root.name = $company_name)
-                   OR ((root:BusinessSegment OR root:Offering) AND root.company_name = $company_name)
-                OPTIONAL MATCH (root)--(neighbor)
-                WHERE neighbor IS NOT NULL
-                  AND NOT (
-                    ((neighbor:BusinessSegment OR neighbor:Offering) AND neighbor.company_name = $company_name)
-                    OR (neighbor:Company AND neighbor.name = $company_name)
-                  )
-                WITH DISTINCT neighbor
-                RETURN labels(neighbor) AS labels, neighbor.name AS name
-                """,
-                company_name=company_name,
-            ).data()
+            summary = self._unload_company_with_runner(session, company_name)
+        logger.info("Unloaded Neo4j footprint for %s: %s", company_name, summary)
+        return summary
 
-            scoped_relationships_deleted = (
-                session.run(
-                    """
-                    MATCH (node)
-                    WHERE (node:BusinessSegment OR node:Offering) AND node.company_name = $company_name
-                    OPTIONAL MATCH (node)-[rel]-()
-                    RETURN count(DISTINCT rel) AS relationship_count
-                    """,
-                    company_name=company_name,
-                ).single()["relationship_count"]
-                or 0
-            )
-            scoped_nodes_deleted = (
-                session.run(
-                    """
-                    MATCH (node)
-                    WHERE (node:BusinessSegment OR node:Offering) AND node.company_name = $company_name
-                    RETURN count(node) AS node_count
-                    """,
-                    company_name=company_name,
-                ).single()["node_count"]
-                or 0
-            )
-            session.run(
+    def _unload_company_with_runner(self, runner: Any, company_name: str) -> dict[str, int | str]:
+        candidate_rows: list[dict[str, str]] = []
+        candidate_rows = runner.run(
+            """
+            MATCH (root)
+            WHERE (root:Company AND root.name = $company_name)
+               OR ((root:BusinessSegment OR root:Offering) AND root.company_name = $company_name)
+            OPTIONAL MATCH (root)--(neighbor)
+            WHERE neighbor IS NOT NULL
+              AND NOT (
+                ((neighbor:BusinessSegment OR neighbor:Offering) AND neighbor.company_name = $company_name)
+                OR (neighbor:Company AND neighbor.name = $company_name)
+              )
+            WITH DISTINCT neighbor
+            RETURN labels(neighbor) AS labels, neighbor.name AS name
+            """,
+            company_name=company_name,
+        ).data()
+
+        scoped_relationships_deleted = (
+            runner.run(
                 """
                 MATCH (node)
                 WHERE (node:BusinessSegment OR node:Offering) AND node.company_name = $company_name
-                DETACH DELETE node
+                OPTIONAL MATCH (node)-[rel]-()
+                RETURN count(DISTINCT rel) AS relationship_count
                 """,
                 company_name=company_name,
-            ).consume()
+            ).single()["relationship_count"]
+            or 0
+        )
+        scoped_nodes_deleted = (
+            runner.run(
+                """
+                MATCH (node)
+                WHERE (node:BusinessSegment OR node:Offering) AND node.company_name = $company_name
+                RETURN count(node) AS node_count
+                """,
+                company_name=company_name,
+            ).single()["node_count"]
+            or 0
+        )
+        runner.run(
+            """
+            MATCH (node)
+            WHERE (node:BusinessSegment OR node:Offering) AND node.company_name = $company_name
+            DETACH DELETE node
+            """,
+            company_name=company_name,
+        ).consume()
 
-            company_relationships_deleted = (
-                session.run(
-                    """
-                    MATCH (:Company {name: $company_name})-[rel]->()
-                    WHERE type(rel) IN $relation_types
-                    RETURN count(rel) AS relationship_count
-                    """,
-                    company_name=company_name,
-                    relation_types=list(UNLOAD_COMPANY_RELATION_TYPES),
-                ).single()["relationship_count"]
-                or 0
-            )
-            session.run(
+        company_relationships_deleted = (
+            runner.run(
                 """
                 MATCH (:Company {name: $company_name})-[rel]->()
                 WHERE type(rel) IN $relation_types
-                DELETE rel
+                RETURN count(rel) AS relationship_count
                 """,
                 company_name=company_name,
                 relation_types=list(UNLOAD_COMPANY_RELATION_TYPES),
-            ).consume()
+            ).single()["relationship_count"]
+            or 0
+        )
+        runner.run(
+            """
+            MATCH (:Company {name: $company_name})-[rel]->()
+            WHERE type(rel) IN $relation_types
+            DELETE rel
+            """,
+            company_name=company_name,
+            relation_types=list(UNLOAD_COMPANY_RELATION_TYPES),
+        ).consume()
+        runner.run(
+            f"""
+            MATCH (company:Company {{name: $company_name}})
+            REMOVE company.{LOADED_COMPANY_PROPERTY}
+            """,
+            company_name=company_name,
+        ).consume()
 
-            company_node_deleted = (
-                session.run(
+        company_node_deleted = (
+            runner.run(
+                """
+                MATCH (company:Company {name: $company_name})
+                WHERE NOT (company)--()
+                WITH collect(company) AS companies
+                FOREACH (company IN companies | DELETE company)
+                RETURN size(companies) AS deleted_count
+                """,
+                company_name=company_name,
+            ).single()["deleted_count"]
+            or 0
+        )
+
+        orphan_candidates = _orphan_prune_candidates(candidate_rows)
+        orphan_nodes_deleted = 0
+        if orphan_candidates:
+            orphan_nodes_deleted = (
+                runner.run(
                     """
-                    MATCH (company:Company {name: $company_name})
-                    WHERE NOT (company)--()
-                    WITH collect(company) AS companies
-                    FOREACH (company IN companies | DELETE company)
-                    RETURN size(companies) AS deleted_count
+                    UNWIND $candidates AS candidate
+                    MATCH (node {name: candidate.name})
+                    WHERE candidate.label IN labels(node)
+                      AND NOT (node)--()
+                    WITH collect(DISTINCT node) AS nodes
+                    FOREACH (node IN nodes | DELETE node)
+                    RETURN size(nodes) AS deleted_count
                     """,
-                    company_name=company_name,
+                    candidates=orphan_candidates,
                 ).single()["deleted_count"]
                 or 0
             )
-
-            orphan_candidates = _orphan_prune_candidates(candidate_rows)
-            orphan_nodes_deleted = 0
-            if orphan_candidates:
-                orphan_nodes_deleted = (
-                    session.run(
-                        """
-                        UNWIND $candidates AS candidate
-                        MATCH (node {name: candidate.name})
-                        WHERE candidate.label IN labels(node)
-                          AND NOT (node)--()
-                        WITH collect(DISTINCT node) AS nodes
-                        FOREACH (node IN nodes | DELETE node)
-                        RETURN size(nodes) AS deleted_count
-                        """,
-                        candidates=orphan_candidates,
-                    ).single()["deleted_count"]
-                    or 0
-                )
 
         summary = {
             "company_name": company_name,
@@ -330,7 +414,6 @@ class Neo4jLoader:
             "company_node_deleted": company_node_deleted,
             "orphan_nodes_deleted": orphan_nodes_deleted,
         }
-        logger.info("Unloaded Neo4j footprint for %s: %s", company_name, summary)
         return summary
 
 
