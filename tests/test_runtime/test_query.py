@@ -136,6 +136,47 @@ class RuntimeQueryTests(unittest.TestCase):
         self.assertIn("CREATE (company:Company {name: $company}) RETURN company.name AS company", rendered_error)
         self.assertIn("disallowed clause", rendered_error)
 
+    def test_query_cypher_rejects_parameter_mismatch_with_clear_error(self):
+        stderr = io.StringIO()
+
+        with patch.object(query_module, "resolve_model_settings", return_value=self._model_settings()), patch.object(
+            query_module, "LLMExtractor", return_value=object()
+        ), patch.object(
+            query_module,
+            "generate_query",
+            return_value=(
+                QueryResult(
+                    answerable=True,
+                    cypher="MATCH (company:Company {name: $company}) RETURN company.name AS company",
+                    params={},
+                ),
+                None,
+                1,
+                {},
+            ),
+        ), redirect_stderr(stderr):
+            exit_code = query_module.main_query_cypher(["--repair-attempts", "0", "Show Acme."])
+
+        self.assertEqual(exit_code, 1)
+        rendered_error = stderr.getvalue()
+        self.assertIn("Generated query failed validation.", rendered_error)
+        self.assertIn("Parameter mismatch.", rendered_error)
+
+    def test_query_reports_malformed_generated_payload_error(self):
+        stderr = io.StringIO()
+
+        with patch.object(query_module, "resolve_model_settings", return_value=self._model_settings()), patch.object(
+            query_module, "LLMExtractor", return_value=object()
+        ), patch.object(
+            query_module,
+            "generate_query",
+            side_effect=ValueError("Answerable responses must include a non-empty cypher string."),
+        ), redirect_stderr(stderr):
+            exit_code = query_module.main_query_cypher(["Show companies."])
+
+        self.assertEqual(exit_code, 1)
+        self.assertIn("Error: Answerable responses must include a non-empty cypher string.", stderr.getvalue())
+
     def test_query_cypher_renders_params_as_browser_ready_snippet(self):
         stdout = io.StringIO()
 

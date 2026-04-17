@@ -171,6 +171,13 @@ class PipelineConsole:
         self._printer("")
         self._current_stage = None
 
+    def warn_stage(self, message: Any) -> None:
+        rendered = self._format_status_message(message)
+        if self._current_stage is None:
+            self._print_detail("warning", rendered)
+            return
+        self._print_detail("warning", rendered)
+
     def handle_progress(self, event: str, **payload: Any) -> None:
         if event == "stage_start":
             self.start_stage(
@@ -203,6 +210,9 @@ class PipelineConsole:
             return
         if event == "stage_complete":
             self.finish_stage(status=payload.get("status", "done"), details=payload.get("details"))
+            return
+        if event == "stage_warning":
+            self.warn_stage(payload["message"])
             return
         if event == "stage_failed":
             self.finish_stage(status="failed", details=[("error", payload["error"])])

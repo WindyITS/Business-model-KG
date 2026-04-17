@@ -721,6 +721,52 @@ class LLMExtractorTests(unittest.TestCase):
         self.assertEqual(audit["raw_triple_count"], 1)
         self.assertEqual(audit["kept_triple_count"], 1)
 
+    def test_reflection_fallback_emits_progress_warning_after_empty_result(self):
+        events: list[tuple[str, dict[str, object]]] = []
+        extractor = LLMExtractor(
+            base_url="http://localhost:1234/v1",
+            api_key="lm-studio",
+            model="local-model",
+            provider="local",
+            api_mode="chat_completions",
+            progress_callback=lambda event, **payload: events.append((event, payload)),
+        )
+        current = KnowledgeGraphExtraction(
+            extraction_notes="pre-reflection",
+            triples=[
+                Triple(
+                    subject="Microsoft",
+                    subject_type="Company",
+                    relation="OFFERS",
+                    object="Azure",
+                    object_type="Offering",
+                )
+            ],
+        )
+
+        with patch.object(
+            extractor,
+            "_call_structured",
+            return_value=(KnowledgeGraphExtraction(extraction_notes="empty", triples=[]), "{}", 1, {"raw_triple_count": 0}),
+        ):
+            extractor.reflect_extraction(
+                full_text="filing",
+                current_extraction=current,
+                company_name="Microsoft",
+                strict=False,
+                system_prompt="system",
+                user_prompt="review",
+                stage_label="Rule reflection",
+            )
+
+        self.assertIn(
+            (
+                "stage_warning",
+                {"message": "Rule reflection returned no triples; using the previous graph instead."},
+            ),
+            events,
+        )
+
     def test_reflection_failure_reaudits_current_extraction_after_exception(self):
         extractor = LLMExtractor(
             base_url="http://localhost:1234/v1",
@@ -757,6 +803,48 @@ class LLMExtractorTests(unittest.TestCase):
         self.assertEqual(attempts_used, 2)
         self.assertEqual(audit["raw_triple_count"], 1)
         self.assertEqual(audit["kept_triple_count"], 1)
+
+    def test_reflection_failure_emits_progress_warning_after_exception(self):
+        events: list[tuple[str, dict[str, object]]] = []
+        extractor = LLMExtractor(
+            base_url="http://localhost:1234/v1",
+            api_key="lm-studio",
+            model="local-model",
+            provider="local",
+            api_mode="chat_completions",
+            progress_callback=lambda event, **payload: events.append((event, payload)),
+        )
+        current = KnowledgeGraphExtraction(
+            extraction_notes="pre-reflection",
+            triples=[
+                Triple(
+                    subject="Microsoft",
+                    subject_type="Company",
+                    relation="OPERATES_IN",
+                    object="Worldwide",
+                    object_type="Place",
+                )
+            ],
+        )
+
+        with patch.object(extractor, "_call_structured", side_effect=llm_extractor_module.ExtractionError("boom")):
+            extractor.reflect_extraction(
+                full_text="filing",
+                current_extraction=current,
+                company_name="Microsoft",
+                strict=False,
+                system_prompt="system",
+                user_prompt="review",
+                stage_label="Filing reflection",
+            )
+
+        self.assertIn(
+            (
+                "stage_warning",
+                {"message": "Filing reflection failed after retries; using the previous graph instead."},
+            ),
+            events,
+        )
 
     def test_canonical_runner_offloads_rules_into_fresh_pass_prompts(self):
         extractor = LLMExtractor(

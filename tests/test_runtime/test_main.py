@@ -1,6 +1,8 @@
+import io
 import json
 import tempfile
 import unittest
+from contextlib import redirect_stdout
 from datetime import datetime, timezone
 from pathlib import Path
 from types import SimpleNamespace
@@ -24,6 +26,17 @@ from runtime.main import (
 
 
 class RuntimeMainTests(unittest.TestCase):
+    @staticmethod
+    def _local_model_settings() -> SimpleNamespace:
+        return SimpleNamespace(
+            provider="local",
+            model="local-model",
+            base_url="http://localhost:1234/v1",
+            api_mode="chat_completions",
+            api_key="lm-studio",
+            max_output_tokens=None,
+        )
+
     def test_mode_name_is_canonical_pipeline(self):
         args = SimpleNamespace(pipeline="canonical")
         self.assertEqual(_mode_name(args), "canonical_pipeline")
@@ -83,6 +96,28 @@ class RuntimeMainTests(unittest.TestCase):
 
         self.assertIn("[07/10] Reflection 1 - Ontology compliance", lines)
         self.assertTrue(any("triples in:" in line and "14" in line for line in lines))
+
+    def test_pipeline_console_renders_stage_warning_messages(self):
+        lines: list[str] = []
+        console = PipelineConsole(printer=lines.append)
+
+        console.handle_progress(
+            "stage_start",
+            index=7,
+            title="Reflection 1 - Ontology compliance",
+            details=[("triples in", 14)],
+        )
+        console.handle_progress(
+            "stage_warning",
+            message="Rule reflection failed after retries; using the previous graph instead.",
+        )
+
+        self.assertTrue(
+            any(
+                "warning:" in line and "using the previous graph instead." in line
+                for line in lines
+            )
+        )
 
     def test_pipeline_console_renders_live_retry_updates(self):
         lines: list[str] = []
@@ -204,14 +239,7 @@ class RuntimeMainTests(unittest.TestCase):
             ), patch(
                 "sys.argv", ["main.py", str(filing_path), "--output-dir", str(tmp_path / "outputs"), "--only-pass1"]
             ):
-                mock_resolve.return_value = SimpleNamespace(
-                    provider="local",
-                    model="local-model",
-                    base_url="http://localhost:1234/v1",
-                    api_mode="chat_completions",
-                    api_key="lm-studio",
-                    max_output_tokens=None,
-                )
+                mock_resolve.return_value = self._local_model_settings()
                 exit_code = main_module.main()
 
             self.assertEqual(exit_code, 0)
@@ -233,6 +261,152 @@ class RuntimeMainTests(unittest.TestCase):
             mock_run_pipeline.assert_called_once()
             self.assertIs(mock_run_pipeline.call_args.kwargs["extractor"], fake_extractor)
             self.assertTrue(mock_run_pipeline.call_args.kwargs["stop_after_pass1"])
+
+    def test_main_passes_expected_validation_options(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            filing_text = "ITEM 1. BUSINESS\nMicrosoft does business.\n"
+            filing_path = tmp_path / "microsoft_10k.txt"
+            filing_path.write_text(filing_text, encoding="utf-8")
+            run_dir = tmp_path / "outputs" / "run"
+            resolved_triple = Triple(
+                subject="Microsoft",
+                subject_type="Company",
+                relation="HAS_SEGMENT",
+                object="Intelligent Cloud",
+                object_type="BusinessSegment",
+            )
+            fake_result = CanonicalPipelineResult(
+                success=True,
+                skeleton_extraction=KnowledgeGraphExtraction(
+                    extraction_notes="skeleton",
+                    triples=[resolved_triple],
+                ),
+            )
+            fake_extractor = SimpleNamespace()
+            captured_validation: dict[str, object] = {}
+
+            def validate_side_effect(triples, **kwargs):
+                captured_validation["triples"] = triples
+                captured_validation.update(kwargs)
+                return {
+                    "valid_triples": [resolved_triple.model_dump()],
+                    "summary": {"invalid_triple_count": 0, "duplicate_triple_count": 0},
+                }
+
+            with patch.object(main_module, "_build_run_dir", return_value=run_dir), patch.object(
+                main_module, "resolve_model_settings", return_value=self._local_model_settings()
+            ), patch.object(main_module, "LLMExtractor", return_value=fake_extractor), patch.object(
+                main_module, "run_extraction_pipeline", return_value=fake_result
+            ), patch.object(
+                main_module, "resolve_entities", return_value=[resolved_triple]
+            ), patch.object(
+                main_module, "validate_triples", side_effect=validate_side_effect
+            ), patch(
+                "sys.argv", ["main.py", str(filing_path), "--output-dir", str(tmp_path / "outputs"), "--skip-neo4j"]
+            ):
+                exit_code = main_module.main()
+
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(captured_validation["triples"], [resolved_triple.model_dump()])
+            self.assertEqual(captured_validation["source_text"], filing_text)
+            self.assertFalse(captured_validation["require_text_grounding"])
+            self.assertTrue(captured_validation["dedupe"])
+            self.assertEqual(captured_validation["ontology_version"], "canonical")
+
+    def test_main_fails_when_resolution_produces_zero_triples(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            filing_path = tmp_path / "microsoft_10k.txt"
+            filing_path.write_text("ITEM 1. BUSINESS\nMicrosoft does business.\n", encoding="utf-8")
+            run_dir = tmp_path / "outputs" / "run"
+            resolved_triple = Triple(
+                subject="Microsoft",
+                subject_type="Company",
+                relation="HAS_SEGMENT",
+                object="Intelligent Cloud",
+                object_type="BusinessSegment",
+            )
+            fake_result = CanonicalPipelineResult(
+                success=True,
+                skeleton_extraction=KnowledgeGraphExtraction(
+                    extraction_notes="skeleton",
+                    triples=[resolved_triple],
+                ),
+            )
+            stdout = io.StringIO()
+
+            with patch.object(main_module, "_build_run_dir", return_value=run_dir), patch.object(
+                main_module, "resolve_model_settings", return_value=self._local_model_settings()
+            ), patch.object(main_module, "LLMExtractor", return_value=SimpleNamespace()), patch.object(
+                main_module, "run_extraction_pipeline", return_value=fake_result
+            ), patch.object(
+                main_module, "resolve_entities", return_value=[]
+            ), patch.object(
+                main_module, "validate_triples"
+            ) as mock_validate, redirect_stdout(stdout), patch(
+                "sys.argv", ["main.py", str(filing_path), "--output-dir", str(tmp_path / "outputs"), "--skip-neo4j"]
+            ):
+                exit_code = main_module.main()
+
+            self.assertEqual(exit_code, 1)
+            self.assertIn("RUN FAILED", stdout.getvalue())
+            self.assertIn("zero resolved triples", stdout.getvalue())
+            self.assertFalse((run_dir / "resolved_triples.json").exists())
+            mock_validate.assert_not_called()
+            summary = json.loads((run_dir / "run_summary.json").read_text(encoding="utf-8"))
+            self.assertEqual(summary["status"], "failed")
+            self.assertIn("zero resolved triples", summary["error"])
+
+    def test_main_fails_when_validation_rejects_all_resolved_triples(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            filing_path = tmp_path / "microsoft_10k.txt"
+            filing_path.write_text("ITEM 1. BUSINESS\nMicrosoft does business.\n", encoding="utf-8")
+            run_dir = tmp_path / "outputs" / "run"
+            resolved_triple = Triple(
+                subject="Microsoft",
+                subject_type="Company",
+                relation="HAS_SEGMENT",
+                object="Intelligent Cloud",
+                object_type="BusinessSegment",
+            )
+            fake_result = CanonicalPipelineResult(
+                success=True,
+                skeleton_extraction=KnowledgeGraphExtraction(
+                    extraction_notes="skeleton",
+                    triples=[resolved_triple],
+                ),
+            )
+            stdout = io.StringIO()
+
+            with patch.object(main_module, "_build_run_dir", return_value=run_dir), patch.object(
+                main_module, "resolve_model_settings", return_value=self._local_model_settings()
+            ), patch.object(main_module, "LLMExtractor", return_value=SimpleNamespace()), patch.object(
+                main_module, "run_extraction_pipeline", return_value=fake_result
+            ), patch.object(
+                main_module, "resolve_entities", return_value=[resolved_triple]
+            ), patch.object(
+                main_module,
+                "validate_triples",
+                return_value={
+                    "valid_triples": [],
+                    "summary": {"invalid_triple_count": 1, "duplicate_triple_count": 0},
+                },
+            ), patch.object(main_module, "Neo4jLoader") as mock_loader, redirect_stdout(stdout), patch(
+                "sys.argv", ["main.py", str(filing_path), "--output-dir", str(tmp_path / "outputs"), "--skip-neo4j"]
+            ):
+                exit_code = main_module.main()
+
+            self.assertEqual(exit_code, 1)
+            self.assertIn("RUN FAILED", stdout.getvalue())
+            self.assertIn("ontology validation", stdout.getvalue())
+            self.assertTrue((run_dir / "validation_report.json").exists())
+            self.assertFalse((run_dir / "resolved_triples.json").exists())
+            mock_loader.assert_not_called()
+            summary = json.loads((run_dir / "run_summary.json").read_text(encoding="utf-8"))
+            self.assertEqual(summary["status"], "failed")
+            self.assertIn("ontology validation", summary["error"])
 
     def test_main_analyst_pipeline_writes_memo_and_graph_artifacts(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -286,14 +460,7 @@ class RuntimeMainTests(unittest.TestCase):
             ), patch(
                 "sys.argv", ["main.py", str(filing_path), "--pipeline", "analyst", "--output-dir", str(tmp_path / "outputs"), "--skip-neo4j"]
             ):
-                mock_resolve.return_value = SimpleNamespace(
-                    provider="local",
-                    model="local-model",
-                    base_url="http://localhost:1234/v1",
-                    api_mode="chat_completions",
-                    api_key="lm-studio",
-                    max_output_tokens=None,
-                )
+                mock_resolve.return_value = self._local_model_settings()
                 exit_code = main_module.main()
 
             self.assertEqual(exit_code, 0)
@@ -341,14 +508,7 @@ class RuntimeMainTests(unittest.TestCase):
             ), patch(
                 "sys.argv", ["main.py", str(filing_path), "--pipeline", "analyst", "--output-dir", str(tmp_path / "outputs"), "--skip-neo4j"]
             ):
-                mock_resolve.return_value = SimpleNamespace(
-                    provider="local",
-                    model="local-model",
-                    base_url="http://localhost:1234/v1",
-                    api_mode="chat_completions",
-                    api_key="lm-studio",
-                    max_output_tokens=None,
-                )
+                mock_resolve.return_value = self._local_model_settings()
                 exit_code = main_module.main()
 
             self.assertEqual(exit_code, 1)

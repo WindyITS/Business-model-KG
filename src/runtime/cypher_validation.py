@@ -14,6 +14,7 @@ DISALLOWED_CLAUSE_PATTERNS = (
     r"\bSET\b",
     r"\bREMOVE\b",
     r"\bCALL\b",
+    r"\bLOAD\s+CSV\b",
 )
 
 PARAM_PATTERN = re.compile(r"\$([A-Za-z_][A-Za-z0-9_]*)")

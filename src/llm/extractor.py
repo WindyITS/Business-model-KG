@@ -861,6 +861,10 @@ class LLMExtractor:
                 ontology_version=ontology_version,
             )
             if not final_extraction.triples and current_extraction.triples:
+                self._emit_progress(
+                    "stage_warning",
+                    message=f"{stage_label} returned no triples; using the previous graph instead.",
+                )
                 logger.warning("%s returned no triples. Falling back to prior graph.", stage_label)
                 _, fallback_audit = audit_knowledge_graph_payload(
                     current_extraction.model_dump(mode="json"),
@@ -871,6 +875,10 @@ class LLMExtractor:
         except ExtractionError:
             if strict:
                 raise
+            self._emit_progress(
+                "stage_warning",
+                message=f"{stage_label} failed after retries; using the previous graph instead.",
+            )
             logger.warning("%s failed. Falling back to prior graph.", stage_label)
             _, fallback_audit = audit_knowledge_graph_payload(
                 current_extraction.model_dump(mode="json"),
