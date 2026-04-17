@@ -104,6 +104,10 @@ The runtime also includes a read-only natural-language query path for the live N
 
 The system prompt used for query generation lives in [`src/runtime/query_prompt.py`](./src/runtime/query_prompt.py), and the read-only Cypher guards live in [`src/runtime/cypher_validation.py`](./src/runtime/cypher_validation.py).
 
+For Neo4j maintenance, the repo also ships:
+
+- `kg-neo4j-unload` to remove one company's loaded graph footprint without clearing the whole database
+
 ## Repo Layout
 
 ```text
@@ -111,6 +115,7 @@ src/
   runtime/
     main.py               runtime CLI implementation
     query.py              natural-language query CLI
+    neo4j_admin.py        selective Neo4j unload CLI
     query_prompt.py       prompt assets for query generation and repair
     cypher_validation.py  read-only query guards and Neo4j URI normalization
     model_provider.py     provider/model resolution
@@ -130,7 +135,7 @@ src/
     validator.py          ontology validation and structural checks
     place_hierarchy.py    place normalization and hierarchy helpers
   graph/
-    neo4j_loader.py       Neo4j loading
+    neo4j_loader.py       Neo4j loading and company-level unload
     evaluate_graph.py     graph evaluation utilities
 
   main.py                 compatibility CLI wrapper
@@ -179,6 +184,7 @@ That editable install creates the convenience commands in `venv/bin/`:
 - `kg-evaluate-graph`
 - `kg-query`
 - `kg-query-cypher`
+- `kg-neo4j-unload`
 
 Prompt workflow notes:
 - an editable install keeps using the repo-level `prompts/` directory, so prompt iteration stays fast
@@ -257,6 +263,7 @@ Useful CLI flags:
 - `--api-key`: override environment-based key resolution
 - `--max-output-tokens`: explicitly cap model output tokens
 - `--clear-neo4j`: clear the target database before loading
+- `kg-neo4j-unload --company "Name"`: remove one company's loaded graph footprint while keeping other companies intact
 
 Load into Neo4j instead:
 
@@ -264,6 +271,14 @@ Load into Neo4j instead:
 docker compose up -d
 ./venv/bin/kg-pipeline data/microsoft_10k.txt
 ```
+
+Unload only one company's graph footprint from Neo4j:
+
+```bash
+./venv/bin/kg-neo4j-unload --company "Microsoft"
+```
+
+If you want to skip the confirmation prompt in automation or scripts, add `--yes`.
 
 Neo4j Browser:
 - `http://localhost:7474`
@@ -314,6 +329,11 @@ ORDER BY company_name
 If your database already contains older unscoped `BusinessSegment` or `Offering` nodes from a
 previous loader version, clear and reload the graph once so the scoped identity takes effect
 consistently.
+
+Selective unload notes:
+- `kg-neo4j-unload` is company-level, not run-level
+- it removes the chosen company's scoped `BusinessSegment` and `Offering` nodes, its outgoing company-level graph links, and any shared nodes that become orphaned because of that unload
+- it does not clear unrelated companies or act as an exact rollback for one historical run
 
 ## Geography
 

@@ -21,6 +21,8 @@ ALLOWED_RELATION_TYPES = {
     "PARTNERS_WITH",
     "MONETIZES_VIA",
 }
+UNLOAD_COMPANY_RELATION_TYPES = ("HAS_SEGMENT", "OFFERS", "OPERATES_IN", "PARTNERS_WITH")
+UNLOAD_ORPHAN_PRUNE_LABELS = ("Company", "CustomerType", "Channel", "Place", "RevenueModel")
 
 
 class Neo4jLoader:
@@ -149,6 +151,125 @@ class Neo4jLoader:
         logger.info("Successfully loaded %s triples into Neo4j.", total_loaded)
         return total_loaded
 
+    def unload_company(self, company_name: str) -> dict[str, int | str]:
+        """Remove one company's graph footprint while preserving unrelated shared graph state."""
+        candidate_rows: list[dict[str, str]] = []
+        with self.driver.session() as session:
+            candidate_rows = session.run(
+                """
+                MATCH (root)
+                WHERE (root:Company AND root.name = $company_name)
+                   OR ((root:BusinessSegment OR root:Offering) AND root.company_name = $company_name)
+                OPTIONAL MATCH (root)--(neighbor)
+                WHERE neighbor IS NOT NULL
+                  AND NOT (
+                    ((neighbor:BusinessSegment OR neighbor:Offering) AND neighbor.company_name = $company_name)
+                    OR (neighbor:Company AND neighbor.name = $company_name)
+                  )
+                WITH DISTINCT neighbor
+                RETURN labels(neighbor) AS labels, neighbor.name AS name
+                """,
+                company_name=company_name,
+            ).data()
+
+            scoped_relationships_deleted = (
+                session.run(
+                    """
+                    MATCH (node)
+                    WHERE (node:BusinessSegment OR node:Offering) AND node.company_name = $company_name
+                    OPTIONAL MATCH (node)-[rel]-()
+                    RETURN count(DISTINCT rel) AS relationship_count
+                    """,
+                    company_name=company_name,
+                ).single()["relationship_count"]
+                or 0
+            )
+            scoped_nodes_deleted = (
+                session.run(
+                    """
+                    MATCH (node)
+                    WHERE (node:BusinessSegment OR node:Offering) AND node.company_name = $company_name
+                    RETURN count(node) AS node_count
+                    """,
+                    company_name=company_name,
+                ).single()["node_count"]
+                or 0
+            )
+            session.run(
+                """
+                MATCH (node)
+                WHERE (node:BusinessSegment OR node:Offering) AND node.company_name = $company_name
+                DETACH DELETE node
+                """,
+                company_name=company_name,
+            ).consume()
+
+            company_relationships_deleted = (
+                session.run(
+                    """
+                    MATCH (:Company {name: $company_name})-[rel]->()
+                    WHERE type(rel) IN $relation_types
+                    RETURN count(rel) AS relationship_count
+                    """,
+                    company_name=company_name,
+                    relation_types=list(UNLOAD_COMPANY_RELATION_TYPES),
+                ).single()["relationship_count"]
+                or 0
+            )
+            session.run(
+                """
+                MATCH (:Company {name: $company_name})-[rel]->()
+                WHERE type(rel) IN $relation_types
+                DELETE rel
+                """,
+                company_name=company_name,
+                relation_types=list(UNLOAD_COMPANY_RELATION_TYPES),
+            ).consume()
+
+            company_node_deleted = (
+                session.run(
+                    """
+                    MATCH (company:Company {name: $company_name})
+                    WHERE NOT (company)--()
+                    WITH collect(company) AS companies
+                    FOREACH (company IN companies | DELETE company)
+                    RETURN size(companies) AS deleted_count
+                    """,
+                    company_name=company_name,
+                ).single()["deleted_count"]
+                or 0
+            )
+
+            orphan_candidates = _orphan_prune_candidates(candidate_rows)
+            orphan_nodes_deleted = 0
+            if orphan_candidates:
+                orphan_nodes_deleted = (
+                    session.run(
+                        """
+                        UNWIND $candidates AS candidate
+                        MATCH (node {name: candidate.name})
+                        WHERE candidate.label IN labels(node)
+                          AND NOT (node)--()
+                        WITH collect(DISTINCT node) AS nodes
+                        FOREACH (node IN nodes | DELETE node)
+                        RETURN size(nodes) AS deleted_count
+                        """,
+                        candidates=orphan_candidates,
+                    ).single()["deleted_count"]
+                    or 0
+                )
+
+        summary = {
+            "company_name": company_name,
+            "scoped_nodes_deleted": scoped_nodes_deleted,
+            "scoped_relationships_deleted": scoped_relationships_deleted,
+            "company_relationships_deleted": company_relationships_deleted,
+            "company_node_deleted": company_node_deleted,
+            "orphan_nodes_deleted": orphan_nodes_deleted,
+        }
+        logger.info("Unloaded Neo4j footprint for %s: %s", company_name, summary)
+        return summary
+
 
 def _merge_node_clause(alias: str, node_type: str, name_field: str, company_field: str) -> str:
     if node_type in SCOPED_NODE_TYPES:
@@ -157,3 +278,21 @@ def _merge_node_clause(alias: str, node_type: str, name_field: str, company_fiel
             f"{{name: row.{name_field}, {SCOPED_NODE_COMPANY_PROPERTY}: row.{company_field}}})"
         )
     return f"MERGE ({alias}:{node_type} {{name: row.{name_field}}})"
+
+
+def _orphan_prune_candidates(rows: list[dict[str, object]]) -> list[dict[str, str]]:
+    candidates: list[dict[str, str]] = []
+    seen: set[tuple[str, str]] = set()
+    for row in rows:
+        name = row.get("name")
+        if not isinstance(name, str) or not name.strip():
+            continue
+        for label in row.get("labels", []):
+            if label not in UNLOAD_ORPHAN_PRUNE_LABELS:
+                continue
+            key = (label, name)
+            if key in seen:
+                continue
+            seen.add(key)
+            candidates.append({"label": label, "name": name})
+    return candidates

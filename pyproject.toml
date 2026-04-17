@@ -19,6 +19,7 @@ kg-pipeline = "runtime.main:main"
 kg-evaluate-graph = "graph.evaluate_graph:main"
 kg-query = "runtime.query:main_query"
 kg-query-cypher = "runtime.query:main_query_cypher"
+kg-neo4j-unload = "runtime.neo4j_admin:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
