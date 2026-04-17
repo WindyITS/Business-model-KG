@@ -56,7 +56,7 @@ If a phrase does not map clearly to one canonical label, omit it.
 
 ### 5. Effective ontology = schema + prompt policy + validator enforcement
 
-The canonical node and relation schema lives in [`configs/ontology.json`](../configs/ontology.json).
+The canonical node and relation schema lives in [`src/ontology/ontology.json`](../src/ontology/ontology.json).
 
 In practice, though, the production ontology is enforced through three layers together:
 - the formal schema and canonical labels
@@ -152,9 +152,10 @@ Links a company to a normalized, business-relevant geography in which it operate
 
 Rules:
 - strictly company-level
-- use named countries or approved macro-regions where the company has meaningful market presence
+- use named countries, approved macro-regions, or `Worldwide` when the filing clearly supports a global operating footprint
 - when a named geography is clearly tied to the company's own business presence, prefer recall over unnecessary omission
 - meaningful market presence can be shown by signals such as a named subsidiary or local entity, employee presence, labor structure, customer or revenue presence, country-specific availability, or present-tense current use in that geography
+- when the filing clearly supports a global footprint and a longer geography list would only restate geographic segment coverage, `Worldwide` is an acceptable corporate-scope place label
 - when the filing states geography at an approved macro-region level, prefer that macro-region rather than expanding it into many countries
 - when the filing provides a clearly exhaustive country list that unambiguously corresponds to one approved macro-region, and the individual countries do not add distinct business signal, emit the macro-region instead of listing every country
 - keep individual countries when the filing gives country-specific business significance such as a named subsidiary, datacenter, employees, customers, revenue, availability, or legal entity in that country
@@ -280,6 +281,7 @@ Additional structural enforcement:
 - U.S. states
 - `District of Columbia`
 - approved macro-regions
+- `Worldwide` when the filing clearly supports a global operating footprint
 
 Approved macro-regions:
 - `Africa`
@@ -305,6 +307,7 @@ Normalization examples:
 - `U.K.`, `UK` -> `United Kingdom`
 - `asia-pacific` -> `Asia Pacific`
 - `emea` -> `EMEA`
+- `global`, `world wide`, `worldwide` -> `Worldwide`
 
 Do not use:
 - cities

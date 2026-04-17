@@ -43,7 +43,7 @@ The canonical runtime follows a few consistent rules:
 - staged extraction with supervision: the runtime extracts structure first, then relation families, then runs a rule-only reflection pass followed by a filing-aware reconciliation pass
 
 This means the effective behavior of the pipeline comes from three layers together:
-- the formal schema in [`configs/ontology.json`](./configs/ontology.json)
+- the formal schema in [`src/ontology/ontology.json`](./src/ontology/ontology.json)
 - the staged extraction and reflection pipeline under [`src/llm/`](./src/llm/) and [`src/llm_extraction/pipelines/`](./src/llm_extraction/pipelines/) with prompt assets in [`prompts/canonical/`](./prompts/canonical/)
 - the final normalization and structural enforcement in [`src/ontology/validator.py`](./src/ontology/validator.py)
 
@@ -125,6 +125,7 @@ src/
     pipelines/analyst/
                           analyst memo -> graph pipeline orchestration
   ontology/
+    ontology.json         canonical ontology config
     config.py             canonical ontology loader
     validator.py          ontology validation and structural checks
     place_hierarchy.py    place normalization and hierarchy helpers
@@ -135,9 +136,6 @@ src/
   main.py                 compatibility CLI wrapper
   llm_extractor.py        compatibility extractor wrapper
   ontology_validator.py   compatibility validator wrapper
-
-configs/
-  ontology.json           canonical ontology config
 
 prompts/
   README.md               prompt asset overview

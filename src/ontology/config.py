@@ -1,27 +1,18 @@
 import json
 from importlib import resources
 from functools import lru_cache
-from pathlib import Path
 from typing import Any
 
 
-CONFIG_DIR = Path(__file__).resolve().parents[2] / "configs"
-REPO_ONTOLOGY_PATH = CONFIG_DIR / "ontology.json"
-PACKAGED_ONTOLOGY_RESOURCE = resources.files("ontology").joinpath("ontology.json")
+ONTOLOGY_RESOURCE = resources.files("ontology").joinpath("ontology.json")
 SUPPORTED_ONTOLOGY_NAMES = {"canonical", "default"}
-
-
-def _ontology_path() -> Path:
-    if REPO_ONTOLOGY_PATH.exists():
-        return REPO_ONTOLOGY_PATH
-    return Path(str(PACKAGED_ONTOLOGY_RESOURCE))
 
 
 @lru_cache(maxsize=None)
 def load_ontology_config(ontology_version: str = "canonical") -> dict[str, Any]:
     if ontology_version not in SUPPORTED_ONTOLOGY_NAMES:
         raise ValueError(f"Unsupported ontology version: {ontology_version}")
-    return json.loads(_ontology_path().read_text(encoding="utf-8"))
+    return json.loads(ONTOLOGY_RESOURCE.read_text(encoding="utf-8"))
 
 
 def canonical_labels(label_group: str, ontology_version: str = "canonical") -> list[str]:
