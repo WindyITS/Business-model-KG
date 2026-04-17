@@ -117,6 +117,23 @@ class GraphComponentTests(unittest.TestCase):
             ],
         )
 
+    def test_graph_counts_reports_nodes_and_relationships(self):
+        loader = Neo4jLoader.__new__(Neo4jLoader)
+        session = MagicMock()
+        session_cm = MagicMock()
+        session_cm.__enter__.return_value = session
+        session_cm.__exit__.return_value = None
+        loader.driver = MagicMock()
+        loader.driver.session.return_value = session_cm
+        session.run.side_effect = [
+            _FakeResult(single_value={"node_count": 7}),
+            _FakeResult(single_value={"relationship_count": 11}),
+        ]
+
+        counts = loader.graph_counts()
+
+        self.assertEqual(counts, {"node_count": 7, "relationship_count": 11})
+
     def test_evaluator_accepts_resolved_triples_payload(self):
         payload = {
             "resolved_triples": [

@@ -26,6 +26,45 @@ def infer_company_name_from_source_stem(source_stem: str) -> str:
     return source_stem.replace("_10k", "").replace("_", " ").strip().title()
 
 
+def company_pipeline_root(output_dir: Path, company_name: str, pipeline: str) -> Path:
+    return output_dir / slugify_company_name(company_name) / pipeline
+
+
+def iter_latest_run_dirs(output_dir: Path, pipeline: str) -> list[Path]:
+    if not output_dir.exists():
+        return []
+
+    latest_dirs: list[Path] = []
+    for company_dir in sorted(path for path in output_dir.iterdir() if path.is_dir()):
+        latest_dir = company_dir / pipeline / "latest"
+        if latest_dir.is_dir():
+            latest_dirs.append(latest_dir)
+    return latest_dirs
+
+
+def resolve_company_run_dir(output_dir: Path, company_name: str, pipeline: str, run_selector: str | None = None) -> Path:
+    pipeline_root = company_pipeline_root(output_dir, company_name, pipeline)
+    if run_selector is None or run_selector == "latest":
+        return pipeline_root / "latest"
+
+    explicit_path = Path(run_selector)
+    if explicit_path.is_absolute():
+        return explicit_path
+
+    if "/" in run_selector or "\\" in run_selector:
+        return (pipeline_root / explicit_path).resolve()
+
+    runs_candidate = pipeline_root / "runs" / run_selector
+    if runs_candidate.exists():
+        return runs_candidate
+
+    failed_candidate = pipeline_root / "failed" / run_selector
+    if failed_candidate.exists():
+        return failed_candidate
+
+    return pipeline_root / explicit_path
+
+
 def _run_token(started_at: datetime) -> str:
     return started_at.astimezone(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 

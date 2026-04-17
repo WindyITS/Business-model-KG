@@ -106,6 +106,7 @@ The system prompt used for query generation lives in [`src/runtime/query_prompt.
 
 For Neo4j maintenance, the repo also ships:
 
+- `kg-neo4j-load` to load saved outputs into Neo4j, either in bulk or for one company/run
 - `kg-neo4j-unload` to remove one company's loaded graph footprint without clearing the whole database
 
 ## Repo Layout
@@ -115,6 +116,7 @@ src/
   runtime/
     main.py               runtime CLI implementation
     query.py              natural-language query CLI
+    neo4j_load.py         saved-output Neo4j load CLI
     neo4j_admin.py        selective Neo4j unload CLI
     output_layout.py      company/pipeline output staging and promotion helpers
     query_prompt.py       prompt assets for query generation and repair
@@ -185,6 +187,7 @@ That editable install creates the convenience commands in `venv/bin/`:
 - `kg-evaluate-graph`
 - `kg-query`
 - `kg-query-cypher`
+- `kg-neo4j-load`
 - `kg-neo4j-unload`
 
 Prompt workflow notes:
@@ -267,6 +270,7 @@ Useful CLI flags:
 - `--max-output-tokens`: explicitly cap model output tokens
 - `--clear-neo4j`: clear the target database before loading
 - `--keep-current-output`: keep the current `latest/` output untouched and store this successful run under `runs/` instead; requires `--skip-neo4j`
+- `kg-neo4j-load`: load saved outputs into Neo4j; defaults to all `analyst/latest` outputs under `outputs/`
 - `kg-neo4j-unload --company "Name"`: remove one company's loaded graph footprint while keeping other companies intact
 
 Load into Neo4j instead:
@@ -275,6 +279,27 @@ Load into Neo4j instead:
 docker compose up -d
 ./venv/bin/kg-pipeline data/microsoft_10k.txt
 ```
+
+Load the latest `analyst` outputs for every company into Neo4j:
+
+```bash
+./venv/bin/kg-neo4j-load
+```
+
+Load the latest `analyst` output for one company only:
+
+```bash
+./venv/bin/kg-neo4j-load --company "Microsoft"
+```
+
+Load one exact saved run for a company:
+
+```bash
+./venv/bin/kg-neo4j-load --company "Microsoft" --run 20260417T101500Z
+```
+
+Use `--pipeline canonical` if you want the command to target canonical outputs instead of the default analyst outputs.
+Use `--yes` to skip the bulk-load warning when Neo4j already contains data.
 
 Unload only one company's graph footprint from Neo4j:
 
@@ -416,6 +441,13 @@ Default behavior:
 The output folder name comes from the canonical company identity used for the run:
 - by default this is inferred from the input filename
 - you can override it with `--company-name`
+
+Saved-output Neo4j load notes:
+- `kg-neo4j-load` defaults to the `analyst/latest` outputs because those are the preferred saved outputs for reload
+- with no `--company`, it loads every available `latest/` directory for the chosen pipeline
+- with `--company`, it loads that company's `latest/` directory for the chosen pipeline
+- with `--company --run <token>`, it loads an exact saved run under `runs/<token>` or `failed/<token>` for that company and pipeline
+- the bulk `kg-neo4j-load` command warns before running if Neo4j already contains data
 
 Canonical pipeline runs write artifacts such as:
 - `run_summary.json`

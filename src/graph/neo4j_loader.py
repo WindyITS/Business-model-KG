@@ -38,6 +38,17 @@ class Neo4jLoader:
             session.run("MATCH (n) DETACH DELETE n").consume()
         logger.info("Cleared all nodes and relationships from Neo4j.")
 
+    def graph_counts(self) -> dict[str, int]:
+        with self.driver.session() as session:
+            node_count = session.run("MATCH (n) RETURN count(n) AS node_count").single()["node_count"] or 0
+            relationship_count = (
+                session.run("MATCH ()-[r]->() RETURN count(r) AS relationship_count").single()["relationship_count"] or 0
+            )
+        return {
+            "node_count": int(node_count),
+            "relationship_count": int(relationship_count),
+        }
+
     def setup_constraints(self) -> None:
         """Set up uniqueness constraints, scoping segments and offerings by company."""
         unscoped_node_types = ["Company", "CustomerType", "Channel", "Place", "RevenueModel"]

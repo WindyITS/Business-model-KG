@@ -5,10 +5,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from runtime.output_layout import (
+    company_pipeline_root,
     finalize_failed_run,
     finalize_successful_run,
+    iter_latest_run_dirs,
     migrate_legacy_output_layout,
     prepare_output_layout,
+    resolve_company_run_dir,
     slugify_company_name,
 )
 
@@ -84,6 +87,37 @@ class OutputLayoutTests(unittest.TestCase):
             self.assertEqual(final_dir, output_dir / "palantir" / "canonical" / "failed" / layout.run_token)
             self.assertEqual((final_dir / "marker.txt").read_text(encoding="utf-8"), "failed")
             self.assertFalse(layout.staging_dir.exists())
+
+    def test_iter_latest_run_dirs_returns_sorted_pipeline_latest_dirs(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            output_dir = Path(tmp_dir) / "outputs"
+            (company_pipeline_root(output_dir, "Google", "analyst") / "latest").mkdir(parents=True, exist_ok=True)
+            (company_pipeline_root(output_dir, "Apple", "analyst") / "latest").mkdir(parents=True, exist_ok=True)
+            (company_pipeline_root(output_dir, "Apple", "canonical") / "latest").mkdir(parents=True, exist_ok=True)
+
+            latest_dirs = iter_latest_run_dirs(output_dir, "analyst")
+
+            self.assertEqual(
+                latest_dirs,
+                [
+                    output_dir / "apple" / "analyst" / "latest",
+                    output_dir / "google" / "analyst" / "latest",
+                ],
+            )
+
+    def test_resolve_company_run_dir_defaults_to_latest_and_supports_run_tokens(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            output_dir = Path(tmp_dir) / "outputs"
+            latest_dir = company_pipeline_root(output_dir, "Apple", "analyst") / "latest"
+            latest_dir.mkdir(parents=True, exist_ok=True)
+            run_dir = company_pipeline_root(output_dir, "Apple", "analyst") / "runs" / "20260417T101500Z"
+            run_dir.mkdir(parents=True, exist_ok=True)
+
+            self.assertEqual(resolve_company_run_dir(output_dir, "Apple", "analyst"), latest_dir)
+            self.assertEqual(
+                resolve_company_run_dir(output_dir, "Apple", "analyst", "20260417T101500Z"),
+                run_dir,
+            )
 
     def test_migrate_legacy_output_layout_moves_flat_directories_and_updates_summary(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
