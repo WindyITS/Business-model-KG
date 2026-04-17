@@ -293,25 +293,29 @@ class CanonicalPipelineRunner:
             title="Reflection 1 - Ontology compliance",
             details=[("triples in", self.extractor._triple_count(state.pre_reflection_extraction))],
         )
-        (
-            state.rule_reflection_extraction,
-            state.raw_rule_reflection_response,
-            state.rule_reflection_attempts_used,
-            state.rule_reflection_audit,
-        ) = self.extractor.reflect_extraction(
-            full_text=full_text,
-            current_extraction=state.pre_reflection_extraction,
-            company_name=company_name,
-            max_retries=max_retries,
-            strict=False,
-            system_prompt=canonical_rule_reflection_system_prompt(),
-            user_prompt=canonical_rule_reflection_prompt(
-                company_name,
-                self.extractor._compact_json(state.pre_reflection_extraction.model_dump()),
-            ),
-            stage_label="Rule reflection",
-            ontology_version="canonical",
-        )
+        try:
+            (
+                state.rule_reflection_extraction,
+                state.raw_rule_reflection_response,
+                state.rule_reflection_attempts_used,
+                state.rule_reflection_audit,
+            ) = self.extractor.reflect_extraction(
+                full_text=full_text,
+                current_extraction=state.pre_reflection_extraction,
+                company_name=company_name,
+                max_retries=max_retries,
+                strict=False,
+                system_prompt=canonical_rule_reflection_system_prompt(),
+                user_prompt=canonical_rule_reflection_prompt(
+                    company_name,
+                    self.extractor._compact_json(state.pre_reflection_extraction.model_dump()),
+                ),
+                stage_label="Rule reflection",
+                ontology_version="canonical",
+            )
+        except ExtractionError as exc:
+            self.extractor._emit_progress("stage_failed", error=str(exc))
+            return state.to_result(success=False, error=str(exc))
         self.extractor._emit_progress(
             "stage_complete",
             details=self.extractor._triple_delta_details(
@@ -326,25 +330,29 @@ class CanonicalPipelineRunner:
             title="Reflection 2 - Filing reconciliation",
             details=[("triples in", self.extractor._triple_count(state.rule_reflection_extraction))],
         )
-        (
-            state.final_extraction,
-            state.raw_final_reflection_response,
-            state.final_reflection_attempts_used,
-            state.final_reflection_audit,
-        ) = self.extractor.reflect_extraction(
-            full_text=full_text,
-            current_extraction=state.rule_reflection_extraction,
-            company_name=company_name,
-            max_retries=max_retries,
-            strict=False,
-            system_prompt=canonical_reflection_system_prompt(full_text),
-            user_prompt=canonical_final_reflection_prompt(
-                company_name,
-                self.extractor._compact_json(state.rule_reflection_extraction.model_dump()),
-            ),
-            stage_label="Filing reflection",
-            ontology_version="canonical",
-        )
+        try:
+            (
+                state.final_extraction,
+                state.raw_final_reflection_response,
+                state.final_reflection_attempts_used,
+                state.final_reflection_audit,
+            ) = self.extractor.reflect_extraction(
+                full_text=full_text,
+                current_extraction=state.rule_reflection_extraction,
+                company_name=company_name,
+                max_retries=max_retries,
+                strict=False,
+                system_prompt=canonical_reflection_system_prompt(full_text),
+                user_prompt=canonical_final_reflection_prompt(
+                    company_name,
+                    self.extractor._compact_json(state.rule_reflection_extraction.model_dump()),
+                ),
+                stage_label="Filing reflection",
+                ontology_version="canonical",
+            )
+        except ExtractionError as exc:
+            self.extractor._emit_progress("stage_failed", error=str(exc))
+            return state.to_result(success=False, error=str(exc))
         self.extractor._emit_progress(
             "stage_complete",
             details=self.extractor._triple_delta_details(

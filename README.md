@@ -184,6 +184,7 @@ Prompt workflow notes:
 - an editable install keeps using the repo-level `prompts/` directory, so prompt iteration stays fast
 - a standard package install also works because the package now ships a bundled prompt fallback
 - if you want to test an alternate prompt set without editing the repo copy, set `KG_PROMPTS_DIR=/path/to/prompts`
+- if a reflection stage returns an empty graph or exhausts retries, an interactive terminal now asks whether to keep the last good graph from the current run; non-interactive runs keep it automatically and print that choice in the console output
 
 Run the extraction pipeline:
 

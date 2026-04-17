@@ -220,26 +220,30 @@ class AnalystPipelineRunner:
             title="Critique - Overreach review",
             details=[("triples in", self.extractor._triple_count(state.compiled_graph_extraction))],
         )
-        (
-            state.final_extraction,
-            state.raw_critique_response,
-            state.critique_attempts_used,
-            state.critique_audit,
-        ) = self.extractor.reflect_extraction(
-            full_text=full_text,
-            current_extraction=state.compiled_graph_extraction,
-            company_name=company_name,
-            max_retries=max_retries,
-            strict=False,
-            system_prompt=graph_system_prompt,
-            user_prompt=analyst_graph_critique_prompt(
-                company_name,
-                augmented_memo_text,
-                self.extractor._compact_json(state.compiled_graph_extraction.model_dump(mode="json")),
-            ),
-            stage_label="Analyst critique",
-            ontology_version="canonical",
-        )
+        try:
+            (
+                state.final_extraction,
+                state.raw_critique_response,
+                state.critique_attempts_used,
+                state.critique_audit,
+            ) = self.extractor.reflect_extraction(
+                full_text=full_text,
+                current_extraction=state.compiled_graph_extraction,
+                company_name=company_name,
+                max_retries=max_retries,
+                strict=False,
+                system_prompt=graph_system_prompt,
+                user_prompt=analyst_graph_critique_prompt(
+                    company_name,
+                    augmented_memo_text,
+                    self.extractor._compact_json(state.compiled_graph_extraction.model_dump(mode="json")),
+                ),
+                stage_label="Analyst critique",
+                ontology_version="canonical",
+            )
+        except ExtractionError as exc:
+            self.extractor._emit_progress("stage_failed", error=str(exc))
+            return state.to_result(success=False, error=str(exc))
         self.extractor._emit_progress(
             "stage_complete",
             details=self.extractor._triple_delta_details(

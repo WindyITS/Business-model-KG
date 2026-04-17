@@ -109,14 +109,59 @@ class RuntimeMainTests(unittest.TestCase):
         )
         console.handle_progress(
             "stage_warning",
-            message="Rule reflection failed after retries; using the previous graph instead.",
+            message="Rule reflection failed after retries.",
         )
 
+        self.assertTrue(any("warning:" in line and "Rule reflection failed after retries." in line for line in lines))
+
+    def test_pipeline_console_confirms_graph_fallback_with_default_yes(self):
+        lines: list[str] = []
+        prompts: list[str] = []
+        console = PipelineConsole(
+            printer=lines.append,
+            input_reader=lambda prompt: prompts.append(prompt) or "",
+            is_interactive=lambda: True,
+        )
+
+        accepted = console.confirm_graph_fallback(stage_label="Rule reflection", triple_count=14)
+
+        self.assertTrue(accepted)
+        self.assertIn(
+            "Rule reflection could not produce a usable graph. Load the last good graph from this run (14 triples)? [Y/n] ",
+            prompts,
+        )
+        self.assertTrue(any("fallback:" in line and "kept the last good graph from this run" in line for line in lines))
+
+    def test_pipeline_console_can_decline_graph_fallback(self):
+        lines: list[str] = []
+        console = PipelineConsole(
+            printer=lines.append,
+            input_reader=lambda prompt: "n",
+            is_interactive=lambda: True,
+        )
+
+        accepted = console.confirm_graph_fallback(stage_label="Filing reflection", triple_count=2)
+
+        self.assertFalse(accepted)
+        self.assertTrue(any("fallback:" in line and "declined by user; stopping run" in line for line in lines))
+
+    def test_pipeline_console_auto_keeps_graph_fallback_when_noninteractive(self):
+        lines: list[str] = []
+
+        def _unexpected_prompt(prompt: str) -> str:
+            raise AssertionError(f"prompt should not be shown: {prompt}")
+
+        console = PipelineConsole(
+            printer=lines.append,
+            input_reader=_unexpected_prompt,
+            is_interactive=lambda: False,
+        )
+
+        accepted = console.confirm_graph_fallback(stage_label="Analyst critique", triple_count=1)
+
+        self.assertTrue(accepted)
         self.assertTrue(
-            any(
-                "warning:" in line and "using the previous graph instead." in line
-                for line in lines
-            )
+            any("fallback:" in line and "non-interactive terminal; kept the last good graph from this run" in line for line in lines)
         )
 
     def test_pipeline_console_renders_live_retry_updates(self):

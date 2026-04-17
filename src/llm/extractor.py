@@ -34,6 +34,7 @@ class LLMExtractor:
         api_mode: str = "chat_completions",
         max_output_tokens: int | None = None,
         progress_callback: Callable[..., None] | None = None,
+        fallback_confirmation_callback: Callable[..., bool] | None = None,
     ):
         self.base_url = base_url.rstrip("/")
         self.api_key = api_key
@@ -42,6 +43,7 @@ class LLMExtractor:
         self.api_mode = api_mode
         self.max_output_tokens = max_output_tokens
         self.progress_callback = progress_callback
+        self.fallback_confirmation_callback = fallback_confirmation_callback
         self.client = None
 
         if api_mode != "messages":
@@ -53,6 +55,16 @@ class LLMExtractor:
         if self.progress_callback is None:
             return
         self.progress_callback(event, **payload)
+
+    def _confirm_reflection_fallback(self, *, stage_label: str, current_extraction: KnowledgeGraphExtraction) -> bool:
+        if self.fallback_confirmation_callback is None:
+            return True
+        return bool(
+            self.fallback_confirmation_callback(
+                stage_label=stage_label,
+                triple_count=self._triple_count(current_extraction),
+            )
+        )
 
     @staticmethod
     def _compact_json(value: Any) -> str:
@@ -860,31 +872,43 @@ class LLMExtractor:
                 max_retries=max_retries,
                 ontology_version=ontology_version,
             )
-            if not final_extraction.triples and current_extraction.triples:
-                self._emit_progress(
-                    "stage_warning",
-                    message=f"{stage_label} returned no triples; using the previous graph instead.",
-                )
-                logger.warning("%s returned no triples. Falling back to prior graph.", stage_label)
-                _, fallback_audit = audit_knowledge_graph_payload(
-                    current_extraction.model_dump(mode="json"),
-                    ontology_version=ontology_version,
-                )
-                return current_extraction, raw_response, attempts_used, fallback_audit
-            return final_extraction, raw_response, attempts_used, audit
         except ExtractionError:
             if strict:
                 raise
             self._emit_progress(
                 "stage_warning",
-                message=f"{stage_label} failed after retries; using the previous graph instead.",
+                message=f"{stage_label} failed after retries.",
             )
+            if current_extraction.triples and not self._confirm_reflection_fallback(
+                stage_label=stage_label,
+                current_extraction=current_extraction,
+            ):
+                raise ExtractionError(f"{stage_label} failed after retries and the last good graph was declined by the user.")
             logger.warning("%s failed. Falling back to prior graph.", stage_label)
             _, fallback_audit = audit_knowledge_graph_payload(
                 current_extraction.model_dump(mode="json"),
                 ontology_version=ontology_version,
             )
             return current_extraction, None, max_retries, fallback_audit
+
+        if not final_extraction.triples and current_extraction.triples:
+            self._emit_progress(
+                "stage_warning",
+                message=f"{stage_label} returned no triples.",
+            )
+            if not self._confirm_reflection_fallback(
+                stage_label=stage_label,
+                current_extraction=current_extraction,
+            ):
+                raise ExtractionError(f"{stage_label} returned no usable graph and the last good graph was declined by the user.")
+            logger.warning("%s returned no triples. Falling back to prior graph.", stage_label)
+            _, fallback_audit = audit_knowledge_graph_payload(
+                current_extraction.model_dump(mode="json"),
+                ontology_version=ontology_version,
+            )
+            return current_extraction, raw_response, attempts_used, fallback_audit
+
+        return final_extraction, raw_response, attempts_used, audit
 
 
 __all__ = [

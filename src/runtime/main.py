@@ -53,9 +53,17 @@ def _format_token_visual(tokens: int, token_cap: int | None = None) -> str:
 
 
 class PipelineConsole:
-    def __init__(self, total_stages: int = TOTAL_STAGES, printer: Callable[[str], None] = _console_print):
+    def __init__(
+        self,
+        total_stages: int = TOTAL_STAGES,
+        printer: Callable[[str], None] = _console_print,
+        input_reader: Callable[[str], str] | None = None,
+        is_interactive: Callable[[], bool] | None = None,
+    ):
         self.total_stages = total_stages
         self._printer = printer
+        self._input_reader = input_reader or input
+        self._is_interactive = is_interactive or (lambda: sys.stdin.isatty() and sys.stdout.isatty())
         self._run_started_at = perf_counter()
         self._header_printed = False
         self._current_stage: dict[str, Any] | None = None
@@ -177,6 +185,35 @@ class PipelineConsole:
             self._print_detail("warning", rendered)
             return
         self._print_detail("warning", rendered)
+
+    def _prompt_yes_no(self, prompt: str, *, default: bool = True) -> bool:
+        while True:
+            response = self._input_reader(prompt).strip().casefold()
+            if not response:
+                return default
+            if response in {"y", "yes"}:
+                return True
+            if response in {"n", "no"}:
+                return False
+            self._print_detail("prompt", "Please answer Y or n.")
+
+    def confirm_graph_fallback(self, *, stage_label: str, triple_count: int) -> bool:
+        triple_label = "triple" if triple_count == 1 else "triples"
+        checkpoint_label = f"last good graph from this run ({triple_count} {triple_label})"
+
+        if not self._is_interactive():
+            self._print_detail("fallback", f"non-interactive terminal; kept the {checkpoint_label} automatically")
+            return True
+
+        keep_graph = self._prompt_yes_no(
+            f"{stage_label} could not produce a usable graph. Load the {checkpoint_label}? [Y/n] "
+        )
+        if keep_graph:
+            self._print_detail("fallback", f"kept the {checkpoint_label}")
+            return True
+
+        self._print_detail("fallback", "declined by user; stopping run")
+        return False
 
     def handle_progress(self, event: str, **payload: Any) -> None:
         if event == "stage_start":
@@ -581,6 +618,7 @@ def main() -> int:
             api_mode=model_settings.api_mode,
             max_output_tokens=model_settings.max_output_tokens,
             progress_callback=console.handle_progress,
+            fallback_confirmation_callback=console.confirm_graph_fallback,
         )
 
         chat_result: ExtractionPipelineResult = run_extraction_pipeline(

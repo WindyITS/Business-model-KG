@@ -9,12 +9,13 @@ import httpx
 from llm import extractor as llm_extractor_module
 from llm.extractor import LLMExtractor
 from llm_extraction.audit import aggregate_extraction_audits, audit_knowledge_graph_payload
-from llm_extraction.models import KnowledgeGraphExtraction, Triple
+from llm_extraction.models import AnalystBusinessModelMemo, KnowledgeGraphExtraction, Triple
 from llm_extraction.pipelines.canonical.prompts import (
     canonical_pipeline_system_prompt,
     canonical_reflection_system_prompt,
     canonical_rule_reflection_system_prompt,
 )
+from llm_extraction.pipelines.analyst.runner import AnalystPipelineRunner
 from llm_extraction.pipelines.canonical.runner import CanonicalPipelineRunner
 from openai import InternalServerError
 
@@ -762,9 +763,55 @@ class LLMExtractorTests(unittest.TestCase):
         self.assertIn(
             (
                 "stage_warning",
-                {"message": "Rule reflection returned no triples; using the previous graph instead."},
+                {"message": "Rule reflection returned no triples."},
             ),
             events,
+        )
+
+    def test_reflection_fallback_can_be_declined_after_empty_result(self):
+        decision_payloads: list[dict[str, object]] = []
+        extractor = LLMExtractor(
+            base_url="http://localhost:1234/v1",
+            api_key="lm-studio",
+            model="local-model",
+            provider="local",
+            api_mode="chat_completions",
+            fallback_confirmation_callback=lambda **payload: decision_payloads.append(payload) or False,
+        )
+        current = KnowledgeGraphExtraction(
+            extraction_notes="pre-reflection",
+            triples=[
+                Triple(
+                    subject="Microsoft",
+                    subject_type="Company",
+                    relation="OFFERS",
+                    object="Azure",
+                    object_type="Offering",
+                )
+            ],
+        )
+
+        with patch.object(
+            extractor,
+            "_call_structured",
+            return_value=(KnowledgeGraphExtraction(extraction_notes="empty", triples=[]), "{}", 1, {"raw_triple_count": 0}),
+        ), self.assertRaisesRegex(
+            llm_extractor_module.ExtractionError,
+            "Rule reflection returned no usable graph and the last good graph was declined by the user.",
+        ):
+            extractor.reflect_extraction(
+                full_text="filing",
+                current_extraction=current,
+                company_name="Microsoft",
+                strict=False,
+                system_prompt="system",
+                user_prompt="review",
+                stage_label="Rule reflection",
+            )
+
+        self.assertEqual(
+            decision_payloads,
+            [{"stage_label": "Rule reflection", "triple_count": 1}],
         )
 
     def test_reflection_failure_reaudits_current_extraction_after_exception(self):
@@ -841,7 +888,7 @@ class LLMExtractorTests(unittest.TestCase):
         self.assertIn(
             (
                 "stage_warning",
-                {"message": "Filing reflection failed after retries; using the previous graph instead."},
+                {"message": "Filing reflection failed after retries."},
             ),
             events,
         )
@@ -1063,6 +1110,110 @@ class LLMExtractorTests(unittest.TestCase):
         self.assertTrue(any("triples in:" in line and "2" in line for line in lines))
         self.assertTrue(any("triples added:" in line and "0" in line for line in lines))
         self.assertTrue(any("triples removed:" in line and "1" in line for line in lines))
+
+    def test_canonical_runner_returns_failed_result_when_reflection_fallback_is_declined(self):
+        extractor = LLMExtractor(
+            base_url="http://localhost:1234/v1",
+            api_key="lm-studio",
+            model="local-model",
+            provider="local",
+            api_mode="chat_completions",
+        )
+        skeleton = KnowledgeGraphExtraction(
+            extraction_notes="skeleton",
+            triples=[
+                Triple(
+                    subject="Microsoft",
+                    subject_type="Company",
+                    relation="HAS_SEGMENT",
+                    object="Intelligent Cloud",
+                    object_type="BusinessSegment",
+                )
+            ],
+        )
+        empty = KnowledgeGraphExtraction(extraction_notes="", triples=[])
+
+        with patch.object(
+            extractor,
+            "_call_structured_messages",
+            side_effect=[
+                (skeleton, "raw skeleton", 1, {"kept_triple_count": 1}),
+                (empty, "raw channels", 1, {"kept_triple_count": 0}),
+                (empty, "raw revenue", 1, {"kept_triple_count": 0}),
+                (empty, "raw serves", 1, {"kept_triple_count": 0}),
+                (empty, "raw corporate", 1, {"kept_triple_count": 0}),
+            ],
+        ), patch.object(
+            extractor,
+            "reflect_extraction",
+            side_effect=llm_extractor_module.ExtractionError(
+                "Rule reflection returned no usable graph and the last good graph was declined by the user."
+            ),
+        ):
+            result = CanonicalPipelineRunner(extractor).run(
+                full_text="filing",
+                company_name="Microsoft",
+                max_retries=2,
+            )
+
+        self.assertFalse(result.success)
+        self.assertEqual(
+            result.error,
+            "Rule reflection returned no usable graph and the last good graph was declined by the user.",
+        )
+
+    def test_analyst_runner_returns_failed_result_when_fallback_is_declined(self):
+        extractor = LLMExtractor(
+            base_url="http://localhost:1234/v1",
+            api_key="lm-studio",
+            model="local-model",
+            provider="local",
+            api_mode="chat_completions",
+        )
+        foundation_memo = AnalystBusinessModelMemo(content="foundation memo")
+        augmented_memo = AnalystBusinessModelMemo(content="augmented memo")
+        compiled_graph = KnowledgeGraphExtraction(
+            extraction_notes="compiled",
+            triples=[
+                Triple(
+                    subject="Microsoft",
+                    subject_type="Company",
+                    relation="OFFERS",
+                    object="Azure",
+                    object_type="Offering",
+                )
+            ],
+        )
+
+        with patch.object(
+            AnalystPipelineRunner,
+            "_run_text_stage",
+            side_effect=[
+                (foundation_memo, foundation_memo.content, 1, {"line_count": 1}),
+                (augmented_memo, augmented_memo.content, 1, {"line_count": 1}),
+            ],
+        ), patch.object(
+            AnalystPipelineRunner,
+            "_run_structured_stage",
+            return_value=(compiled_graph, "raw graph", 1, {"kept_triple_count": 1}),
+        ), patch.object(
+            extractor,
+            "reflect_extraction",
+            side_effect=llm_extractor_module.ExtractionError(
+                "Analyst critique failed after retries and the last good graph was declined by the user."
+            ),
+        ):
+            result = AnalystPipelineRunner(extractor).run(
+                full_text="filing",
+                company_name="Microsoft",
+                max_retries=2,
+            )
+
+        self.assertFalse(result.success)
+        self.assertEqual(
+            result.error,
+            "Analyst critique failed after retries and the last good graph was declined by the user.",
+        )
 
 
 if __name__ == "__main__":
