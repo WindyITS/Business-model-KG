@@ -1,10 +1,13 @@
+import os
 import re
 from functools import lru_cache
 from pathlib import Path
 
 
 PLACEHOLDER_RE = re.compile(r"\{\{([a-zA-Z_][a-zA-Z0-9_]*)\}\}")
-PROMPTS_ROOT = Path(__file__).resolve().parents[2] / "prompts"
+PROMPTS_OVERRIDE_ENV = "KG_PROMPTS_DIR"
+REPO_PROMPTS_ROOT = Path(__file__).resolve().parents[2] / "prompts"
+BUNDLED_PROMPTS_ROOT = Path(__file__).resolve().parent / "_bundled_prompts"
 
 
 @lru_cache(maxsize=None)
@@ -13,7 +16,25 @@ def _load_prompt(path: str) -> str:
 
 
 def prompt_root() -> Path:
-    return PROMPTS_ROOT
+    override = os.getenv(PROMPTS_OVERRIDE_ENV)
+    if override:
+        path = Path(override).expanduser().resolve()
+        if not path.is_dir():
+            raise FileNotFoundError(
+                f"Prompt override directory from {PROMPTS_OVERRIDE_ENV} was not found: {path}"
+            )
+        return path
+
+    if REPO_PROMPTS_ROOT.is_dir():
+        return REPO_PROMPTS_ROOT
+
+    if BUNDLED_PROMPTS_ROOT.is_dir():
+        return BUNDLED_PROMPTS_ROOT
+
+    raise FileNotFoundError(
+        "No prompt directory is available. "
+        f"Checked repo prompts at {REPO_PROMPTS_ROOT} and bundled prompts at {BUNDLED_PROMPTS_ROOT}."
+    )
 
 
 def pipeline_prompt_dir(pipeline_name: str) -> Path:

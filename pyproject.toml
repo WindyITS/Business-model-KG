@@ -51,3 +51,9 @@ include = [
 
 [tool.setuptools.package-data]
 ontology = ["ontology.json"]
+llm_extraction = [
+    "_bundled_prompts/README.md",
+    "_bundled_prompts/analyst/README.md",
+    "_bundled_prompts/analyst/*.txt",
+    "_bundled_prompts/canonical/*.txt",
+]

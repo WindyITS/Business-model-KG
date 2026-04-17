@@ -1,0 +1,51 @@
+<workflow_step>
+PASS 4 - CORPORATE SHELL FACTS
+</workflow_step>
+
+<objective>
+Using the filing directly, extract corporate geography and partnerships.
+</objective>
+
+<extract_only>
+- OPERATES_IN
+- PARTNERS_WITH
+</extract_only>
+
+<relation_definitions>
+- OPERATES_IN: Company -> Place. Use for a normalized, business-relevant geography where the company conducts business, has employees or a local entity, serves customers in a meaningful way, or otherwise has meaningful market presence.
+- PARTNERS_WITH: Company -> Company. Use only for an explicit named strategic, commercial, distribution, technology, integration, or go-to-market partnership.
+</relation_definitions>
+
+<place_constraints>
+- valid Place objects are countries, U.S. states, District of Columbia, and these approved macro-regions: {{approved_macro_regions_json}}.
+- normalize aliases such as U.S. -> United States, U.K. -> United Kingdom, asia-pacific -> Asia Pacific, and emea -> EMEA.
+- do not use cities, office sites, vague global labels, or market placeholders.
+</place_constraints>
+
+<partnership_constraints>
+- use PARTNERS_WITH only when the filing explicitly describes a named partnership.
+- do not use PARTNERS_WITH for suppliers, customers, competitors, ecosystem mentions, or channel relationships.
+</partnership_constraints>
+
+<pass_specific_focus>
+- add only company-level geography and explicit named partnerships
+- for **OPERATES_IN**, use the **full filing** and include named countries or approved macro-regions where the company conducts business or has **meaningful market presence**
+- meaningful market presence can be shown by signals such as a named subsidiary or local entity, employee presence, labor structure, customer or revenue presence, country-specific availability, or present-tense current use in that geography
+- prefer recall over unnecessary omission when a named geography is tied to the company's own business presence
+- when the filing states geography at an approved macro-region level (for example Europe, Asia Pacific, EMEA), prefer that macro-region rather than expanding it into many countries
+- when the filing provides a clearly exhaustive country list that unambiguously corresponds to one approved macro-region, and the individual countries do not add distinct business signal, emit the macro-region instead of listing every country
+- keep individual countries when the filing gives country-specific evidence or country-specific business significance, such as a named subsidiary, datacenter, employees, customers, revenue, availability, or legal entity in that country
+- do not infer unmentioned countries just to complete a region
+- only roll up countries into a macro-region when the mapping is clear and unambiguous; if overlap makes the roll-up uncertain, keep the explicit countries
+- do not substitute one overlapping macro-region for another unless the filing supports that exact label
+- exclude geographies that appear only as incidental context such as regulatory reference or IP jurisdiction without company presence
+</pass_specific_focus>
+
+<format_reminder>
+Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array.
+Do not use markdown code blocks (```json).
+</format_reminder>
+
+<output_scope>
+Return only OPERATES_IN and PARTNERS_WITH triples for this pass.
+</output_scope>

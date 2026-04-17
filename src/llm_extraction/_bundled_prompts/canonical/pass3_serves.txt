@@ -1,0 +1,55 @@
+<workflow_step>
+PASS 3 - CUSTOMER TYPES
+</workflow_step>
+
+<objective>
+Using the structural graph from PASS 1 as fixed context, extract customer-type relations.
+</objective>
+
+<company_name>
+{{company_name}}
+</company_name>
+
+<current_structure>
+{{current_structure}}
+</current_structure>
+
+<extract_only>
+- SERVES
+</extract_only>
+
+<customer_type_definitions>
+- use only the exact canonical CustomerType labels defined below.
+- if a filing phrase does not map clearly to one canonical customer type label, omit it.
+{{customer_type_definitions}}
+</customer_type_definitions>
+
+<customer_inference_rules>
+- precision is more important than recall.
+- extract only text-grounded customer-type facts.
+- conservative inference is allowed only for SERVES in this pass.
+- SERVES inference must be segment-specific, not global.
+- do not spread one customer type across multiple segments unless each segment has its own supporting evidence.
+- do not make weak guesses from vague proximity or broad context.
+</customer_inference_rules>
+
+<pass_specific_focus>
+- add only SERVES facts
+- use only the PASS 1 structure as fixed context
+- reason segment by segment from the offerings and descriptions inside each BusinessSegment
+- for each BusinessSegment, check the canonical customer types against it and keep every clearly stated or clearly implied one
+- do not fan out a rare or specialized customer type like government agencies, educational institutions, healthcare organizations, financial services firms, manufacturers, or retailers unless that segment has its own support
+</pass_specific_focus>
+
+<customer_scope_rule>
+- when several offerings inside the same segment point to the same customer type, attach that customer type to the BusinessSegment.
+</customer_scope_rule>
+
+<format_reminder>
+Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array.
+Do not use markdown code blocks (```json).
+</format_reminder>
+
+<output_scope>
+Return only SERVES triples for this pass.
+</output_scope>

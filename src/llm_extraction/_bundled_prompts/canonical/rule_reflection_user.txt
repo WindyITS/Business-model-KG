@@ -1,0 +1,29 @@
+<workflow_step>
+REFLECTION 1 - ONTOLOGY COMPLIANCE
+</workflow_step>
+
+<objective>
+Review the draft graph only against the ontology, relation rules, and canonical label rules.
+</objective>
+
+<company_name>
+{{company_name}}
+</company_name>
+
+<current_graph>
+{{current_graph}}
+</current_graph>
+
+<review_instruction>
+Act exactly as the system prompt instructs.
+Repair malformed triples and rule violations only.
+Do not remove or change a triple solely because support in the filing may be weak or ambiguous.
+Do not add new facts from the filing in this step.
+Do not deduplicate or collapse semantically similar triples in this step.
+Return the full updated graph.
+</review_instruction>
+
+<format_reminder>
+Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array.
+Do not use markdown code blocks (```json).
+</format_reminder>

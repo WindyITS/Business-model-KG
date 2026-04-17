@@ -155,7 +155,8 @@ tests/
 ```
 
 Pipeline structure notes:
-- prompt files are repo assets under `prompts/`, not embedded in `src/`
+- prompt files are edited under `prompts/`; packaged installs carry a bundled fallback copy under `src/llm_extraction/_bundled_prompts/`
+- prompt loading order is: `KG_PROMPTS_DIR` override, then repo `prompts/`, then bundled packaged prompts
 - [`src/llm/extractor.py`](./src/llm/extractor.py) handles transport, retries, JSON recovery, and parsing only
 - pipeline-specific orchestration and prompt selection live under [`src/llm_extraction/pipelines/`](./src/llm_extraction/pipelines/)
 
@@ -177,8 +178,14 @@ pip install -e .
 
 That editable install creates the convenience commands in `venv/bin/`:
 - `kg-pipeline`
+- `kg-evaluate-graph`
 - `kg-query`
 - `kg-query-cypher`
+
+Prompt workflow notes:
+- an editable install keeps using the repo-level `prompts/` directory, so prompt iteration stays fast
+- a standard package install also works because the package now ships a bundled prompt fallback
+- if you want to test an alternate prompt set without editing the repo copy, set `KG_PROMPTS_DIR=/path/to/prompts`
 
 Run the extraction pipeline:
 
@@ -358,7 +365,9 @@ keeping the strongest match class.
 
 ## Output Artifacts
 
-Each run writes a timestamped directory under `outputs/` with artifacts such as:
+Each run writes a timestamped directory under `outputs/`.
+
+Canonical pipeline runs write artifacts such as:
 - `run_summary.json`
 - `chunks.json`
 - `skeleton_extraction.json`
@@ -377,6 +386,16 @@ Each run writes a timestamped directory under `outputs/` with artifacts such as:
 - `validation_report.json`
 
 `--only-pass1` writes the structural subset of these artifacts rather than the full multi-pass set.
+
+Analyst pipeline runs write a different mix centered on:
+- `analyst_memo_foundation.md`
+- `analyst_memo_augmented.md`
+- `analyst_graph_compilation.json`
+- `analyst_graph_critique.json`
+- `run_summary.json`
+- `chunks.json`
+- `resolved_triples.json`
+- `validation_report.json`
 
 ## Evaluation Utilities
 
