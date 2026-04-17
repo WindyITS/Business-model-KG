@@ -49,6 +49,58 @@ class Neo4jLoader:
             "relationship_count": int(relationship_count),
         }
 
+    def list_loaded_companies(self) -> list[str]:
+        with self.driver.session() as session:
+            rows = session.run(
+                """
+                MATCH (company:Company)
+                RETURN DISTINCT company.name AS company_name
+                UNION
+                MATCH (node)
+                WHERE (node:BusinessSegment OR node:Offering)
+                  AND node.company_name IS NOT NULL
+                  AND trim(node.company_name) <> ""
+                RETURN DISTINCT node.company_name AS company_name
+                """
+            ).data()
+        company_names = sorted(
+            {
+                row["company_name"].strip()
+                for row in rows
+                if isinstance(row.get("company_name"), str) and row["company_name"].strip()
+            }
+        )
+        return company_names
+
+    def company_graph_counts(self, company_name: str) -> dict[str, int]:
+        with self.driver.session() as session:
+            counts = session.run(
+                """
+                OPTIONAL MATCH (company:Company {name: $company_name})
+                WITH count(company) AS company_node_count
+                OPTIONAL MATCH (scoped)
+                WHERE (scoped:BusinessSegment OR scoped:Offering) AND scoped.company_name = $company_name
+                WITH company_node_count, count(scoped) AS scoped_node_count
+                OPTIONAL MATCH (root)
+                WHERE (root:Company AND root.name = $company_name)
+                   OR ((root:BusinessSegment OR root:Offering) AND root.company_name = $company_name)
+                OPTIONAL MATCH (root)-[rel]-()
+                RETURN
+                    company_node_count,
+                    scoped_node_count,
+                    count(DISTINCT rel) AS relationship_count
+                """,
+                company_name=company_name,
+            ).single()
+        company_node_count = counts["company_node_count"] or 0
+        scoped_node_count = counts["scoped_node_count"] or 0
+        relationship_count = counts["relationship_count"] or 0
+        return {
+            "company_node_count": int(company_node_count),
+            "scoped_node_count": int(scoped_node_count),
+            "relationship_count": int(relationship_count),
+        }
+
     def setup_constraints(self) -> None:
         """Set up uniqueness constraints, scoping segments and offerings by company."""
         unscoped_node_types = ["Company", "CustomerType", "Channel", "Place", "RevenueModel"]

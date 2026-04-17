@@ -6,11 +6,14 @@ from pathlib import Path
 
 from runtime.output_layout import (
     company_pipeline_root,
+    discover_output_company_states,
     finalize_failed_run,
     finalize_successful_run,
     iter_latest_run_dirs,
+    manifest_path,
     migrate_legacy_output_layout,
     prepare_output_layout,
+    refresh_output_manifests,
     resolve_company_run_dir,
     slugify_company_name,
 )
@@ -45,6 +48,9 @@ class OutputLayoutTests(unittest.TestCase):
             self.assertEqual((latest_dir / "marker.txt").read_text(encoding="utf-8"), "new")
             self.assertFalse((output_dir / "apple" / "canonical" / ".previous_latest").exists())
             self.assertFalse(layout.staging_dir.exists())
+            manifest = json.loads(manifest_path(output_dir, "Apple", "canonical").read_text(encoding="utf-8"))
+            self.assertTrue(manifest["latest_available"])
+            self.assertEqual(manifest["latest_run_dir"], str(latest_dir))
 
     def test_finalize_successful_run_can_preserve_current_output(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -87,6 +93,9 @@ class OutputLayoutTests(unittest.TestCase):
             self.assertEqual(final_dir, output_dir / "palantir" / "canonical" / "failed" / layout.run_token)
             self.assertEqual((final_dir / "marker.txt").read_text(encoding="utf-8"), "failed")
             self.assertFalse(layout.staging_dir.exists())
+            manifest = json.loads(manifest_path(output_dir, "Palantir", "canonical").read_text(encoding="utf-8"))
+            self.assertFalse(manifest["latest_available"])
+            self.assertEqual(manifest["failed_run_tokens"], [layout.run_token])
 
     def test_iter_latest_run_dirs_returns_sorted_pipeline_latest_dirs(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -135,6 +144,47 @@ class OutputLayoutTests(unittest.TestCase):
             self.assertEqual((target_dir / "artifact.txt").read_text(encoding="utf-8"), "legacy")
             summary = json.loads((target_dir / "run_summary.json").read_text(encoding="utf-8"))
             self.assertEqual(summary["run_dir"], str(target_dir))
+
+    def test_discover_output_company_states_uses_saved_run_summary_when_latest_is_missing(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            output_dir = Path(tmp_dir) / "outputs"
+            run_dir = company_pipeline_root(output_dir, "Apple Inc.", "analyst") / "runs" / "20260417T101500Z"
+            run_dir.mkdir(parents=True, exist_ok=True)
+            (run_dir / "run_summary.json").write_text(
+                json.dumps(
+                    {
+                        "company_name": "Apple Inc.",
+                        "source_file": "data/apple_10k.txt",
+                        "run_dir": str(run_dir),
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            states = discover_output_company_states(output_dir, "analyst")
+
+            self.assertEqual(len(states), 1)
+            self.assertEqual(states[0].company_name, "Apple Inc.")
+            self.assertFalse(states[0].latest_available)
+            self.assertEqual(states[0].available_run_tokens, ["20260417T101500Z"])
+
+    def test_refresh_output_manifests_writes_manifest_for_existing_latest_output(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            output_dir = Path(tmp_dir) / "outputs"
+            latest_dir = company_pipeline_root(output_dir, "Google", "analyst") / "latest"
+            latest_dir.mkdir(parents=True, exist_ok=True)
+            (latest_dir / "run_summary.json").write_text(
+                json.dumps({"company_name": "Google", "source_file": "data/google_10k.txt", "run_dir": str(latest_dir)}),
+                encoding="utf-8",
+            )
+
+            manifests = refresh_output_manifests(output_dir, "analyst")
+
+            manifest_file = manifest_path(output_dir, "Google", "analyst")
+            self.assertEqual(manifests, [manifest_file])
+            payload = json.loads(manifest_file.read_text(encoding="utf-8"))
+            self.assertEqual(payload["company_name"], "Google")
+            self.assertTrue(payload["latest_available"])
 
 
 if __name__ == "__main__":

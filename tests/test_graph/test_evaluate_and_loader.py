@@ -134,6 +134,54 @@ class GraphComponentTests(unittest.TestCase):
 
         self.assertEqual(counts, {"node_count": 7, "relationship_count": 11})
 
+    def test_list_loaded_companies_returns_sorted_unique_names(self):
+        loader = Neo4jLoader.__new__(Neo4jLoader)
+        session = MagicMock()
+        session_cm = MagicMock()
+        session_cm.__enter__.return_value = session
+        session_cm.__exit__.return_value = None
+        loader.driver = MagicMock()
+        loader.driver.session.return_value = session_cm
+        session.run.return_value = _FakeResult(
+            data_rows=[
+                {"company_name": "Microsoft"},
+                {"company_name": "Apple"},
+                {"company_name": "Microsoft"},
+                {"company_name": " "},
+            ]
+        )
+
+        company_names = loader.list_loaded_companies()
+
+        self.assertEqual(company_names, ["Apple", "Microsoft"])
+
+    def test_company_graph_counts_reports_existing_company_footprint(self):
+        loader = Neo4jLoader.__new__(Neo4jLoader)
+        session = MagicMock()
+        session_cm = MagicMock()
+        session_cm.__enter__.return_value = session
+        session_cm.__exit__.return_value = None
+        loader.driver = MagicMock()
+        loader.driver.session.return_value = session_cm
+        session.run.return_value = _FakeResult(
+            single_value={
+                "company_node_count": 1,
+                "scoped_node_count": 4,
+                "relationship_count": 9,
+            }
+        )
+
+        counts = loader.company_graph_counts("Apple")
+
+        self.assertEqual(
+            counts,
+            {
+                "company_node_count": 1,
+                "scoped_node_count": 4,
+                "relationship_count": 9,
+            },
+        )
+
     def test_evaluator_accepts_resolved_triples_payload(self):
         payload = {
             "resolved_triples": [

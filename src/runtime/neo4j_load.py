@@ -12,6 +12,7 @@ from llm_extraction.models import Triple
 from runtime.output_layout import (
     infer_company_name_from_source_stem,
     iter_latest_run_dirs,
+    refresh_output_manifests,
     resolve_company_run_dir,
 )
 
@@ -25,6 +26,13 @@ class LoadTarget:
     company_name: str
     run_dir: Path
     triples: list[Triple]
+
+
+@dataclass
+class LoadFailure:
+    company_name: str
+    run_dir: Path
+    error: str
 
 
 def _load_json(path: Path) -> dict[str, object]:
@@ -155,6 +163,69 @@ def _print_target_summary(target: LoadTarget, unload_summary: dict[str, int | st
     )
 
 
+def _company_is_loaded(counts: dict[str, int]) -> bool:
+    return any(counts.values())
+
+
+def _confirm_company_reload(
+    *,
+    target: LoadTarget,
+    counts: dict[str, int],
+    input_reader: Callable[[str], str],
+    is_interactive: Callable[[], bool],
+) -> bool:
+    warning = (
+        f'Neo4j already contains data for company "{target.company_name}" '
+        f'({counts["company_node_count"]} company node(s), '
+        f'{counts["scoped_node_count"]} scoped node(s), '
+        f'{counts["relationship_count"]} relationship(s)). '
+        f"Replace it with {target.run_dir}? [y/N] "
+    )
+    if not is_interactive():
+        print(
+            "Refusing to replace an already-loaded company in a non-interactive terminal without confirmation. "
+            "Re-run with --yes.",
+            file=sys.stderr,
+            flush=True,
+        )
+        print(warning, file=sys.stderr, flush=True)
+        return False
+
+    response = input_reader(warning).strip().casefold()
+    return response in {"y", "yes"}
+
+
+def _print_load_failure(failure: LoadFailure) -> None:
+    print(
+        f'Failed to load {failure.company_name} from {failure.run_dir}: {failure.error}',
+        file=sys.stderr,
+        flush=True,
+    )
+
+
+def _print_final_summary(
+    *,
+    pipeline: str,
+    total_targets: int,
+    successful_targets: int,
+    total_loaded: int,
+    failures: list[LoadFailure],
+) -> None:
+    if failures:
+        print(
+            f'Loaded {successful_targets} of {total_targets} "{pipeline}" output(s) into Neo4j '
+            f"({total_loaded} triples total). {len(failures)} compan"
+            f'{"y" if len(failures) == 1 else "ies"} could not be loaded.',
+            flush=True,
+        )
+        return
+
+    print(
+        f'Loaded {successful_targets} "{pipeline}" output(s) into Neo4j ({total_loaded} triples total).',
+        flush=True,
+    )
+
+
 def main(
     argv: list[str] | None = None,
     *,
@@ -182,11 +253,12 @@ def main(
     parser.add_argument(
         "--yes",
         action="store_true",
-        help="Skip the bulk-load confirmation prompt when Neo4j already contains data.",
+        help="Skip confirmation prompts when bulk-loading into a non-empty database or replacing an already-loaded company.",
     )
     args = parser.parse_args(argv)
 
     try:
+        refresh_output_manifests(args.output_dir, pipeline=args.pipeline)
         targets = _discover_targets(
             output_dir=args.output_dir,
             pipeline=args.pipeline,
@@ -217,23 +289,50 @@ def main(
             ):
                 print("Aborted; nothing was loaded.", file=sys.stderr, flush=True)
                 return 1
+        else:
+            target = targets[0]
+            if not args.yes:
+                company_counts = loader.company_graph_counts(target.company_name)
+                if _company_is_loaded(company_counts) and not _confirm_company_reload(
+                    target=target,
+                    counts=company_counts,
+                    input_reader=input_reader,
+                    is_interactive=is_interactive,
+                ):
+                    print("Aborted; nothing was loaded.", file=sys.stderr, flush=True)
+                    return 1
 
         loader.setup_constraints()
 
         total_loaded = 0
+        failures: list[LoadFailure] = []
+        successful_targets = 0
         for target in targets:
-            unload_summary = loader.unload_company(target.company_name)
-            loaded_triple_count = loader.load_triples(target.triples, company_name=target.company_name)
+            try:
+                unload_summary = loader.unload_company(target.company_name)
+                loaded_triple_count = loader.load_triples(target.triples, company_name=target.company_name)
+            except Exception as exc:
+                failure = LoadFailure(company_name=target.company_name, run_dir=target.run_dir, error=str(exc))
+                failures.append(failure)
+                _print_load_failure(failure)
+                if args.company is not None:
+                    return 1
+                continue
+
+            successful_targets += 1
             total_loaded += loaded_triple_count
             _print_target_summary(target, unload_summary, loaded_triple_count)
     finally:
         loader.close()
 
-    print(
-        f'Loaded {len(targets)} "{args.pipeline}" output(s) into Neo4j ({total_loaded} triples total).',
-        flush=True,
+    _print_final_summary(
+        pipeline=args.pipeline,
+        total_targets=len(targets),
+        successful_targets=successful_targets,
+        total_loaded=total_loaded,
+        failures=failures,
     )
-    return 0
+    return 0 if not failures else 1
 
 
 if __name__ == "__main__":

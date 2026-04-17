@@ -107,6 +107,7 @@ The system prompt used for query generation lives in [`src/runtime/query_prompt.
 For Neo4j maintenance, the repo also ships:
 
 - `kg-neo4j-load` to load saved outputs into Neo4j, either in bulk or for one company/run
+- `kg-neo4j-status` to show which companies are loaded in Neo4j and which saved outputs are available
 - `kg-neo4j-unload` to remove one company's loaded graph footprint without clearing the whole database
 
 ## Repo Layout
@@ -117,6 +118,7 @@ src/
     main.py               runtime CLI implementation
     query.py              natural-language query CLI
     neo4j_load.py         saved-output Neo4j load CLI
+    neo4j_status.py       Neo4j vs saved-output status CLI
     neo4j_admin.py        selective Neo4j unload CLI
     output_layout.py      company/pipeline output staging and promotion helpers
     query_prompt.py       prompt assets for query generation and repair
@@ -188,6 +190,7 @@ That editable install creates the convenience commands in `venv/bin/`:
 - `kg-query`
 - `kg-query-cypher`
 - `kg-neo4j-load`
+- `kg-neo4j-status`
 - `kg-neo4j-unload`
 
 Prompt workflow notes:
@@ -271,6 +274,7 @@ Useful CLI flags:
 - `--clear-neo4j`: clear the target database before loading
 - `--keep-current-output`: keep the current `latest/` output untouched and store this successful run under `runs/` instead; requires `--skip-neo4j`
 - `kg-neo4j-load`: load saved outputs into Neo4j; defaults to all `analyst/latest` outputs under `outputs/`
+- `kg-neo4j-status`: report which companies are loaded in Neo4j and whether local latest outputs exist for them
 - `kg-neo4j-unload --company "Name"`: remove one company's loaded graph footprint while keeping other companies intact
 
 Load into Neo4j instead:
@@ -300,6 +304,13 @@ Load one exact saved run for a company:
 
 Use `--pipeline canonical` if you want the command to target canonical outputs instead of the default analyst outputs.
 Use `--yes` to skip the bulk-load warning when Neo4j already contains data.
+If you target one company with `--company` and that company is already loaded, the command now asks for confirmation before replacing that company graph.
+
+Show which companies are currently loaded in Neo4j and which local outputs are ready to load:
+
+```bash
+./venv/bin/kg-neo4j-status
+```
 
 Unload only one company's graph footprint from Neo4j:
 
@@ -430,6 +441,7 @@ outputs/
     analyst/
       latest/
         ...
+      manifest.json
 ```
 
 Default behavior:
@@ -437,6 +449,7 @@ Default behavior:
 - the previous `latest/` output for that company and pipeline is removed on successful replacement
 - failed runs do not overwrite `latest/`; their artifacts are moved into `failed/`
 - `--keep-current-output --skip-neo4j` keeps the current `latest/` untouched and stores the successful run under `runs/` for testing or comparison
+- each company/pipeline folder also keeps a `manifest.json` summary so the Neo4j helper commands can report what latest output, archived runs, and failed runs exist
 
 The output folder name comes from the canonical company identity used for the run:
 - by default this is inferred from the input filename
@@ -448,6 +461,9 @@ Saved-output Neo4j load notes:
 - with `--company`, it loads that company's `latest/` directory for the chosen pipeline
 - with `--company --run <token>`, it loads an exact saved run under `runs/<token>` or `failed/<token>` for that company and pipeline
 - the bulk `kg-neo4j-load` command warns before running if Neo4j already contains data
+- if a bulk load hits a problem for one company, it keeps going for the others and reports which companies failed
+- if a single-company load sees that the company is already present in Neo4j, it asks before replacing that company graph unless you pass `--yes`
+- `kg-neo4j-status` compares Neo4j against the saved outputs and tells you which companies are loaded, which are not, and whether a latest output is available to load
 
 Canonical pipeline runs write artifacts such as:
 - `run_summary.json`
