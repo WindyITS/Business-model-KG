@@ -12,7 +12,7 @@ from training.query_planner import (
     write_dataset_splits,
 )
 from training.query_planner import dataset as dataset_module
-from training.query_planner.graphs import evaluate_query_plan, matching_graph_ids_for_plan
+from training.query_planner.graphs import evaluate_query_plan
 
 
 class QueryPlannerDatasetTests(unittest.TestCase):
@@ -85,7 +85,7 @@ class QueryPlannerDatasetTests(unittest.TestCase):
         positive_compiled = compile_query_plan(positive_plan)
         self.assertTrue(positive_compiled.answerable)
         self.assertEqual(evaluate_query_plan(company_tuple, positive_plan), [{"company": "Aurora Systems"}])
-        self.assertEqual(matching_graph_ids_for_plan(company_tuple, positive_plan), ("aurora",))
+        self.assertEqual(dataset_module.matching_graph_ids_for_plan(company_tuple, positive_plan), ("aurora",))
 
         negative_plan = QueryPlanEnvelope(
             answerable=True,
@@ -100,7 +100,7 @@ class QueryPlannerDatasetTests(unittest.TestCase):
         negative_compiled = compile_query_plan(negative_plan)
         self.assertTrue(negative_compiled.answerable)
         self.assertEqual(evaluate_query_plan(company_tuple, negative_plan), [])
-        self.assertEqual(matching_graph_ids_for_plan(company_tuple, negative_plan), ())
+        self.assertEqual(dataset_module.matching_graph_ids_for_plan(company_tuple, negative_plan), ())
 
     def test_local_safe_metadata_tracks_actual_matching_graph_ids(self):
         splits = build_dataset_splits(train_size=120, validation_size=30, release_eval_size=45, seed=13)

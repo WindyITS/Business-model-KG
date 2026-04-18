@@ -8,15 +8,16 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Iterable, Literal
 
+from ontology.place_hierarchy import normalize_place_name
 from runtime.query_planner import QueryPlanEnvelope, QueryPlanPayload, compile_query_plan
 
 from .graphs import (
     SyntheticCompany,
     all_offerings,
     build_synthetic_company_graphs,
+    company_matches_place,
     descendant_offering_names,
     evaluate_query_plan,
-    matching_graph_ids_for_plan,
     root_offerings_with_children,
     segment_revenue_models,
 )
@@ -277,6 +278,85 @@ def _possessive_phrase(value: str) -> str:
 
 def _graph_source_id(graph_ids: Iterable[str]) -> str:
     return "+".join(sorted(set(graph_ids)))
+
+
+def matching_graph_ids_for_plan(
+    companies: tuple[SyntheticCompany, ...],
+    plan: QueryPlanEnvelope,
+    rows: list[dict[str, Any]] | None = None,
+) -> tuple[str, ...]:
+    if not plan.answerable:
+        return ()
+
+    payload = plan.payload or QueryPlanPayload()
+    company_by_name = {company.name: company for company in companies}
+    rows = evaluate_query_plan(companies, plan) if rows is None else rows
+
+    def graph_ids_from_company_names(company_names: set[str]) -> tuple[str, ...]:
+        return tuple(sorted({company_by_name[name].graph_id for name in company_names if name in company_by_name}))
+
+    if any("company" in row for row in rows):
+        return graph_ids_from_company_names({row["company"] for row in rows if "company" in row})
+
+    if plan.family == "boolean_exists":
+        nested_plan = QueryPlanEnvelope(answerable=True, family=payload.base_family, payload=payload)
+        return matching_graph_ids_for_plan(companies, nested_plan)
+
+    if plan.family == "count_aggregate":
+        aggregate_spec = payload.aggregate_spec or {}
+        nested_family = payload.base_family or aggregate_spec.get("base_family")
+        nested_plan = QueryPlanEnvelope(answerable=True, family=nested_family, payload=payload)
+        return matching_graph_ids_for_plan(companies, nested_plan)
+
+    if plan.family == "ranking_topk":
+        metric = (payload.aggregate_spec or {}).get("ranking_metric")
+        normalized_places = {normalize_place_name(place) for place in payload.places}
+        if metric == "customer_type_by_company_count":
+            contributors: dict[str, set[str]] = {}
+            for company in companies:
+                if normalized_places and not company_matches_place(company, normalized_places):
+                    continue
+                if payload.companies and company.name not in payload.companies:
+                    continue
+                seen: set[str] = set()
+                for segment in company.segments:
+                    seen.update(segment.customer_types)
+                for customer_type in seen:
+                    contributors.setdefault(customer_type, set()).add(company.name)
+            return graph_ids_from_company_names(
+                {company_name for row in rows for company_name in contributors.get(row["customer_type"], set())}
+            )
+        if metric == "channel_by_segment_count":
+            contributors: dict[str, set[str]] = {}
+            for company in companies:
+                if normalized_places and not company_matches_place(company, normalized_places):
+                    continue
+                if payload.companies and company.name not in payload.companies:
+                    continue
+                for segment in company.segments:
+                    for channel in segment.channels:
+                        contributors.setdefault(channel, set()).add(company.name)
+            return graph_ids_from_company_names(
+                {company_name for row in rows for company_name in contributors.get(row["channel"], set())}
+            )
+        if metric == "revenue_model_by_company_count":
+            contributors: dict[str, set[str]] = {}
+            for company in companies:
+                if normalized_places and not company_matches_place(company, normalized_places):
+                    continue
+                if payload.companies and company.name not in payload.companies:
+                    continue
+                seen: set[str] = set()
+                for segment in company.segments:
+                    seen.update(segment_revenue_models(segment, descendant=True))
+                for revenue_model in seen:
+                    contributors.setdefault(revenue_model, set()).add(company.name)
+            return graph_ids_from_company_names(
+                {company_name for row in rows for company_name in contributors.get(row["revenue_model"], set())}
+            )
+        return graph_ids_from_company_names({row["company"] for row in rows if "company" in row})
+
+    return ()
 
 
 def _style_indices(split: SplitName) -> tuple[int, ...]:
