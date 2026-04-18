@@ -256,6 +256,13 @@ class QueryPlannerDatasetTests(unittest.TestCase):
             "satisfy serve ",
             "satisfy sell through ",
             "whose descendants of ",
+            "systems's",
+            "company portfolio",
+            "business-wide request",
+            "within the company scope of",
+            "when the company scope is",
+            "among companies scoped to",
+            "descendant offerings in the ",
         )
         for split_name, examples in splits.items():
             for example in examples:
@@ -293,6 +300,8 @@ class QueryPlannerDatasetTests(unittest.TestCase):
                     self.assertNotIn("what companies", lowered, msg=f"{split_name}: {example.question}")
                     self.assertNotIn("identify the companies", lowered, msg=f"{split_name}: {example.question}")
                     company_name = companies[0].casefold()
+                    self.assertNotIn(f"for {company_name},", lowered, msg=f"{split_name}: {example.question}")
+                    self.assertNotIn(f", for {company_name},", lowered, msg=f"{split_name}: {example.question}")
                     self.assertNotIn(f"list {company_name} if", lowered, msg=f"{split_name}: {example.question}")
                     self.assertNotIn(f"return {company_name} if", lowered, msg=f"{split_name}: {example.question}")
                     self.assertNotIn(f"show {company_name} if", lowered, msg=f"{split_name}: {example.question}")
@@ -317,6 +326,22 @@ class QueryPlannerDatasetTests(unittest.TestCase):
             lowered = example.question.casefold()
             for substring in bad_substrings:
                 self.assertNotIn(substring, lowered, msg=example.question)
+
+    def test_train_materialization_includes_multi_company_examples_for_company_selection_families(self):
+        splits = build_dataset_splits(train_size=360, validation_size=108, release_eval_size=162, seed=41)
+        target_families = {
+            "companies_by_segment_filters",
+            "companies_by_cross_segment_filters",
+            "companies_by_descendant_revenue",
+            "companies_by_partner",
+        }
+        counts = Counter()
+        for example in splits["train"]:
+            payload = example.target.get("payload", {})
+            if example.family in target_families and len(payload.get("companies", [])) > 1:
+                counts[example.family] += 1
+        for family in target_families:
+            self.assertGreater(counts[family], 0, msg=f"train did not materialize multi-company examples for {family}")
 
     def test_materialized_ranking_examples_avoid_tie_only_single_company_company_count_metrics(self):
         splits = build_dataset_splits(train_size=240, validation_size=72, release_eval_size=108, seed=31)

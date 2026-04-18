@@ -181,12 +181,12 @@ PLACE_SURFACES: dict[str, tuple[str, ...]] = {
 SURFACE_WRAPPERS_BY_SPLIT: dict[SplitName, tuple[tuple[str, str | None], ...]] = {
     "train": (
         ("direct", None),
-        ("graph", "In the graph, {body}"),
-        ("dataset", "Within this dataset, {body}"),
-        ("kg", "From the knowledge graph, {body}"),
-        ("available", "Using the available graph, {body}"),
-        ("snapshot", "From the KG snapshot, {body}"),
-        ("scope", "Looking at this graph only, {body}"),
+        ("graph", "In this graph, {body}"),
+        ("here", "From what we have here, {body}"),
+        ("based", "Based on this graph, {body}"),
+        ("alone", "Using this graph alone, {body}"),
+        ("context", "From the graph we're looking at, {body}"),
+        ("scope", "With only this graph in view, {body}"),
     ),
     "validation": (
         ("current", "Using only the current graph, {body}"),
@@ -203,6 +203,12 @@ SURFACE_WRAPPERS_BY_SPLIT: dict[SplitName, tuple[tuple[str, str | None], ...]] =
         ("provided", "Using just the provided graph, {body}"),
         ("supplied", "Looking only at the supplied dataset, {body}"),
     ),
+}
+
+LOCAL_SAFE_WRAPPER_IDS_BY_SPLIT: dict[SplitName, tuple[str, ...]] = {
+    "train": ("direct", "graph", "here", "based"),
+    "validation": ("current", "present", "local", "specific", "context"),
+    "release_eval": ("scope", "alone", "snapshot", "outside", "provided", "supplied"),
 }
 
 
@@ -265,13 +271,17 @@ def _natural_join(values: Iterable[str]) -> str:
     return ", ".join(items[:-1]) + f", and {items[-1]}"
 
 
+def _possessive_phrase(value: str) -> str:
+    return f"{value}'" if value.endswith("s") else f"{value}'s"
+
+
 def _graph_source_id(graph_ids: Iterable[str]) -> str:
     return "+".join(sorted(set(graph_ids)))
 
 
 def _style_indices(split: SplitName) -> tuple[int, ...]:
     if split == "train":
-        return (0,)
+        return (0, 1)
     if split == "validation":
         return (0, 1)
     return (1, 2)
@@ -300,11 +310,20 @@ def _lower_initial(text: str) -> str:
     return text[:1].lower() + text[1:]
 
 
-def _expand_surface_variants(base_id: str, templates: tuple[str, ...], split: SplitName) -> list[tuple[str, str, str]]:
+def _expand_surface_variants(
+    base_id: str,
+    templates: tuple[str, ...],
+    split: SplitName,
+    *,
+    wrapper_ids: tuple[str, ...] | None = None,
+) -> list[tuple[str, str, str]]:
     expanded: list[tuple[str, str, str]] = []
+    wrappers = SURFACE_WRAPPERS_BY_SPLIT[split]
+    if wrapper_ids is not None:
+        wrappers = tuple((wrapper_id, wrapper) for wrapper_id, wrapper in wrappers if wrapper_id in wrapper_ids)
     for template_index, question in enumerate(templates, start=1):
         body = _lower_initial(question.strip())
-        for wrapper_id, wrapper in SURFACE_WRAPPERS_BY_SPLIT[split]:
+        for wrapper_id, wrapper in wrappers:
             rendered = question if wrapper is None else wrapper.format(body=body)
             expanded.append((f"{base_id}-t{template_index:02d}", wrapper_id, rendered))
     return _dedupe_surfaces(expanded)
@@ -654,6 +673,14 @@ def _ranking_scope_type(payload: QueryPlanPayload) -> str:
     return "global"
 
 
+def _company_scope_shape(payload: QueryPlanPayload) -> str:
+    if len(payload.companies) > 1:
+        return "multi"
+    if payload.companies:
+        return "single"
+    return "unscoped"
+
+
 def _ranking_score_key(metric: str | None) -> str | None:
     if metric in {"customer_type_by_company_count", "revenue_model_by_company_count"}:
         return "company_count"
@@ -679,6 +706,7 @@ def _render_boolean_surfaces(case: CanonicalCase, split: SplitName) -> list[tupl
     if base_family is None:
         return []
     surfaces: list[tuple[str, str, str]] = []
+    wrapper_ids = LOCAL_SAFE_WRAPPER_IDS_BY_SPLIT[split]
     company_names = _natural_join(payload.companies)
     company_aux, company_subject, company_possessive = _company_prompt_subject(payload.companies)
     for style_index in _style_indices(split):
@@ -744,17 +772,17 @@ def _render_boolean_surfaces(case: CanonicalCase, split: SplitName) -> list[tupl
             clause = _render_portfolio_base_clause(payload, style_index)
             if payload.companies:
                 templates = (
-                    f"{company_aux} {company_subject} {clause} somewhere across {company_possessive} company portfolio?",
-                    f"Can {company_names} be matched to a business-wide request to {clause}?",
-                    f"Would {company_names} satisfy a business-wide request to {clause} somewhere across {company_possessive} portfolio?",
-                    f"Is {company_names} a portfolio-level match for the ability to {clause}?",
+                    f"{company_aux} {company_subject} {clause} across {company_possessive} segments?",
+                    f"Can {company_names} be matched to a request to {clause} across {company_possessive} segments?",
+                    f"Would {company_names} satisfy a request to {clause} when you look across {company_possessive} segments?",
+                    f"Is {company_names} a match for the ability to {clause} across the company?",
                 )
             else:
                 templates = (
-                    f"Is there a company that {clause} somewhere across its company portfolio?",
-                    f"Are there companies that {clause} across the company portfolio?",
-                    f"Can a company be matched to a business-wide request to {clause} across its portfolio?",
-                    f"Would any company qualify for a business-wide request to {clause}?",
+                    f"Is there a company that {clause} across its segments?",
+                    f"Are there companies that {clause} across the company?",
+                    f"Can a company be matched to a request to {clause} across its segments?",
+                    f"Would any company qualify for a request to {clause} across its segments?",
                 )
         elif base_family == "descendant_offerings_by_root":
             root_name = payload.offerings[0]
@@ -777,21 +805,21 @@ def _render_boolean_surfaces(case: CanonicalCase, split: SplitName) -> list[tupl
             revenue_phrase = _surface_join(payload.revenue_models, REVENUE_MODEL_SURFACES, style_index)
             if payload.companies:
                 templates = (
-                    f"{company_aux} {company_subject} have a descendant offering in the {root_name} family that monetizes via {revenue_phrase}?",
-                    f"Is the {root_name} family at {company_names} monetized through {revenue_phrase} on descendant offerings?",
-                    f"Can {company_names} be matched to descendant offerings in the {root_name} family monetized via {revenue_phrase}?",
-                    f"Would {company_names} count as having descendant offerings in the {root_name} family monetized via {revenue_phrase}?",
+                    f"{company_aux} {company_subject} have offerings under {root_name} that monetize via {revenue_phrase}?",
+                    f"Are offerings under {root_name} at {company_names} monetized through {revenue_phrase}?",
+                    f"Can {company_names} be matched to offerings under {root_name} that monetize via {revenue_phrase}?",
+                    f"Would {company_names} count as having offerings under {root_name} that monetize via {revenue_phrase}?",
                 )
             else:
                 templates = (
-                    f"Is there a company whose {root_name} family uses {revenue_phrase} on descendant offerings?",
-                    f"Are there companies that monetize descendant offerings in the {root_name} family via {revenue_phrase}?",
-                    f"Can a company be matched to descendant offerings in the {root_name} family using {revenue_phrase}?",
-                    f"Would any company count as monetizing the {root_name} family through {revenue_phrase} on descendant offerings?",
+                    f"Is there a company with offerings under {root_name} that use {revenue_phrase}?",
+                    f"Are there companies that monetize offerings under {root_name} via {revenue_phrase}?",
+                    f"Can a company be matched to offerings under {root_name} that use {revenue_phrase}?",
+                    f"Would any company count as monetizing offerings under {root_name} through {revenue_phrase}?",
                 )
         else:
             templates = ()
-        surfaces.extend(_expand_surface_variants(f"boolean-{base_family}-{style_id}", templates, split))
+        surfaces.extend(_expand_surface_variants(f"boolean-{base_family}-{style_id}", templates, split, wrapper_ids=wrapper_ids))
     return _dedupe_surfaces(surfaces)
 
 
@@ -799,6 +827,7 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
     payload = case.plan.payload or QueryPlanPayload()
     family = case.family
     surfaces: list[tuple[str, str, str]] = []
+    wrapper_ids = LOCAL_SAFE_WRAPPER_IDS_BY_SPLIT[split]
     company_names = _natural_join(payload.companies)
     for style_index in _style_indices(split):
         style_id = f"s{style_index}"
@@ -825,28 +854,28 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
                     "Show the companies present in the graph.",
                     "What companies are available in this graph?",
                 )
-            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split))
+            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split, wrapper_ids=wrapper_ids))
             continue
 
         if family == "segments_by_company":
             if split == "release_eval":
                 if payload.limit:
                     templates = (
-                        f"List up to {payload.limit} business segments from {company_names}'s segment portfolio.",
-                        f"Name as many as {payload.limit} segments in {company_names}'s segment portfolio.",
-                        f"Which business segments are in {company_names}'s segment portfolio, limited to {payload.limit} results?",
+                        f"List up to {payload.limit} business segments from {_possessive_phrase(company_names)} segment portfolio.",
+                        f"Name as many as {payload.limit} segments in {_possessive_phrase(company_names)} segment portfolio.",
+                        f"Which business segments are in {_possessive_phrase(company_names)} segment portfolio, limited to {payload.limit} results?",
                         f"Identify up to {payload.limit} business segments in the segment portfolio of {company_names}.",
                         f"Show up to {payload.limit} business segments from the segment portfolio of {company_names}.",
-                        f"What does {company_names}'s segment portfolio include, limited to {payload.limit} results?",
+                        f"What does {_possessive_phrase(company_names)} segment portfolio include, limited to {payload.limit} results?",
                     )
                 else:
                     templates = (
-                        f"What is in {company_names}'s segment portfolio?",
-                        f"List the business segments in {company_names}'s segment portfolio.",
-                        f"Which business segments are in {company_names}'s segment portfolio?",
+                        f"What is in {_possessive_phrase(company_names)} segment portfolio?",
+                        f"List the business segments in {_possessive_phrase(company_names)} segment portfolio.",
+                        f"Which business segments are in {_possessive_phrase(company_names)} segment portfolio?",
                         f"Identify the business segments in the segment portfolio of {company_names}.",
-                        f"Show the business segments from {company_names}'s segment portfolio.",
-                        f"What does {company_names}'s segment portfolio include?",
+                        f"Show the business segments from {_possessive_phrase(company_names)} segment portfolio.",
+                        f"What does {_possessive_phrase(company_names)} segment portfolio include?",
                     )
             else:
                 noun = "business segments"
@@ -868,7 +897,7 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
                         f"Show the {noun} tied to {company_names}.",
                         f"Name the {noun} that sit under {company_names}.",
                     )
-            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split))
+            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split, wrapper_ids=wrapper_ids))
             continue
 
         if family == "offerings_by_company":
@@ -890,7 +919,7 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
                     f"Show the offering inventory for {company_names}.",
                     f"Name the offerings attached to {company_names}.",
                 )
-            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split))
+            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split, wrapper_ids=wrapper_ids))
             continue
 
         if family == "offerings_by_segment":
@@ -898,22 +927,22 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
             if payload.limit:
                 templates = (
                     f"List up to {payload.limit} offerings in the {segment_names} segment of {company_names}.",
-                    f"Give me as many as {payload.limit} offerings for {company_names}'s {segment_names} segment.",
+                    f"Give me as many as {payload.limit} offerings for the {segment_names} segment at {company_names}.",
                     f"What offerings sit in the {segment_names} segment of {company_names}, limited to {payload.limit} results?",
                     f"Which offerings belong to the {segment_names} segment at {company_names}, capped at {payload.limit} results?",
                     f"Show the offering inventory for the {segment_names} segment of {company_names}, limited to {payload.limit}.",
-                    f"Identify up to {payload.limit} offerings that sit under {company_names}'s {segment_names} segment.",
+                    f"Identify up to {payload.limit} offerings that sit under the {segment_names} segment at {company_names}.",
                 )
             else:
                 templates = (
                     f"What offerings sit in the {segment_names} segment of {company_names}?",
-                    f"List the offerings in {company_names}'s {segment_names} segment.",
+                    f"List the offerings in the {segment_names} segment at {company_names}.",
                     f"Which offerings belong to the {segment_names} segment at {company_names}?",
                     f"Show the offering inventory for the {segment_names} segment of {company_names}.",
                     f"Name the offerings associated with the {segment_names} segment at {company_names}.",
-                    f"Identify the offerings that sit under {company_names}'s {segment_names} segment.",
+                    f"Identify the offerings that sit under the {segment_names} segment at {company_names}.",
                 )
-            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split))
+            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split, wrapper_ids=wrapper_ids))
             continue
 
         if family == "companies_by_segment_filters":
@@ -926,11 +955,9 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
             single_company = _single_company_scope(payload.companies)
             if single_company is not None:
                 templates = (
-                    f"For {single_company}, which company has {segment_reference} that {clause}?",
-                    f"For {single_company}, name the company that has {segment_reference} that {clause}.",
-                    f"For {single_company}, identify the company with {segment_reference} that {clause}.",
-                    f"For {single_company}, what company qualifies by having {segment_reference} that {clause}?",
-                    f"For {single_company}, which company matches through {segment_reference} that {clause}?",
+                    f"Considering only {single_company}, which company has {segment_reference} that {clause}?",
+                    f"If you only consider {single_company}, what company has {segment_reference} that {clause}?",
+                    f"Which company, limited to {single_company}, has {segment_reference} that {clause}?",
                 )
             elif payload.companies:
                 templates = (
@@ -948,7 +975,7 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
                     f"Identify companies with {segment_reference} that {clause}.",
                     f"What companies have {segment_reference} that {clause}?",
                 )
-            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split))
+            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split, wrapper_ids=wrapper_ids))
             continue
 
         if family == "segments_by_segment_filters":
@@ -962,7 +989,7 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
                 f"Identify business segments{company_scope}{segment_name_suffix} that {clause}.",
                 f"What business segments{company_scope}{segment_name_suffix} {clause}?",
             )
-            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split))
+            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split, wrapper_ids=wrapper_ids))
             continue
 
         if family == "companies_by_cross_segment_filters":
@@ -970,29 +997,27 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
             single_company = _single_company_scope(payload.companies)
             if single_company is not None:
                 templates = (
-                    f"For {single_company}, which company can {clause} across its portfolio?",
-                    f"For {single_company}, name the company whose portfolio can {clause}.",
-                    f"For {single_company}, identify the company that qualifies by being able to {clause} across its portfolio.",
-                    f"For {single_company}, what company satisfies the business-wide request to {clause}?",
-                    f"For {single_company}, which company shows it can {clause} across its portfolio?",
+                    f"Considering only {single_company}, which company can {clause} across its segments?",
+                    f"If you only consider {single_company}, what company can {clause} across its segments?",
+                    f"Which company, limited to {single_company}, can {clause} across its segments?",
                 )
             elif payload.companies:
                 templates = (
-                    f"Which of {company_names}, across their portfolios, can {clause}?",
-                    f"List the companies among {company_names} that, across their portfolios, can {clause}.",
-                    f"Name the companies in {company_names} whose portfolios show they can collectively {clause}.",
-                    f"Which companies in {company_names} satisfy a business-wide request to {clause}?",
-                    f"Identify the companies among {company_names} that qualify at the business-wide level because they can collectively {clause}.",
+                    f"Which of {company_names} can {clause} across their segments?",
+                    f"List the companies among {company_names} that can {clause} across their segments.",
+                    f"Name the companies in {company_names} whose segments collectively let them {clause}.",
+                    f"Which companies in {company_names} can {clause} when you look across their segments?",
+                    f"Identify the companies among {company_names} that can {clause} across the company.",
                 )
             else:
                 templates = (
-                    f"Which companies collectively {clause} across the company portfolio?",
-                    f"List the companies that, across their portfolio, {clause}.",
-                    f"Name the companies whose portfolio shows they collectively {clause}.",
-                    f"Which companies satisfy a business-wide request to {clause}?",
-                    f"Identify companies that qualify at the business-wide level because they collectively {clause}.",
+                    f"Which companies can {clause} across their segments?",
+                    f"List the companies that can {clause} across their segments.",
+                    f"Name the companies whose segments collectively let them {clause}.",
+                    f"Which companies can {clause} when you look across their segments?",
+                    f"Identify companies that can {clause} across the company.",
                 )
-            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split))
+            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split, wrapper_ids=wrapper_ids))
             continue
 
         if family == "descendant_offerings_by_root":
@@ -1014,7 +1039,7 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
                     f"Name the offerings in the {root_name} family at {company_phrase}.",
                     f"Identify the descendant offerings under {root_name} for {company_phrase}.",
                 )
-            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split))
+            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split, wrapper_ids=wrapper_ids))
             continue
 
         if family == "companies_by_descendant_revenue":
@@ -1024,37 +1049,33 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
             single_company = _single_company_scope(payload.companies)
             if single_company is not None and payload.limit:
                 templates = (
-                    f"For {single_company}, which company monetizes descendant offerings in the {root_name} family via {revenue_phrase}, up to {payload.limit} results?",
-                    f"For {single_company}, name the company whose descendant offerings in the {root_name} family use {revenue_phrase}, limited to {payload.limit} results.",
-                    f"For {single_company}, identify the company with descendant offerings in the {root_name} family that use {revenue_phrase}, capped at {payload.limit} results.",
-                    f"For {single_company}, what company matches through descendant offerings in the {root_name} family using {revenue_phrase}, limited to {payload.limit}?",
-                    f"For {single_company}, which company qualifies through offerings in the {root_name} family that monetize via {revenue_phrase}, up to {payload.limit} results?",
+                    f"Considering only {single_company}, which company uses {revenue_phrase} for offerings under {root_name}, up to {payload.limit} results?",
+                    f"If you only consider {single_company}, what company has offerings under {root_name} that use {revenue_phrase}, limited to {payload.limit} results?",
+                    f"Which company, limited to {single_company}, has offerings under {root_name} that use {revenue_phrase}, capped at {payload.limit} results?",
                 )
             elif single_company is not None:
                 templates = (
-                    f"For {single_company}, which company monetizes descendant offerings in the {root_name} family via {revenue_phrase}?",
-                    f"For {single_company}, name the company whose descendant offerings in the {root_name} family use {revenue_phrase}.",
-                    f"For {single_company}, identify the company with descendant offerings in the {root_name} family that use {revenue_phrase}.",
-                    f"For {single_company}, what company matches through descendant offerings in the {root_name} family using {revenue_phrase}?",
-                    f"For {single_company}, which company qualifies through offerings in the {root_name} family that monetize via {revenue_phrase}?",
+                    f"Considering only {single_company}, which company uses {revenue_phrase} for offerings under {root_name}?",
+                    f"If you only consider {single_company}, what company has offerings under {root_name} that use {revenue_phrase}?",
+                    f"Which company, limited to {single_company}, has offerings under {root_name} that use {revenue_phrase}?",
                 )
             elif payload.limit:
                 templates = (
-                    f"{intro}which {company_subject} monetize descendant offerings in the {root_name} family via {revenue_phrase}, up to {payload.limit} results?",
-                    f"{intro}list up to {payload.limit} {company_subject} whose offerings in the {root_name} family use {revenue_phrase}.",
-                    f"{intro}what {company_subject} monetize descendant offerings in the {root_name} family through {revenue_phrase}, limited to {payload.limit}?",
-                    f"{intro}identify up to {payload.limit} {company_subject} with descendant offerings in the {root_name} family that use {revenue_phrase}.",
-                    f"{intro}name as many as {payload.limit} {company_subject} that monetize offerings in the {root_name} family with {revenue_phrase}.",
+                    f"{intro}which {company_subject} use {revenue_phrase} for offerings under {root_name}, up to {payload.limit} results?",
+                    f"{intro}list up to {payload.limit} {company_subject} whose offerings under {root_name} use {revenue_phrase}.",
+                    f"{intro}what {company_subject} use {revenue_phrase} for offerings under {root_name}, limited to {payload.limit}?",
+                    f"{intro}identify up to {payload.limit} {company_subject} with offerings under {root_name} that use {revenue_phrase}.",
+                    f"{intro}name as many as {payload.limit} {company_subject} that use {revenue_phrase} for offerings under {root_name}.",
                 )
             else:
                 templates = (
-                    f"{intro}which {company_subject} monetize descendant offerings in the {root_name} family via {revenue_phrase}?",
-                    f"{intro}list the {company_subject} whose offerings in the {root_name} family use {revenue_phrase}.",
-                    f"{intro}what {company_subject} monetize descendant offerings in the {root_name} family through {revenue_phrase}?",
-                    f"{intro}identify {company_subject} with descendant offerings in the {root_name} family that use {revenue_phrase}.",
-                    f"{intro}name the {company_subject} that monetize offerings in the {root_name} family with {revenue_phrase}.",
+                    f"{intro}which {company_subject} use {revenue_phrase} for offerings under {root_name}?",
+                    f"{intro}list the {company_subject} whose offerings under {root_name} use {revenue_phrase}.",
+                    f"{intro}what {company_subject} use {revenue_phrase} for offerings under {root_name}?",
+                    f"{intro}identify {company_subject} with offerings under {root_name} that use {revenue_phrase}.",
+                    f"{intro}name the {company_subject} that use {revenue_phrase} for offerings under {root_name}.",
                 )
-            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split))
+            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split, wrapper_ids=wrapper_ids))
             continue
 
         if family == "companies_by_place":
@@ -1075,7 +1096,7 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
                     f"Name the companies active in {place_phrase}.",
                     f"Identify companies operating in {place_phrase}.",
                 )
-            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split))
+            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split, wrapper_ids=wrapper_ids))
             continue
 
         if family == "segments_by_place_and_segment_filters":
@@ -1098,7 +1119,7 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
                     f"Identify business segments{segment_name_suffix} whose company operates in {place_phrase} and that {clause}.",
                     f"What business segments{segment_name_suffix} sit at companies operating in {place_phrase} and {clause}?",
                 )
-            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split))
+            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split, wrapper_ids=wrapper_ids))
             continue
 
         if family == "companies_by_partner":
@@ -1106,16 +1127,14 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
             single_company = _single_company_scope(payload.companies)
             if single_company is not None:
                 templates = (
-                    f"For {single_company}, which company partners with {partner_phrase}?",
-                    f"For {single_company}, name the company that has a named partnership with {partner_phrase}.",
-                    f"For {single_company}, identify the company partnered with {partner_phrase}.",
-                    f"For {single_company}, what company matches as a partner of {partner_phrase}?",
-                    f"For {single_company}, which company is tied to {partner_phrase} through partnerships?",
+                    f"Considering only {single_company}, which company partners with {partner_phrase}?",
+                    f"If you only consider {single_company}, what company has a named partnership with {partner_phrase}?",
+                    f"Which company, limited to {single_company}, is partnered with {partner_phrase}?",
                 )
                 if payload.limit:
                     templates += (
-                        f"For {single_company}, which company partners with {partner_phrase}, up to {payload.limit} results?",
-                        f"For {single_company}, name the company partnered with {partner_phrase}, limited to {payload.limit} results.",
+                        f"Considering only {single_company}, which company partners with {partner_phrase}, up to {payload.limit} results?",
+                        f"Which company, limited to {single_company}, is partnered with {partner_phrase}, limited to {payload.limit} results?",
                     )
             elif payload.companies:
                 templates = (
@@ -1147,7 +1166,7 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
                         f"Identify the companies that partner with {partner_phrase}.",
                         f"Name the companies tied to {partner_phrase} through partnerships.",
                     )
-            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split))
+            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split, wrapper_ids=wrapper_ids))
             continue
 
         if family == "boolean_exists":
@@ -1166,7 +1185,7 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
                     f"What is the number of {noun} at {company_names}?",
                     f"How many {noun} belong to {company_names}?",
                 )
-                surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split))
+                surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split, wrapper_ids=wrapper_ids))
                 continue
             if base_family == "companies_by_segment_filters":
                 singular_clause = _render_relative_segment_clause(payload, style_index)
@@ -1177,7 +1196,7 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
                     f"What is the number of {company_subject} with a business segment that {singular_clause}?",
                     f"How many {company_subject} can be matched to a business segment that {singular_clause}?",
                 )
-                surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split))
+                surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split, wrapper_ids=wrapper_ids))
                 continue
             if base_family == "segments_by_segment_filters":
                 clause = _render_relative_segment_clause(payload, style_index, plural=True)
@@ -1188,7 +1207,7 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
                     f"What is the number of business segments{company_scope} that {clause}?",
                     f"How many business segments{company_scope} can be found that {clause}?",
                 )
-                surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split))
+                surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split, wrapper_ids=wrapper_ids))
                 continue
             if base_family == "descendant_offerings_by_root":
                 root_name = payload.offerings[0]
@@ -1199,7 +1218,7 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
                     f"What is the number of descendant offerings under {root_name} at {company_phrase}?",
                     f"How many offerings are in the {root_name} family at {company_phrase}?",
                 )
-                surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split))
+                surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split, wrapper_ids=wrapper_ids))
                 continue
 
             clause = _render_filter_clause(payload, split, style_index)
@@ -1209,7 +1228,7 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
                 f"What is the number of {noun} that {clause}?",
                 f"How many {noun} can be found that {clause}?",
             )
-            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split))
+            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split, wrapper_ids=wrapper_ids))
             continue
 
         if family == "ranking_topk":
@@ -1246,7 +1265,7 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
                     f"Name the top {limit} companies{scope_phrases['company_ranking']} by segment-match count where segments {clause}.",
                     f"What are the top {limit} companies by matched segments{scope_phrases['company_ranking']} for segments that {clause}?",
                 )
-            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split))
+            surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split, wrapper_ids=wrapper_ids))
             continue
 
     return _dedupe_surfaces(surfaces)
@@ -1341,11 +1360,11 @@ def _render_strong_candidate_surfaces(case: CanonicalCase, split: SplitName) -> 
     else:
         templates = (
             f"Rank the segments of {context['company']} using a custom weighted score that prioritizes {context['focus']}.",
-            f"Give me a weighted ranking of {context['company']}'s segments, giving extra importance to {context['focus']}.",
-            f"Order {context['company']}'s segments by a custom score that overweights {context['focus']}.",
-            f"Produce a weighted ranking for {context['company']}'s segments with extra weight on {context['focus']}.",
+            f"Give me a weighted ranking of {_possessive_phrase(context['company'])} segments, giving extra importance to {context['focus']}.",
+            f"Order {_possessive_phrase(context['company'])} segments by a custom score that overweights {context['focus']}.",
+            f"Produce a weighted ranking for {_possessive_phrase(context['company'])} segments with extra weight on {context['focus']}.",
             f"Rank the segments of {context['company']} using a custom formula that emphasizes {context['focus']}.",
-            f"Show a custom weighted leaderboard for {context['company']}'s segments based on {context['focus']}.",
+            f"Show a custom weighted leaderboard for {_possessive_phrase(context['company'])} segments based on {context['focus']}.",
         )
     return _expand_surface_variants(family, templates, split)
 
@@ -1446,6 +1465,12 @@ def _materialize_family_examples(
     seen_pairs: set[str],
 ) -> list[DatasetExample]:
     selected: list[DatasetExample] = []
+    style_diversity_families = {
+        "companies_by_segment_filters",
+        "companies_by_cross_segment_filters",
+        "companies_by_descendant_revenue",
+        "companies_by_partner",
+    }
     for family, target_count in sorted(family_targets.items()):
         if target_count <= 0:
             continue
@@ -1455,21 +1480,37 @@ def _materialize_family_examples(
                 example = _build_example(companies, case, template_id, variant_id, question)
                 sort_key = _selection_key(seed, case.case_id, template_id, variant_id, question)
                 pool.append((sort_key, example))
-        pool.sort(key=lambda item: item[0])
+        if family in style_diversity_families:
+            scope_priority = {"multi": 0, "unscoped": 1, "single": 2}
+            pool.sort(
+                key=lambda item: (
+                    scope_priority[
+                        _company_scope_shape(QueryPlanPayload.model_validate(item[1].target.get("payload", {})))
+                    ],
+                    item[0],
+                )
+            )
+        else:
+            pool.sort(key=lambda item: item[0])
 
         family_selected = 0
         chosen_keys: set[str] = set()
+        chosen_targets: set[str] = set()
 
-        def add_example(example: DatasetExample) -> bool:
+        def add_example(example: DatasetExample, *, require_new_target: bool = False) -> bool:
             nonlocal family_selected
             normalized_question = example.question.strip().casefold()
             normalized_pair = f"{normalized_question}|{_normalized_json_key(example.supervision_target)}"
+            normalized_target = _normalized_json_key(example.supervision_target)
             if normalized_question in seen_questions or normalized_pair in seen_pairs or normalized_pair in chosen_keys:
+                return False
+            if require_new_target and normalized_target in chosen_targets:
                 return False
             selected.append(example)
             seen_questions.add(normalized_question)
             seen_pairs.add(normalized_pair)
             chosen_keys.add(normalized_pair)
+            chosen_targets.add(normalized_target)
             family_selected += 1
             return True
 
@@ -1484,6 +1525,13 @@ def _materialize_family_examples(
         if family == "boolean_exists" and target_count >= 2:
             reserve_first(lambda example: example.metadata.get("boolean_answer") is False)
             reserve_first(lambda example: example.metadata.get("boolean_answer") is True)
+        if family in style_diversity_families and target_count >= 3:
+            for scope in ("multi", "unscoped", "single"):
+                reserve_first(
+                    lambda example, scope=scope: _company_scope_shape(
+                        QueryPlanPayload.model_validate(example.target.get("payload", {}))
+                    ) == scope
+                )
         if family == "ranking_topk" and target_count >= 1:
             for scope in ("company+place", "global", "company", "place"):
                 if family_selected >= target_count:
@@ -1494,6 +1542,10 @@ def _materialize_family_examples(
                     ) == scope
                 )
 
+        for _, example in pool:
+            if family_selected >= target_count:
+                break
+            add_example(example, require_new_target=True)
         for _, example in pool:
             if family_selected >= target_count:
                 break
@@ -1560,6 +1612,7 @@ def _inventory_cases(companies: tuple[SyntheticCompany, ...]) -> dict[str, list[
 def _same_segment_cases(companies: tuple[SyntheticCompany, ...]) -> dict[str, list[CanonicalCase]]:
     cases: dict[str, list[CanonicalCase]] = defaultdict(list)
     families = ("companies_by_segment_filters", "segments_by_segment_filters")
+    subsets = [subset for subset in _company_subsets(companies) if len(subset) > 1]
     for company in companies:
         for segment in company.segments:
             revenue_models = sorted(segment_revenue_models(segment, descendant=True))
@@ -1628,11 +1681,31 @@ def _same_segment_cases(companies: tuple[SyntheticCompany, ...]) -> dict[str, li
                         )
                         if scoped_case is not None:
                             cases[family].append(scoped_case)
+    for subset in subsets:
+        subset_names = [company.name for company in subset]
+        source_ids = [company.graph_id for company in subset]
+        for company in subset:
+            for segment in company.segments:
+                case = _make_local_safe_case(
+                    family="companies_by_segment_filters",
+                    bucket="same_segment",
+                    payload=QueryPlanPayload(
+                        companies=subset_names,
+                        segments=[segment.name],
+                        customer_types=[segment.customer_types[0]],
+                        channels=[segment.channels[0]],
+                        binding_scope="same_segment",
+                    ),
+                    source_graph_ids=source_ids,
+                )
+                if case is not None:
+                    cases["companies_by_segment_filters"].append(case)
     return {family: _dedupe_local_safe_cases(materialized) for family, materialized in cases.items()}
 
 
 def _cross_segment_cases(companies: tuple[SyntheticCompany, ...]) -> dict[str, list[CanonicalCase]]:
     cases: list[CanonicalCase] = []
+    subsets = [subset for subset in _company_subsets(companies) if len(subset) > 1]
     for company in companies:
         customer_types = sorted({customer_type for segment in company.segments for customer_type in segment.customer_types})
         channels = sorted({channel for segment in company.segments for channel in segment.channels})
@@ -1683,12 +1756,46 @@ def _cross_segment_cases(companies: tuple[SyntheticCompany, ...]) -> dict[str, l
                 )
                 if case is not None:
                     cases.append(case)
+    for subset in subsets:
+        subset_names = [company.name for company in subset]
+        source_ids = [company.graph_id for company in subset]
+        for company in subset:
+            customer_types = sorted({customer_type for segment in company.segments for customer_type in segment.customer_types})
+            channels = sorted({channel for segment in company.segments for channel in segment.channels})
+            if len(customer_types) >= 2:
+                case = _make_local_safe_case(
+                    family="companies_by_cross_segment_filters",
+                    bucket="cross_segment",
+                    payload=QueryPlanPayload(
+                        companies=subset_names,
+                        customer_types=list(customer_types[:2]),
+                        binding_scope="across_segments",
+                    ),
+                    source_graph_ids=source_ids,
+                )
+                if case is not None:
+                    cases.append(case)
+            if customer_types and channels:
+                case = _make_local_safe_case(
+                    family="companies_by_cross_segment_filters",
+                    bucket="cross_segment",
+                    payload=QueryPlanPayload(
+                        companies=subset_names,
+                        customer_types=[customer_types[0]],
+                        channels=[channels[0]],
+                        binding_scope="across_segments",
+                    ),
+                    source_graph_ids=source_ids,
+                )
+                if case is not None:
+                    cases.append(case)
     return {"companies_by_cross_segment_filters": _dedupe_local_safe_cases(cases)}
 
 
 def _hierarchy_cases(companies: tuple[SyntheticCompany, ...]) -> dict[str, list[CanonicalCase]]:
     descendants_cases: list[CanonicalCase] = []
     revenue_cases: list[CanonicalCase] = []
+    subsets = [subset for subset in _company_subsets(companies) if len(subset) > 1]
     for company in companies:
         for segment in company.segments:
             for root in root_offerings_with_children(segment):
@@ -1767,6 +1874,37 @@ def _hierarchy_cases(companies: tuple[SyntheticCompany, ...]) -> dict[str, list[
                     )
                     if case is not None:
                         revenue_cases.append(case)
+    for subset in subsets:
+        subset_names = [company.name for company in subset]
+        source_ids = [company.graph_id for company in subset]
+        for company in subset:
+            for segment in company.segments:
+                for root in root_offerings_with_children(segment):
+                    descendant_names = descendant_offering_names(segment, root.name)
+                    revenue_models = sorted(
+                        {
+                            revenue_model
+                            for offering in all_offerings(segment)
+                            if offering.name in descendant_names
+                            for revenue_model in offering.revenue_models
+                        }
+                    )
+                    if not revenue_models:
+                        continue
+                    case = _make_local_safe_case(
+                        family="companies_by_descendant_revenue",
+                        bucket="hierarchy",
+                        payload=QueryPlanPayload(
+                            companies=subset_names,
+                            offerings=[root.name],
+                            revenue_models=[revenue_models[0]],
+                            hierarchy_mode="descendant",
+                            limit=2,
+                        ),
+                        source_graph_ids=source_ids,
+                    )
+                    if case is not None:
+                        revenue_cases.append(case)
     return {
         "descendant_offerings_by_root": _dedupe_local_safe_cases(descendants_cases),
         "companies_by_descendant_revenue": _dedupe_local_safe_cases(revenue_cases),
@@ -1816,6 +1954,7 @@ def _geography_cases(companies: tuple[SyntheticCompany, ...]) -> dict[str, list[
 
 def _partner_cases(companies: tuple[SyntheticCompany, ...]) -> dict[str, list[CanonicalCase]]:
     cases: list[CanonicalCase] = []
+    subsets = [subset for subset in _company_subsets(companies) if len(subset) > 1]
     for partner in _all_partners(companies):
         for limit in (None, 2, 3):
             case = _make_local_safe_case(
@@ -1836,6 +1975,19 @@ def _partner_cases(companies: tuple[SyntheticCompany, ...]) -> dict[str, list[Ca
             )
             if case is not None:
                 cases.append(case)
+    for subset in subsets:
+        subset_names = [company.name for company in subset]
+        source_ids = [company.graph_id for company in subset]
+        for company in subset:
+            for partner in company.partners[:2]:
+                case = _make_local_safe_case(
+                    family="companies_by_partner",
+                    bucket="partner",
+                    payload=QueryPlanPayload(companies=subset_names, partners=[partner]),
+                    source_graph_ids=source_ids,
+                )
+                if case is not None:
+                    cases.append(case)
     return {"companies_by_partner": _dedupe_local_safe_cases(cases)}
 
 
@@ -2400,7 +2552,7 @@ def _canonical_refusal_cases(companies: tuple[SyntheticCompany, ...]) -> dict[st
             ),
             "unsupported_metric": (
                 (
-                    f"What is {company.name}'s annual revenue?",
+                    f"What is {_possessive_phrase(company.name)} annual revenue?",
                     f"Show the annual revenue of {company.name}.",
                     f"How much revenue does {company.name} make?",
                     f"List the revenue of {company.name}.",
@@ -2420,8 +2572,8 @@ def _canonical_refusal_cases(companies: tuple[SyntheticCompany, ...]) -> dict[st
             ),
             "unsupported_time": (
                 (
-                    f"What was {company.name}'s revenue in 2024?",
-                    f"Show {company.name}'s 2024 revenue.",
+                    f"What was {_possessive_phrase(company.name)} revenue in 2024?",
+                    f"Show {_possessive_phrase(company.name)} 2024 revenue.",
                     f"How much revenue did {company.name} report in 2024?",
                     f"List the 2024 revenue of {company.name}.",
                 ),
@@ -2506,8 +2658,8 @@ def _canonical_refusal_cases(companies: tuple[SyntheticCompany, ...]) -> dict[st
                     f"Which companies match developers but not retailers in a way comparable to {company.name}?",
                 ),
                 (
-                    f"Rank {company.name}'s segments using a custom weighted score.",
-                    f"Show a weighted ranking of {company.name}'s segments with a custom formula.",
+                    f"Rank {_possessive_phrase(company.name)} segments using a custom weighted score.",
+                    f"Show a weighted ranking of {_possessive_phrase(company.name)} segments with a custom formula.",
                     f"Compute a custom score to rank the segments of {company.name}.",
                     f"Order the segments of {company.name} by a weighted custom score.",
                 ),
