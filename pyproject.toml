@@ -22,6 +22,7 @@ kg-query-cypher = "runtime.query:main_query_cypher"
 kg-neo4j-unload = "runtime.neo4j_admin:main"
 kg-neo4j-load = "runtime.neo4j_load:main"
 kg-neo4j-status = "runtime.neo4j_status:main"
+kg-health-check = "runtime.health_check:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
@@ -35,6 +36,7 @@ py-modules = [
     "ontology_config",
     "ontology_validator",
     "place_hierarchy",
+    "query_cypher",
 ]
 
 [tool.setuptools.packages.find]

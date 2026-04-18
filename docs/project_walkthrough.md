@@ -72,6 +72,10 @@ There are three main Neo4j helper commands:
 - `kg-neo4j-status`: compare Neo4j against the saved outputs
 - `kg-neo4j-unload`: remove one company from Neo4j
 
+There is also one operational helper command:
+
+- `kg-health-check`: check whether the local repo, saved outputs, and optional Neo4j service look ready to use
+
 The important behavior is:
 
 - company replacement is company-scoped, not whole-database by default
@@ -100,6 +104,18 @@ To create or refresh the local development environment:
 
 ```bash
 ./scripts/bootstrap_dev.sh
+```
+
+To run a quick local health check:
+
+```bash
+./scripts/kg-health-check
+```
+
+To run the fuller maintainer check:
+
+```bash
+bash ./scripts/check_repo.sh
 ```
 
 To remove common local noise without touching saved outputs:

@@ -158,6 +158,7 @@ docs/
 
 scripts/
   bootstrap_dev.sh        create or refresh the local dev environment
+  check_repo.sh           run the main local safety checks
   clean_local_artifacts.sh
                           remove caches and local scratch artifacts
   kg-pipeline             source-checkout pipeline wrapper
@@ -166,6 +167,7 @@ scripts/
   kg-neo4j-load           source-checkout saved-output load wrapper
   kg-neo4j-status         source-checkout Neo4j status wrapper
   kg-neo4j-unload         source-checkout Neo4j unload wrapper
+  kg-health-check         local repo and Neo4j health check
 
 tests/
   test_runtime/
@@ -212,6 +214,7 @@ That editable install creates the convenience commands in `venv/bin/`:
 - `kg-neo4j-load`
 - `kg-neo4j-status`
 - `kg-neo4j-unload`
+- `kg-health-check`
 
 If you already had the virtual environment before a new CLI command was added to the repo, rerun:
 
@@ -231,6 +234,7 @@ For day-to-day work from a source checkout, the most reliable commands are the w
 - `./scripts/kg-neo4j-load`
 - `./scripts/kg-neo4j-status`
 - `./scripts/kg-neo4j-unload`
+- `./scripts/kg-health-check`
 
 These wrappers run the repo source directly with the repo virtual environment, so they still work even if the editable-install entry points have not been refreshed yet.
 
@@ -240,6 +244,12 @@ To remove local caches and scratch artifacts without touching saved outputs, run
 
 ```bash
 ./scripts/clean_local_artifacts.sh
+```
+
+To run the main repo safety checks end to end, run:
+
+```bash
+bash ./scripts/check_repo.sh
 ```
 
 Prompt workflow notes:
@@ -325,6 +335,7 @@ Useful CLI flags:
 - `kg-neo4j-load`: load saved outputs into Neo4j; defaults to all `analyst/latest` outputs under `outputs/`
 - `kg-neo4j-status`: report which companies are loaded in Neo4j and whether local latest outputs exist for them
 - `kg-neo4j-unload --company "Name"`: remove one company's loaded graph footprint while keeping other companies intact
+- `kg-health-check`: inspect the local repo setup, saved outputs, and optional Neo4j connectivity
 
 Load into Neo4j instead:
 
@@ -365,6 +376,18 @@ Show which companies are currently loaded in Neo4j and which local outputs are r
 
 `kg-neo4j-status` is read-only: it reports the current state but does not rewrite outputs or load/unload anything.
 
+Run a local environment health check:
+
+```bash
+./scripts/kg-health-check
+```
+
+If you only want repo checks and do not want to probe Neo4j, use:
+
+```bash
+./scripts/kg-health-check --skip-neo4j
+```
+
 Unload only one company's graph footprint from Neo4j:
 
 ```bash
@@ -383,6 +406,7 @@ These are the main commands that touch Neo4j, and they are meant for different m
 - `kg-neo4j-load --company "Name" --run <token>`: loads one exact saved run from `runs/<token>` or `failed/<token>`, or a relative path inside that company's pipeline folder, instead of the latest output. This is mainly for debugging, testing, or comparing older runs.
 - `kg-neo4j-status`: compares Neo4j against the saved outputs for the selected pipeline. It tells you which companies are loaded, which are not, and, for the not-loaded ones, whether a latest output is ready to load. It is a reporting command only and does not modify outputs or Neo4j.
 - `kg-neo4j-unload --company "Name"`: removes only that company's graph footprint from Neo4j and leaves unrelated companies in place. It asks for confirmation unless you pass `--yes`.
+- `kg-health-check`: checks whether the local repo setup looks usable. It reports Python, the repo venv, `.env.example`, prompt assets, ontology assets, saved outputs, and optionally Neo4j connectivity.
 
 The most useful flags in practice are:
 
@@ -391,6 +415,7 @@ The most useful flags in practice are:
 - `--keep-current-output --skip-neo4j` on `kg-pipeline` when you want to save a test run under `runs/` without replacing the current `latest/` output or the live Neo4j graph.
 - `--clear-neo4j` on `kg-pipeline` only when you intentionally want to wipe the entire Neo4j database before loading.
 - `--yes` on `kg-neo4j-load` or `kg-neo4j-unload` when the command is running in automation or a non-interactive script.
+- `--skip-neo4j` on `kg-health-check` when you want setup/output checks without treating a stopped Neo4j instance as part of the current task.
 
 Neo4j Browser:
 - `http://localhost:7474`
@@ -537,6 +562,11 @@ Saved-output Neo4j load notes:
 - if a single-company load sees that the company is already present in Neo4j, it asks before replacing that company graph unless you pass `--yes`
 - company replacement is transactional, so if the new load fails the previous live graph for that company is left untouched
 - `kg-neo4j-status` compares Neo4j against the saved outputs and tells you which companies are loaded, which are not, and whether a latest output is available to load; it does not rewrite manifests or change the graph
+
+Operational safety notes:
+- `./scripts/kg-health-check` is the quick “is my local setup ready?” command
+- `bash ./scripts/check_repo.sh` is the deeper maintainer check that runs tests, compile checks, wrapper smoke checks, and a package-install smoke test
+- `.github/workflows/checks.yml` runs the same repo-check script on pushes and pull requests
 
 Canonical pipeline runs write artifacts such as:
 - `run_summary.json`

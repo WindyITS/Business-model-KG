@@ -16,11 +16,13 @@ Bootstrap complete.
 
 Reliable source-checkout commands:
   ./scripts/kg-pipeline
+  ./scripts/kg-evaluate-graph
   ./scripts/kg-query
   ./scripts/kg-query-cypher
   ./scripts/kg-neo4j-load
   ./scripts/kg-neo4j-status
   ./scripts/kg-neo4j-unload
+  ./scripts/kg-health-check
 
 Editable-install entry points are also refreshed under ${VENV_DIR}/bin/.
 EOF
