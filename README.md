@@ -100,9 +100,10 @@ Runtime notes:
 The runtime also includes a read-only natural-language query path for the live Neo4j graph:
 
 - `kg-query-cypher` renders a browser-ready Cypher query without executing it
-- `kg-query` generates the query, runs a Neo4j `EXPLAIN`, and then executes it
+- `kg-query` generates a structured query plan, compiles it into Cypher, runs a Neo4j `EXPLAIN`, and then executes it
+- `kg-query-dataset` generates the synthetic train/validation/release-eval JSONL splits, plus a manifest and the synthetic graph definitions used to build them
 
-The system prompt used for query generation lives in [`src/runtime/query_prompt.py`](./src/runtime/query_prompt.py), and the read-only Cypher guards live in [`src/runtime/cypher_validation.py`](./src/runtime/cypher_validation.py).
+The planner prompt lives in [`src/runtime/query_prompt.py`](./src/runtime/query_prompt.py), the deterministic compiler lives in [`src/runtime/query_planner.py`](./src/runtime/query_planner.py), the synthetic dataset generator lives in [`src/runtime/query_dataset.py`](./src/runtime/query_dataset.py), and the read-only Cypher guards live in [`src/runtime/cypher_validation.py`](./src/runtime/cypher_validation.py).
 
 For Neo4j maintenance, the repo also ships:
 
@@ -117,11 +118,13 @@ src/
   runtime/
     main.py               runtime CLI implementation
     query.py              natural-language query CLI
+    query_planner.py      family-based query-plan compiler
+    query_dataset.py      synthetic planner dataset generation
     neo4j_load.py         saved-output Neo4j load CLI
     neo4j_status.py       Neo4j vs saved-output status CLI
     neo4j_admin.py        selective Neo4j unload CLI
     output_layout.py      company/pipeline output staging and promotion helpers
-    query_prompt.py       prompt assets for query generation and repair
+    query_prompt.py       prompt assets for query-plan generation and repair
     cypher_validation.py  read-only query guards and Neo4j URI normalization
     model_provider.py     provider/model resolution
     entity_resolver.py    light entity normalization
