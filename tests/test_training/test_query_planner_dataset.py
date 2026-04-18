@@ -151,7 +151,7 @@ class QueryPlannerDatasetTests(unittest.TestCase):
             self.assertNotIn("Is there a match where", question)
             self.assertTrue(question.endswith("?"))
             stem = question.split(", ", 1)[-1].strip().lower()
-            self.assertTrue(stem.startswith(("does ", "do ", "is ", "are ", "can ", "would ")))
+            self.assertTrue(stem.startswith(("does ", "do ", "is ", "are ", "can ", "could ", "would ")))
             self.assertNotIn(" that serve ", question.casefold())
             self.assertNotIn(" that sell through ", question.casefold())
             self.assertNotIn("matched to a matching segment", question.casefold())
@@ -263,6 +263,15 @@ class QueryPlannerDatasetTests(unittest.TestCase):
             "when the company scope is",
             "among companies scoped to",
             "descendant offerings in the ",
+            "be matched to ",
+            "looking only at the supplied dataset",
+            "be matched to a business segment",
+            "operating in canadian operations",
+            "operating in german operations",
+            "operating in australian operations",
+            "which company, limited to ",
+            " 1 results",
+            " 1 companies",
         )
         for split_name, examples in splits.items():
             for example in examples:
@@ -313,6 +322,22 @@ class QueryPlannerDatasetTests(unittest.TestCase):
                     self.assertNotIn("what is the business segments count", lowered, msg=f"{split_name}: {example.question}")
                     self.assertNotIn("for cases that", lowered, msg=f"{split_name}: {example.question}")
                     self.assertNotIn("match the condition to", lowered, msg=f"{split_name}: {example.question}")
+
+    def test_company_selection_families_do_not_emit_single_company_scope_examples(self):
+        splits = build_dataset_splits(train_size=240, validation_size=72, release_eval_size=108, seed=31)
+        company_families = {
+            "companies_by_segment_filters",
+            "companies_by_cross_segment_filters",
+            "companies_by_descendant_revenue",
+            "companies_by_partner",
+        }
+        offending = [
+            f"{split_name}: {example.question}"
+            for split_name, examples in splits.items()
+            for example in examples
+            if example.family in company_families and len(example.target.get("payload", {}).get("companies", [])) == 1
+        ]
+        self.assertEqual(offending, [])
 
     def test_release_eval_segment_portfolio_surfaces_are_grammatical(self):
         splits = build_dataset_splits(train_size=240, validation_size=72, release_eval_size=108, seed=37)
@@ -553,6 +578,24 @@ class QueryPlannerDatasetTests(unittest.TestCase):
                 manifest["split_overlap_stats"][manifest_key]["target_overlap_count"],
                 expected_target_overlap,
             )
+            expected_local_safe_target_overlap = len(
+                {
+                    json.dumps(example.supervision_target, sort_keys=True, separators=(",", ":"))
+                    for example in splits[left]
+                    if example.route_label == "local_safe"
+                }.intersection(
+                    {
+                        json.dumps(example.supervision_target, sort_keys=True, separators=(",", ":"))
+                        for example in splits[right]
+                        if example.route_label == "local_safe"
+                    }
+                )
+            )
+            self.assertEqual(
+                manifest["split_overlap_stats"][manifest_key]["local_safe_target_overlap_count"],
+                expected_local_safe_target_overlap,
+            )
+            self.assertEqual(expected_local_safe_target_overlap, 0)
 
     def test_supervision_target_distinguishes_strong_candidates_from_refusals(self):
         splits = build_dataset_splits(train_size=120, validation_size=36, release_eval_size=54, seed=17)
@@ -567,16 +610,58 @@ class QueryPlannerDatasetTests(unittest.TestCase):
         self.assertEqual(refusal.supervision_target["route_label"], "refuse")
         self.assertNotEqual(strong_candidate.supervision_target, refusal.supervision_target)
 
+        refusal_questions = [
+            example.question.casefold()
+            for split_examples in splits.values()
+            for example in split_examples
+            if example.route_label == "refuse"
+        ]
+        self.assertFalse(any("custom weighted score" in question for question in refusal_questions))
+        self.assertFalse(any("custom formula" in question for question in refusal_questions))
+
+    def test_false_boolean_examples_keep_scoped_source_graph_ids(self):
+        splits = build_dataset_splits(train_size=240, validation_size=72, release_eval_size=108, seed=43)
+        company_to_graph = {
+            company.name: company.graph_id
+            for company in build_synthetic_company_graphs()
+        }
+        scoped_false_examples = [
+            example
+            for split_examples in splits.values()
+            for example in split_examples
+            if example.family == "boolean_exists"
+            and example.metadata.get("boolean_answer") is False
+            and example.target.get("payload", {}).get("companies")
+        ]
+        self.assertTrue(scoped_false_examples)
+        for example in scoped_false_examples:
+            company_name = example.target["payload"]["companies"][0]
+            self.assertEqual(example.metadata["source_graph_ids"], [company_to_graph[company_name]])
+            self.assertEqual(example.metadata["source_graph_id"], company_to_graph[company_name])
+
     def test_write_dataset_splits_writes_jsonl_and_support_files(self):
         with TemporaryDirectory() as tmp_dir:
             output_dir = Path(tmp_dir)
             written = write_dataset_splits(output_dir, train_size=30, validation_size=15, release_eval_size=21, seed=5)
 
-            self.assertEqual(set(written), {"train", "validation", "release_eval", "synthetic_graphs", "manifest"})
+            self.assertEqual(
+                set(written),
+                {
+                    "train",
+                    "validation",
+                    "release_eval",
+                    "train_synthetic_graphs",
+                    "validation_synthetic_graphs",
+                    "release_eval_synthetic_graphs",
+                    "manifest",
+                },
+            )
             self.assertTrue(written["train"].exists())
             self.assertTrue(written["validation"].exists())
             self.assertTrue(written["release_eval"].exists())
-            self.assertTrue(written["synthetic_graphs"].exists())
+            self.assertTrue(written["train_synthetic_graphs"].exists())
+            self.assertTrue(written["validation_synthetic_graphs"].exists())
+            self.assertTrue(written["release_eval_synthetic_graphs"].exists())
             self.assertTrue(written["manifest"].exists())
 
             first_line = written["train"].read_text(encoding="utf-8").splitlines()[0]
@@ -592,6 +677,13 @@ class QueryPlannerDatasetTests(unittest.TestCase):
 
             manifest = json.loads(written["manifest"].read_text(encoding="utf-8"))
             self.assertEqual(manifest["split_sizes"]["release_eval"], 21)
+
+            for split_name in ("train", "validation", "release_eval"):
+                graphs_payload = json.loads(written[f"{split_name}_synthetic_graphs"].read_text(encoding="utf-8"))
+                self.assertEqual(
+                    sorted(company["graph_id"] for company in graphs_payload),
+                    sorted(dataset_module.GRAPH_IDS_BY_SPLIT[split_name]),
+                )
 
 
 if __name__ == "__main__":

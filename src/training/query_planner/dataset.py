@@ -169,13 +169,13 @@ PLACE_SURFACES: dict[str, tuple[str, ...]] = {
     "EMEA": ("EMEA", "Europe, the Middle East, and Africa", "the EMEA region"),
     "APAC": ("APAC", "Asia Pacific", "the Asia-Pacific region"),
     "Latin America": ("Latin America", "LatAm", "the Latin American market"),
-    "Italy": ("Italy", "the Italian market", "Italian operations"),
-    "Germany": ("Germany", "the German market", "German operations"),
-    "Japan": ("Japan", "the Japanese market", "Japanese operations"),
-    "Canada": ("Canada", "Canadian operations", "the Canadian market"),
-    "Australia": ("Australia", "the Australian market", "Australian operations"),
-    "France": ("France", "the French market", "French operations"),
-    "Mexico": ("Mexico", "the Mexican market", "Mexican operations"),
+    "Italy": ("Italy", "the Italian market", "Italy"),
+    "Germany": ("Germany", "the German market", "Germany"),
+    "Japan": ("Japan", "the Japanese market", "Japan"),
+    "Canada": ("Canada", "the Canadian market", "Canada"),
+    "Australia": ("Australia", "the Australian market", "Australia"),
+    "France": ("France", "the French market", "France"),
+    "Mexico": ("Mexico", "the Mexican market", "Mexico"),
 }
 
 SURFACE_WRAPPERS_BY_SPLIT: dict[SplitName, tuple[tuple[str, str | None], ...]] = {
@@ -201,7 +201,7 @@ SURFACE_WRAPPERS_BY_SPLIT: dict[SplitName, tuple[tuple[str, str | None], ...]] =
         ("snapshot", "From this KG snapshot alone, {body}"),
         ("outside", "Without bringing in outside information, {body}"),
         ("provided", "Using just the provided graph, {body}"),
-        ("supplied", "Looking only at the supplied dataset, {body}"),
+        ("supplied", "Using only the supplied dataset, {body}"),
     ),
 }
 
@@ -719,8 +719,8 @@ def _render_boolean_surfaces(case: CanonicalCase, split: SplitName) -> list[tupl
                 templates = (
                     f"{company_aux} {company_subject} have a {target_noun} that {singular_clause}?",
                     f"Is there a {target_noun} at {company_names} that {singular_clause}?",
-                    f"Can {company_names} be matched to a {target_noun} that {singular_clause}?",
-                    f"Would {company_names} satisfy a request for a {target_noun} that {singular_clause}?",
+                    f"Could {company_names} qualify through a {target_noun} that {singular_clause}?",
+                    f"Would {company_names} count as having a {target_noun} that {singular_clause}?",
                 )
             elif base_family == "segments_by_segment_filters":
                 templates = (
@@ -742,7 +742,7 @@ def _render_boolean_surfaces(case: CanonicalCase, split: SplitName) -> list[tupl
                 templates = (
                     f"{company_aux} {company_subject} partner with {partner_phrase}?",
                     f"Is {company_names} partnered with {partner_phrase}?",
-                    f"Can {company_names} be matched to {partner_phrase} as a partner?",
+                    f"Could {company_names} qualify as partnering with {partner_phrase}?",
                     f"Would {company_names} qualify as partnered with {partner_phrase}?",
                 )
             else:
@@ -758,7 +758,7 @@ def _render_boolean_surfaces(case: CanonicalCase, split: SplitName) -> list[tupl
                 templates = (
                     f"{company_aux} {company_subject} operate in {place_phrase}?",
                     f"Is {company_names} active in {place_phrase}?",
-                    f"Can {company_names} be matched to {place_phrase}?",
+                    f"Could {company_names} qualify as operating in {place_phrase}?",
                     f"Would {company_names} count as operating in {place_phrase}?",
                 )
             else:
@@ -773,7 +773,7 @@ def _render_boolean_surfaces(case: CanonicalCase, split: SplitName) -> list[tupl
             if payload.companies:
                 templates = (
                     f"{company_aux} {company_subject} {clause} across {company_possessive} segments?",
-                    f"Can {company_names} be matched to a request to {clause} across {company_possessive} segments?",
+                    f"Could {company_names} qualify for a request to {clause} across {company_possessive} segments?",
                     f"Would {company_names} satisfy a request to {clause} when you look across {company_possessive} segments?",
                     f"Is {company_names} a match for the ability to {clause} across the company?",
                 )
@@ -781,7 +781,7 @@ def _render_boolean_surfaces(case: CanonicalCase, split: SplitName) -> list[tupl
                 templates = (
                     f"Is there a company that {clause} across its segments?",
                     f"Are there companies that {clause} across the company?",
-                    f"Can a company be matched to a request to {clause} across its segments?",
+                    f"Could a company qualify for a request to {clause} across its segments?",
                     f"Would any company qualify for a request to {clause} across its segments?",
                 )
         elif base_family == "descendant_offerings_by_root":
@@ -790,14 +790,14 @@ def _render_boolean_surfaces(case: CanonicalCase, split: SplitName) -> list[tupl
                 templates = (
                     f"{company_aux} {company_subject} have an offering in the {root_name} family?",
                     f"Is there an offering under {root_name} at {company_names}?",
-                    f"Can {company_names} be matched to descendant offerings of {root_name}?",
+                    f"Could {company_names} qualify as having descendant offerings of {root_name}?",
                     f"Would {company_names} count as having anything in the {root_name} offering family?",
                 )
             else:
                 templates = (
                     f"Is there a company with an offering in the {root_name} family?",
                     f"Are there companies with offerings in the {root_name} family?",
-                    f"Can a company be matched to descendant offerings of {root_name}?",
+                    f"Could a company qualify as having descendant offerings of {root_name}?",
                     f"Would any company count as carrying something in the {root_name} family?",
                 )
         elif base_family == "companies_by_descendant_revenue":
@@ -807,14 +807,14 @@ def _render_boolean_surfaces(case: CanonicalCase, split: SplitName) -> list[tupl
                 templates = (
                     f"{company_aux} {company_subject} have offerings under {root_name} that monetize via {revenue_phrase}?",
                     f"Are offerings under {root_name} at {company_names} monetized through {revenue_phrase}?",
-                    f"Can {company_names} be matched to offerings under {root_name} that monetize via {revenue_phrase}?",
+                    f"Could {company_names} qualify as having offerings under {root_name} that monetize via {revenue_phrase}?",
                     f"Would {company_names} count as having offerings under {root_name} that monetize via {revenue_phrase}?",
                 )
             else:
                 templates = (
                     f"Is there a company with offerings under {root_name} that use {revenue_phrase}?",
                     f"Are there companies that monetize offerings under {root_name} via {revenue_phrase}?",
-                    f"Can a company be matched to offerings under {root_name} that use {revenue_phrase}?",
+                    f"Could a company qualify as having offerings under {root_name} that use {revenue_phrase}?",
                     f"Would any company count as monetizing offerings under {root_name} through {revenue_phrase}?",
                 )
         else:
@@ -833,16 +833,28 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
         style_id = f"s{style_index}"
         if family == "companies_list":
             if payload.limit:
-                templates = (
-                    f"Name up to {payload.limit} companies in the graph.",
-                    f"List as many as {payload.limit} companies represented in the knowledge graph.",
-                    f"Give me up to {payload.limit} companies from the dataset.",
-                    f"What companies are currently represented here, limited to {payload.limit} results?",
-                    f"Identify up to {payload.limit} companies in the graph.",
-                    f"Show up to {payload.limit} companies that appear in the knowledge graph.",
-                    f"Return up to {payload.limit} companies from the graph.",
-                    f"Which companies are represented in the dataset, capped at {payload.limit} results?",
-                )
+                if payload.limit == 1:
+                    templates = (
+                        "Name up to 1 company in the graph.",
+                        "List up to 1 company represented in the knowledge graph.",
+                        "Give me up to 1 company from the dataset.",
+                        "What company is currently represented here, limited to 1 result?",
+                        "Identify up to 1 company in the graph.",
+                        "Show up to 1 company that appears in the knowledge graph.",
+                        "Return up to 1 company from the graph.",
+                        "Which company is represented in the dataset, capped at 1 result?",
+                    )
+                else:
+                    templates = (
+                        f"Name up to {payload.limit} companies in the graph.",
+                        f"List as many as {payload.limit} companies represented in the knowledge graph.",
+                        f"Give me up to {payload.limit} companies from the dataset.",
+                        f"What companies are currently represented here, limited to {payload.limit} results?",
+                        f"Identify up to {payload.limit} companies in the graph.",
+                        f"Show up to {payload.limit} companies that appear in the knowledge graph.",
+                        f"Return up to {payload.limit} companies from the graph.",
+                        f"Which companies are represented in the dataset, capped at {payload.limit} results?",
+                    )
             else:
                 templates = (
                     "Which companies are in the graph?",
@@ -955,9 +967,9 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
             single_company = _single_company_scope(payload.companies)
             if single_company is not None:
                 templates = (
-                    f"Considering only {single_company}, which company has {segment_reference} that {clause}?",
-                    f"If you only consider {single_company}, what company has {segment_reference} that {clause}?",
-                    f"Which company, limited to {single_company}, has {segment_reference} that {clause}?",
+                    f"Which company within {single_company} has {segment_reference} that {clause}?",
+                    f"Inside {single_company}, what company has {segment_reference} that {clause}?",
+                    f"When only considering {single_company}, which company has {segment_reference} that {clause}?",
                 )
             elif payload.companies:
                 templates = (
@@ -997,9 +1009,9 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
             single_company = _single_company_scope(payload.companies)
             if single_company is not None:
                 templates = (
-                    f"Considering only {single_company}, which company can {clause} across its segments?",
-                    f"If you only consider {single_company}, what company can {clause} across its segments?",
-                    f"Which company, limited to {single_company}, can {clause} across its segments?",
+                    f"Which company within {single_company} can {clause} across its segments?",
+                    f"Inside {single_company}, what company can {clause} across its segments?",
+                    f"When only considering {single_company}, which company can {clause} across its segments?",
                 )
             elif payload.companies:
                 templates = (
@@ -1008,6 +1020,8 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
                     f"Name the companies in {company_names} whose segments collectively let them {clause}.",
                     f"Which companies in {company_names} can {clause} when you look across their segments?",
                     f"Identify the companies among {company_names} that can {clause} across the company.",
+                    f"What companies in {company_names} can {clause} when their segments are considered together?",
+                    f"Show the companies in {company_names} whose segments together let them {clause}.",
                 )
             else:
                 templates = (
@@ -1016,6 +1030,8 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
                     f"Name the companies whose segments collectively let them {clause}.",
                     f"Which companies can {clause} when you look across their segments?",
                     f"Identify companies that can {clause} across the company.",
+                    f"What companies can {clause} when their segments are considered together?",
+                    f"Show the companies whose segments together let them {clause}.",
                 )
             surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split, wrapper_ids=wrapper_ids))
             continue
@@ -1049,15 +1065,15 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
             single_company = _single_company_scope(payload.companies)
             if single_company is not None and payload.limit:
                 templates = (
-                    f"Considering only {single_company}, which company uses {revenue_phrase} for offerings under {root_name}, up to {payload.limit} results?",
-                    f"If you only consider {single_company}, what company has offerings under {root_name} that use {revenue_phrase}, limited to {payload.limit} results?",
-                    f"Which company, limited to {single_company}, has offerings under {root_name} that use {revenue_phrase}, capped at {payload.limit} results?",
+                    f"Which company within {single_company} uses {revenue_phrase} for offerings under {root_name}, up to {payload.limit} results?",
+                    f"Inside {single_company}, what company has offerings under {root_name} that use {revenue_phrase}, limited to {payload.limit} results?",
+                    f"When only considering {single_company}, which company has offerings under {root_name} that use {revenue_phrase}, capped at {payload.limit} results?",
                 )
             elif single_company is not None:
                 templates = (
-                    f"Considering only {single_company}, which company uses {revenue_phrase} for offerings under {root_name}?",
-                    f"If you only consider {single_company}, what company has offerings under {root_name} that use {revenue_phrase}?",
-                    f"Which company, limited to {single_company}, has offerings under {root_name} that use {revenue_phrase}?",
+                    f"Which company within {single_company} uses {revenue_phrase} for offerings under {root_name}?",
+                    f"Inside {single_company}, what company has offerings under {root_name} that use {revenue_phrase}?",
+                    f"When only considering {single_company}, which company has offerings under {root_name} that use {revenue_phrase}?",
                 )
             elif payload.limit:
                 templates = (
@@ -1127,14 +1143,14 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
             single_company = _single_company_scope(payload.companies)
             if single_company is not None:
                 templates = (
-                    f"Considering only {single_company}, which company partners with {partner_phrase}?",
-                    f"If you only consider {single_company}, what company has a named partnership with {partner_phrase}?",
-                    f"Which company, limited to {single_company}, is partnered with {partner_phrase}?",
+                    f"Which company within {single_company} partners with {partner_phrase}?",
+                    f"Inside {single_company}, what company has a named partnership with {partner_phrase}?",
+                    f"When only considering {single_company}, which company is partnered with {partner_phrase}?",
                 )
                 if payload.limit:
                     templates += (
-                        f"Considering only {single_company}, which company partners with {partner_phrase}, up to {payload.limit} results?",
-                        f"Which company, limited to {single_company}, is partnered with {partner_phrase}, limited to {payload.limit} results?",
+                        f"Which company within {single_company} partners with {partner_phrase}, up to {payload.limit} results?",
+                        f"When only considering {single_company}, which company is partnered with {partner_phrase}, limited to {payload.limit} results?",
                     )
             elif payload.companies:
                 templates = (
@@ -1194,7 +1210,7 @@ def _render_local_safe_surfaces(case: CanonicalCase, split: SplitName) -> list[t
                     f"How many {company_subject} have a business segment that {singular_clause}?",
                     f"Count the {company_subject} with a business segment that {singular_clause}.",
                     f"What is the number of {company_subject} with a business segment that {singular_clause}?",
-                    f"How many {company_subject} can be matched to a business segment that {singular_clause}?",
+                    f"How many {company_subject} include a business segment that {singular_clause}?",
                 )
                 surfaces.extend(_expand_surface_variants(f"{family}-{style_id}", templates, split, wrapper_ids=wrapper_ids))
                 continue
@@ -1359,12 +1375,12 @@ def _render_strong_candidate_surfaces(case: CanonicalCase, split: SplitName) -> 
         )
     else:
         templates = (
-            f"Rank the segments of {context['company']} using a custom weighted score that prioritizes {context['focus']}.",
-            f"Give me a weighted ranking of {_possessive_phrase(context['company'])} segments, giving extra importance to {context['focus']}.",
-            f"Order {_possessive_phrase(context['company'])} segments by a custom score that overweights {context['focus']}.",
-            f"Produce a weighted ranking for {_possessive_phrase(context['company'])} segments with extra weight on {context['focus']}.",
-            f"Rank the segments of {context['company']} using a custom formula that emphasizes {context['focus']}.",
-            f"Show a custom weighted leaderboard for {_possessive_phrase(context['company'])} segments based on {context['focus']}.",
+            f"Rank the segments of {context['company']} using a custom weighted score with explicit extra weight on {context['focus']}.",
+            f"Give me a weighted ranking of {_possessive_phrase(context['company'])} segments with an explicit heavier weight on {context['focus']}.",
+            f"Order {_possessive_phrase(context['company'])} segments by a custom score that deliberately overweights {context['focus']}.",
+            f"Produce a weighted ranking for {_possessive_phrase(context['company'])} segments using explicit importance weights for {context['focus']}.",
+            f"Rank the segments of {context['company']} using a custom formula that explicitly emphasizes {context['focus']}.",
+            f"Show a custom weighted leaderboard for {_possessive_phrase(context['company'])} segments with extra scoring weight on {context['focus']}.",
         )
     return _expand_surface_variants(family, templates, split)
 
@@ -1403,11 +1419,14 @@ def _build_example(companies: tuple[SyntheticCompany, ...], case: CanonicalCase,
     if case.route_label != "local_safe" and compiled.answerable:
         raise ValueError(f"Non-local example compiled to an answer for question: {question}")
     rows = evaluate_query_plan(companies, case.plan) if compiled.answerable else []
-    actual_source_graph_ids = (
-        matching_graph_ids_for_plan(companies, case.plan, rows)
-        if compiled.answerable
-        else case.source_graph_ids
-    )
+    if case.family == "boolean_exists" and rows and rows[0].get("is_match") is False:
+        actual_source_graph_ids = case.source_graph_ids
+    else:
+        actual_source_graph_ids = (
+            matching_graph_ids_for_plan(companies, case.plan, rows)
+            if compiled.answerable
+            else case.source_graph_ids
+        )
     metadata = _base_metadata(case)
     metadata["source_graph_ids"] = list(actual_source_graph_ids)
     metadata["source_graph_id"] = _graph_source_id(actual_source_graph_ids)
@@ -1432,6 +1451,88 @@ def _build_example(companies: tuple[SyntheticCompany, ...], case: CanonicalCase,
 
 def _family_targets_for_split(train_targets: dict[str, int], total: int) -> dict[str, int]:
     return _scale_targets(train_targets, total)
+
+
+def _capped_family_targets(
+    weights: dict[str, int],
+    capacities: dict[str, int],
+    total: int,
+) -> dict[str, int]:
+    allocations = {family: 0 for family in weights}
+    remaining_families = {family for family, capacity in capacities.items() if family in weights and capacity > 0}
+    remaining_total = total
+
+    while remaining_total > 0 and remaining_families:
+        scaled = _scale_targets({family: weights[family] for family in remaining_families}, remaining_total)
+        progress = False
+        saturated: set[str] = set()
+        for family, requested in scaled.items():
+            available = capacities[family] - allocations[family]
+            if available <= 0:
+                saturated.add(family)
+                continue
+            granted = min(requested, available)
+            if granted > 0:
+                allocations[family] += granted
+                remaining_total -= granted
+                progress = True
+            if allocations[family] >= capacities[family]:
+                saturated.add(family)
+        remaining_families.difference_update(saturated)
+        if progress:
+            continue
+        for family in sorted(remaining_families, key=lambda item: (-weights[item], item)):
+            available = capacities[family] - allocations[family]
+            if available <= 0:
+                saturated.add(family)
+                continue
+            allocations[family] += 1
+            remaining_total -= 1
+            progress = True
+            if allocations[family] >= capacities[family]:
+                saturated.add(family)
+            break
+        remaining_families.difference_update(saturated)
+        if not progress:
+            break
+
+    if remaining_total > 0:
+        raise ValueError(
+            f"Could not allocate {total} examples within family capacities; short by {remaining_total}."
+        )
+    return {family: count for family, count in allocations.items() if count > 0}
+
+
+def _local_safe_family_capacities(
+    *,
+    companies: tuple[SyntheticCompany, ...],
+    family_cases: dict[str, list[CanonicalCase]],
+    split: SplitName,
+    reserved_targets: set[str],
+) -> dict[str, int]:
+    style_diversity_families = {
+        "companies_by_segment_filters",
+        "companies_by_cross_segment_filters",
+        "companies_by_descendant_revenue",
+        "companies_by_partner",
+    }
+    capacities: dict[str, int] = {}
+    for family in LOCAL_SAFE_FAMILY_TARGETS_TRAIN:
+        pair_keys: set[str] = set()
+        for case in family_cases.get(family, []):
+            for template_id, variant_id, question in _surface_pool_for_case(case, split):
+                example = _build_example(companies, case, template_id, variant_id, question)
+                payload = QueryPlanPayload.model_validate(example.target.get("payload", {}))
+                if family in style_diversity_families and _company_scope_shape(payload) == "single":
+                    continue
+                normalized_target = _normalized_json_key(example.supervision_target)
+                if normalized_target in reserved_targets:
+                    continue
+                normalized_question = example.question.strip().casefold()
+                pair_keys.add(f"{normalized_question}|{normalized_target}")
+        if pair_keys:
+            capacities[family] = len(pair_keys)
+    return capacities
 
 
 def _bucket_targets_from_family_targets(family_targets: dict[str, int]) -> dict[str, int]:
@@ -1463,6 +1564,7 @@ def _materialize_family_examples(
     seed: int,
     seen_questions: set[str],
     seen_pairs: set[str],
+    reserved_targets: set[str] | None = None,
 ) -> list[DatasetExample]:
     selected: list[DatasetExample] = []
     style_diversity_families = {
@@ -1471,6 +1573,8 @@ def _materialize_family_examples(
         "companies_by_descendant_revenue",
         "companies_by_partner",
     }
+    if reserved_targets is None:
+        reserved_targets = set()
     for family, target_count in sorted(family_targets.items()):
         if target_count <= 0:
             continue
@@ -1478,6 +1582,10 @@ def _materialize_family_examples(
         for case in family_cases.get(family, []):
             for template_id, variant_id, question in _surface_pool_for_case(case, split):
                 example = _build_example(companies, case, template_id, variant_id, question)
+                if family in style_diversity_families and _company_scope_shape(
+                    QueryPlanPayload.model_validate(example.target.get("payload", {}))
+                ) == "single":
+                    continue
                 sort_key = _selection_key(seed, case.case_id, template_id, variant_id, question)
                 pool.append((sort_key, example))
         if family in style_diversity_families:
@@ -1502,6 +1610,8 @@ def _materialize_family_examples(
             normalized_question = example.question.strip().casefold()
             normalized_pair = f"{normalized_question}|{_normalized_json_key(example.supervision_target)}"
             normalized_target = _normalized_json_key(example.supervision_target)
+            if normalized_target in reserved_targets:
+                return False
             if normalized_question in seen_questions or normalized_pair in seen_pairs or normalized_pair in chosen_keys:
                 return False
             if require_new_target and normalized_target in chosen_targets:
@@ -1525,8 +1635,8 @@ def _materialize_family_examples(
         if family == "boolean_exists" and target_count >= 2:
             reserve_first(lambda example: example.metadata.get("boolean_answer") is False)
             reserve_first(lambda example: example.metadata.get("boolean_answer") is True)
-        if family in style_diversity_families and target_count >= 3:
-            for scope in ("multi", "unscoped", "single"):
+        if family in style_diversity_families and target_count >= 2:
+            for scope in ("multi", "unscoped"):
                 reserve_first(
                     lambda example, scope=scope: _company_scope_shape(
                         QueryPlanPayload.model_validate(example.target.get("payload", {}))
@@ -2658,10 +2768,10 @@ def _canonical_refusal_cases(companies: tuple[SyntheticCompany, ...]) -> dict[st
                     f"Which companies match developers but not retailers in a way comparable to {company.name}?",
                 ),
                 (
-                    f"Rank {_possessive_phrase(company.name)} segments using a custom weighted score.",
-                    f"Show a weighted ranking of {_possessive_phrase(company.name)} segments with a custom formula.",
-                    f"Compute a custom score to rank the segments of {company.name}.",
-                    f"Order the segments of {company.name} by a weighted custom score.",
+                    f"Which segments of {company.name} should the company prioritize next based on a custom strategy you design?",
+                    f"Recommend how {company.name} should prioritize its segments using your own strategic framework.",
+                    f"Suggest an ordering of {_possessive_phrase(company.name)} segments based on a strategy you invent.",
+                    f"Tell me which segments {company.name} should focus on first under a custom prioritization approach.",
                 ),
                 (
                     f"Explain why {company.name} should rank ahead of peers with a weighted explanation.",
@@ -2685,7 +2795,22 @@ def _canonical_refusal_cases(companies: tuple[SyntheticCompany, ...]) -> dict[st
     return {reason: _dedupe_case_ids(materialized) for reason, materialized in cases.items()}
 
 
-def _local_safe_family_targets(split: SplitName, total: int) -> dict[str, int]:
+def _local_safe_family_targets(
+    split: SplitName,
+    total: int,
+    *,
+    companies: tuple[SyntheticCompany, ...] | None = None,
+    family_cases: dict[str, list[CanonicalCase]] | None = None,
+    reserved_targets: set[str] | None = None,
+) -> dict[str, int]:
+    if companies is not None and family_cases is not None and reserved_targets is not None:
+        capacities = _local_safe_family_capacities(
+            companies=companies,
+            family_cases=family_cases,
+            split=split,
+            reserved_targets=reserved_targets,
+        )
+        return _capped_family_targets(LOCAL_SAFE_FAMILY_TARGETS_TRAIN, capacities, total)
     return _family_targets_for_split(LOCAL_SAFE_FAMILY_TARGETS_TRAIN, total)
 
 
@@ -2713,11 +2838,19 @@ def _build_split_examples(
     split: SplitName,
     size: int,
     seed: int,
+    reserved_local_safe_targets: set[str] | None = None,
 ) -> list[DatasetExample]:
     route_targets = _scale_targets(DEFAULT_ROUTE_TARGETS_BY_SPLIT[split], size)
     local_safe_cases = _canonical_local_safe_cases(companies)
     strong_cases = _canonical_strong_candidate_cases(companies)
     refusal_cases = _canonical_refusal_cases(companies)
+    local_safe_family_targets = _local_safe_family_targets(
+        split,
+        route_targets["local_safe"],
+        companies=companies,
+        family_cases=local_safe_cases,
+        reserved_targets=reserved_local_safe_targets or set(),
+    )
 
     seen_questions: set[str] = set()
     seen_pairs: set[str] = set()
@@ -2727,11 +2860,12 @@ def _build_split_examples(
         _materialize_family_examples(
             companies=companies,
             family_cases=local_safe_cases,
-            family_targets=_local_safe_family_targets(split, route_targets["local_safe"]),
+            family_targets=local_safe_family_targets,
             split=split,
             seed=seed + 11,
             seen_questions=seen_questions,
             seen_pairs=seen_pairs,
+            reserved_targets=reserved_local_safe_targets,
         )
     )
     examples.extend(
@@ -2775,25 +2909,42 @@ def build_dataset_splits(
         split: tuple(company_map[graph_id] for graph_id in graph_ids)
         for split, graph_ids in GRAPH_IDS_BY_SPLIT.items()
     }
-    return {
-        "train": _build_split_examples(
+    reserved_local_safe_targets: set[str] = set()
+    train_examples = _build_split_examples(
             graphs_by_split["train"],
             split="train",
             size=train_size,
             seed=seed + SPLIT_SEED_OFFSETS["train"],
-        ),
-        "validation": _build_split_examples(
+            reserved_local_safe_targets=reserved_local_safe_targets,
+        )
+    reserved_local_safe_targets.update(
+        _normalized_json_key(example.supervision_target)
+        for example in train_examples
+        if example.route_label == "local_safe"
+    )
+    validation_examples = _build_split_examples(
             graphs_by_split["validation"],
             split="validation",
             size=validation_size,
             seed=seed + SPLIT_SEED_OFFSETS["validation"],
-        ),
-        "release_eval": _build_split_examples(
+            reserved_local_safe_targets=reserved_local_safe_targets,
+        )
+    reserved_local_safe_targets.update(
+        _normalized_json_key(example.supervision_target)
+        for example in validation_examples
+        if example.route_label == "local_safe"
+    )
+    release_eval_examples = _build_split_examples(
             graphs_by_split["release_eval"],
             split="release_eval",
             size=release_eval_size,
             seed=seed + SPLIT_SEED_OFFSETS["release_eval"],
-        ),
+            reserved_local_safe_targets=reserved_local_safe_targets,
+        )
+    return {
+        "train": train_examples,
+        "validation": validation_examples,
+        "release_eval": release_eval_examples,
     }
 
 
@@ -2879,6 +3030,17 @@ def _split_overlap_stats(
     left_targets = {_normalized_json_key(example.supervision_target) for example in left_examples}
     right_targets = {_normalized_json_key(example.supervision_target) for example in right_examples}
     target_overlap = sorted(left_targets.intersection(right_targets))
+    left_local_safe_targets = {
+        _normalized_json_key(example.supervision_target)
+        for example in left_examples
+        if example.route_label == "local_safe"
+    }
+    right_local_safe_targets = {
+        _normalized_json_key(example.supervision_target)
+        for example in right_examples
+        if example.route_label == "local_safe"
+    }
+    local_safe_target_overlap = sorted(left_local_safe_targets.intersection(right_local_safe_targets))
     left_questions = {example.question.strip().casefold() for example in left_examples}
     right_questions = {example.question.strip().casefold() for example in right_examples}
     question_overlap = sorted(left_questions.intersection(right_questions))
@@ -2905,10 +3067,12 @@ def _split_overlap_stats(
     return {
         "case_id_overlap_count": len(case_id_overlap),
         "target_overlap_count": len(target_overlap),
+        "local_safe_target_overlap_count": len(local_safe_target_overlap),
         "question_overlap_count": len(question_overlap),
         "question_target_overlap_count": len(pair_overlap),
         "sample_case_id_overlaps": case_id_overlap[:10],
         "sample_target_overlaps": [json.loads(target) for target in target_overlap[:10]],
+        "sample_local_safe_target_overlaps": [json.loads(target) for target in local_safe_target_overlap[:10]],
         "sample_question_overlaps": question_overlap[:10],
         "sample_question_target_overlaps": [
             {
@@ -2950,7 +3114,13 @@ def build_dataset_manifest(
         }.items()
     }
     local_safe_targets = {
-        split: _local_safe_family_targets(split, route_targets[split]["local_safe"])
+        split: dict(
+            Counter(
+                example.family
+                for example in splits[split]
+                if example.route_label == "local_safe"
+            )
+        )
         for split in ("train", "validation", "release_eval")
     }
     strong_targets = {
@@ -3028,7 +3198,7 @@ def write_dataset_splits(
         release_eval_size=release_eval_size,
         seed=seed,
     )
-    synthetic_graphs = [asdict(company) for company in build_synthetic_company_graphs()]
+    synthetic_graphs_by_id = {company.graph_id: asdict(company) for company in build_synthetic_company_graphs()}
     output_dir.mkdir(parents=True, exist_ok=True)
 
     written: dict[str, Path] = {}
@@ -3039,9 +3209,10 @@ def write_dataset_splits(
                 handle.write(json.dumps(asdict(example), ensure_ascii=False) + "\n")
         written[split_name] = path
 
-    graphs_path = output_dir / "synthetic_graphs.json"
-    graphs_path.write_text(json.dumps(synthetic_graphs, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    written["synthetic_graphs"] = graphs_path
+        graphs_path = output_dir / f"{split_name}_synthetic_graphs.json"
+        split_graphs = [synthetic_graphs_by_id[graph_id] for graph_id in GRAPH_IDS_BY_SPLIT[split_name]]
+        graphs_path.write_text(json.dumps(split_graphs, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        written[f"{split_name}_synthetic_graphs"] = graphs_path
 
     manifest_path = output_dir / "manifest.json"
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
