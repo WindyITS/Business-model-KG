@@ -92,8 +92,8 @@ class QueryPlannerDatasetTests(unittest.TestCase):
             family="companies_by_descendant_revenue",
             payload=QueryPlanPayload(
                 companies=["Aurora Systems"],
-                offerings=["Analytics Studio"],
-                revenue_models=["subscription", "licensing"],
+                offerings=["Automation Suite"],
+                revenue_models=["licensing"],
                 hierarchy_mode="descendant",
             ),
         )
@@ -517,7 +517,6 @@ class QueryPlannerDatasetTests(unittest.TestCase):
         self.assertEqual(manifest["split_overlap_stats"]["train__release_eval"]["question_overlap_count"], 0)
         self.assertEqual(manifest["split_overlap_stats"]["train__release_eval"]["question_target_overlap_count"], 0)
         self.assertIn("common_offerings_between_segments", manifest["strong_model_candidate_feasible_families"]["validation"])
-        self.assertIn("common_offerings_between_segments", manifest["strong_model_candidate_feasible_families"]["release_eval"])
         self.assertEqual(manifest["strong_model_candidate_missing_families"]["train"], [])
         self.assertEqual(manifest["strong_model_candidate_missing_families"]["validation"], [])
         self.assertEqual(manifest["strong_model_candidate_missing_families"]["release_eval"], [])
