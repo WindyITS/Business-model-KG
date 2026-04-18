@@ -154,6 +154,18 @@ prompts/
 
 docs/
   ontology.md             canonical ontology specification
+  project_walkthrough.md  plain-language architecture and workflow guide
+
+scripts/
+  bootstrap_dev.sh        create or refresh the local dev environment
+  clean_local_artifacts.sh
+                          remove caches and local scratch artifacts
+  kg-pipeline             source-checkout pipeline wrapper
+  kg-query                source-checkout query wrapper
+  kg-query-cypher         source-checkout query-to-Cypher wrapper
+  kg-neo4j-load           source-checkout saved-output load wrapper
+  kg-neo4j-status         source-checkout Neo4j status wrapper
+  kg-neo4j-unload         source-checkout Neo4j unload wrapper
 
 tests/
   test_runtime/
@@ -178,6 +190,14 @@ Requirements:
 
 Setup:
 
+Recommended one-command setup from a cloned repo:
+
+```bash
+./scripts/bootstrap_dev.sh
+```
+
+Manual equivalent:
+
 ```bash
 python3 -m venv venv
 source venv/bin/activate
@@ -201,6 +221,27 @@ pip install -e .
 
 That refreshes the `venv/bin/` entry points so the new commands appear there too.
 
+If you want a template for local environment variables and defaults, copy from `.env.example`.
+
+For day-to-day work from a source checkout, the most reliable commands are the wrapper scripts under `scripts/`:
+
+- `./scripts/kg-pipeline`
+- `./scripts/kg-query`
+- `./scripts/kg-query-cypher`
+- `./scripts/kg-neo4j-load`
+- `./scripts/kg-neo4j-status`
+- `./scripts/kg-neo4j-unload`
+
+These wrappers run the repo source directly with the repo virtual environment, so they still work even if the editable-install entry points have not been refreshed yet.
+
+For a plain-language overview of how the project fits together, see [docs/project_walkthrough.md](./docs/project_walkthrough.md).
+
+To remove local caches and scratch artifacts without touching saved outputs, run:
+
+```bash
+./scripts/clean_local_artifacts.sh
+```
+
 Prompt workflow notes:
 - an editable install keeps using the repo-level `prompts/` directory, so prompt iteration stays fast
 - a standard package install also works because the package now ships a bundled prompt fallback
@@ -210,31 +251,31 @@ Prompt workflow notes:
 Run the extraction pipeline:
 
 ```bash
-./venv/bin/kg-pipeline data/microsoft_10k.txt --skip-neo4j
+./scripts/kg-pipeline data/microsoft_10k.txt --skip-neo4j
 ```
 
 Optional explicit pipeline flag:
 
 ```bash
-./venv/bin/kg-pipeline data/microsoft_10k.txt --pipeline canonical --skip-neo4j
+./scripts/kg-pipeline data/microsoft_10k.txt --pipeline canonical --skip-neo4j
 ```
 
 Run only the structural skeleton:
 
 ```bash
-./venv/bin/kg-pipeline data/microsoft_10k.txt --only-pass1 --skip-neo4j
+./scripts/kg-pipeline data/microsoft_10k.txt --only-pass1 --skip-neo4j
 ```
 
 Render a Cypher query without executing it:
 
 ```bash
-./venv/bin/kg-query-cypher "Which company segments sell through marketplaces?"
+./scripts/kg-query-cypher "Which company segments sell through marketplaces?"
 ```
 
 Run a query against Neo4j:
 
 ```bash
-./venv/bin/kg-query "Which company segments sell through marketplaces?" \
+./scripts/kg-query "Which company segments sell through marketplaces?" \
   --neo4j-uri bolt://localhost:7687 \
   --neo4j-user neo4j \
   --neo4j-password password
@@ -244,7 +285,7 @@ Run against OpenCode Go with a hosted open model:
 
 ```bash
 export OPENCODE_GO_API_KEY=your_key_here
-./venv/bin/kg-pipeline data/microsoft_10k.txt \
+./scripts/kg-pipeline data/microsoft_10k.txt \
   --provider opencode-go \
   --model kimi-k2.5 \
   --skip-neo4j
@@ -253,8 +294,8 @@ export OPENCODE_GO_API_KEY=your_key_here
 Other supported OpenCode Go models use the same CLI shape:
 
 ```bash
-./venv/bin/kg-pipeline data/microsoft_10k.txt --provider opencode-go --model mimo-v2-pro --skip-neo4j
-./venv/bin/kg-pipeline data/microsoft_10k.txt --provider opencode-go --model minimax-m2.7 --skip-neo4j
+./scripts/kg-pipeline data/microsoft_10k.txt --provider opencode-go --model mimo-v2-pro --skip-neo4j
+./scripts/kg-pipeline data/microsoft_10k.txt --provider opencode-go --model minimax-m2.7 --skip-neo4j
 ```
 
 Provider notes:
@@ -289,25 +330,25 @@ Load into Neo4j instead:
 
 ```bash
 docker compose up -d
-./venv/bin/kg-pipeline data/microsoft_10k.txt
+./scripts/kg-pipeline data/microsoft_10k.txt
 ```
 
 Load the latest `analyst` outputs for every company into Neo4j:
 
 ```bash
-./venv/bin/kg-neo4j-load
+./scripts/kg-neo4j-load
 ```
 
 Load the latest `analyst` output for one company only:
 
 ```bash
-./venv/bin/kg-neo4j-load --company "Microsoft"
+./scripts/kg-neo4j-load --company "Microsoft"
 ```
 
 Load one exact saved run for a company:
 
 ```bash
-./venv/bin/kg-neo4j-load --company "Microsoft" --run 20260417T101500Z
+./scripts/kg-neo4j-load --company "Microsoft" --run 20260417T101500Z
 ```
 
 You can also pass a relative path inside that company's pipeline folder, but `--run` is intentionally limited to that folder. It will not jump to another company or to an arbitrary filesystem path.
@@ -319,7 +360,7 @@ If you target one company with `--company` and that company is already loaded, t
 Show which companies are currently loaded in Neo4j and which local outputs are ready to load:
 
 ```bash
-./venv/bin/kg-neo4j-status
+./scripts/kg-neo4j-status
 ```
 
 `kg-neo4j-status` is read-only: it reports the current state but does not rewrite outputs or load/unload anything.
@@ -327,7 +368,7 @@ Show which companies are currently loaded in Neo4j and which local outputs are r
 Unload only one company's graph footprint from Neo4j:
 
 ```bash
-./venv/bin/kg-neo4j-unload --company "Microsoft"
+./scripts/kg-neo4j-unload --company "Microsoft"
 ```
 
 If you want to skip the confirmation prompt in automation or scripts, add `--yes`.
@@ -358,13 +399,13 @@ Neo4j Browser:
 Generate a read-only Cypher query from a natural-language question:
 
 ```bash
-./venv/bin/kg-query-cypher "Which companies sell to developers through direct sales?"
+./scripts/kg-query-cypher "Which companies sell to developers through direct sales?"
 ```
 
 Generate the query and run it against the current Neo4j database:
 
 ```bash
-./venv/bin/kg-query "Which companies sell to developers through direct sales?"
+./scripts/kg-query "Which companies sell to developers through direct sales?"
 ```
 
 Both commands reuse the same provider/model options as `kg-pipeline`. `kg-query` returns rows from the
@@ -532,13 +573,13 @@ Analyst pipeline runs write a different mix centered on:
 Compare a predicted extraction to a gold graph:
 
 ```bash
-./venv/bin/kg-evaluate-graph compare path/to/predicted.json path/to/gold.json
+./scripts/kg-evaluate-graph compare path/to/predicted.json path/to/gold.json
 ```
 
 Inspect the graph currently loaded in Neo4j:
 
 ```bash
-./venv/bin/kg-evaluate-graph dump-neo4j
+./scripts/kg-evaluate-graph dump-neo4j
 ```
 
 The evaluation utility accepts payloads wrapped as `triples`, `resolved_triples`, or `valid_triples`.
