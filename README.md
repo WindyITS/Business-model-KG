@@ -203,8 +203,11 @@ Manual equivalent:
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-pip install -e .
+pip install -e ".[dev]"
 ```
+
+The `dev` extra installs the test tooling used by `./scripts/check_repo.sh`. If you only want
+the runtime CLI surface and not the maintainer checks, `pip install -e .` is still enough.
 
 That editable install creates the convenience commands in `venv/bin/`:
 - `kg-pipeline`

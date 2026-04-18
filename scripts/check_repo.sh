@@ -23,6 +23,11 @@ echo "[1/6] Running repo health check"
 bash "${ROOT_DIR}/scripts/kg-health-check" --skip-neo4j
 
 echo "[2/6] Running test suite"
+if ! "${PYTHON_BIN}" -c "import pytest" >/dev/null 2>&1; then
+  echo "pytest is not installed in ${PYTHON_BIN}." >&2
+  echo "Run ./scripts/bootstrap_dev.sh, or install the dev extras with pip install -e .[dev]." >&2
+  exit 1
+fi
 "${PYTHON_BIN}" -m pytest -q
 
 echo "[3/6] Checking Python compilation"

@@ -14,6 +14,11 @@ dependencies = [
     "pydantic==2.12.5",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pytest>=8,<9",
+]
+
 [project.scripts]
 kg-pipeline = "runtime.main:main"
 kg-evaluate-graph = "graph.evaluate_graph:main"

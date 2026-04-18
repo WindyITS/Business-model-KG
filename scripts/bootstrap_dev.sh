@@ -9,7 +9,7 @@ VENV_DIR="${VENV_DIR:-${ROOT_DIR}/venv}"
 "${PYTHON_BIN}" -m venv "${VENV_DIR}"
 "${VENV_DIR}/bin/python" -m ensurepip --upgrade >/dev/null 2>&1 || true
 "${VENV_DIR}/bin/python" -m pip install --upgrade pip setuptools wheel
-"${VENV_DIR}/bin/python" -m pip install -e "${ROOT_DIR}" --no-build-isolation
+"${VENV_DIR}/bin/python" -m pip install -e "${ROOT_DIR}[dev]" --no-build-isolation
 
 cat <<EOF
 Bootstrap complete.
