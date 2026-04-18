@@ -97,13 +97,18 @@ Runtime notes:
 
 ## Query Interface
 
-The runtime also includes a read-only natural-language query path for the live Neo4j graph:
+The runtime includes a read-only natural-language query path for the live Neo4j graph:
 
 - `kg-query-cypher` renders a browser-ready Cypher query without executing it
 - `kg-query` generates a structured query plan, compiles it into Cypher, runs a Neo4j `EXPLAIN`, and then executes it
+
+The planner prompt lives in [`src/runtime/query_prompt.py`](./src/runtime/query_prompt.py), the deterministic compiler lives in [`src/runtime/query_planner.py`](./src/runtime/query_planner.py), and the read-only Cypher guards live in [`src/runtime/cypher_validation.py`](./src/runtime/cypher_validation.py).
+
+Training-data generation for the query planner is a separate training-side surface:
+
 - `kg-query-dataset` generates the synthetic train/validation/release-eval JSONL splits, plus a manifest and the synthetic graph definitions used to build them
 
-The planner prompt lives in [`src/runtime/query_prompt.py`](./src/runtime/query_prompt.py), the deterministic compiler lives in [`src/runtime/query_planner.py`](./src/runtime/query_planner.py), the synthetic dataset generator lives in [`src/runtime/query_dataset.py`](./src/runtime/query_dataset.py), and the read-only Cypher guards live in [`src/runtime/cypher_validation.py`](./src/runtime/cypher_validation.py).
+That CLI targets the training module path `training.query_planner.dataset`, while the live planner/compiler remain under `runtime`.
 
 For Neo4j maintenance, the repo also ships:
 
@@ -119,7 +124,6 @@ src/
     main.py               runtime CLI implementation
     query.py              natural-language query CLI
     query_planner.py      family-based query-plan compiler
-    query_dataset.py      synthetic planner dataset generation
     neo4j_load.py         saved-output Neo4j load CLI
     neo4j_status.py       Neo4j vs saved-output status CLI
     neo4j_admin.py        selective Neo4j unload CLI
@@ -128,6 +132,10 @@ src/
     cypher_validation.py  read-only query guards and Neo4j URI normalization
     model_provider.py     provider/model resolution
     entity_resolver.py    light entity normalization
+  training/
+    query_planner/
+      dataset.py          synthetic planner dataset generation
+      ...                 training-side dataset helpers and manifests
   llm/
     extractor.py          generic LLM calling and extraction facade
   llm_extraction/
@@ -167,6 +175,7 @@ scripts/
   kg-pipeline             source-checkout pipeline wrapper
   kg-query                source-checkout query wrapper
   kg-query-cypher         source-checkout query-to-Cypher wrapper
+  kg-query-dataset        source-checkout training dataset wrapper
   kg-neo4j-load           source-checkout saved-output load wrapper
   kg-neo4j-status         source-checkout Neo4j status wrapper
   kg-neo4j-unload         source-checkout Neo4j unload wrapper
@@ -217,6 +226,7 @@ That editable install creates the convenience commands in `venv/bin/`:
 - `kg-evaluate-graph`
 - `kg-query`
 - `kg-query-cypher`
+- `kg-query-dataset`
 - `kg-neo4j-load`
 - `kg-neo4j-status`
 - `kg-neo4j-unload`
@@ -237,12 +247,15 @@ For day-to-day work from a source checkout, the most reliable commands are the w
 - `./scripts/kg-pipeline`
 - `./scripts/kg-query`
 - `./scripts/kg-query-cypher`
+- `./scripts/kg-query-dataset`
 - `./scripts/kg-neo4j-load`
 - `./scripts/kg-neo4j-status`
 - `./scripts/kg-neo4j-unload`
 - `./scripts/kg-health-check`
 
 These wrappers run the repo source directly with the repo virtual environment, so they still work even if the editable-install entry points have not been refreshed yet.
+
+Use `kg-query-dataset` for the training-side synthetic dataset workflow. The live planner/compiler path remains under `src/runtime/`; dataset generation is part of the training stack.
 
 For a plain-language overview of how the project fits together, see [docs/project_walkthrough.md](./docs/project_walkthrough.md).
 

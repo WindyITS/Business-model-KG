@@ -24,7 +24,7 @@ kg-pipeline = "runtime.main:main"
 kg-evaluate-graph = "graph.evaluate_graph:main"
 kg-query = "runtime.query:main_query"
 kg-query-cypher = "runtime.query:main_query_cypher"
-kg-query-dataset = "runtime.query_dataset:main"
+kg-query-dataset = "training.query_planner.dataset:main"
 kg-neo4j-unload = "runtime.neo4j_admin:main"
 kg-neo4j-load = "runtime.neo4j_load:main"
 kg-neo4j-status = "runtime.neo4j_status:main"
@@ -58,6 +58,8 @@ include = [
     "ontology.*",
     "runtime",
     "runtime.*",
+    "training",
+    "training.*",
 ]
 
 [tool.setuptools.package-data]
