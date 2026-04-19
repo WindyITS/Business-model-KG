@@ -16,6 +16,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "numpy>=1.26,<3",
     "pytest>=8,<9",
 ]
 
@@ -24,6 +25,8 @@ kg-pipeline = "runtime.main:main"
 kg-evaluate-graph = "graph.evaluate_graph:main"
 kg-query = "runtime.query:main_query"
 kg-query-cypher = "runtime.query:main_query_cypher"
+kg-query-jolly = "runtime.query:main_query_jolly"
+kg-query-cypher-jolly = "runtime.query:main_query_cypher_jolly"
 kg-neo4j-unload = "runtime.neo4j_admin:main"
 kg-neo4j-load = "runtime.neo4j_load:main"
 kg-neo4j-status = "runtime.neo4j_status:main"
