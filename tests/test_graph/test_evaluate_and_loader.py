@@ -162,8 +162,9 @@ class GraphComponentTests(unittest.TestCase):
         company_names = loader.list_loaded_companies()
 
         self.assertEqual(company_names, ["Apple", "Microsoft"])
-        self.assertIn("coalesce(company.is_loaded_company, false)", session.run.call_args.args[0])
+        self.assertIn("coalesce(company[$loaded_company_property], false)", session.run.call_args.args[0])
         self.assertEqual(session.run.call_args.kwargs["relation_types"], ["HAS_SEGMENT", "OFFERS", "OPERATES_IN", "PARTNERS_WITH"])
+        self.assertEqual(session.run.call_args.kwargs["loaded_company_property"], "is_loaded_company")
 
     def test_company_graph_counts_reports_existing_company_footprint(self):
         loader = Neo4jLoader.__new__(Neo4jLoader)
@@ -192,6 +193,7 @@ class GraphComponentTests(unittest.TestCase):
             },
         )
         self.assertEqual(session.run.call_args.kwargs["relation_types"], ["HAS_SEGMENT", "OFFERS", "OPERATES_IN", "PARTNERS_WITH"])
+        self.assertEqual(session.run.call_args.kwargs["loaded_company_property"], "is_loaded_company")
 
     def test_replace_company_triples_commits_on_success(self):
         loader = Neo4jLoader.__new__(Neo4jLoader)

@@ -55,7 +55,7 @@ class Neo4jLoader:
             rows = session.run(
                 """
                 MATCH (company:Company)
-                WHERE coalesce(company.is_loaded_company, false)
+                WHERE coalesce(company[$loaded_company_property], false)
                 RETURN DISTINCT company.name AS company_name
                 UNION
                 MATCH (node)
@@ -69,6 +69,7 @@ class Neo4jLoader:
                 RETURN DISTINCT company.name AS company_name
                 """,
                 relation_types=list(UNLOAD_COMPANY_RELATION_TYPES),
+                loaded_company_property=LOADED_COMPANY_PROPERTY,
             ).data()
         company_names = sorted(
             {
@@ -84,7 +85,7 @@ class Neo4jLoader:
             counts = session.run(
                 """
                 OPTIONAL MATCH (company:Company {name: $company_name})
-                WHERE coalesce(company.is_loaded_company, false)
+                WHERE coalesce(company[$loaded_company_property], false)
                    OR EXISTS {
                        MATCH (company)-[rel]->()
                        WHERE type(rel) IN $relation_types
@@ -98,7 +99,7 @@ class Neo4jLoader:
                         root:Company
                     AND root.name = $company_name
                     AND (
-                        coalesce(root.is_loaded_company, false)
+                        coalesce(root[$loaded_company_property], false)
                         OR EXISTS {
                             MATCH (root)-[rel]->()
                             WHERE type(rel) IN $relation_types
@@ -114,6 +115,7 @@ class Neo4jLoader:
                 """,
                 company_name=company_name,
                 relation_types=list(UNLOAD_COMPANY_RELATION_TYPES),
+                loaded_company_property=LOADED_COMPANY_PROPERTY,
             ).single()
         company_node_count = counts["company_node_count"] or 0
         scoped_node_count = counts["scoped_node_count"] or 0
