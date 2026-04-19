@@ -1,0 +1,735 @@
+[
+  {
+    "graph_id": "aurora",
+    "name": "Aurora Systems",
+    "segments": [
+      {
+        "name": "Cloud Infrastructure",
+        "customer_types": [
+          "large enterprises",
+          "developers",
+          "IT professionals"
+        ],
+        "channels": [
+          "direct sales",
+          "system integrators",
+          "managed service providers"
+        ],
+        "offerings": [
+          {
+            "name": "Cloud Platform",
+            "revenue_models": [
+              "subscription",
+              "consumption-based"
+            ],
+            "children": [
+              {
+                "name": "Cloud Platform Edge",
+                "revenue_models": [
+                  "consumption-based"
+                ],
+                "children": []
+              },
+              {
+                "name": "Cloud Platform Secure",
+                "revenue_models": [
+                  "subscription"
+                ],
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Identity Cloud",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Developer Toolkit",
+            "revenue_models": [
+              "subscription",
+              "service fees"
+            ],
+            "children": []
+          },
+          {
+            "name": "Analytics Studio",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Automation Suite",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Data Products",
+        "customer_types": [
+          "large enterprises",
+          "mid-market companies",
+          "developers"
+        ],
+        "channels": [
+          "direct sales",
+          "online"
+        ],
+        "offerings": [
+          {
+            "name": "Analytics Studio",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": [
+              {
+                "name": "Analytics Studio Pro",
+                "revenue_models": [
+                  "subscription"
+                ],
+                "children": []
+              },
+              {
+                "name": "Analytics Studio Embedded",
+                "revenue_models": [
+                  "licensing"
+                ],
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Data Exchange",
+            "revenue_models": [
+              "transaction fees"
+            ],
+            "children": []
+          },
+          {
+            "name": "Model Hub",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Forecast Engine",
+            "revenue_models": [
+              "consumption-based"
+            ],
+            "children": []
+          },
+          {
+            "name": "Insight Stream",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Commerce Cloud",
+        "customer_types": [
+          "retailers",
+          "small businesses",
+          "mid-market companies"
+        ],
+        "channels": [
+          "resellers",
+          "marketplaces",
+          "online"
+        ],
+        "offerings": [
+          {
+            "name": "Marketplace Hub",
+            "revenue_models": [
+              "transaction fees"
+            ],
+            "children": [
+              {
+                "name": "Marketplace Hub Seller",
+                "revenue_models": [
+                  "transaction fees"
+                ],
+                "children": []
+              },
+              {
+                "name": "Marketplace Hub Buyer",
+                "revenue_models": [
+                  "transaction fees"
+                ],
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Commerce Engine",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Payment Services",
+            "revenue_models": [
+              "transaction fees"
+            ],
+            "children": []
+          },
+          {
+            "name": "Inventory Grid",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Fulfillment Orchestrator",
+            "revenue_models": [
+              "service fees"
+            ],
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Public Sector Solutions",
+        "customer_types": [
+          "government agencies",
+          "educational institutions",
+          "healthcare organizations"
+        ],
+        "channels": [
+          "direct sales",
+          "resellers"
+        ],
+        "offerings": [
+          {
+            "name": "Compliance Vault",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Citizen Services Portal",
+            "revenue_models": [
+              "service fees"
+            ],
+            "children": []
+          },
+          {
+            "name": "Secure Records",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Procurement Exchange",
+            "revenue_models": [
+              "transaction fees"
+            ],
+            "children": []
+          },
+          {
+            "name": "Field Operations Suite",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          }
+        ]
+      }
+    ],
+    "places": [
+      "United States",
+      "Italy",
+      "Germany",
+      "EMEA"
+    ],
+    "partners": [
+      "Dell",
+      "Fujitsu Limited",
+      "RetailNet"
+    ]
+  },
+  {
+    "graph_id": "redwood",
+    "name": "Redwood Retail",
+    "segments": [
+      {
+        "name": "Merchant Services",
+        "customer_types": [
+          "retailers",
+          "small businesses",
+          "mid-market companies"
+        ],
+        "channels": [
+          "resellers",
+          "marketplaces",
+          "distributors"
+        ],
+        "offerings": [
+          {
+            "name": "Marketplace Hub",
+            "revenue_models": [
+              "transaction fees"
+            ],
+            "children": [
+              {
+                "name": "Marketplace Hub Merchant",
+                "revenue_models": [
+                  "transaction fees"
+                ],
+                "children": []
+              },
+              {
+                "name": "Marketplace Hub Checkout",
+                "revenue_models": [
+                  "transaction fees"
+                ],
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Commerce Engine",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Payment Services",
+            "revenue_models": [
+              "transaction fees"
+            ],
+            "children": []
+          },
+          {
+            "name": "Storefront OS",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Support Desk",
+            "revenue_models": [
+              "service fees"
+            ],
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Consumer Commerce",
+        "customer_types": [
+          "consumers"
+        ],
+        "channels": [
+          "online",
+          "retail"
+        ],
+        "offerings": [
+          {
+            "name": "Loyalty Cloud",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": [
+              {
+                "name": "Loyalty Cloud Rewards",
+                "revenue_models": [
+                  "subscription"
+                ],
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Marketplace Hub",
+            "revenue_models": [
+              "transaction fees"
+            ],
+            "children": []
+          },
+          {
+            "name": "Device Sync",
+            "revenue_models": [
+              "hardware sales"
+            ],
+            "children": []
+          },
+          {
+            "name": "Recommendation Engine",
+            "revenue_models": [
+              "consumption-based"
+            ],
+            "children": []
+          },
+          {
+            "name": "Gift Network",
+            "revenue_models": [
+              "transaction fees"
+            ],
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Analytics",
+        "customer_types": [
+          "retailers",
+          "large enterprises",
+          "developers"
+        ],
+        "channels": [
+          "direct sales",
+          "system integrators"
+        ],
+        "offerings": [
+          {
+            "name": "Analytics Studio",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Forecast Engine",
+            "revenue_models": [
+              "consumption-based"
+            ],
+            "children": []
+          },
+          {
+            "name": "Model Hub",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Identity Cloud",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Inventory Grid",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Wholesale Network",
+        "customer_types": [
+          "manufacturers",
+          "retailers"
+        ],
+        "channels": [
+          "distributors",
+          "resellers"
+        ],
+        "offerings": [
+          {
+            "name": "Supply Exchange",
+            "revenue_models": [
+              "transaction fees"
+            ],
+            "children": []
+          },
+          {
+            "name": "Inventory Grid",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Compliance Vault",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Fulfillment Orchestrator",
+            "revenue_models": [
+              "service fees"
+            ],
+            "children": []
+          },
+          {
+            "name": "Commerce Engine",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          }
+        ]
+      }
+    ],
+    "places": [
+      "United States",
+      "Mexico",
+      "Latin America",
+      "Japan"
+    ],
+    "partners": [
+      "RetailNet",
+      "Fujitsu Limited",
+      "PaySphere"
+    ]
+  },
+  {
+    "graph_id": "lattice",
+    "name": "Lattice Finance",
+    "segments": [
+      {
+        "name": "Enterprise Banking",
+        "customer_types": [
+          "financial services firms",
+          "large enterprises",
+          "government agencies"
+        ],
+        "channels": [
+          "direct sales",
+          "system integrators"
+        ],
+        "offerings": [
+          {
+            "name": "Risk Console",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Decision Hub",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": [
+              {
+                "name": "Decision Hub Credit",
+                "revenue_models": [
+                  "subscription"
+                ],
+                "children": []
+              },
+              {
+                "name": "Decision Hub Treasury",
+                "revenue_models": [
+                  "subscription"
+                ],
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Forecast Engine",
+            "revenue_models": [
+              "consumption-based"
+            ],
+            "children": []
+          },
+          {
+            "name": "Compliance Vault",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Identity Cloud",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Payments Network",
+        "customer_types": [
+          "financial services firms",
+          "small businesses",
+          "retailers"
+        ],
+        "channels": [
+          "direct sales",
+          "resellers",
+          "marketplaces"
+        ],
+        "offerings": [
+          {
+            "name": "Payment Services",
+            "revenue_models": [
+              "transaction fees"
+            ],
+            "children": []
+          },
+          {
+            "name": "Marketplace Hub",
+            "revenue_models": [
+              "transaction fees"
+            ],
+            "children": []
+          },
+          {
+            "name": "Data Exchange",
+            "revenue_models": [
+              "licensing"
+            ],
+            "children": []
+          },
+          {
+            "name": "Fraud Grid",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Merchant Console",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": [
+              {
+                "name": "Merchant Console Insights",
+                "revenue_models": [
+                  "subscription"
+                ],
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Developer Platform",
+        "customer_types": [
+          "developers",
+          "IT professionals"
+        ],
+        "channels": [
+          "online",
+          "direct sales"
+        ],
+        "offerings": [
+          {
+            "name": "Developer Toolkit",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Cloud Platform",
+            "revenue_models": [
+              "subscription",
+              "consumption-based"
+            ],
+            "children": []
+          },
+          {
+            "name": "Model Hub",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Secure Collaboration",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "API Gateway",
+            "revenue_models": [
+              "consumption-based"
+            ],
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Compliance Services",
+        "customer_types": [
+          "government agencies",
+          "financial services firms",
+          "healthcare organizations"
+        ],
+        "channels": [
+          "direct sales",
+          "managed service providers"
+        ],
+        "offerings": [
+          {
+            "name": "Secure Records",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Compliance Vault",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Audit Exchange",
+            "revenue_models": [
+              "service fees"
+            ],
+            "children": []
+          },
+          {
+            "name": "Support Desk",
+            "revenue_models": [
+              "service fees"
+            ],
+            "children": []
+          },
+          {
+            "name": "Workflow Automation",
+            "revenue_models": [
+              "service fees"
+            ],
+            "children": []
+          }
+        ]
+      }
+    ],
+    "places": [
+      "United States",
+      "Canada",
+      "United Kingdom",
+      "Europe"
+    ],
+    "partners": [
+      "CloudAtlas",
+      "PaySphere",
+      "Dell"
+    ]
+  }
+]

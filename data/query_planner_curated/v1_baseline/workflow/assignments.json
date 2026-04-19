@@ -1,0 +1,479 @@
+{
+  "roles": [
+    {
+      "role": "Coordinator",
+      "responsibility": "Own shard assignment, apply deterministic question-first curation, and merge approved edits."
+    },
+    {
+      "role": "Verifier",
+      "responsibility": "Run runtime-backed validation after every shard merge and before freezing the final package."
+    },
+    {
+      "role": "Adjudicator",
+      "responsibility": "Handle rows that cannot be repaired by rewriting the question alone."
+    },
+    {
+      "role": "Worker A",
+      "responsibility": "Review assigned 200-row shards under the shared curation rubric."
+    },
+    {
+      "role": "Worker B",
+      "responsibility": "Review assigned 200-row shards under the shared curation rubric."
+    },
+    {
+      "role": "Worker C",
+      "responsibility": "Review assigned 200-row shards under the shared curation rubric."
+    }
+  ],
+  "shards": [
+    {
+      "shard": "workflow/review_shards/train/train_shard_000.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker A",
+      "start_index": 0,
+      "end_index": 199
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_001.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker B",
+      "start_index": 200,
+      "end_index": 399
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_002.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker C",
+      "start_index": 400,
+      "end_index": 599
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_003.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker A",
+      "start_index": 600,
+      "end_index": 799
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_004.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker B",
+      "start_index": 800,
+      "end_index": 999
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_005.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker C",
+      "start_index": 1000,
+      "end_index": 1199
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_006.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker A",
+      "start_index": 1200,
+      "end_index": 1399
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_007.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker B",
+      "start_index": 1400,
+      "end_index": 1599
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_008.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker C",
+      "start_index": 1600,
+      "end_index": 1799
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_009.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker A",
+      "start_index": 1800,
+      "end_index": 1999
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_010.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker B",
+      "start_index": 2000,
+      "end_index": 2199
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_011.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker C",
+      "start_index": 2200,
+      "end_index": 2399
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_012.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker A",
+      "start_index": 2400,
+      "end_index": 2599
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_013.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker B",
+      "start_index": 2600,
+      "end_index": 2799
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_014.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker C",
+      "start_index": 2800,
+      "end_index": 2999
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_015.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker A",
+      "start_index": 3000,
+      "end_index": 3199
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_016.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker B",
+      "start_index": 3200,
+      "end_index": 3399
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_017.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker C",
+      "start_index": 3400,
+      "end_index": 3599
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_018.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker A",
+      "start_index": 3600,
+      "end_index": 3799
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_019.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker B",
+      "start_index": 3800,
+      "end_index": 3999
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_020.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker C",
+      "start_index": 4000,
+      "end_index": 4199
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_021.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker A",
+      "start_index": 4200,
+      "end_index": 4399
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_022.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker B",
+      "start_index": 4400,
+      "end_index": 4599
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_023.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker C",
+      "start_index": 4600,
+      "end_index": 4799
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_024.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker A",
+      "start_index": 4800,
+      "end_index": 4999
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_025.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker B",
+      "start_index": 5000,
+      "end_index": 5199
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_026.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker C",
+      "start_index": 5200,
+      "end_index": 5399
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_027.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker A",
+      "start_index": 5400,
+      "end_index": 5599
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_028.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker B",
+      "start_index": 5600,
+      "end_index": 5799
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_029.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker C",
+      "start_index": 5800,
+      "end_index": 5999
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_030.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker A",
+      "start_index": 6000,
+      "end_index": 6199
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_031.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker B",
+      "start_index": 6200,
+      "end_index": 6399
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_032.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker C",
+      "start_index": 6400,
+      "end_index": 6599
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_033.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker A",
+      "start_index": 6600,
+      "end_index": 6799
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_034.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker B",
+      "start_index": 6800,
+      "end_index": 6999
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_035.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker C",
+      "start_index": 7000,
+      "end_index": 7199
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_036.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker A",
+      "start_index": 7200,
+      "end_index": 7399
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_037.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker B",
+      "start_index": 7400,
+      "end_index": 7599
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_038.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker C",
+      "start_index": 7600,
+      "end_index": 7799
+    },
+    {
+      "shard": "workflow/review_shards/train/train_shard_039.jsonl",
+      "split_name": "train",
+      "row_count": 200,
+      "assigned_role": "Worker A",
+      "start_index": 7800,
+      "end_index": 7999
+    },
+    {
+      "shard": "workflow/review_shards/validation/validation_shard_000.jsonl",
+      "split_name": "validation",
+      "row_count": 200,
+      "assigned_role": "Worker B",
+      "start_index": 0,
+      "end_index": 199
+    },
+    {
+      "shard": "workflow/review_shards/validation/validation_shard_001.jsonl",
+      "split_name": "validation",
+      "row_count": 200,
+      "assigned_role": "Worker C",
+      "start_index": 200,
+      "end_index": 399
+    },
+    {
+      "shard": "workflow/review_shards/validation/validation_shard_002.jsonl",
+      "split_name": "validation",
+      "row_count": 200,
+      "assigned_role": "Worker A",
+      "start_index": 400,
+      "end_index": 599
+    },
+    {
+      "shard": "workflow/review_shards/validation/validation_shard_003.jsonl",
+      "split_name": "validation",
+      "row_count": 200,
+      "assigned_role": "Worker B",
+      "start_index": 600,
+      "end_index": 799
+    },
+    {
+      "shard": "workflow/review_shards/validation/validation_shard_004.jsonl",
+      "split_name": "validation",
+      "row_count": 200,
+      "assigned_role": "Worker C",
+      "start_index": 800,
+      "end_index": 999
+    },
+    {
+      "shard": "workflow/review_shards/validation/validation_shard_005.jsonl",
+      "split_name": "validation",
+      "row_count": 200,
+      "assigned_role": "Worker A",
+      "start_index": 1000,
+      "end_index": 1199
+    },
+    {
+      "shard": "workflow/review_shards/release_eval/release_eval_shard_000.jsonl",
+      "split_name": "release_eval",
+      "row_count": 200,
+      "assigned_role": "Worker B",
+      "start_index": 0,
+      "end_index": 199
+    },
+    {
+      "shard": "workflow/review_shards/release_eval/release_eval_shard_001.jsonl",
+      "split_name": "release_eval",
+      "row_count": 200,
+      "assigned_role": "Worker C",
+      "start_index": 200,
+      "end_index": 399
+    },
+    {
+      "shard": "workflow/review_shards/release_eval/release_eval_shard_002.jsonl",
+      "split_name": "release_eval",
+      "row_count": 200,
+      "assigned_role": "Worker A",
+      "start_index": 400,
+      "end_index": 599
+    },
+    {
+      "shard": "workflow/review_shards/release_eval/release_eval_shard_003.jsonl",
+      "split_name": "release_eval",
+      "row_count": 200,
+      "assigned_role": "Worker B",
+      "start_index": 600,
+      "end_index": 799
+    },
+    {
+      "shard": "workflow/review_shards/release_eval/release_eval_shard_004.jsonl",
+      "split_name": "release_eval",
+      "row_count": 200,
+      "assigned_role": "Worker C",
+      "start_index": 800,
+      "end_index": 999
+    },
+    {
+      "shard": "workflow/review_shards/release_eval/release_eval_shard_005.jsonl",
+      "split_name": "release_eval",
+      "row_count": 200,
+      "assigned_role": "Worker A",
+      "start_index": 1000,
+      "end_index": 1199
+    },
+    {
+      "shard": "workflow/review_shards/release_eval/release_eval_shard_006.jsonl",
+      "split_name": "release_eval",
+      "row_count": 200,
+      "assigned_role": "Worker B",
+      "start_index": 1200,
+      "end_index": 1399
+    },
+    {
+      "shard": "workflow/review_shards/release_eval/release_eval_shard_007.jsonl",
+      "split_name": "release_eval",
+      "row_count": 200,
+      "assigned_role": "Worker C",
+      "start_index": 1400,
+      "end_index": 1599
+    },
+    {
+      "shard": "workflow/review_shards/release_eval/release_eval_shard_008.jsonl",
+      "split_name": "release_eval",
+      "row_count": 200,
+      "assigned_role": "Worker A",
+      "start_index": 1600,
+      "end_index": 1799
+    }
+  ],
+  "rubric": [
+    "question matches the exact semantics of supervision_target",
+    "no hidden scope, limit, company, place, or inclusive/exclusive mismatch",
+    "local_safe wording is faithful to runtime semantics",
+    "strong_model_candidate vs refuse boundary is clean",
+    "prompt is grammatical and natural enough for a small local model",
+    "no synthetic scaffold patterns that weaken supervision",
+    "no contradiction between question, route_label, family, and gold_rows"
+  ]
+}

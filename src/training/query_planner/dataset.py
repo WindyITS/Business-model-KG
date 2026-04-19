@@ -1543,10 +1543,12 @@ def _capped_family_targets(
     remaining_total = total
 
     while remaining_total > 0 and remaining_families:
-        scaled = _scale_targets({family: weights[family] for family in remaining_families}, remaining_total)
+        ordered_remaining = tuple(sorted(remaining_families))
+        scaled = _scale_targets({family: weights[family] for family in ordered_remaining}, remaining_total)
         progress = False
         saturated: set[str] = set()
-        for family, requested in scaled.items():
+        for family in ordered_remaining:
+            requested = scaled[family]
             available = capacities[family] - allocations[family]
             if available <= 0:
                 saturated.add(family)

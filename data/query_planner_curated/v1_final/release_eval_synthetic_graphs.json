@@ -1,0 +1,254 @@
+[
+  {
+    "graph_id": "vector",
+    "name": "Vector Industrial",
+    "segments": [
+      {
+        "name": "Connected Operations",
+        "customer_types": [
+          "manufacturers",
+          "large enterprises",
+          "IT professionals"
+        ],
+        "channels": [
+          "direct sales",
+          "system integrators",
+          "managed service providers"
+        ],
+        "offerings": [
+          {
+            "name": "Automation Suite",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": [
+              {
+                "name": "Automation Suite Remote",
+                "revenue_models": [
+                  "subscription"
+                ],
+                "children": []
+              },
+              {
+                "name": "Automation Suite Safety",
+                "revenue_models": [
+                  "subscription"
+                ],
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Cloud Platform",
+            "revenue_models": [
+              "consumption-based"
+            ],
+            "children": [
+              {
+                "name": "Cloud Platform Field",
+                "revenue_models": [
+                  "consumption-based"
+                ],
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Field Operations Suite",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Device Sync",
+            "revenue_models": [
+              "hardware sales"
+            ],
+            "children": []
+          },
+          {
+            "name": "Support Desk",
+            "revenue_models": [
+              "service fees"
+            ],
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Supply Chain",
+        "customer_types": [
+          "manufacturers",
+          "retailers",
+          "mid-market companies"
+        ],
+        "channels": [
+          "distributors",
+          "resellers"
+        ],
+        "offerings": [
+          {
+            "name": "Inventory Grid",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Supply Exchange",
+            "revenue_models": [
+              "transaction fees"
+            ],
+            "children": []
+          },
+          {
+            "name": "Commerce Engine",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Fulfillment Orchestrator",
+            "revenue_models": [
+              "service fees"
+            ],
+            "children": []
+          },
+          {
+            "name": "Procurement Exchange",
+            "revenue_models": [
+              "transaction fees"
+            ],
+            "children": []
+          },
+          {
+            "name": "Support Desk",
+            "revenue_models": [
+              "service fees"
+            ],
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Developer Tools",
+        "customer_types": [
+          "developers",
+          "IT professionals",
+          "educational institutions"
+        ],
+        "channels": [
+          "online",
+          "OEMs"
+        ],
+        "offerings": [
+          {
+            "name": "Developer Toolkit",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Model Hub",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Identity Cloud",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Analytics Studio",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": [
+              {
+                "name": "Analytics Studio Edge",
+                "revenue_models": [
+                  "subscription"
+                ],
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "API Gateway",
+            "revenue_models": [
+              "consumption-based"
+            ],
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Energy Services",
+        "customer_types": [
+          "government agencies",
+          "manufacturers",
+          "large enterprises"
+        ],
+        "channels": [
+          "direct sales",
+          "resellers"
+        ],
+        "offerings": [
+          {
+            "name": "Forecast Engine",
+            "revenue_models": [
+              "consumption-based"
+            ],
+            "children": []
+          },
+          {
+            "name": "Compliance Vault",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Risk Console",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Data Exchange",
+            "revenue_models": [
+              "licensing"
+            ],
+            "children": []
+          },
+          {
+            "name": "Secure Records",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          }
+        ]
+      }
+    ],
+    "places": [
+      "Germany",
+      "Japan",
+      "Australia",
+      "APAC"
+    ],
+    "partners": [
+      "Fujitsu Limited",
+      "CloudAtlas",
+      "GridWorks"
+    ]
+  }
+]

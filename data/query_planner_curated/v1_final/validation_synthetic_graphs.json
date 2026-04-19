@@ -1,0 +1,236 @@
+[
+  {
+    "graph_id": "nimbus",
+    "name": "Nimbus Health",
+    "segments": [
+      {
+        "name": "Provider Cloud",
+        "customer_types": [
+          "healthcare organizations",
+          "IT professionals",
+          "large enterprises"
+        ],
+        "channels": [
+          "direct sales",
+          "managed service providers"
+        ],
+        "offerings": [
+          {
+            "name": "Care Platform",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": [
+              {
+                "name": "Care Platform Mobile",
+                "revenue_models": [
+                  "subscription"
+                ],
+                "children": []
+              },
+              {
+                "name": "Care Platform Home",
+                "revenue_models": [
+                  "subscription"
+                ],
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Identity Cloud",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Secure Records",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Analytics Studio",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": [
+              {
+                "name": "Analytics Studio Clinical",
+                "revenue_models": [
+                  "subscription"
+                ],
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Workflow Automation",
+            "revenue_models": [
+              "service fees"
+            ],
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Payer Intelligence",
+        "customer_types": [
+          "financial services firms",
+          "healthcare organizations"
+        ],
+        "channels": [
+          "direct sales",
+          "system integrators"
+        ],
+        "offerings": [
+          {
+            "name": "Claims Exchange",
+            "revenue_models": [
+              "transaction fees"
+            ],
+            "children": []
+          },
+          {
+            "name": "Forecast Engine",
+            "revenue_models": [
+              "consumption-based"
+            ],
+            "children": []
+          },
+          {
+            "name": "Decision Hub",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Model Hub",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Compliance Vault",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Life Sciences",
+        "customer_types": [
+          "manufacturers",
+          "large enterprises",
+          "developers"
+        ],
+        "channels": [
+          "direct sales",
+          "resellers"
+        ],
+        "offerings": [
+          {
+            "name": "Developer Toolkit",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Lab Marketplace",
+            "revenue_models": [
+              "transaction fees"
+            ],
+            "children": []
+          },
+          {
+            "name": "Secure Collaboration",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Data Exchange",
+            "revenue_models": [
+              "licensing"
+            ],
+            "children": []
+          },
+          {
+            "name": "Automation Suite",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Consumer Wellness",
+        "customer_types": [
+          "consumers",
+          "healthcare organizations"
+        ],
+        "channels": [
+          "online",
+          "retail"
+        ],
+        "offerings": [
+          {
+            "name": "Marketplace Hub",
+            "revenue_models": [
+              "transaction fees"
+            ],
+            "children": []
+          },
+          {
+            "name": "Wellness Pass",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Care Platform Home",
+            "revenue_models": [
+              "subscription"
+            ],
+            "children": []
+          },
+          {
+            "name": "Device Sync",
+            "revenue_models": [
+              "hardware sales"
+            ],
+            "children": []
+          },
+          {
+            "name": "Support Desk",
+            "revenue_models": [
+              "service fees"
+            ],
+            "children": []
+          }
+        ]
+      }
+    ],
+    "places": [
+      "United Kingdom",
+      "France",
+      "Italy",
+      "Europe"
+    ],
+    "partners": [
+      "MediSupply",
+      "CloudAtlas",
+      "Dell"
+    ]
+  }
+]

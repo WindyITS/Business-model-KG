@@ -21,6 +21,24 @@ def write_dataset_splits(*args, **kwargs):
     return _write_dataset_splits(*args, **kwargs)
 
 
+def build_curated_artifact(*args, **kwargs):
+    from .curated_artifact import build_curated_artifact as _build_curated_artifact
+
+    return _build_curated_artifact(*args, **kwargs)
+
+
+def freeze_curated_baseline(*args, **kwargs):
+    from .curated_artifact import freeze_curated_baseline as _freeze_curated_baseline
+
+    return _freeze_curated_baseline(*args, **kwargs)
+
+
+def verify_curated_artifact(*args, **kwargs):
+    from .curated_artifact import verify_curated_artifact as _verify_curated_artifact
+
+    return _verify_curated_artifact(*args, **kwargs)
+
+
 def main(argv=None):
     from .dataset import main as _main
 
@@ -31,9 +49,12 @@ __all__ = [
     "SyntheticCompany",
     "SyntheticOffering",
     "SyntheticSegment",
+    "build_curated_artifact",
     "build_dataset_manifest",
     "build_dataset_splits",
     "build_synthetic_company_graphs",
+    "freeze_curated_baseline",
     "main",
+    "verify_curated_artifact",
     "write_dataset_splits",
 ]

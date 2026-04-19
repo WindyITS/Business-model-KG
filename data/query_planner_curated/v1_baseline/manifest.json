@@ -1,0 +1,673 @@
+{
+  "seed": 7,
+  "split_sizes": {
+    "train": 8000,
+    "validation": 1200,
+    "release_eval": 1800
+  },
+  "route_targets": {
+    "train": {
+      "local_safe": 5000,
+      "strong_model_candidate": 1500,
+      "refuse": 1500
+    },
+    "validation": {
+      "local_safe": 750,
+      "strong_model_candidate": 225,
+      "refuse": 225
+    },
+    "release_eval": {
+      "local_safe": 900,
+      "strong_model_candidate": 450,
+      "refuse": 450
+    }
+  },
+  "local_safe_bucket_targets": {
+    "train": {
+      "inventory": 700,
+      "same_segment": 1200,
+      "cross_segment": 700,
+      "hierarchy": 700,
+      "geography": 600,
+      "partner": 200,
+      "boolean": 400,
+      "count": 350,
+      "ranking": 150
+    },
+    "validation": {
+      "inventory": 100,
+      "same_segment": 182,
+      "cross_segment": 106,
+      "hierarchy": 106,
+      "geography": 90,
+      "partner": 30,
+      "boolean": 60,
+      "count": 53,
+      "ranking": 23
+    },
+    "release_eval": {
+      "inventory": 126,
+      "same_segment": 228,
+      "cross_segment": 133,
+      "hierarchy": 133,
+      "geography": 114,
+      "partner": 38,
+      "boolean": 76,
+      "count": 24,
+      "ranking": 28
+    }
+  },
+  "local_safe_family_targets": {
+    "train": {
+      "companies_by_partner": 200,
+      "segments_by_place_and_segment_filters": 380,
+      "boolean_exists": 400,
+      "companies_by_cross_segment_filters": 700,
+      "companies_by_descendant_revenue": 350,
+      "offerings_by_company": 180,
+      "count_aggregate": 350,
+      "segments_by_segment_filters": 600,
+      "ranking_topk": 150,
+      "offerings_by_segment": 270,
+      "segments_by_company": 210,
+      "companies_by_segment_filters": 600,
+      "descendant_offerings_by_root": 350,
+      "companies_by_place": 220,
+      "companies_list": 40
+    },
+    "validation": {
+      "segments_by_place_and_segment_filters": 57,
+      "companies_by_descendant_revenue": 53,
+      "offerings_by_segment": 41,
+      "segments_by_segment_filters": 91,
+      "boolean_exists": 60,
+      "segments_by_company": 32,
+      "companies_by_cross_segment_filters": 106,
+      "companies_by_place": 33,
+      "ranking_topk": 23,
+      "companies_by_segment_filters": 91,
+      "offerings_by_company": 27,
+      "count_aggregate": 53,
+      "descendant_offerings_by_root": 53,
+      "companies_by_partner": 30
+    },
+    "release_eval": {
+      "companies_by_descendant_revenue": 67,
+      "segments_by_segment_filters": 114,
+      "descendant_offerings_by_root": 66,
+      "boolean_exists": 76,
+      "segments_by_place_and_segment_filters": 72,
+      "offerings_by_segment": 51,
+      "ranking_topk": 28,
+      "companies_by_segment_filters": 114,
+      "companies_by_partner": 38,
+      "offerings_by_company": 35,
+      "companies_by_place": 42,
+      "segments_by_company": 40,
+      "count_aggregate": 24,
+      "companies_by_cross_segment_filters": 133
+    }
+  },
+  "strong_model_candidate_targets": {
+    "train": {
+      "common_offerings_between_segments": 236,
+      "unique_offerings_to_segment": 236,
+      "compare_segments_by_customer_types": 158,
+      "compare_segments_by_channels": 158,
+      "compare_segments_by_offering_count": 158,
+      "why_segment_matches": 158,
+      "compare_companies_by_customer_types": 158,
+      "compare_companies_by_channels": 158,
+      "weighted_ranking_request": 80
+    },
+    "validation": {
+      "common_offerings_between_segments": 45,
+      "unique_offerings_to_segment": 45,
+      "compare_segments_by_customer_types": 30,
+      "compare_segments_by_channels": 30,
+      "compare_segments_by_offering_count": 30,
+      "why_segment_matches": 30,
+      "weighted_ranking_request": 15
+    },
+    "release_eval": {
+      "common_offerings_between_segments": 90,
+      "unique_offerings_to_segment": 90,
+      "compare_segments_by_customer_types": 60,
+      "compare_segments_by_channels": 60,
+      "compare_segments_by_offering_count": 60,
+      "why_segment_matches": 60,
+      "weighted_ranking_request": 30
+    }
+  },
+  "strong_model_candidate_feasible_families": {
+    "train": [
+      "common_offerings_between_segments",
+      "compare_companies_by_channels",
+      "compare_companies_by_customer_types",
+      "compare_segments_by_channels",
+      "compare_segments_by_customer_types",
+      "compare_segments_by_offering_count",
+      "unique_offerings_to_segment",
+      "weighted_ranking_request",
+      "why_segment_matches"
+    ],
+    "validation": [
+      "common_offerings_between_segments",
+      "compare_segments_by_channels",
+      "compare_segments_by_customer_types",
+      "compare_segments_by_offering_count",
+      "unique_offerings_to_segment",
+      "weighted_ranking_request",
+      "why_segment_matches"
+    ],
+    "release_eval": [
+      "common_offerings_between_segments",
+      "compare_segments_by_channels",
+      "compare_segments_by_customer_types",
+      "compare_segments_by_offering_count",
+      "unique_offerings_to_segment",
+      "weighted_ranking_request",
+      "why_segment_matches"
+    ]
+  },
+  "strong_model_candidate_missing_families": {
+    "train": [],
+    "validation": [],
+    "release_eval": []
+  },
+  "refusal_reason_targets": {
+    "train": {
+      "unsupported_schema": 215,
+      "unsupported_metric": 215,
+      "unsupported_time": 214,
+      "ambiguous_closed_label": 214,
+      "ambiguous_request": 214,
+      "write_request": 214,
+      "beyond_local_coverage": 214
+    },
+    "validation": {
+      "unsupported_schema": 33,
+      "unsupported_metric": 32,
+      "unsupported_time": 32,
+      "ambiguous_closed_label": 32,
+      "ambiguous_request": 32,
+      "write_request": 32,
+      "beyond_local_coverage": 32
+    },
+    "release_eval": {
+      "unsupported_schema": 65,
+      "unsupported_metric": 65,
+      "unsupported_time": 64,
+      "ambiguous_closed_label": 64,
+      "ambiguous_request": 64,
+      "write_request": 64,
+      "beyond_local_coverage": 64
+    }
+  },
+  "graph_assignments": {
+    "train": [
+      "aurora",
+      "redwood",
+      "lattice"
+    ],
+    "validation": [
+      "nimbus"
+    ],
+    "release_eval": [
+      "vector"
+    ]
+  },
+  "split_overlap_stats": {
+    "train__validation": {
+      "case_id_overlap_count": 0,
+      "target_overlap_count": 8,
+      "local_safe_target_overlap_count": 0,
+      "question_overlap_count": 0,
+      "question_target_overlap_count": 0,
+      "sample_case_id_overlaps": [],
+      "sample_target_overlaps": [
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "ambiguous_closed_label"
+          },
+          "route_label": "refuse"
+        },
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "ambiguous_request"
+          },
+          "route_label": "refuse"
+        },
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "beyond_local_coverage"
+          },
+          "route_label": "refuse"
+        },
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "beyond_local_coverage"
+          },
+          "route_label": "strong_model_candidate"
+        },
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "unsupported_metric"
+          },
+          "route_label": "refuse"
+        },
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "unsupported_schema"
+          },
+          "route_label": "refuse"
+        },
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "unsupported_time"
+          },
+          "route_label": "refuse"
+        },
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "write_request"
+          },
+          "route_label": "refuse"
+        }
+      ],
+      "sample_local_safe_target_overlaps": [],
+      "sample_question_overlaps": [],
+      "sample_question_target_overlaps": []
+    },
+    "train__release_eval": {
+      "case_id_overlap_count": 0,
+      "target_overlap_count": 8,
+      "local_safe_target_overlap_count": 0,
+      "question_overlap_count": 0,
+      "question_target_overlap_count": 0,
+      "sample_case_id_overlaps": [],
+      "sample_target_overlaps": [
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "ambiguous_closed_label"
+          },
+          "route_label": "refuse"
+        },
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "ambiguous_request"
+          },
+          "route_label": "refuse"
+        },
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "beyond_local_coverage"
+          },
+          "route_label": "refuse"
+        },
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "beyond_local_coverage"
+          },
+          "route_label": "strong_model_candidate"
+        },
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "unsupported_metric"
+          },
+          "route_label": "refuse"
+        },
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "unsupported_schema"
+          },
+          "route_label": "refuse"
+        },
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "unsupported_time"
+          },
+          "route_label": "refuse"
+        },
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "write_request"
+          },
+          "route_label": "refuse"
+        }
+      ],
+      "sample_local_safe_target_overlaps": [],
+      "sample_question_overlaps": [],
+      "sample_question_target_overlaps": []
+    },
+    "validation__release_eval": {
+      "case_id_overlap_count": 0,
+      "target_overlap_count": 8,
+      "local_safe_target_overlap_count": 0,
+      "question_overlap_count": 0,
+      "question_target_overlap_count": 0,
+      "sample_case_id_overlaps": [],
+      "sample_target_overlaps": [
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "ambiguous_closed_label"
+          },
+          "route_label": "refuse"
+        },
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "ambiguous_request"
+          },
+          "route_label": "refuse"
+        },
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "beyond_local_coverage"
+          },
+          "route_label": "refuse"
+        },
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "beyond_local_coverage"
+          },
+          "route_label": "strong_model_candidate"
+        },
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "unsupported_metric"
+          },
+          "route_label": "refuse"
+        },
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "unsupported_schema"
+          },
+          "route_label": "refuse"
+        },
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "unsupported_time"
+          },
+          "route_label": "refuse"
+        },
+        {
+          "plan": {
+            "answerable": false,
+            "reason": "write_request"
+          },
+          "route_label": "refuse"
+        }
+      ],
+      "sample_local_safe_target_overlaps": [],
+      "sample_question_overlaps": [],
+      "sample_question_target_overlaps": []
+    }
+  },
+  "split_stats": {
+    "train": {
+      "count": 8000,
+      "route_counts": {
+        "local_safe": 5000,
+        "refuse": 1500,
+        "strong_model_candidate": 1500
+      },
+      "supervision_target_route_counts": {
+        "local_safe": 5000,
+        "refuse": 1500,
+        "strong_model_candidate": 1500
+      },
+      "family_counts": {
+        "boolean_exists": 400,
+        "common_offerings_between_segments": 236,
+        "companies_by_cross_segment_filters": 700,
+        "companies_by_descendant_revenue": 350,
+        "companies_by_partner": 200,
+        "companies_by_place": 220,
+        "companies_by_segment_filters": 600,
+        "companies_list": 40,
+        "compare_companies_by_channels": 158,
+        "compare_companies_by_customer_types": 158,
+        "compare_segments_by_channels": 158,
+        "compare_segments_by_customer_types": 158,
+        "compare_segments_by_offering_count": 158,
+        "count_aggregate": 350,
+        "descendant_offerings_by_root": 350,
+        "offerings_by_company": 180,
+        "offerings_by_segment": 270,
+        "ranking_topk": 150,
+        "refuse": 1500,
+        "segments_by_company": 210,
+        "segments_by_place_and_segment_filters": 380,
+        "segments_by_segment_filters": 600,
+        "unique_offerings_to_segment": 236,
+        "weighted_ranking_request": 80,
+        "why_segment_matches": 158
+      },
+      "local_safe_bucket_counts": {
+        "inventory": 700,
+        "same_segment": 1200,
+        "cross_segment": 700,
+        "hierarchy": 700,
+        "geography": 600,
+        "partner": 200,
+        "boolean": 400,
+        "count": 350,
+        "ranking": 150
+      },
+      "refusal_reason_counts": {
+        "ambiguous_closed_label": 214,
+        "ambiguous_request": 214,
+        "beyond_local_coverage": 214,
+        "unsupported_metric": 215,
+        "unsupported_schema": 215,
+        "unsupported_time": 214,
+        "write_request": 214
+      },
+      "strong_model_candidate_reason_counts": {
+        "beyond_local_coverage": 1500
+      },
+      "source_graph_distribution": {
+        "aurora": 3533,
+        "lattice": 3478,
+        "redwood": 3121
+      },
+      "boolean_answer_counts": {
+        "false": 83,
+        "true": 317
+      },
+      "ranking_scope_counts": {
+        "global": 28,
+        "company": 13,
+        "place": 53,
+        "company+place": 56
+      },
+      "unique_question_count": 8000,
+      "unique_target_count": 916,
+      "unique_question_target_count": 8000,
+      "duplicate_question_count": 0,
+      "duplicate_target_count": 7084,
+      "duplicate_question_target_count": 0
+    },
+    "validation": {
+      "count": 1200,
+      "route_counts": {
+        "local_safe": 750,
+        "refuse": 225,
+        "strong_model_candidate": 225
+      },
+      "supervision_target_route_counts": {
+        "local_safe": 750,
+        "refuse": 225,
+        "strong_model_candidate": 225
+      },
+      "family_counts": {
+        "boolean_exists": 60,
+        "common_offerings_between_segments": 45,
+        "companies_by_cross_segment_filters": 106,
+        "companies_by_descendant_revenue": 53,
+        "companies_by_partner": 30,
+        "companies_by_place": 33,
+        "companies_by_segment_filters": 91,
+        "compare_segments_by_channels": 30,
+        "compare_segments_by_customer_types": 30,
+        "compare_segments_by_offering_count": 30,
+        "count_aggregate": 53,
+        "descendant_offerings_by_root": 53,
+        "offerings_by_company": 27,
+        "offerings_by_segment": 41,
+        "ranking_topk": 23,
+        "refuse": 225,
+        "segments_by_company": 32,
+        "segments_by_place_and_segment_filters": 57,
+        "segments_by_segment_filters": 91,
+        "unique_offerings_to_segment": 45,
+        "weighted_ranking_request": 15,
+        "why_segment_matches": 30
+      },
+      "local_safe_bucket_counts": {
+        "inventory": 100,
+        "same_segment": 182,
+        "cross_segment": 106,
+        "hierarchy": 106,
+        "geography": 90,
+        "partner": 30,
+        "boolean": 60,
+        "count": 53,
+        "ranking": 23
+      },
+      "refusal_reason_counts": {
+        "ambiguous_closed_label": 32,
+        "ambiguous_request": 32,
+        "beyond_local_coverage": 32,
+        "unsupported_metric": 32,
+        "unsupported_schema": 33,
+        "unsupported_time": 32,
+        "write_request": 32
+      },
+      "strong_model_candidate_reason_counts": {
+        "beyond_local_coverage": 225
+      },
+      "source_graph_distribution": {
+        "nimbus": 1200
+      },
+      "boolean_answer_counts": {
+        "false": 15,
+        "true": 45
+      },
+      "ranking_scope_counts": {
+        "global": 0,
+        "company": 3,
+        "place": 9,
+        "company+place": 11
+      },
+      "unique_question_count": 1200,
+      "unique_target_count": 187,
+      "unique_question_target_count": 1200,
+      "duplicate_question_count": 0,
+      "duplicate_target_count": 1013,
+      "duplicate_question_target_count": 0
+    },
+    "release_eval": {
+      "count": 1800,
+      "route_counts": {
+        "local_safe": 900,
+        "refuse": 450,
+        "strong_model_candidate": 450
+      },
+      "supervision_target_route_counts": {
+        "local_safe": 900,
+        "refuse": 450,
+        "strong_model_candidate": 450
+      },
+      "family_counts": {
+        "boolean_exists": 76,
+        "common_offerings_between_segments": 90,
+        "companies_by_cross_segment_filters": 133,
+        "companies_by_descendant_revenue": 67,
+        "companies_by_partner": 38,
+        "companies_by_place": 42,
+        "companies_by_segment_filters": 114,
+        "compare_segments_by_channels": 60,
+        "compare_segments_by_customer_types": 60,
+        "compare_segments_by_offering_count": 60,
+        "count_aggregate": 24,
+        "descendant_offerings_by_root": 66,
+        "offerings_by_company": 35,
+        "offerings_by_segment": 51,
+        "ranking_topk": 28,
+        "refuse": 450,
+        "segments_by_company": 40,
+        "segments_by_place_and_segment_filters": 72,
+        "segments_by_segment_filters": 114,
+        "unique_offerings_to_segment": 90,
+        "weighted_ranking_request": 30,
+        "why_segment_matches": 60
+      },
+      "local_safe_bucket_counts": {
+        "inventory": 126,
+        "same_segment": 228,
+        "cross_segment": 133,
+        "hierarchy": 133,
+        "geography": 114,
+        "partner": 38,
+        "boolean": 76,
+        "count": 24,
+        "ranking": 28
+      },
+      "refusal_reason_counts": {
+        "ambiguous_closed_label": 64,
+        "ambiguous_request": 64,
+        "beyond_local_coverage": 64,
+        "unsupported_metric": 65,
+        "unsupported_schema": 65,
+        "unsupported_time": 64,
+        "write_request": 64
+      },
+      "strong_model_candidate_reason_counts": {
+        "beyond_local_coverage": 450
+      },
+      "source_graph_distribution": {
+        "vector": 1800
+      },
+      "boolean_answer_counts": {
+        "false": 14,
+        "true": 62
+      },
+      "ranking_scope_counts": {
+        "global": 0,
+        "company": 2,
+        "place": 16,
+        "company+place": 10
+      },
+      "unique_question_count": 1800,
+      "unique_target_count": 195,
+      "unique_question_target_count": 1800,
+      "duplicate_question_count": 0,
+      "duplicate_target_count": 1605,
+      "duplicate_question_target_count": 0
+    }
+  }
+}
