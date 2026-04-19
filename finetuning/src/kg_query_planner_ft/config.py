@@ -31,7 +31,7 @@ class PlannerConfig(BaseModel):
     grad_accumulation_steps: int = 4
     epochs: int = 3
     learning_rate: float = 1e-4
-    max_seq_length: int = 768
+    max_seq_length: int = 1088
     max_tokens: int = 256
     seed: int = 7
     mask_prompt: bool = True

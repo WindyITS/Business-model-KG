@@ -6,11 +6,12 @@ import re
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
 from .config import load_config
 from .json_utils import compact_json, read_jsonl, write_json
 from .paths import planner_adapter_dir, prepared_planner_balanced_dir, prepared_planner_raw_dir
-from .progress import StepProgress, progress_write
+from .progress import StepProgress, progress_write, track
 
 
 _MLX_PROGRESS_PATTERNS = (
@@ -37,6 +38,52 @@ def _yaml_dump(config: dict[str, object]) -> str:
         else:
             lines.append(f"{key}: {value}")
     return "\n".join(lines) + "\n"
+
+
+def _planner_length_preflight(
+    rows: list[dict[str, Any]],
+    *,
+    model_id: str,
+    max_seq_length: int,
+) -> dict[str, int]:
+    try:
+        from transformers import AutoTokenizer
+    except ImportError as exc:  # pragma: no cover - exercised only in the training env
+        raise RuntimeError(
+            "Planner length preflight requires transformers in the fine-tuning environment."
+        ) from exc
+
+    tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
+    stats = {
+        "count": 0,
+        "full_max": 0,
+        "prompt_max": 0,
+        "completion_max": 0,
+        "zero_target_rows": 0,
+    }
+    for row in track(
+        rows,
+        total=len(rows),
+        desc="planner length preflight",
+        unit="row",
+    ):
+        messages = row["messages"]
+        full_tokens = tokenizer.apply_chat_template(messages)
+        prompt_tokens = tokenizer.apply_chat_template(
+            messages[:-1],
+            add_generation_prompt=True,
+        )
+        completion_tokens = tokenizer.encode(
+            messages[-1]["content"],
+            add_special_tokens=False,
+        )
+        stats["count"] += 1
+        stats["full_max"] = max(stats["full_max"], len(full_tokens))
+        stats["prompt_max"] = max(stats["prompt_max"], len(prompt_tokens))
+        stats["completion_max"] = max(stats["completion_max"], len(completion_tokens))
+        if min(len(full_tokens), max_seq_length) <= len(prompt_tokens):
+            stats["zero_target_rows"] += 1
+    return stats
 
 
 def _maybe_extract_iteration(line: str) -> tuple[int | None, int | None]:
@@ -99,6 +146,26 @@ def train_planner(config_path: str | None = None) -> dict[str, object]:
         adapter_dir = planner_adapter_dir(config)
         adapter_dir.mkdir(parents=True, exist_ok=True)
         progress.advance("loaded planner training split")
+
+        preflight = _planner_length_preflight(
+            train_rows,
+            model_id=config.planner.base_model,
+            max_seq_length=config.planner.max_seq_length,
+        )
+        progress_write(
+            compact_json(
+                {
+                    "planner_length_preflight": preflight,
+                    "max_seq_length": config.planner.max_seq_length,
+                }
+            )
+        )
+        if preflight["zero_target_rows"] > 0:
+            raise ValueError(
+                "Planner fine-tuning would truncate away all assistant target tokens for "
+                f"{preflight['zero_target_rows']} training rows at max_seq_length="
+                f"{config.planner.max_seq_length}. Increase max_seq_length or shorten the prompt."
+            )
 
         steps_per_epoch = math.ceil(len(train_rows) / config.planner.batch_size)
         total_iters = steps_per_epoch * config.planner.epochs
