@@ -104,11 +104,7 @@ The runtime includes a read-only natural-language query path for the live Neo4j 
 
 The planner prompt lives in [`src/runtime/query_prompt.py`](./src/runtime/query_prompt.py), the deterministic compiler lives in [`src/runtime/query_planner.py`](./src/runtime/query_planner.py), and the read-only Cypher guards live in [`src/runtime/cypher_validation.py`](./src/runtime/cypher_validation.py).
 
-Training-data generation for the query planner is a separate training-side surface:
-
-- `kg-query-dataset` generates the synthetic train/validation/release-eval JSONL splits, plus a manifest and the synthetic graph definitions used to build them
-
-That CLI targets the training module path `training.query_planner.dataset`, while the live planner/compiler remain under `runtime`.
+The final curated fine-tuning dataset for the query planner is preserved under [`data/query_planner_curated/v1_final`](./data/query_planner_curated/v1_final/). The repo intentionally does not keep a dataset-construction CLI surface.
 
 For Neo4j maintenance, the repo also ships:
 
@@ -132,10 +128,6 @@ src/
     cypher_validation.py  read-only query guards and Neo4j URI normalization
     model_provider.py     provider/model resolution
     entity_resolver.py    light entity normalization
-  training/
-    query_planner/
-      dataset.py          synthetic planner dataset generation
-      ...                 training-side dataset helpers and manifests
   llm/
     extractor.py          generic LLM calling and extraction facade
   llm_extraction/
@@ -175,7 +167,6 @@ scripts/
   kg-pipeline             source-checkout pipeline wrapper
   kg-query                source-checkout query wrapper
   kg-query-cypher         source-checkout query-to-Cypher wrapper
-  kg-query-dataset        source-checkout training dataset wrapper
   kg-neo4j-load           source-checkout saved-output load wrapper
   kg-neo4j-status         source-checkout Neo4j status wrapper
   kg-neo4j-unload         source-checkout Neo4j unload wrapper
@@ -226,7 +217,6 @@ That editable install creates the convenience commands in `venv/bin/`:
 - `kg-evaluate-graph`
 - `kg-query`
 - `kg-query-cypher`
-- `kg-query-dataset`
 - `kg-neo4j-load`
 - `kg-neo4j-status`
 - `kg-neo4j-unload`
@@ -247,16 +237,13 @@ For day-to-day work from a source checkout, the most reliable commands are the w
 - `./scripts/kg-pipeline`
 - `./scripts/kg-query`
 - `./scripts/kg-query-cypher`
-- `./scripts/kg-query-dataset`
 - `./scripts/kg-neo4j-load`
 - `./scripts/kg-neo4j-status`
 - `./scripts/kg-neo4j-unload`
 - `./scripts/kg-health-check`
 
 These wrappers run the repo source directly with the repo virtual environment, so they still work even if the editable-install entry points have not been refreshed yet.
-
-Use `kg-query-dataset` for the training-side synthetic dataset workflow. The live planner/compiler path remains under `src/runtime/`; dataset generation is part of the training stack.
-The generated JSONL rows keep `target` as the raw runtime plan for backward compatibility, but future training/export work should consume `supervision_target`, which makes `local_safe`, `strong_model_candidate`, and `refuse` explicit in the serialized supervision object.
+The retained query-planner training artifact lives under `data/query_planner_curated/v1_final/`. Training/export work should consume `supervision_target`, which makes `local_safe`, `strong_model_candidate`, and `refuse` explicit in the serialized supervision object.
 
 For a plain-language overview of how the project fits together, see [docs/project_walkthrough.md](./docs/project_walkthrough.md).
 
