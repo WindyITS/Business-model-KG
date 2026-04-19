@@ -1,5 +1,0 @@
-# Compatibility mirror of the runtime dependencies in pyproject.toml.
-# Prefer pyproject.toml for installs and keep this file in sync if you change dependencies.
-openai==2.30.0
-neo4j==6.1.0
-pydantic==2.12.5

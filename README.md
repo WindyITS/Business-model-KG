@@ -256,6 +256,7 @@ For day-to-day work from a source checkout, the most reliable commands are the w
 These wrappers run the repo source directly with the repo virtual environment, so they still work even if the editable-install entry points have not been refreshed yet.
 
 Use `kg-query-dataset` for the training-side synthetic dataset workflow. The live planner/compiler path remains under `src/runtime/`; dataset generation is part of the training stack.
+The generated JSONL rows keep `target` as the raw runtime plan for backward compatibility, but future training/export work should consume `supervision_target`, which makes `local_safe`, `strong_model_candidate`, and `refuse` explicit in the serialized supervision object.
 
 For a plain-language overview of how the project fits together, see [docs/project_walkthrough.md](./docs/project_walkthrough.md).
 
