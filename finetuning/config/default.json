@@ -16,7 +16,7 @@
     "refuse_precision_min": 0.95
   },
   "planner": {
-    "base_model": "Qwen/Qwen3-4B-Instruct",
+    "base_model": "Qwen/Qwen3-4B-Instruct-2507",
     "data_variant": "balanced",
     "rank": 16,
     "alpha": 32.0,
