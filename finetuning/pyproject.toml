@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "kg-query-planner-ft"
 version = "0.1.0"
-description = "Isolated fine-tuning pipeline for router + Qwen planner."
+description = "Isolated fine-tuning pipeline for router + 4-bit Qwen QLoRA planner."
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [

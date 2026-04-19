@@ -5,13 +5,13 @@ This directory is intentionally separate from the main KG/runtime codebase.
 It contains an isolated fine-tuning pipeline for:
 
 - a `DeBERTa-v3-small` router classifier
-- a `Qwen3-4B-Instruct` MLX LoRA planner
+- a `Qwen3-4B-Instruct-2507` 4-bit MLX QLoRA planner
 
 The main repo does not import anything from this island.
 
-## Fixed External Locations
+## Locations
 
-- Environment root: `~/projects/.ML-environments/kg-query-planner-ft`
+- Environment root: `finetuning/.venv`
 - Artifact root: `~/projects/.ML-artifacts/kg-query-planner`
 
 The repo keeps only code, docs, and static config here. Prepared datasets, checkpoints, logs, and adapters are written outside the repo.
@@ -22,7 +22,7 @@ The repo keeps only code, docs, and static config here. Prepared datasets, check
 bash finetuning/scripts/bootstrap_env.sh
 ```
 
-That creates the dedicated environment and installs this island in editable mode.
+That creates the dedicated project-local environment and installs this island in editable mode.
 
 ## Commands
 
@@ -34,6 +34,7 @@ train-router
 eval-router
 train-planner
 eval-planner
+eval-planner --base-only
 run-local-stack "Which companies partner with Dell?"
 ```
 
@@ -68,6 +69,10 @@ Artifacts are written under:
 ## Notes
 
 - The planner is trained only on `local_safe` rows.
+- The planner default base model is `mlx-community/Qwen3-4B-Instruct-2507-4bit`, so `train-planner` runs QLoRA rather than full-precision LoRA.
+- Planner training saves numbered adapter checkpoints every `500` iterations by default, for example `0000500_adapters.safetensors`.
+- To resume planner training, set `planner.resume_adapter_file` in `finetuning/config/default.json` to one of those checkpoint files.
+- `eval-planner --base-only` evaluates the standard 4-bit base model without loading adapter weights and writes artifacts under `planner/eval/base_model/`.
 - The router maps full-dataset route labels into `local`, `api_fallback`, and `refuse`.
 - The local harness is conservative: any planner parse/schema/compile failure downgrades to `api_fallback`.
 - The CLIs emit progress bars for dataset prep, router scoring, planner evaluation, and the fine-tuning stages themselves.

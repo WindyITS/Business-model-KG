@@ -31,15 +31,16 @@ class PlannerConfig(BaseModel):
     grad_accumulation_steps: int = 4
     epochs: int = 3
     learning_rate: float = 1e-4
-    max_seq_length: int = 1088
+    max_seq_length: int = 4096
     max_tokens: int = 256
     seed: int = 7
     mask_prompt: bool = True
     steps_per_report: int = 10
+    checkpoint_every: int = 500
+    resume_adapter_file: str | None = None
 
 
 class FineTuningConfig(BaseModel):
-    env_root: str
     artifact_root: str
     dataset_path: str
     router: RouterConfig = Field(default_factory=RouterConfig)

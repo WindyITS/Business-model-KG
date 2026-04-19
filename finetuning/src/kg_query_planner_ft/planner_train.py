@@ -170,7 +170,7 @@ def train_planner(config_path: str | None = None) -> dict[str, object]:
         steps_per_epoch = math.ceil(len(train_rows) / config.planner.batch_size)
         total_iters = steps_per_epoch * config.planner.epochs
         steps_per_eval = max(steps_per_epoch, 1)
-        save_every = max(steps_per_epoch, 1)
+        save_every = max(config.planner.checkpoint_every, 1)
         progress.advance("computed planner schedule")
 
         mlx_config = {
@@ -188,6 +188,7 @@ def train_planner(config_path: str | None = None) -> dict[str, object]:
             "steps_per_eval": steps_per_eval,
             "adapter_path": str(adapter_dir),
             "save_every": save_every,
+            "resume_adapter_file": config.planner.resume_adapter_file,
             "max_seq_length": config.planner.max_seq_length,
             "grad_accumulation_steps": config.planner.grad_accumulation_steps,
             "mask_prompt": config.planner.mask_prompt,
@@ -211,6 +212,8 @@ def train_planner(config_path: str | None = None) -> dict[str, object]:
             "train_examples": len(train_rows),
             "steps_per_epoch": steps_per_epoch,
             "total_iters": total_iters,
+            "checkpoint_every": save_every,
+            "resume_adapter_file": config.planner.resume_adapter_file,
             "effective_batch_size": config.planner.batch_size * config.planner.grad_accumulation_steps,
             "config_path": str(yaml_path),
         }
@@ -220,7 +223,9 @@ def train_planner(config_path: str | None = None) -> dict[str, object]:
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Train the local planner with MLX LoRA.")
+    parser = argparse.ArgumentParser(
+        description="Train the local planner with MLX QLoRA."
+    )
     parser.add_argument("--config", type=str, default=None, help="Path to the fine-tuning JSON config.")
     return parser
 

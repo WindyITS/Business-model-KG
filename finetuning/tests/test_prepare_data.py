@@ -158,11 +158,10 @@ class PrepareDataTests(unittest.TestCase):
             config_path.write_text(
                 json.dumps(
                     {
-                        "env_root": str(tmp / "env"),
                         "artifact_root": str(artifact_root),
                         "dataset_path": str(source),
                         "router": {"base_model": "microsoft/deberta-v3-small"},
-                        "planner": {"base_model": "Qwen/Qwen3-4B-Instruct"},
+                        "planner": {"base_model": "mlx-community/Qwen3-4B-Instruct-2507-4bit"},
                     }
                 ),
                 encoding="utf-8",

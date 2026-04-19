@@ -44,5 +44,8 @@ def planner_adapter_dir(config: FineTuningConfig) -> Path:
     return artifact_root(config) / "planner" / "adapter"
 
 
-def planner_eval_dir(config: FineTuningConfig) -> Path:
-    return artifact_root(config) / "planner" / "eval"
+def planner_eval_dir(config: FineTuningConfig, *, base_only: bool = False) -> Path:
+    root = artifact_root(config) / "planner" / "eval"
+    if base_only:
+        return root / "base_model"
+    return root

@@ -1,5 +1,4 @@
 {
-  "env_root": "~/projects/.ML-environments/kg-query-planner-ft",
   "artifact_root": "~/projects/.ML-artifacts/kg-query-planner",
   "dataset_path": "data/query_planner_curated/v1_final",
   "router": {
@@ -16,7 +15,7 @@
     "refuse_precision_min": 0.95
   },
   "planner": {
-    "base_model": "Qwen/Qwen3-4B-Instruct-2507",
+    "base_model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
     "data_variant": "balanced",
     "rank": 16,
     "alpha": 32.0,
@@ -26,10 +25,12 @@
     "grad_accumulation_steps": 4,
     "epochs": 3,
     "learning_rate": 0.0001,
-    "max_seq_length": 1088,
+    "max_seq_length": 4096,
     "max_tokens": 256,
     "seed": 7,
     "mask_prompt": true,
-    "steps_per_report": 10
+    "steps_per_report": 10,
+    "checkpoint_every": 500,
+    "resume_adapter_file": null
   }
 }

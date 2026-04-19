@@ -92,12 +92,16 @@ def _evaluate_split(
     return metrics, predictions
 
 
-def evaluate_planner(config_path: str | None = None) -> dict[str, Any]:
+def evaluate_planner(
+    config_path: str | None = None,
+    *,
+    base_only: bool = False,
+) -> dict[str, Any]:
     with StepProgress(total=4, desc="eval-planner") as progress:
         config = load_config(config_path)
         generator = PlannerGenerator(
             model_path=config.planner.base_model,
-            adapter_path=str(planner_adapter_dir(config)),
+            adapter_path=None if base_only else str(planner_adapter_dir(config)),
         )
         prepared_dir = prepared_planner_raw_dir(config)
         validation_rows = read_jsonl(prepared_dir / "valid.jsonl")
@@ -116,13 +120,16 @@ def evaluate_planner(config_path: str | None = None) -> dict[str, Any]:
             max_tokens=config.planner.max_tokens,
         )
         progress.advance("evaluated release eval split")
-        eval_dir = planner_eval_dir(config)
+        eval_dir = planner_eval_dir(config, base_only=base_only)
         eval_dir.mkdir(parents=True, exist_ok=True)
         write_json(eval_dir / "validation_metrics.json", validation_metrics)
         write_json(eval_dir / "release_eval_metrics.json", test_metrics)
         write_jsonl(eval_dir / "validation_predictions.jsonl", validation_predictions)
         write_jsonl(eval_dir / "release_eval_predictions.jsonl", test_predictions)
         summary = {
+            "mode": "base_model" if base_only else "adapter",
+            "base_model": config.planner.base_model,
+            "adapter_path": None if base_only else str(planner_adapter_dir(config)),
             "validation": validation_metrics,
             "release_eval": test_metrics,
         }
@@ -132,14 +139,21 @@ def evaluate_planner(config_path: str | None = None) -> dict[str, Any]:
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Evaluate the local Qwen planner adapter.")
+    parser = argparse.ArgumentParser(
+        description="Evaluate the local Qwen planner adapter or the base model."
+    )
     parser.add_argument("--config", type=str, default=None, help="Path to the fine-tuning JSON config.")
+    parser.add_argument(
+        "--base-only",
+        action="store_true",
+        help="Evaluate the base planner model without loading any adapter weights.",
+    )
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
-    summary = evaluate_planner(args.config)
+    summary = evaluate_planner(args.config, base_only=args.base_only)
     print(compact_json(summary))
     return 0
 
