@@ -469,12 +469,12 @@
         "place": 53,
         "company+place": 56
       },
-      "unique_question_count": 7935,
+      "unique_question_count": 8000,
       "unique_target_count": 916,
-      "unique_question_target_count": 7935,
-      "duplicate_question_count": 65,
+      "unique_question_target_count": 8000,
+      "duplicate_question_count": 0,
       "duplicate_target_count": 7084,
-      "duplicate_question_target_count": 65
+      "duplicate_question_target_count": 0
     },
     "validation": {
       "count": 1200,
@@ -548,12 +548,12 @@
         "place": 9,
         "company+place": 11
       },
-      "unique_question_count": 1194,
+      "unique_question_count": 1200,
       "unique_target_count": 187,
-      "unique_question_target_count": 1194,
-      "duplicate_question_count": 6,
+      "unique_question_target_count": 1200,
+      "duplicate_question_count": 0,
       "duplicate_target_count": 1013,
-      "duplicate_question_target_count": 6
+      "duplicate_question_target_count": 0
     },
     "release_eval": {
       "count": 1800,
@@ -627,17 +627,17 @@
         "place": 16,
         "company+place": 10
       },
-      "unique_question_count": 1789,
+      "unique_question_count": 1800,
       "unique_target_count": 195,
-      "unique_question_target_count": 1789,
-      "duplicate_question_count": 11,
+      "unique_question_target_count": 1800,
+      "duplicate_question_count": 0,
       "duplicate_target_count": 1605,
-      "duplicate_question_target_count": 11
+      "duplicate_question_target_count": 0
     }
   },
   "curation": {
     "policy": "question-first",
-    "curation_log_count": 609,
+    "curation_log_count": 683,
     "roles": [
       {
         "role": "Coordinator",

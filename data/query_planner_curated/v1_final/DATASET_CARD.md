@@ -35,7 +35,7 @@ The compiler and runtime remain the source of truth for how that target is execu
 
 ## Curation Policy
 
-- Baseline rows were frozen first, then curated question-first with 609 logged edits.
+- Baseline rows were frozen first, then curated question-first with 683 logged edits.
 - Question rewrites were allowed by default; route/target edits require runtime-backed adjudication.
 - The generator code remains archived for provenance/debugging, but this curated package is the official training source.
 

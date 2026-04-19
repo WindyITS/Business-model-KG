@@ -182,60 +182,87 @@ def _apply_wrapper(template: str | None, body: str) -> str:
     return template.format(body=body)
 
 
-def _build_descendant_inventory_body(payload: QueryPlanPayload, row: dict[str, Any]) -> str:
+def _candidate_wrappers(split_name: str, preferred: str | None) -> list[str | None]:
+    wrappers = [preferred]
+    wrappers.extend(
+        template
+        for _, template in SURFACE_WRAPPERS_BY_SPLIT[split_name]
+        if template != preferred
+    )
+    seen: set[str | None] = set()
+    ordered: list[str | None] = []
+    for template in wrappers:
+        if template in seen:
+            continue
+        ordered.append(template)
+        seen.add(template)
+    return ordered
+
+
+def _descendant_inventory_bodies(payload: QueryPlanPayload) -> tuple[str, ...]:
     root_name = payload.offerings[0]
     company_phrase = _natural_join(payload.companies) if payload.companies else "the selected companies"
-    key = f"{row['template_id']}|{row['variant_id']}"
     if payload.limit:
-        templates = (
+        return (
             f"Which offerings are in the {root_name} family at {company_phrase}, up to {payload.limit} results?",
             f"List up to {payload.limit} offerings in the {root_name} family for {company_phrase}.",
             f"What offerings are part of the {root_name} family at {company_phrase}, limited to {payload.limit} results?",
             f"Name as many as {payload.limit} offerings in the {root_name} family at {company_phrase}.",
             f"Identify up to {payload.limit} offerings in the {root_name} family for {company_phrase}.",
         )
-    else:
-        templates = (
-            f"Which offerings are in the {root_name} family at {company_phrase}?",
-            f"List the offerings in the {root_name} family for {company_phrase}.",
-            f"What offerings are part of the {root_name} family at {company_phrase}?",
-            f"Name the offerings in the {root_name} family at {company_phrase}.",
-            f"Identify the offerings in the {root_name} family for {company_phrase}.",
-        )
+    return (
+        f"Which offerings are in the {root_name} family at {company_phrase}?",
+        f"List the offerings in the {root_name} family for {company_phrase}.",
+        f"What offerings are part of the {root_name} family at {company_phrase}?",
+        f"Name the offerings in the {root_name} family at {company_phrase}.",
+        f"Identify the offerings in the {root_name} family for {company_phrase}.",
+    )
+
+
+def _build_descendant_inventory_body(payload: QueryPlanPayload, row: dict[str, Any]) -> str:
+    key = f"{row['case_id']}|{row['template_id']}|{row['variant_id']}"
+    templates = _descendant_inventory_bodies(payload)
     return templates[_stable_index(key, modulo=len(templates))]
 
 
-def _build_descendant_boolean_body(payload: QueryPlanPayload, row: dict[str, Any]) -> str:
+def _descendant_boolean_bodies(payload: QueryPlanPayload) -> tuple[str, ...]:
     root_name = payload.offerings[0]
     company_names = _natural_join(payload.companies)
-    key = f"{row['template_id']}|{row['variant_id']}"
     if payload.companies:
-        templates = (
+        return (
             f"Does {company_names} have any offerings in the {root_name} family?",
             f"Is there an offering in the {root_name} family at {company_names}?",
             f"Could {company_names} qualify as having offerings in the {root_name} family?",
             f"Would {company_names} count as having anything in the {root_name} offering family?",
         )
-    else:
-        templates = (
-            f"Is there a company with an offering in the {root_name} family?",
-            f"Are there companies with offerings in the {root_name} family?",
-            f"Could a company qualify as having offerings in the {root_name} family?",
-            f"Would any company count as carrying something in the {root_name} family?",
-        )
+    return (
+        f"Is there a company with an offering in the {root_name} family?",
+        f"Are there companies with offerings in the {root_name} family?",
+        f"Could a company qualify as having offerings in the {root_name} family?",
+        f"Would any company count as carrying something in the {root_name} family?",
+    )
+
+
+def _build_descendant_boolean_body(payload: QueryPlanPayload, row: dict[str, Any]) -> str:
+    key = f"{row['case_id']}|{row['template_id']}|{row['variant_id']}"
+    templates = _descendant_boolean_bodies(payload)
     return templates[_stable_index(key, modulo=len(templates))]
 
 
-def _build_descendant_count_body(payload: QueryPlanPayload, row: dict[str, Any]) -> str:
+def _descendant_count_bodies(payload: QueryPlanPayload) -> tuple[str, ...]:
     root_name = payload.offerings[0]
     company_phrase = _natural_join(payload.companies) if payload.companies else "the selected companies"
-    key = f"{row['template_id']}|{row['variant_id']}"
-    templates = (
+    return (
         f"How many offerings are in the {root_name} family at {company_phrase}?",
         f"Count the offerings in the {root_name} family at {company_phrase}.",
         f"What is the number of offerings in the {root_name} family at {company_phrase}?",
         f"How many offerings can be found in the {root_name} family at {company_phrase}?",
     )
+
+
+def _build_descendant_count_body(payload: QueryPlanPayload, row: dict[str, Any]) -> str:
+    key = f"{row['case_id']}|{row['template_id']}|{row['variant_id']}"
+    templates = _descendant_count_bodies(payload)
     return templates[_stable_index(key, modulo=len(templates))]
 
 
@@ -253,15 +280,19 @@ def _extract_reference_company(question: str) -> str:
     return "the reference company"
 
 
-def _build_refuse_beyond_local_body(question: str, row: dict[str, Any]) -> str:
+def _refuse_beyond_local_bodies(question: str) -> tuple[str, ...]:
     company = _extract_reference_company(question)
-    key = f"{row['template_id']}|{row['variant_id']}"
-    templates = (
+    return (
         f"Which companies should we prioritize for developers rather than retailers, using {company} only as a reference point?",
         f"Recommend which companies to focus on for developers instead of retailers, with {company} as context rather than as a hard filter.",
         f"How would you rank companies if we want to favor developers over retailers, using {company} only as a reference?",
         f"Suggest which companies deserve attention for developers rather than retailers, taking {company} only as a comparison point.",
     )
+
+
+def _build_refuse_beyond_local_body(question: str, row: dict[str, Any]) -> str:
+    key = f"{row['case_id']}|{row['template_id']}|{row['variant_id']}"
+    templates = _refuse_beyond_local_bodies(question)
     return templates[_stable_index(key, modulo=len(templates))]
 
 
@@ -270,6 +301,40 @@ def _normalize_question_text(question: str) -> str:
     question = re.sub(r"\bactive in United Kingdom\b", "active in the United Kingdom", question)
     question = re.sub(r"\bfor United Kingdom\b", "for the United Kingdom", question)
     return question
+
+
+def _question_candidates(split_name: str, row: dict[str, Any]) -> list[str]:
+    question = row["question"]
+    plan = QueryPlanEnvelope.model_validate(row["supervision_target"]["plan"])
+    payload = plan.payload or QueryPlanPayload()
+    wrapper_template, body = _extract_wrapper_template(split_name, question)
+    wrappers = _candidate_wrappers(split_name, wrapper_template)
+
+    if row["route_label"] == "refuse" and plan.reason == "beyond_local_coverage":
+        bodies = _refuse_beyond_local_bodies(body)
+    elif row["family"] == "descendant_offerings_by_root":
+        bodies = _descendant_inventory_bodies(payload)
+    elif row["family"] == "count_aggregate" and payload.base_family == "descendant_offerings_by_root":
+        bodies = _descendant_count_bodies(payload)
+    elif row["family"] == "boolean_exists" and payload.base_family == "descendant_offerings_by_root":
+        bodies = _descendant_boolean_bodies(payload)
+    else:
+        match = TOP_RANKING_PATTERN.match(body)
+        if row["family"] == "ranking_topk" and match is not None:
+            bodies = (f"What are the top {match.group(1)} {match.group(2).rstrip('.')}?",)
+        else:
+            bodies = (body,)
+
+    candidates: list[str] = []
+    seen: set[str] = set()
+    for template in wrappers:
+        for candidate_body in bodies:
+            candidate = _normalize_question_text(_apply_wrapper(template, candidate_body))
+            if candidate in seen:
+                continue
+            seen.add(candidate)
+            candidates.append(candidate)
+    return candidates
 
 
 def _curate_question(split_name: str, row: dict[str, Any]) -> tuple[str, list[dict[str, Any]]]:
@@ -324,6 +389,13 @@ def _curation_log_entry(split_name: str, row: dict[str, Any], change: dict[str, 
     }
 
 
+def _duplicate_pair_key(row: dict[str, Any]) -> tuple[str, str]:
+    return (
+        row["question"],
+        _normalized_json_key(row["supervision_target"]),
+    )
+
+
 def _curate_rows(split_name: str, rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     curated_rows: list[dict[str, Any]] = []
     curation_log: list[dict[str, Any]] = []
@@ -346,6 +418,56 @@ def _curate_rows(split_name: str, rows: list[dict[str, Any]]) -> tuple[list[dict
                 reason = "refuse_boundary_clarification"
             curation_log.append(_curation_log_entry(split_name, updated, change, reason))
     return curated_rows, curation_log
+
+
+def _dedupe_question_target_rows(
+    split_name: str,
+    rows: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    pair_groups: dict[tuple[str, str], list[int]] = {}
+    for index, row in enumerate(rows):
+        pair_groups.setdefault(_duplicate_pair_key(row), []).append(index)
+
+    used_questions = {row["question"] for row in rows}
+    curation_log: list[dict[str, Any]] = []
+
+    for indices in list(pair_groups.values()):
+        if len(indices) <= 1:
+            continue
+        for duplicate_index in indices[1:]:
+            row = rows[duplicate_index]
+            original_question = row["question"]
+            used_questions.discard(original_question)
+            replacement = None
+            for candidate in _question_candidates(split_name, row):
+                pair_key = (
+                    candidate,
+                    _normalized_json_key(row["supervision_target"]),
+                )
+                if candidate in used_questions:
+                    continue
+                if pair_key in pair_groups:
+                    continue
+                replacement = candidate
+                break
+            if replacement is None:
+                used_questions.add(original_question)
+                continue
+            row["question"] = replacement
+            used_questions.add(replacement)
+            pair_groups[(
+                replacement,
+                _normalized_json_key(row["supervision_target"]),
+            )] = [duplicate_index]
+            curation_log.append(
+                _curation_log_entry(
+                    split_name,
+                    row,
+                    {"field": "question", "old": original_question, "new": replacement},
+                    "duplicate_pair_rewrite",
+                )
+            )
+    return rows, curation_log
 
 
 def _write_review_workflow(output_dir: Path, rows_by_split: dict[str, list[dict[str, Any]]], shard_size: int) -> None:
@@ -640,8 +762,10 @@ def build_curated_artifact(
     curation_log: list[dict[str, Any]] = []
     for split_name, rows in rows_by_split.items():
         curated_rows, split_log = _curate_rows(split_name, rows)
+        curated_rows, dedupe_log = _dedupe_question_target_rows(split_name, curated_rows)
         curated_rows_by_split[split_name] = curated_rows
         curation_log.extend(split_log)
+        curation_log.extend(dedupe_log)
 
     for split_name, rows in curated_rows_by_split.items():
         _write_jsonl(output_dir / f"{split_name}.jsonl", rows)
@@ -851,6 +975,8 @@ def verify_curated_artifact(package_dir: Path) -> dict[str, Any]:
             issues.append(f"{split_name} is missing held-out boolean polarity coverage")
         if split_stats["ranking_scope_counts"].get("company+place", 0) <= 0:
             issues.append(f"{split_name} is missing company+place ranking coverage")
+        if split_stats["duplicate_question_target_count"] != 0:
+            issues.append(f"{split_name} contains duplicate question+target rows")
 
     expected_manifest = _build_curated_manifest(
         rows_by_split,

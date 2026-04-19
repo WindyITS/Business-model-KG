@@ -161,6 +161,11 @@ class QueryPlannerCuratedArtifactTests(unittest.TestCase):
                 manifest["split_overlap_stats"]["validation__release_eval"]["local_safe_target_overlap_count"],
                 0,
             )
+            for split_name in ("train", "validation", "release_eval"):
+                self.assertEqual(
+                    manifest["split_stats"][split_name]["duplicate_question_target_count"],
+                    0,
+                )
 
 
 if __name__ == "__main__":
