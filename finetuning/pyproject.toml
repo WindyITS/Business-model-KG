@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kg-query-planner-ft"
+version = "0.1.0"
+description = "Isolated fine-tuning pipeline for router + Qwen planner."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "accelerate>=1.6,<2",
+    "datasets>=3.2,<4",
+    "mlx-lm>=0.22,<1",
+    "numpy>=1.26,<3",
+    "pydantic>=2.12,<3",
+    "torch>=2.6,<3",
+    "tqdm>=4.66,<5",
+    "transformers>=4.51,<5",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8,<9",
+]
+
+[project.scripts]
+prepare-data = "kg_query_planner_ft.prepare_data:main"
+train-router = "kg_query_planner_ft.router_train:main"
+eval-router = "kg_query_planner_ft.router_eval:main"
+train-planner = "kg_query_planner_ft.planner_train:main"
+eval-planner = "kg_query_planner_ft.planner_eval:main"
+run-local-stack = "kg_query_planner_ft.local_stack:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["kg_query_planner_ft", "kg_query_planner_ft.*"]
