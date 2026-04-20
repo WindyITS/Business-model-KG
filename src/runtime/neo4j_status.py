@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from graph.neo4j_loader import Neo4jLoader
+from llm_extraction.pipelines import implemented_pipeline_names
 from runtime.output_layout import OutputCompanyState, discover_output_company_states
 
 
@@ -83,7 +84,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output-dir", type=Path, default=Path("outputs"), help="Root outputs directory.")
     parser.add_argument(
         "--pipeline",
-        choices=["literal", "analyst"],
+        choices=implemented_pipeline_names(),
         default="analyst",
         help="Pipeline output family to compare against Neo4j. Defaults to analyst; use literal explicitly for the staged literal extractor outputs.",
     )

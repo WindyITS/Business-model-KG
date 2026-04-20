@@ -11,25 +11,33 @@ from llm_extraction.pipelines import (
     run_extraction_pipeline,
 )
 from llm_extraction.pipelines.analyst.runner import AnalystPipelineRunner
+from llm_extraction.pipelines.zero_shot.runner import ZeroShotPipelineRunner
 from llm_extraction.prompting import pipeline_prompt_dir
 
 
 class ExtractionPipelineRegistryTests(unittest.TestCase):
     def test_known_pipelines_include_analyst(self):
-        self.assertEqual(known_pipeline_names(), ("literal", "analyst"))
-        self.assertEqual(implemented_pipeline_names(), ("literal", "analyst"))
+        self.assertEqual(known_pipeline_names(), ("literal", "analyst", "zero-shot"))
+        self.assertEqual(implemented_pipeline_names(), ("literal", "analyst", "zero-shot"))
 
     def test_analyst_pipeline_dispatches_runner(self):
         runner = build_pipeline_runner("analyst", SimpleNamespace())
 
         self.assertIsInstance(runner, AnalystPipelineRunner)
 
+    def test_zero_shot_pipeline_dispatches_runner(self):
+        runner = build_pipeline_runner("zero-shot", SimpleNamespace())
+
+        self.assertIsInstance(runner, ZeroShotPipelineRunner)
+
     def test_pipeline_stage_metadata_tracks_analyst(self):
         self.assertTrue(pipeline_supports_stop_after_pass1("literal"))
         self.assertFalse(pipeline_supports_stop_after_pass1("analyst"))
+        self.assertFalse(pipeline_supports_stop_after_pass1("zero-shot"))
         self.assertEqual(pipeline_stage_count("literal"), 10)
         self.assertEqual(pipeline_stage_count("literal", stop_after_pass1=True), 4)
         self.assertEqual(pipeline_stage_count("analyst"), 7)
+        self.assertEqual(pipeline_stage_count("zero-shot"), 4)
 
         with self.assertRaises(ExtractionError) as ctx:
             pipeline_stage_count("analyst", stop_after_pass1=True)
@@ -59,3 +67,9 @@ class ExtractionPipelineRegistryTests(unittest.TestCase):
         self.assertEqual(prompt_dir.parts[-2:], ("prompts", "analyst"))
         self.assertTrue((prompt_dir / "system.txt").is_file())
         self.assertTrue((prompt_dir / "memo_foundation.txt").is_file())
+
+    def test_zero_shot_prompt_assets_live_under_top_level_prompts_dir(self):
+        prompt_dir = pipeline_prompt_dir("zero-shot")
+
+        self.assertEqual(prompt_dir.parts[-2:], ("prompts", "zero-shot"))
+        self.assertTrue((prompt_dir / "extract.txt").is_file())

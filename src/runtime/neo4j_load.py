@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from graph.neo4j_loader import Neo4jLoader
+from llm_extraction.pipelines import implemented_pipeline_names
 from llm_extraction.models import Triple
 from runtime.output_layout import (
     infer_company_name_from_source_stem,
@@ -236,7 +237,7 @@ def main(
     parser.add_argument("--output-dir", type=Path, default=Path("outputs"), help="Root outputs directory.")
     parser.add_argument(
         "--pipeline",
-        choices=["literal", "analyst"],
+        choices=implemented_pipeline_names(),
         default="analyst",
         help="Pipeline output family to load. Defaults to analyst latest outputs; use literal explicitly for the staged literal extractor outputs.",
     )

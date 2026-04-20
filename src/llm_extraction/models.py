@@ -139,5 +139,12 @@ class AnalystPipelineResult(ExtractionPipelineResult):
     critique_attempts_used: int = 0
 
 
+class ZeroShotPipelineResult(ExtractionPipelineResult):
+    zero_shot_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
+    zero_shot_audit: dict[str, Any] = Field(default_factory=dict)
+    raw_zero_shot_response: str | None = None
+    zero_shot_attempts_used: int = 0
+
+
 class ExtractionError(RuntimeError):
     pass

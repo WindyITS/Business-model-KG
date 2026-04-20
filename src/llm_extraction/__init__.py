@@ -15,6 +15,7 @@ from llm_extraction.models import (
     NodeType,
     RelationType,
     Triple,
+    ZeroShotPipelineResult,
 )
 
 __all__ = [
@@ -33,6 +34,7 @@ __all__ = [
     "NodeType",
     "RelationType",
     "Triple",
+    "ZeroShotPipelineResult",
     "aggregate_extraction_audits",
     "audit_knowledge_graph_payload",
     "normalize_lenient_payload",

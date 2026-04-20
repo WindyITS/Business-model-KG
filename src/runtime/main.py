@@ -11,7 +11,13 @@ from typing import Any
 from .entity_resolver import resolve_entities
 from graph.neo4j_loader import Neo4jLoader
 from llm.extractor import LLMExtractor
-from llm_extraction.models import AnalystPipelineResult, CanonicalPipelineResult, ExtractionError, ExtractionPipelineResult
+from llm_extraction.models import (
+    AnalystPipelineResult,
+    CanonicalPipelineResult,
+    ExtractionError,
+    ExtractionPipelineResult,
+    ZeroShotPipelineResult,
+)
 from llm_extraction.pipelines import (
     implemented_pipeline_names,
     pipeline_stage_count,
@@ -468,6 +474,30 @@ def _prepare_pipeline_artifacts(
             },
         }
 
+    if isinstance(chat_result, ZeroShotPipelineResult):
+        _write_graph_extraction_artifact(
+            run_dir / "zero_shot_extraction.json",
+            extraction=chat_result.zero_shot_extraction,
+            attempts_used=chat_result.zero_shot_attempts_used,
+            raw_response=chat_result.raw_zero_shot_response,
+        )
+        return {
+            "extractions": [chat_result.final_extraction],
+            "extraction_payload": {
+                "zero_shot_extraction": chat_result.zero_shot_extraction.model_dump(),
+                "final_extraction": chat_result.final_extraction.model_dump(),
+            },
+            "stage_audits": {
+                "zero_shot": chat_result.zero_shot_audit,
+            },
+            "final_output_audit": chat_result.zero_shot_audit,
+            "resolve_stage_index": 3,
+            "load_stage_index": 4,
+            "summary_metrics": {
+                "zero_shot_triple_count": len(chat_result.zero_shot_extraction.triples),
+            },
+        }
+
     raise TypeError(f"Unsupported pipeline result type: {type(chat_result)!r}")
 
 
@@ -490,6 +520,16 @@ def _write_partial_pipeline_artifacts(run_dir: Path, chat_result: ExtractionPipe
                 extraction=chat_result.final_extraction,
                 attempts_used=chat_result.critique_attempts_used,
                 raw_response=chat_result.raw_critique_response,
+            )
+        return
+
+    if isinstance(chat_result, ZeroShotPipelineResult):
+        if chat_result.zero_shot_extraction.triples or chat_result.raw_zero_shot_response is not None:
+            _write_graph_extraction_artifact(
+                run_dir / "zero_shot_extraction.json",
+                extraction=chat_result.zero_shot_extraction,
+                attempts_used=chat_result.zero_shot_attempts_used,
+                raw_response=chat_result.raw_zero_shot_response,
             )
 
 

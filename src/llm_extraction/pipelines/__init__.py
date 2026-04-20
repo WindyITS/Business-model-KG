@@ -3,17 +3,19 @@ from typing import TYPE_CHECKING, Any
 from llm_extraction.models import ExtractionError
 from llm_extraction.pipelines.analyst.runner import AnalystPipelineRunner
 from llm_extraction.pipelines.canonical.runner import CanonicalPipelineRunner
+from llm_extraction.pipelines.zero_shot.runner import ZeroShotPipelineRunner
 
 if TYPE_CHECKING:
     from llm.extractor import LLMExtractor
 
 
-KNOWN_PIPELINES: tuple[str, ...] = ("literal", "analyst")
-IMPLEMENTED_PIPELINES: tuple[str, ...] = ("literal", "analyst")
+KNOWN_PIPELINES: tuple[str, ...] = ("literal", "analyst", "zero-shot")
+IMPLEMENTED_PIPELINES: tuple[str, ...] = ("literal", "analyst", "zero-shot")
 PASS1_SUPPORTED_PIPELINES: frozenset[str] = frozenset({"literal"})
 PIPELINE_STAGE_COUNTS: dict[str, dict[str, int]] = {
     "literal": {"full": 10, "pass1": 4},
     "analyst": {"full": 7},
+    "zero-shot": {"full": 4},
 }
 
 
@@ -46,6 +48,8 @@ def build_pipeline_runner(pipeline: str, extractor: "LLMExtractor") -> Any:
         return CanonicalPipelineRunner(extractor)
     if pipeline == "analyst":
         return AnalystPipelineRunner(extractor)
+    if pipeline == "zero-shot":
+        return ZeroShotPipelineRunner(extractor)
     raise ExtractionError(f"Unknown extraction pipeline: {pipeline}")
 
 

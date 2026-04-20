@@ -10,11 +10,11 @@ from pathlib import Path
 from typing import Any
 
 
-LEGACY_OUTPUT_DIR_RE = re.compile(
-    r"^(?P<source_stem>.+)_(?P<pipeline>canonical|literal|analyst)_pipeline_(?P<run_token>\d{8}T\d{6}Z(?:_\d+)?)$"
-)
 COMPANY_SLUG_RE = re.compile(r"[^a-z0-9]+")
-PIPELINE_NAMES = ("literal", "analyst")
+PIPELINE_NAMES = ("literal", "analyst", "zero-shot")
+LEGACY_OUTPUT_DIR_RE = re.compile(
+    rf"^(?P<source_stem>.+)_(?P<pipeline>{'|'.join(re.escape(name) for name in ('canonical', *PIPELINE_NAMES))})_pipeline_(?P<run_token>\d{{8}}T\d{{6}}Z(?:_\d+)?)$"
+)
 MANIFEST_FILENAME = "manifest.json"
 
 

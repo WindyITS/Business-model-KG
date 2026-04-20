@@ -24,6 +24,7 @@ def _sync_runtime_main_module() -> None:
         "ExtractionPipelineResult",
         "LLMExtractor",
         "PipelineConsole",
+        "ZeroShotPipelineResult",
         "_console_print",
         "_format_duration",
         "_format_token_visual",

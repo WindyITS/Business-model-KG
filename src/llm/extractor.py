@@ -14,6 +14,7 @@ from llm_extraction.models import (
     ExtractionPipelineResult,
     KnowledgeGraphExtraction,
     Triple,
+    ZeroShotPipelineResult,
 )
 from pydantic import BaseModel, ValidationError
 
@@ -919,6 +920,7 @@ __all__ = [
     "KnowledgeGraphExtraction",
     "LLMExtractor",
     "Triple",
+    "ZeroShotPipelineResult",
     "aggregate_extraction_audits",
     "audit_knowledge_graph_payload",
     "normalize_lenient_payload",

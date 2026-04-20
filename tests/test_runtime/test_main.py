@@ -14,6 +14,7 @@ from llm_extraction.models import (
     CanonicalPipelineResult,
     KnowledgeGraphExtraction,
     Triple,
+    ZeroShotPipelineResult,
 )
 from runtime import main as main_module
 from runtime.main import (
@@ -72,6 +73,10 @@ class RuntimeMainTests(unittest.TestCase):
     def test_mode_name_is_analyst_pipeline(self):
         args = SimpleNamespace(pipeline="analyst")
         self.assertEqual(_mode_name(args), "analyst_pipeline")
+
+    def test_mode_name_is_zero_shot_pipeline(self):
+        args = SimpleNamespace(pipeline="zero-shot")
+        self.assertEqual(_mode_name(args), "zero-shot_pipeline")
 
     def test_format_duration_uses_compact_seconds_and_minutes(self):
         self.assertEqual(_format_duration(0.42), "0.4s")
@@ -723,6 +728,79 @@ class RuntimeMainTests(unittest.TestCase):
             self.assertEqual(summary["status"], "failed")
             self.assertIn("Empty response from model", summary["error"])
             mock_resolve.assert_called_once()
+
+    def test_main_zero_shot_pipeline_writes_single_pass_artifacts(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            filing_path = tmp_path / "microsoft_10k.txt"
+            filing_path.write_text("ITEM 1. BUSINESS\nMicrosoft does business.\n", encoding="utf-8")
+            run_dir = tmp_path / "outputs" / "run"
+            resolved_triple = Triple(
+                subject="Microsoft",
+                subject_type="Company",
+                relation="HAS_SEGMENT",
+                object="Intelligent Cloud",
+                object_type="BusinessSegment",
+            )
+
+            fake_result = ZeroShotPipelineResult(
+                success=True,
+                zero_shot_extraction=KnowledgeGraphExtraction(
+                    extraction_notes="zero shot",
+                    triples=[resolved_triple],
+                ),
+                final_extraction=KnowledgeGraphExtraction(
+                    extraction_notes="zero shot",
+                    triples=[resolved_triple],
+                ),
+                zero_shot_audit={"kept_triple_count": 1, "raw_triple_count": 1},
+                zero_shot_attempts_used=1,
+                raw_zero_shot_response='{"triples":[]}',
+            )
+            fake_extractor = SimpleNamespace()
+            fake_validation_report = {
+                "valid_triples": [resolved_triple.model_dump()],
+                "summary": {
+                    "invalid_triple_count": 0,
+                    "duplicate_triple_count": 0,
+                },
+            }
+
+            layout = self._output_layout(run_dir, pipeline="zero-shot")
+
+            with patch.object(main_module, "_prepare_output_layout", return_value=layout), patch.object(
+                main_module, "finalize_successful_run", return_value=run_dir
+            ), patch.object(
+                main_module, "finalize_failed_run", return_value=run_dir
+            ), patch.object(
+                main_module, "resolve_model_settings"
+            ) as mock_resolve, patch.object(main_module, "LLMExtractor", return_value=fake_extractor), patch.object(
+                main_module, "run_extraction_pipeline", return_value=fake_result
+            ) as mock_run_pipeline, patch.object(
+                main_module, "resolve_entities", return_value=[resolved_triple]
+            ), patch.object(
+                main_module, "validate_triples", return_value=fake_validation_report
+            ), patch(
+                "sys.argv",
+                ["main.py", str(filing_path), "--pipeline", "zero-shot", "--output-dir", str(tmp_path / "outputs"), "--skip-neo4j"],
+            ):
+                mock_resolve.return_value = self._local_model_settings()
+                exit_code = main_module.main()
+
+            self.assertEqual(exit_code, 0)
+            self.assertTrue((run_dir / "zero_shot_extraction.json").exists())
+            self.assertTrue((run_dir / "resolved_triples.json").exists())
+
+            summary = json.loads((run_dir / "run_summary.json").read_text(encoding="utf-8"))
+            self.assertEqual(summary["stage_count"], 4)
+            self.assertEqual(summary["status"], "success")
+            self.assertEqual(summary["zero_shot_triple_count"], 1)
+            self.assertTrue(summary["skip_neo4j"])
+
+            mock_resolve.assert_called_once()
+            mock_run_pipeline.assert_called_once()
+            self.assertEqual(mock_run_pipeline.call_args.kwargs["pipeline"], "zero-shot")
+            self.assertFalse(mock_run_pipeline.call_args.kwargs["stop_after_pass1"])
 
     def test_main_keep_current_output_requires_skip_neo4j(self):
         with tempfile.TemporaryDirectory() as tmp_dir:

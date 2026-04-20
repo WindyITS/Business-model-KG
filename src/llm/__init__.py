@@ -6,6 +6,7 @@ from llm.extractor import (
     KnowledgeGraphExtraction,
     LLMExtractor,
     Triple,
+    ZeroShotPipelineResult,
 )
 
 __all__ = [
@@ -16,4 +17,5 @@ __all__ = [
     "KnowledgeGraphExtraction",
     "LLMExtractor",
     "Triple",
+    "ZeroShotPipelineResult",
 ]

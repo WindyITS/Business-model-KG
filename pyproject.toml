@@ -71,4 +71,5 @@ llm_extraction = [
     "_bundled_prompts/analyst/README.md",
     "_bundled_prompts/analyst/*.txt",
     "_bundled_prompts/canonical/*.txt",
+    "_bundled_prompts/zero-shot/*.txt",
 ]
