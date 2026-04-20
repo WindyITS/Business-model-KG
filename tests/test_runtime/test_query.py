@@ -4,6 +4,7 @@ from contextlib import redirect_stderr, redirect_stdout
 from types import SimpleNamespace
 from unittest.mock import patch
 
+from llm_extraction.models import ExtractionError
 from runtime import query as query_module
 from runtime.query import QueryResult
 
@@ -23,9 +24,11 @@ class RuntimeQueryTests(unittest.TestCase):
         stdout = io.StringIO()
         stderr = io.StringIO()
 
-        with patch.object(query_module, "resolve_model_settings", return_value=self._model_settings()), patch.object(
-            query_module, "LLMExtractor", return_value=object()
-        ), patch.object(
+        with patch.object(query_module, "_run_local_stack", return_value=({"decision": "api_fallback"}, None)), patch.object(
+            query_module,
+            "resolve_model_settings",
+            return_value=self._model_settings(),
+        ), patch.object(query_module, "LLMExtractor", return_value=object()), patch.object(
             query_module,
             "generate_query",
             return_value=(
@@ -45,16 +48,16 @@ class RuntimeQueryTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         self.assertEqual(stdout.getvalue().strip(), "MATCH (company:Company) RETURN DISTINCT company.name AS company ORDER BY company")
-        self.assertIn("Generating query plan...", stderr.getvalue())
+        self.assertIn("Generating fallback query plan...", stderr.getvalue())
         mock_execute.assert_not_called()
 
     def test_query_executes_generated_cypher_and_prints_rows(self):
         stdout = io.StringIO()
         stderr = io.StringIO()
 
-        with patch.object(query_module, "resolve_model_settings", return_value=self._model_settings()), patch.object(
-            query_module, "LLMExtractor", return_value=object()
-        ), patch.object(
+        with patch.object(query_module, "_run_local_stack", return_value=({"decision": "api_fallback"}, None)), patch.object(
+            query_module, "resolve_model_settings", return_value=self._model_settings()
+        ), patch.object(query_module, "LLMExtractor", return_value=object()), patch.object(
             query_module,
             "generate_query",
             return_value=(
@@ -80,17 +83,44 @@ class RuntimeQueryTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         self.assertEqual(stdout.getvalue().strip(), "Acme\nGlobex")
-        self.assertIn("Generating query plan...", stderr.getvalue())
+        self.assertIn("Generating fallback query plan...", stderr.getvalue())
         self.assertIn("Running query on Neo4j...", stderr.getvalue())
         mock_execute.assert_called_once()
+
+    def test_query_uses_local_stack_compiled_query_without_remote_planner(self):
+        stdout = io.StringIO()
+        stderr = io.StringIO()
+
+        with patch.object(
+            query_module,
+            "_run_local_stack",
+            return_value=(
+                {
+                    "decision": "local",
+                    "compiled": {
+                        "cypher": "MATCH (company:Company) RETURN DISTINCT company.name AS company ORDER BY company",
+                        "params": {},
+                    },
+                },
+                None,
+            ),
+        ), patch.object(query_module, "resolve_model_settings") as mock_settings, redirect_stdout(stdout), redirect_stderr(
+            stderr
+        ):
+            exit_code = query_module.main_query_cypher(["Which companies are in the graph?"])
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(stdout.getvalue().strip(), "MATCH (company:Company) RETURN DISTINCT company.name AS company ORDER BY company")
+        self.assertIn("Router decision: local", stderr.getvalue())
+        mock_settings.assert_not_called()
 
     def test_query_returns_refusal_without_hitting_neo4j(self):
         stdout = io.StringIO()
         stderr = io.StringIO()
 
-        with patch.object(query_module, "resolve_model_settings", return_value=self._model_settings()), patch.object(
-            query_module, "LLMExtractor", return_value=object()
-        ), patch.object(
+        with patch.object(query_module, "_run_local_stack", return_value=({"decision": "api_fallback"}, None)), patch.object(
+            query_module, "resolve_model_settings", return_value=self._model_settings()
+        ), patch.object(query_module, "LLMExtractor", return_value=object()), patch.object(
             query_module,
             "generate_query",
             return_value=(
@@ -113,9 +143,9 @@ class RuntimeQueryTests(unittest.TestCase):
         stdout = io.StringIO()
         stderr = io.StringIO()
 
-        with patch.object(query_module, "resolve_model_settings", return_value=self._model_settings()), patch.object(
-            query_module, "LLMExtractor", return_value=object()
-        ), patch.object(
+        with patch.object(query_module, "_run_local_stack", return_value=({"decision": "api_fallback"}, None)), patch.object(
+            query_module, "resolve_model_settings", return_value=self._model_settings()
+        ), patch.object(query_module, "LLMExtractor", return_value=object()), patch.object(
             query_module,
             "generate_query",
             return_value=(
@@ -138,9 +168,9 @@ class RuntimeQueryTests(unittest.TestCase):
     def test_query_cypher_renders_list_params_as_browser_ready_snippet(self):
         stdout = io.StringIO()
 
-        with patch.object(query_module, "resolve_model_settings", return_value=self._model_settings()), patch.object(
-            query_module, "LLMExtractor", return_value=object()
-        ), patch.object(
+        with patch.object(query_module, "_run_local_stack", return_value=({"decision": "api_fallback"}, None)), patch.object(
+            query_module, "resolve_model_settings", return_value=self._model_settings()
+        ), patch.object(query_module, "LLMExtractor", return_value=object()), patch.object(
             query_module,
             "generate_query",
             return_value=(
@@ -165,9 +195,9 @@ class RuntimeQueryTests(unittest.TestCase):
     def test_query_reports_preflight_errors(self):
         stderr = io.StringIO()
 
-        with patch.object(query_module, "resolve_model_settings", return_value=self._model_settings()), patch.object(
-            query_module, "LLMExtractor", return_value=object()
-        ), patch.object(
+        with patch.object(query_module, "_run_local_stack", return_value=({"decision": "api_fallback"}, None)), patch.object(
+            query_module, "resolve_model_settings", return_value=self._model_settings()
+        ), patch.object(query_module, "LLMExtractor", return_value=object()), patch.object(
             query_module,
             "generate_query",
             return_value=(
@@ -189,6 +219,159 @@ class RuntimeQueryTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 1)
         self.assertIn("Neo4j preflight error: Query cannot conclude with WITH", stderr.getvalue())
+
+    def test_query_jolly_bypasses_local_stack_and_forces_local_provider(self):
+        stdout = io.StringIO()
+        stderr = io.StringIO()
+
+        with patch.object(query_module, "_run_local_stack") as mock_local_stack, patch.object(
+            query_module,
+            "resolve_model_settings",
+            return_value=self._model_settings(),
+        ) as mock_settings, patch.object(query_module, "LLMExtractor", return_value=object()), patch.object(
+            query_module,
+            "generate_query",
+            return_value=(
+                QueryResult(
+                    answerable=True,
+                    cypher="MATCH (company:Company) RETURN DISTINCT company.name AS company ORDER BY company",
+                    params={},
+                ),
+                None,
+                1,
+                {},
+            ),
+        ), redirect_stdout(stdout), redirect_stderr(stderr):
+            exit_code = query_module.main_query_cypher_jolly(["Which companies are in the graph?"])
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("LM Studio jolly mode", stderr.getvalue())
+        self.assertEqual(stdout.getvalue().strip(), "MATCH (company:Company) RETURN DISTINCT company.name AS company ORDER BY company")
+        mock_local_stack.assert_not_called()
+        self.assertEqual(mock_settings.call_args.kwargs["provider"], "local")
+
+    def test_query_stack_fallback_skips_local_stack(self):
+        stdout = io.StringIO()
+        stderr = io.StringIO()
+
+        with patch.object(query_module, "_run_local_stack") as mock_local_stack, patch.object(
+            query_module, "resolve_model_settings", return_value=self._model_settings()
+        ), patch.object(query_module, "LLMExtractor", return_value=object()), patch.object(
+            query_module,
+            "generate_query",
+            return_value=(
+                QueryResult(
+                    answerable=True,
+                    cypher="MATCH (company:Company) RETURN DISTINCT company.name AS company ORDER BY company",
+                    params={},
+                ),
+                None,
+                1,
+                {},
+            ),
+        ), redirect_stdout(stdout), redirect_stderr(stderr):
+            exit_code = query_module.main_query_cypher(["Which companies are in the graph?", "--stack", "fallback"])
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("Using fallback planner only.", stderr.getvalue())
+        mock_local_stack.assert_not_called()
+
+    def test_query_stack_jolly_uses_local_provider_on_main_command(self):
+        stdout = io.StringIO()
+        stderr = io.StringIO()
+
+        with patch.object(query_module, "_run_local_stack") as mock_local_stack, patch.object(
+            query_module, "resolve_model_settings", return_value=self._model_settings()
+        ) as mock_settings, patch.object(query_module, "LLMExtractor", return_value=object()), patch.object(
+            query_module,
+            "generate_query",
+            return_value=(
+                QueryResult(
+                    answerable=True,
+                    cypher="MATCH (company:Company) RETURN DISTINCT company.name AS company ORDER BY company",
+                    params={},
+                ),
+                None,
+                1,
+                {},
+            ),
+        ), redirect_stdout(stdout), redirect_stderr(stderr):
+            exit_code = query_module.main_query_cypher(["Which companies are in the graph?", "--stack", "jolly"])
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("LM Studio jolly mode", stderr.getvalue())
+        mock_local_stack.assert_not_called()
+        self.assertEqual(mock_settings.call_args.kwargs["provider"], "local")
+
+    def test_query_prompts_before_fallback_when_local_planner_errors(self):
+        stderr = io.StringIO()
+
+        with patch.object(
+            query_module,
+            "_run_local_stack",
+            return_value=({"decision": "api_fallback", "planner": {"error": "local qwen failure"}}, None),
+        ), patch.object(
+            query_module,
+            "_confirm_api_fallback_after_local_error",
+            return_value=False,
+        ), patch.object(
+            query_module,
+            "resolve_model_settings",
+        ) as mock_settings, redirect_stderr(stderr):
+            exit_code = query_module.main_query_cypher(["Which companies are in the graph?"])
+
+        self.assertEqual(exit_code, 1)
+        self.assertIn("API fallback declined after local model error", stderr.getvalue())
+        mock_settings.assert_not_called()
+
+    def test_query_retries_fallback_once_with_error_context(self):
+        stdout = io.StringIO()
+        stderr = io.StringIO()
+        first_error = ExtractionError("temporary API planner failure")
+
+        with patch.object(query_module, "_run_local_stack", return_value=({"decision": "api_fallback"}, None)), patch.object(
+            query_module, "resolve_model_settings", return_value=self._model_settings()
+        ), patch.object(query_module, "LLMExtractor", return_value=object()), patch.object(
+            query_module,
+            "generate_query",
+            side_effect=[
+                first_error,
+                (
+                    QueryResult(
+                        answerable=True,
+                        cypher="MATCH (company:Company) RETURN DISTINCT company.name AS company ORDER BY company",
+                        params={},
+                    ),
+                    None,
+                    1,
+                    {},
+                ),
+            ],
+        ) as mock_generate, redirect_stdout(stdout), redirect_stderr(stderr):
+            exit_code = query_module.main_query_cypher(["Which companies are in the graph?", "--stack", "fallback"])
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("Retrying fallback planner once with error context", stderr.getvalue())
+        self.assertEqual(mock_generate.call_count, 2)
+        retry_question = mock_generate.call_args_list[1].kwargs["question"]
+        self.assertIn("Planner retry context", retry_question)
+
+    def test_query_warns_after_two_fallback_errors(self):
+        stderr = io.StringIO()
+        first_error = ExtractionError("planner call 1 failed")
+        second_error = ExtractionError("planner call 2 failed")
+
+        with patch.object(query_module, "_run_local_stack", return_value=({"decision": "api_fallback"}, None)), patch.object(
+            query_module, "resolve_model_settings", return_value=self._model_settings()
+        ), patch.object(query_module, "LLMExtractor", return_value=object()), patch.object(
+            query_module,
+            "generate_query",
+            side_effect=[first_error, second_error],
+        ), redirect_stderr(stderr):
+            exit_code = query_module.main_query_cypher(["Which companies are in the graph?", "--stack", "fallback"])
+
+        self.assertEqual(exit_code, 1)
+        self.assertIn("Warning: fallback planner failed twice in a row.", stderr.getvalue())
 
 
 if __name__ == "__main__":

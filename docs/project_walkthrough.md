@@ -70,7 +70,7 @@ There are three main Neo4j helper commands:
 
 - `kg-neo4j-load`: load saved outputs into Neo4j
 - `kg-neo4j-status`: compare Neo4j against the saved outputs
-- `kg-neo4j-unload`: remove one company from Neo4j
+- `kg-neo4j-unload`: unload Neo4j graph data (full dataset by default, or one company with `--company`)
 
 There is also one operational helper command:
 
@@ -81,7 +81,7 @@ The important behavior is:
 - company replacement is company-scoped, not whole-database by default
 - single-company replacement is transactional, so a failed reload does not wipe the previous live graph for that company
 - status is read-only
-- unload only removes the selected company's footprint and keeps unrelated shared graph state where possible
+- unload supports full-dataset clear (no `--company`) and company-scoped removal (`--company`) that keeps unrelated shared graph state where possible
 
 ## Recommended Commands From A Source Checkout
 
@@ -92,6 +92,8 @@ Use:
 - `./scripts/kg-pipeline`
 - `./scripts/kg-query`
 - `./scripts/kg-query-cypher`
+- `./scripts/kg-query-jolly`
+- `./scripts/kg-query-cypher-jolly`
 - `./scripts/kg-neo4j-load`
 - `./scripts/kg-neo4j-status`
 - `./scripts/kg-neo4j-unload`
