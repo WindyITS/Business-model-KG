@@ -159,7 +159,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output-dir", type=Path, default=Path("outputs"), help="Root outputs directory to inspect.")
     parser.add_argument(
         "--pipeline",
-        choices=["canonical", "analyst"],
+        choices=["literal", "analyst"],
         default="analyst",
         help="Pipeline output family to inspect when checking saved outputs.",
     )

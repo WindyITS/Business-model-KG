@@ -532,14 +532,14 @@ def main() -> int:
     parser.add_argument(
         "--pipeline",
         choices=implemented_pipeline_names(),
-        default="canonical",
-        help="Extraction pipeline to run. Canonical keeps the staged literal extractor; analyst builds a structured analyst memo before compiling the graph.",
+        default="analyst",
+        help="Extraction pipeline to run. Analyst is the default; literal keeps the staged literal extractor and must be requested explicitly.",
     )
     parser.add_argument("--max-retries", type=int, default=3, help="Maximum LLM retries per call.")
     parser.add_argument(
         "--only-pass1",
         action="store_true",
-        help="Run only canonical Pass 1, then resolve/validate and load Neo4j unless --skip-neo4j is also set.",
+        help="Run only literal Pass 1, then resolve/validate and load Neo4j unless --skip-neo4j is also set.",
     )
     parser.add_argument(
         "--company-name",
@@ -559,6 +559,8 @@ def main() -> int:
 
     if args.keep_current_output and not args.skip_neo4j:
         parser.error("--keep-current-output requires --skip-neo4j so test outputs do not replace the live Neo4j graph.")
+    if args.only_pass1 and args.pipeline != "literal":
+        parser.error("--only-pass1 requires --pipeline literal.")
 
     source_file = Path(args.file_path)
     mode = _mode_name(args)

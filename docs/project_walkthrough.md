@@ -18,7 +18,7 @@ In short, the workflow is:
 
 There are two main pipelines:
 
-- `canonical`: a more direct staged extractor that works triple-first
+- `literal`: a more direct staged extractor that works triple-first
 - `analyst`: a memo-first pipeline that builds a structured analyst view and then compiles that into the graph
 
 The default Neo4j reload commands prefer `analyst/latest` because that is the current preferred saved output for interactive reloads.
@@ -45,7 +45,7 @@ Outputs are organized by company and pipeline:
 ```text
 outputs/
   microsoft/
-    canonical/
+    literal/
       latest/
       runs/
       failed/

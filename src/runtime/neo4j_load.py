@@ -236,9 +236,9 @@ def main(
     parser.add_argument("--output-dir", type=Path, default=Path("outputs"), help="Root outputs directory.")
     parser.add_argument(
         "--pipeline",
-        choices=["canonical", "analyst"],
+        choices=["literal", "analyst"],
         default="analyst",
-        help="Pipeline output family to load. Defaults to analyst latest outputs.",
+        help="Pipeline output family to load. Defaults to analyst latest outputs; use literal explicitly for the staged literal extractor outputs.",
     )
     parser.add_argument("--company", type=str, default=None, help="Load only one company's saved output.")
     parser.add_argument(

@@ -16,8 +16,8 @@ from llm_extraction.prompting import pipeline_prompt_dir
 
 class ExtractionPipelineRegistryTests(unittest.TestCase):
     def test_known_pipelines_include_analyst(self):
-        self.assertEqual(known_pipeline_names(), ("canonical", "analyst"))
-        self.assertEqual(implemented_pipeline_names(), ("canonical", "analyst"))
+        self.assertEqual(known_pipeline_names(), ("literal", "analyst"))
+        self.assertEqual(implemented_pipeline_names(), ("literal", "analyst"))
 
     def test_analyst_pipeline_dispatches_runner(self):
         runner = build_pipeline_runner("analyst", SimpleNamespace())
@@ -25,10 +25,10 @@ class ExtractionPipelineRegistryTests(unittest.TestCase):
         self.assertIsInstance(runner, AnalystPipelineRunner)
 
     def test_pipeline_stage_metadata_tracks_analyst(self):
-        self.assertTrue(pipeline_supports_stop_after_pass1("canonical"))
+        self.assertTrue(pipeline_supports_stop_after_pass1("literal"))
         self.assertFalse(pipeline_supports_stop_after_pass1("analyst"))
-        self.assertEqual(pipeline_stage_count("canonical"), 10)
-        self.assertEqual(pipeline_stage_count("canonical", stop_after_pass1=True), 4)
+        self.assertEqual(pipeline_stage_count("literal"), 10)
+        self.assertEqual(pipeline_stage_count("literal", stop_after_pass1=True), 4)
         self.assertEqual(pipeline_stage_count("analyst"), 7)
 
         with self.assertRaises(ExtractionError) as ctx:
@@ -47,7 +47,7 @@ class ExtractionPipelineRegistryTests(unittest.TestCase):
 
         self.assertIn("Unknown extraction pipeline", str(ctx.exception))
 
-    def test_canonical_prompt_assets_live_under_top_level_prompts_dir(self):
+    def test_literal_prompt_assets_live_under_top_level_prompts_dir(self):
         prompt_dir = pipeline_prompt_dir("canonical")
 
         self.assertEqual(prompt_dir.parts[-2:], ("prompts", "canonical"))

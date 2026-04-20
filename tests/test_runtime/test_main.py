@@ -45,7 +45,7 @@ class RuntimeMainTests(unittest.TestCase):
         root_dir: Path | None = None,
         company_name: str = "Microsoft",
         company_slug: str = "microsoft",
-        pipeline: str = "canonical",
+        pipeline: str = "literal",
         keep_current_output: bool = False,
     ) -> SimpleNamespace:
         root_dir = root_dir or run_dir.parent
@@ -65,9 +65,9 @@ class RuntimeMainTests(unittest.TestCase):
             planned_output_dir=planned_output_dir or run_dir,
         )
 
-    def test_mode_name_is_canonical_pipeline(self):
-        args = SimpleNamespace(pipeline="canonical")
-        self.assertEqual(_mode_name(args), "canonical_pipeline")
+    def test_mode_name_is_literal_pipeline(self):
+        args = SimpleNamespace(pipeline="literal")
+        self.assertEqual(_mode_name(args), "literal_pipeline")
 
     def test_mode_name_is_analyst_pipeline(self):
         args = SimpleNamespace(pipeline="analyst")
@@ -89,7 +89,7 @@ class RuntimeMainTests(unittest.TestCase):
             started_at=datetime(2026, 4, 14, 7, 19, 1, tzinfo=timezone.utc),
             source_file=Path("data/palantir_10k.txt"),
             run_dir=Path("outputs/palantir_run"),
-            pipeline="canonical",
+            pipeline="literal",
             provider="local",
             model="local-model",
             neo4j_enabled=True,
@@ -330,7 +330,8 @@ class RuntimeMainTests(unittest.TestCase):
             ), patch.object(
                 main_module, "Neo4jLoader", FakeNeo4jLoader
             ), patch(
-                "sys.argv", ["main.py", str(filing_path), "--output-dir", str(tmp_path / "outputs"), "--only-pass1"]
+                "sys.argv",
+                ["main.py", str(filing_path), "--output-dir", str(tmp_path / "outputs"), "--pipeline", "literal", "--only-pass1"],
             ):
                 mock_resolve.return_value = self._local_model_settings()
                 exit_code = main_module.main()
@@ -355,6 +356,18 @@ class RuntimeMainTests(unittest.TestCase):
             mock_run_pipeline.assert_called_once()
             self.assertIs(mock_run_pipeline.call_args.kwargs["extractor"], fake_extractor)
             self.assertTrue(mock_run_pipeline.call_args.kwargs["stop_after_pass1"])
+
+    def test_main_only_pass1_requires_literal_pipeline(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            filing_path = tmp_path / "microsoft_10k.txt"
+            filing_path.write_text("ITEM 1. BUSINESS\nMicrosoft does business.\n", encoding="utf-8")
+
+            with patch("sys.argv", ["main.py", str(filing_path), "--output-dir", str(tmp_path / "outputs"), "--only-pass1"]):
+                with self.assertRaises(SystemExit) as ctx:
+                    main_module.main()
+
+        self.assertEqual(ctx.exception.code, 2)
 
     def test_main_passes_expected_validation_options(self):
         with tempfile.TemporaryDirectory() as tmp_dir:

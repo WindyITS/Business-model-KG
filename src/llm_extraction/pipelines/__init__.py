@@ -8,11 +8,11 @@ if TYPE_CHECKING:
     from llm.extractor import LLMExtractor
 
 
-KNOWN_PIPELINES: tuple[str, ...] = ("canonical", "analyst")
-IMPLEMENTED_PIPELINES: tuple[str, ...] = ("canonical", "analyst")
-PASS1_SUPPORTED_PIPELINES: frozenset[str] = frozenset({"canonical"})
+KNOWN_PIPELINES: tuple[str, ...] = ("literal", "analyst")
+IMPLEMENTED_PIPELINES: tuple[str, ...] = ("literal", "analyst")
+PASS1_SUPPORTED_PIPELINES: frozenset[str] = frozenset({"literal"})
 PIPELINE_STAGE_COUNTS: dict[str, dict[str, int]] = {
-    "canonical": {"full": 10, "pass1": 4},
+    "literal": {"full": 10, "pass1": 4},
     "analyst": {"full": 7},
 }
 
@@ -42,7 +42,7 @@ def pipeline_stage_count(pipeline: str, *, stop_after_pass1: bool = False) -> in
 
 
 def build_pipeline_runner(pipeline: str, extractor: "LLMExtractor") -> Any:
-    if pipeline == "canonical":
+    if pipeline == "literal":
         return CanonicalPipelineRunner(extractor)
     if pipeline == "analyst":
         return AnalystPipelineRunner(extractor)

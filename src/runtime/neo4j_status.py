@@ -83,9 +83,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output-dir", type=Path, default=Path("outputs"), help="Root outputs directory.")
     parser.add_argument(
         "--pipeline",
-        choices=["canonical", "analyst"],
+        choices=["literal", "analyst"],
         default="analyst",
-        help="Pipeline output family to compare against Neo4j. Defaults to analyst.",
+        help="Pipeline output family to compare against Neo4j. Defaults to analyst; use literal explicitly for the staged literal extractor outputs.",
     )
     parser.add_argument("--neo4j-uri", type=str, default="bolt://localhost:7687", help="Neo4j connection URI.")
     parser.add_argument("--neo4j-user", type=str, default="neo4j", help="Neo4j username.")

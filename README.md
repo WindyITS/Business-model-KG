@@ -33,7 +33,7 @@ Full ontology spec: [`docs/ontology.md`](./docs/ontology.md)
 
 ## Pipeline Philosophy
 
-The canonical runtime follows a few consistent rules:
+The literal runtime follows a few consistent rules:
 
 - scope-first modeling: `Company` is the corporate shell, `BusinessSegment` is the primary semantic anchor, and `Offering` is the inventory layer
 - canonical extraction over convenience duplication: the extractor does not materialize inherited or rollup facts just to make the graph denser
@@ -42,19 +42,19 @@ The canonical runtime follows a few consistent rules:
 - broader but still text-grounded company geography capture: `OPERATES_IN` is more recall-friendly than the semantic business-model relations, but still constrained to meaningful company presence
 - staged extraction with supervision: the runtime extracts structure first, then relation families, then runs a rule-only reflection pass followed by a filing-aware reconciliation pass
 
-This means the effective behavior of the pipeline comes from three layers together:
+This means the effective behavior of the literal pipeline comes from three layers together:
 - the formal schema in [`src/ontology/ontology.json`](./src/ontology/ontology.json)
-- the staged extraction and reflection pipeline under [`src/llm/`](./src/llm/) and [`src/llm_extraction/pipelines/`](./src/llm_extraction/pipelines/) with prompt assets in [`prompts/canonical/`](./prompts/canonical/)
+- the staged extraction and reflection pipeline under [`src/llm/`](./src/llm/) and [`src/llm_extraction/pipelines/`](./src/llm_extraction/pipelines/) with prompt assets in [`prompts/canonical/`](./prompts/canonical/) backing the `literal` pipeline
 - the final normalization and structural enforcement in [`src/ontology/validator.py`](./src/ontology/validator.py)
 
 ## Extraction Pipelines
 
 The repo ships two extraction pipelines:
 
-- `canonical`: the staged, ontology-constrained extraction runtime
+- `literal`: the staged, ontology-constrained extraction runtime
 - `analyst`: a sibling runtime that first builds a structured analyst memo from the full filing, then compiles that memo into the ontology graph and runs a short overreach critique pass
 
-### Canonical Extraction Pipeline
+### Literal Extraction Pipeline
 
 High-level flow:
 
@@ -93,7 +93,7 @@ Runtime notes:
 - the memo is a first-class structured plain-text artifact, not just hidden reasoning
 - the memo explicitly separates filing support, analyst inference, and uncertainty
 - the analyst runtime treats the ontology as the target graph structure, not as a literal paragraph-extraction cage
-- `--only-pass1` is intentionally canonical-only because the analyst pipeline's first pass is a memo rather than a loadable graph
+- `--only-pass1` is intentionally literal-only because the analyst pipeline's first pass is a memo rather than a loadable graph
 
 ## Query Interface
 
@@ -135,7 +135,7 @@ src/
     prompting.py          lightweight prompt loading/rendering helpers
     pipelines/__init__.py pipeline registry and runner dispatch
     pipelines/canonical/
-                          canonical pipeline orchestration
+                          literal pipeline orchestration
     pipelines/analyst/
                           analyst memo -> graph pipeline orchestration
   ontology/
@@ -153,7 +153,7 @@ src/
 
 prompts/
   README.md               prompt asset overview
-  canonical/              canonical pipeline prompt assets
+  canonical/              prompt assets backing the literal pipeline
   analyst/                analyst pipeline prompt assets
 
 docs/
@@ -278,10 +278,10 @@ Run the extraction pipeline:
 ./scripts/kg-pipeline data/microsoft_10k.txt --skip-neo4j
 ```
 
-Optional explicit pipeline flag:
+Optional explicit `literal` pipeline flag:
 
 ```bash
-./scripts/kg-pipeline data/microsoft_10k.txt --pipeline canonical --skip-neo4j
+./scripts/kg-pipeline data/microsoft_10k.txt --pipeline literal --skip-neo4j
 ```
 
 Run only the structural skeleton:
@@ -346,7 +346,7 @@ Provider notes:
 - `opencode-go` reads `--api-key` first, then `OPENCODE_GO_API_KEY`, then `OPENCODE_API_KEY`
 - for `opencode-go`, the runtime rewrites `system` messages to `user` messages for compatibility while keeping the rest of the pipeline flow unchanged
 - `opencode-go` defaults to `--max-output-tokens 20000`; override it if needed
-- the CLI exposes both the `canonical` and `analyst` pipelines
+- the CLI exposes both the `literal` and `analyst` pipelines
 - every run writes `run_summary.json`; the console header shows pipeline, provider, and model, and LLM attempt summaries show token counts when available
 - successful Neo4j loads now replace the previous graph footprint for that same company by default; use `--clear-neo4j` only when you truly want to wipe the entire database first
 
@@ -399,7 +399,7 @@ Load one exact saved run for a company:
 
 You can also pass a relative path inside that company's pipeline folder, but `--run` is intentionally limited to that folder. It will not jump to another company or to an arbitrary filesystem path.
 
-Use `--pipeline canonical` if you want the command to target canonical outputs instead of the default analyst outputs.
+Use `--pipeline literal` if you want the command to target literal outputs instead of the default analyst outputs.
 Use `--yes` to skip the bulk-load warning when Neo4j already contains data.
 If you target one company with `--company` and that company is already loaded, the command now asks for confirmation before replacing that company graph.
 
@@ -453,7 +453,7 @@ These are the main commands that touch Neo4j, and they are meant for different m
 The most useful flags in practice are:
 
 - `--company-name` on `kg-pipeline` when the filename is not the company identity you want to use for outputs and Neo4j replacement.
-- `--pipeline canonical|analyst` on `kg-pipeline`, `kg-neo4j-load`, and `kg-neo4j-status` when you want to work with canonical outputs instead of the default analyst ones.
+- `--pipeline literal|analyst` on `kg-pipeline`, `kg-neo4j-load`, and `kg-neo4j-status` when you want to work with literal outputs instead of the default analyst ones.
 - `--keep-current-output --skip-neo4j` on `kg-pipeline` when you want to save a test run under `runs/` without replacing the current `latest/` output or the live Neo4j graph.
 - `--clear-neo4j` on `kg-pipeline` only when you intentionally want to wipe the entire Neo4j database before loading.
 - `--yes` on `kg-neo4j-load` or `kg-neo4j-unload` when the command is running in automation or a non-interactive script.
