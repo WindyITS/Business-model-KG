@@ -27,7 +27,9 @@ ROUTED_STACK_MODE = "routed"
 JOLLY_STACK_MODE = "jolly"
 QueryStackMode = Literal["routed", "jolly"]
 QueryStackSelection = Literal["routed", "fallback", "jolly"]
+LocalPlannerMode = Literal["qwen", "lmstudio"]
 LOCAL_STACK_MODULE = "kg_query_planner_ft.local_stack"
+LOCAL_ROUTER_MODULE = "kg_query_planner_ft.local_router"
 
 WRITE_REQUEST_RE = re.compile(r"\b(add|create|delete|drop|insert|load|merge|remove|set|update|upsert|write)\b", re.I)
 TIME_REQUEST_RE = re.compile(r"\b(\d{4}|quarter|q[1-4]|month|week|year|yoy|over time|trend|historic)\b", re.I)
@@ -157,8 +159,9 @@ def _resolve_local_stack_config(explicit_path: str | None) -> str | None:
     return default_path if Path(default_path).exists() else None
 
 
-def _run_local_stack(
+def _run_local_module(
     *,
+    module_name: str,
     question: str,
     local_stack_python: str | None,
     local_stack_config: str | None,
@@ -166,7 +169,7 @@ def _run_local_stack(
 ) -> tuple[dict[str, Any] | None, str | None]:
     python_executable = _resolve_local_stack_python(local_stack_python)
     config_path = _resolve_local_stack_config(local_stack_config)
-    command = [python_executable, "-m", LOCAL_STACK_MODULE, question]
+    command = [python_executable, "-m", module_name, question]
     if config_path:
         command.extend(["--config", config_path])
 
@@ -204,6 +207,38 @@ def _run_local_stack(
         return None, f"{exc} Raw output: {_tail(completed.stdout)}"
 
     return payload, None
+
+
+def _run_local_stack(
+    *,
+    question: str,
+    local_stack_python: str | None,
+    local_stack_config: str | None,
+    timeout_seconds: int,
+) -> tuple[dict[str, Any] | None, str | None]:
+    return _run_local_module(
+        module_name=LOCAL_STACK_MODULE,
+        question=question,
+        local_stack_python=local_stack_python,
+        local_stack_config=local_stack_config,
+        timeout_seconds=timeout_seconds,
+    )
+
+
+def _run_local_router(
+    *,
+    question: str,
+    local_stack_python: str | None,
+    local_stack_config: str | None,
+    timeout_seconds: int,
+) -> tuple[dict[str, Any] | None, str | None]:
+    return _run_local_module(
+        module_name=LOCAL_ROUTER_MODULE,
+        question=question,
+        local_stack_python=local_stack_python,
+        local_stack_config=local_stack_config,
+        timeout_seconds=timeout_seconds,
+    )
 
 
 def _infer_refusal_reason(question: str) -> str:
@@ -349,6 +384,22 @@ def _generate_fallback_query_with_retry(
             ) from second_error
 
 
+def _generate_local_lmstudio_query(
+    *,
+    question: str,
+    args: argparse.Namespace,
+) -> QueryResult:
+    return _generate_query_with_provider(
+        question=question,
+        provider=DEFAULT_JOLLY_PROVIDER,
+        model=args.local_model or args.model,
+        base_url=args.local_base_url or args.base_url,
+        api_key=args.local_api_key or args.api_key,
+        max_output_tokens=args.max_output_tokens,
+        max_retries=args.max_retries,
+    )
+
+
 def execute_live_query(
     *,
     cypher: str,
@@ -470,32 +521,64 @@ def _resolve_query_result(
 
     force_fallback = bool(getattr(args, "skip_local_stack", False)) or getattr(args, "stack", ROUTED_STACK_MODE) == "fallback"
     if not force_fallback:
-        _print_status("Routing with local router + Qwen planner...")
-        local_payload, local_error = _run_local_stack(
-            question=question,
-            local_stack_python=args.local_stack_python,
-            local_stack_config=args.local_stack_config,
-            timeout_seconds=args.local_stack_timeout,
-        )
-        if local_payload is not None:
-            local_result, decision = _result_from_local_stack(local_payload, question=question)
-            if local_result is not None:
-                if local_result.answerable:
-                    _print_status("Router decision: local (using local Qwen planner output).")
+        local_planner_mode: LocalPlannerMode = getattr(args, "local_planner", "qwen")
+        if local_planner_mode == "lmstudio":
+            _print_status("Routing with local DeBERTa router + LM Studio local planner...")
+            router_payload, router_error = _run_local_router(
+                question=question,
+                local_stack_python=args.local_stack_python,
+                local_stack_config=args.local_stack_config,
+                timeout_seconds=args.local_stack_timeout,
+            )
+            if router_payload is not None:
+                decision = str(router_payload.get("decision", "")).strip().casefold()
+                if decision == "refuse":
+                    refusal = QueryResult(answerable=False, reason=_infer_refusal_reason(question))
+                    _print_status(f"Router decision: refuse ({refusal.reason}).")
+                    return refusal
+                if decision == "local":
+                    _print_status("Router decision: local (using LM Studio local planner output).")
+                    try:
+                        return _generate_local_lmstudio_query(question=question, args=args)
+                    except Exception as local_planner_error:  # noqa: BLE001
+                        if not _confirm_api_fallback_after_local_error(str(local_planner_error)):
+                            raise ValueError("API fallback declined after local model error.") from local_planner_error
+                        _print_status("LM Studio local planner failed; falling back to remote planner.")
+                elif decision == "api_fallback":
+                    _print_status("Router decision: api_fallback (using remote planner fallback).")
                 else:
-                    _print_status(f"Router decision: refuse ({local_result.reason}).")
-                return local_result
-            planner_error = _local_planner_error(local_payload)
-            if planner_error and not _confirm_api_fallback_after_local_error(planner_error):
-                raise ValueError("API fallback declined after local model error.")
-            if decision == "api_fallback":
-                _print_status("Router decision: api_fallback (using remote planner fallback).")
-            else:
-                _print_status(f"Router decision: {decision or 'unknown'} (falling back to remote planner).")
-        elif local_error:
-            if not _confirm_api_fallback_after_local_error(local_error):
-                raise ValueError("API fallback declined after local model error.")
-            _print_status("Falling back to remote planner.")
+                    _print_status(f"Router decision: {decision or 'unknown'} (falling back to remote planner).")
+            elif router_error:
+                if not _confirm_api_fallback_after_local_error(router_error):
+                    raise ValueError("API fallback declined after local model error.")
+                _print_status("Local router unavailable; falling back to remote planner.")
+        else:
+            _print_status("Routing with local router + Qwen planner...")
+            local_payload, local_error = _run_local_stack(
+                question=question,
+                local_stack_python=args.local_stack_python,
+                local_stack_config=args.local_stack_config,
+                timeout_seconds=args.local_stack_timeout,
+            )
+            if local_payload is not None:
+                local_result, decision = _result_from_local_stack(local_payload, question=question)
+                if local_result is not None:
+                    if local_result.answerable:
+                        _print_status("Router decision: local (using local Qwen planner output).")
+                    else:
+                        _print_status(f"Router decision: refuse ({local_result.reason}).")
+                    return local_result
+                planner_error = _local_planner_error(local_payload)
+                if planner_error and not _confirm_api_fallback_after_local_error(planner_error):
+                    raise ValueError("API fallback declined after local model error.")
+                if decision == "api_fallback":
+                    _print_status("Router decision: api_fallback (using remote planner fallback).")
+                else:
+                    _print_status(f"Router decision: {decision or 'unknown'} (falling back to remote planner).")
+            elif local_error:
+                if not _confirm_api_fallback_after_local_error(local_error):
+                    raise ValueError("API fallback declined after local model error.")
+                _print_status("Falling back to remote planner.")
     else:
         _print_status("Using fallback planner only.")
 
@@ -520,9 +603,9 @@ def _build_parser(*, execute: bool, mode: QueryStackMode) -> argparse.ArgumentPa
         )
     else:
         description = (
-            "Route query with local router+Qwen first, then use remote planner fallback when needed, and run on Neo4j."
+            "Route query with local DeBERTa router and local planner first, then use remote planner fallback when needed, and run on Neo4j."
             if execute
-            else "Route query with local router+Qwen first, then use remote planner fallback when needed, and render Cypher."
+            else "Route query with local DeBERTa router and local planner first, then use remote planner fallback when needed, and render Cypher."
         )
 
     parser = argparse.ArgumentParser(description=description)
@@ -539,7 +622,13 @@ def _build_parser(*, execute: bool, mode: QueryStackMode) -> argparse.ArgumentPa
             "--stack",
             choices=["routed", "fallback", "jolly"],
             default="routed",
-            help="Execution stack: routed (default), fallback (skip local router+Qwen), or jolly (LM Studio direct).",
+            help="Execution stack: routed (default), fallback (skip local router/planner), or jolly (LM Studio direct).",
+        )
+        parser.add_argument(
+            "--local-planner",
+            choices=["qwen", "lmstudio"],
+            default="qwen",
+            help="Planner used for local-safe routed queries: qwen (default) or lmstudio.",
         )
         parser.add_argument(
             "--provider",
@@ -558,7 +647,7 @@ def _build_parser(*, execute: bool, mode: QueryStackMode) -> argparse.ArgumentPa
         parser.add_argument(
             "--skip-local-stack",
             action="store_true",
-            help="Bypass local router+Qwen and always use fallback planner generation.",
+            help="Bypass local router/planner and always use fallback planner generation.",
         )
         parser.add_argument(
             "--local-stack-python",
@@ -576,7 +665,25 @@ def _build_parser(*, execute: bool, mode: QueryStackMode) -> argparse.ArgumentPa
             "--local-stack-timeout",
             type=int,
             default=120,
-            help="Timeout in seconds for local router+Qwen planning.",
+            help="Timeout in seconds for local router/local-planner execution.",
+        )
+        parser.add_argument(
+            "--local-model",
+            type=str,
+            default=None,
+            help="LM Studio model name/ID to use when --local-planner lmstudio.",
+        )
+        parser.add_argument(
+            "--local-base-url",
+            type=str,
+            default=None,
+            help="LM Studio base URL to use when --local-planner lmstudio.",
+        )
+        parser.add_argument(
+            "--local-api-key",
+            type=str,
+            default=None,
+            help="LM Studio API key to use when --local-planner lmstudio.",
         )
     parser.add_argument(
         "--model",

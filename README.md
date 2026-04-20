@@ -99,7 +99,7 @@ Runtime notes:
 
 The runtime includes a read-only natural-language query path for the live Neo4j graph:
 
-- `kg-query-cypher` and `kg-query` use the routed stack: local router + local Qwen planner first, with remote planner fallback
+- `kg-query-cypher` and `kg-query` use the routed stack: local DeBERTa router + local planner first (`qwen` or `lmstudio`), with remote planner fallback
 - `kg-query-cypher-jolly` and `kg-query-jolly` force LM Studio direct planning and bypass routing/fallback logic
 - `kg-query` and `kg-query-cypher` also accept `--stack routed|fallback|jolly` so one command can select the behavior
 
@@ -305,7 +305,7 @@ Run a query against Neo4j:
   --neo4j-password password
 ```
 
-Force fallback planner only (skip local router+Qwen) with one switch:
+Force fallback planner only (skip local router/local planner) with one switch:
 
 ```bash
 ./scripts/kg-query-cypher "Which company segments sell through marketplaces?" --stack fallback
@@ -316,6 +316,14 @@ Force LM Studio direct planning (jolly mode, no routing/fallback):
 ```bash
 ./scripts/kg-query-cypher-jolly "Which company segments sell through marketplaces?"
 ./scripts/kg-query-jolly "Which company segments sell through marketplaces?"
+```
+
+Use LM Studio as the routed local planner (router still runs first):
+
+```bash
+./scripts/kg-query-cypher "Which company segments sell through marketplaces?" \
+  --local-planner lmstudio \
+  --local-model my-base-model-in-lmstudio
 ```
 
 Run against OpenCode Go with a hosted open model:
@@ -357,9 +365,11 @@ Useful CLI flags:
 - `--base-url`: pass either an API root or a full endpoint URL; the runtime normalizes common suffixes
 - `--api-key`: override environment-based key resolution
 - `--max-output-tokens`: explicitly cap model output tokens
-- `kg-query` / `kg-query-cypher --skip-local-stack`: skip local router+Qwen and force fallback planner generation
+- `kg-query` / `kg-query-cypher --skip-local-stack`: skip local router/local planner and force fallback planner generation
 - `kg-query` / `kg-query-cypher --stack fallback`: preferred single-switch way to force fallback planner generation
 - `kg-query` / `kg-query-cypher --stack jolly`: run LM Studio jolly mode from the same command surface
+- `kg-query` / `kg-query-cypher --local-planner qwen|lmstudio`: choose the local planner used after router `local` decisions
+- `kg-query` / `kg-query-cypher --local-model <name>`: choose the LM Studio model when `--local-planner lmstudio`
 - `kg-query` / `kg-query-cypher --local-stack-python /path/to/python`: point routed query commands to a specific local stack environment
 - `kg-query` / `kg-query-cypher --provider ...`: choose the fallback planner provider used only when local routing does not return a local-safe plan
 - when local planner errors in routed mode, the CLI asks `Use API fallback instead? [Y/n]` before continuing
@@ -475,7 +485,7 @@ Generate the query and run it against the current Neo4j database:
 ./scripts/kg-query "Which companies sell to developers through direct sales?"
 ```
 
-These routed commands try local router+Qwen first, then use fallback planner generation when needed.
+These routed commands try local routing first, then run the configured local planner (`qwen` by default, or `lmstudio` when selected), and use fallback planner generation when needed.
 
 If you want to bypass routing and force LM Studio direct planning:
 
@@ -577,7 +587,7 @@ Outputs are now organized by company and pipeline:
 ```text
 outputs/
   microsoft/
-    canonical/
+    literal/
       latest/
         ...
       runs/
@@ -619,7 +629,7 @@ Operational safety notes:
 - `bash ./scripts/check_repo.sh` is the deeper maintainer check that runs tests, compile checks, wrapper smoke checks, and a package-install smoke test
 - `.github/workflows/checks.yml` runs the same repo-check script on pushes and pull requests
 
-Canonical pipeline runs write artifacts such as:
+Literal pipeline runs write artifacts such as:
 - `run_summary.json`
 - `chunks.json`
 - `skeleton_extraction.json`

@@ -373,6 +373,48 @@ class RuntimeQueryTests(unittest.TestCase):
         self.assertEqual(exit_code, 1)
         self.assertIn("Warning: fallback planner failed twice in a row.", stderr.getvalue())
 
+    def test_query_routed_lmstudio_local_planner_uses_router_and_local_model(self):
+        stdout = io.StringIO()
+        stderr = io.StringIO()
+
+        with patch.object(
+            query_module,
+            "_run_local_router",
+            return_value=({"decision": "local"}, None),
+        ), patch.object(query_module, "_run_local_stack") as mock_local_stack, patch.object(
+            query_module,
+            "resolve_model_settings",
+            return_value=self._model_settings(),
+        ) as mock_settings, patch.object(query_module, "LLMExtractor", return_value=object()), patch.object(
+            query_module,
+            "generate_query",
+            return_value=(
+                QueryResult(
+                    answerable=True,
+                    cypher="MATCH (company:Company) RETURN DISTINCT company.name AS company ORDER BY company",
+                    params={},
+                ),
+                None,
+                1,
+                {},
+            ),
+        ), redirect_stdout(stdout), redirect_stderr(stderr):
+            exit_code = query_module.main_query_cypher(
+                [
+                    "Which companies are in the graph?",
+                    "--local-planner",
+                    "lmstudio",
+                    "--local-model",
+                    "my-local-base-model",
+                ]
+            )
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("using LM Studio local planner output", stderr.getvalue())
+        mock_local_stack.assert_not_called()
+        self.assertEqual(mock_settings.call_args.kwargs["provider"], "local")
+        self.assertEqual(mock_settings.call_args.kwargs["model"], "my-local-base-model")
+
 
 if __name__ == "__main__":
     unittest.main()
