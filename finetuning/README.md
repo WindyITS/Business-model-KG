@@ -12,9 +12,9 @@ The main repo does not import anything from this island.
 ## Locations
 
 - Environment root: `finetuning/.venv`
-- Artifact root: `~/projects/.ML-artifacts/kg-query-planner`
+- Artifact root: `finetuning/artifacts/kg-query-planner`
 
-The repo keeps only code, docs, and static config here. Prepared datasets, checkpoints, logs, and adapters are written outside the repo.
+Prepared datasets, checkpoints, logs, and adapters are written under that in-repo artifact directory, which is ignored by Git.
 
 ## Bootstrap
 
@@ -35,6 +35,7 @@ eval-router
 train-planner
 eval-planner
 eval-planner --base-only
+eval-planner --backend lmstudio --lmstudio-model "Qwen3-32B-Instruct"
 run-local-stack "Which companies partner with Dell?"
 ```
 
@@ -52,7 +53,7 @@ run-local-stack "Which companies partner with Dell?"
 Artifacts are written under:
 
 ```text
-~/projects/.ML-artifacts/kg-query-planner/
+finetuning/artifacts/kg-query-planner/
   prepared/
     router/
     planner/
@@ -64,6 +65,7 @@ Artifacts are written under:
   planner/
     adapter/
     eval/
+      lmstudio/
 ```
 
 ## Notes
@@ -73,6 +75,7 @@ Artifacts are written under:
 - Planner training saves numbered adapter checkpoints every `500` iterations by default, for example `0000500_adapters.safetensors`.
 - To resume planner training, set `planner.resume_adapter_file` in `finetuning/config/default.json` to one of those checkpoint files.
 - `eval-planner --base-only` evaluates the standard 4-bit base model without loading adapter weights and writes artifacts under `planner/eval/base_model/`.
+- `eval-planner --backend lmstudio --lmstudio-model "<name>"` evaluates an LM Studio-served model with the same frozen planner system prompt and writes artifacts under `planner/eval/lmstudio/<model>/`.
 - The router maps full-dataset route labels into `local`, `api_fallback`, and `refuse`.
 - The local harness is conservative: any planner parse/schema/compile failure downgrades to `api_fallback`.
 - The CLIs emit progress bars for dataset prep, router scoring, planner evaluation, and the fine-tuning stages themselves.

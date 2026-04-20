@@ -28,6 +28,7 @@ outputs/
 dist/
 build/
 packaging/
+finetuning/artifacts/
 
 # OS
 .DS_Store

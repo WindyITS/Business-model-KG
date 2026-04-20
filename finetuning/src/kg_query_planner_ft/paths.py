@@ -5,19 +5,27 @@ from pathlib import Path
 from .config import FineTuningConfig, repo_root
 
 
-def expand_user(path: str) -> Path:
-    return Path(path).expanduser().resolve()
+def _safe_path_component(value: str) -> str:
+    normalized = "".join(
+        char if char.isalnum() or char in {"-", "_", "."} else "_"
+        for char in value.strip()
+    ).strip("._")
+    return normalized or "model"
 
 
-def dataset_root(config: FineTuningConfig) -> Path:
-    configured = Path(config.dataset_path)
+def _resolve_repo_path(path: str) -> Path:
+    configured = Path(path).expanduser()
     if configured.is_absolute():
-        return configured
+        return configured.resolve()
     return (repo_root() / configured).resolve()
 
 
+def dataset_root(config: FineTuningConfig) -> Path:
+    return _resolve_repo_path(config.dataset_path)
+
+
 def artifact_root(config: FineTuningConfig) -> Path:
-    return expand_user(config.artifact_root)
+    return _resolve_repo_path(config.artifact_root)
 
 
 def prepared_router_dir(config: FineTuningConfig) -> Path:
@@ -44,8 +52,18 @@ def planner_adapter_dir(config: FineTuningConfig) -> Path:
     return artifact_root(config) / "planner" / "adapter"
 
 
-def planner_eval_dir(config: FineTuningConfig, *, base_only: bool = False) -> Path:
+def planner_eval_dir(
+    config: FineTuningConfig,
+    *,
+    base_only: bool = False,
+    backend: str = "mlx",
+    model_name: str | None = None,
+) -> Path:
     root = artifact_root(config) / "planner" / "eval"
-    if base_only:
-        return root / "base_model"
-    return root
+    if backend == "mlx":
+        if base_only:
+            return root / "base_model"
+        return root
+    if backend == "lmstudio":
+        return root / "lmstudio" / _safe_path_component(model_name or "local-model")
+    raise ValueError(f"Unsupported planner eval backend: {backend}")
