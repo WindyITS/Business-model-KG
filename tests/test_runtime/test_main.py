@@ -11,7 +11,6 @@ from unittest.mock import MagicMock, patch
 from llm_extraction.models import (
     AnalystBusinessModelMemo,
     AnalystPipelineResult,
-    CanonicalPipelineResult,
     KnowledgeGraphExtraction,
     Triple,
     ZeroShotPipelineResult,
@@ -46,7 +45,7 @@ class RuntimeMainTests(unittest.TestCase):
         root_dir: Path | None = None,
         company_name: str = "Microsoft",
         company_slug: str = "microsoft",
-        pipeline: str = "literal",
+        pipeline: str = "analyst",
         keep_current_output: bool = False,
     ) -> SimpleNamespace:
         root_dir = root_dir or run_dir.parent
@@ -66,9 +65,18 @@ class RuntimeMainTests(unittest.TestCase):
             planned_output_dir=planned_output_dir or run_dir,
         )
 
-    def test_mode_name_is_literal_pipeline(self):
-        args = SimpleNamespace(pipeline="literal")
-        self.assertEqual(_mode_name(args), "literal_pipeline")
+    @staticmethod
+    def _zero_shot_result(resolved_triple: Triple) -> ZeroShotPipelineResult:
+        extraction = KnowledgeGraphExtraction(
+            extraction_notes="zero shot",
+            triples=[resolved_triple],
+        )
+        return ZeroShotPipelineResult(
+            success=True,
+            zero_shot_extraction=extraction,
+            final_extraction=extraction,
+            zero_shot_audit={"kept_triple_count": 1, "raw_triple_count": 1},
+        )
 
     def test_mode_name_is_analyst_pipeline(self):
         args = SimpleNamespace(pipeline="analyst")
@@ -88,13 +96,13 @@ class RuntimeMainTests(unittest.TestCase):
 
     def test_pipeline_console_renders_pass_progress(self):
         lines: list[str] = []
-        console = PipelineConsole(printer=lines.append)
+        console = PipelineConsole(total_stages=4, printer=lines.append)
 
         console.start_run(
             started_at=datetime(2026, 4, 14, 7, 19, 1, tzinfo=timezone.utc),
             source_file=Path("data/palantir_10k.txt"),
             run_dir=Path("outputs/palantir_run"),
-            pipeline="literal",
+            pipeline="zero-shot",
             provider="local",
             model="local-model",
             neo4j_enabled=True,
@@ -103,49 +111,49 @@ class RuntimeMainTests(unittest.TestCase):
         console.handle_progress(
             "stage_start",
             index=2,
-            title="Pass 1 - Structural skeleton",
-            extracts="HAS_SEGMENT, OFFERS",
+            title="Zero-shot extraction",
+            extracts="full ontology graph",
         )
         console.handle_progress("llm_call_complete", attempt=1, max_retries=3, tokens=3244)
         console.handle_progress("stage_complete", details=[("result", "9 triples")])
 
         self.assertIn("KG PIPELINE RUN", lines)
         self.assertIn("Neo4j:     enabled (notifications disabled)", lines)
-        self.assertIn("[02/10] Pass 1 - Structural skeleton", lines)
-        self.assertTrue(any("extracts:" in line and "HAS_SEGMENT, OFFERS" in line for line in lines))
+        self.assertIn("[02/04] Zero-shot extraction", lines)
+        self.assertTrue(any("extracts:" in line and "full ontology graph" in line for line in lines))
         self.assertTrue(any("llm:" in line and "attempt 1/3, tokens=3,244" in line for line in lines))
         self.assertTrue(any("result:" in line and "9 triples" in line for line in lines))
 
     def test_pipeline_console_renders_stage_start_details(self):
         lines: list[str] = []
-        console = PipelineConsole(printer=lines.append)
+        console = PipelineConsole(total_stages=7, printer=lines.append)
 
         console.handle_progress(
             "stage_start",
-            index=7,
-            title="Reflection 1 - Ontology compliance",
+            index=5,
+            title="Critique - Overreach review",
             details=[("triples in", 14)],
         )
 
-        self.assertIn("[07/10] Reflection 1 - Ontology compliance", lines)
+        self.assertIn("[05/07] Critique - Overreach review", lines)
         self.assertTrue(any("triples in:" in line and "14" in line for line in lines))
 
     def test_pipeline_console_renders_stage_warning_messages(self):
         lines: list[str] = []
-        console = PipelineConsole(printer=lines.append)
+        console = PipelineConsole(total_stages=7, printer=lines.append)
 
         console.handle_progress(
             "stage_start",
-            index=7,
-            title="Reflection 1 - Ontology compliance",
+            index=5,
+            title="Critique - Overreach review",
             details=[("triples in", 14)],
         )
         console.handle_progress(
             "stage_warning",
-            message="Rule reflection failed after retries.",
+            message="Analyst critique failed after retries.",
         )
 
-        self.assertTrue(any("warning:" in line and "Rule reflection failed after retries." in line for line in lines))
+        self.assertTrue(any("warning:" in line and "Analyst critique failed after retries." in line for line in lines))
 
     def test_pipeline_console_confirms_graph_fallback_with_default_yes(self):
         lines: list[str] = []
@@ -252,128 +260,6 @@ class RuntimeMainTests(unittest.TestCase):
 
         self.assertEqual(inferred, "Google")
 
-    def test_main_only_pass1_writes_artifacts_and_loads_by_default(self):
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            tmp_path = Path(tmp_dir)
-            filing_path = tmp_path / "microsoft_10k.txt"
-            filing_path.write_text("ITEM 1. BUSINESS\nMicrosoft does business.\n", encoding="utf-8")
-            run_dir = tmp_path / "outputs" / "run"
-            resolved_triple = Triple(
-                subject="Microsoft",
-                subject_type="Company",
-                relation="HAS_SEGMENT",
-                object="Intelligent Cloud",
-                object_type="BusinessSegment",
-            )
-
-            fake_result = CanonicalPipelineResult(
-                success=True,
-                skeleton_extraction=KnowledgeGraphExtraction(
-                    extraction_notes="skeleton",
-                    triples=[resolved_triple],
-                ),
-            )
-            fake_extractor = SimpleNamespace()
-            fake_validation_report = {
-                "valid_triples": [resolved_triple.model_dump()],
-                "summary": {
-                    "invalid_triple_count": 0,
-                    "duplicate_triple_count": 0,
-                },
-            }
-
-            load_call: dict[str, object] = {}
-
-            class FakeNeo4jLoader:
-                def __init__(self, uri, user, password):
-                    self.uri = uri
-                    self.user = user
-                    self.password = password
-
-                def clear_graph(self):
-                    pass
-
-                def replace_company_triples(self, triples, company_name):
-                    load_call["unloaded_company"] = company_name
-                    load_call["company_name"] = company_name
-                    load_call["triple_count"] = len(triples)
-                    return (
-                        {
-                            "company_name": company_name,
-                            "scoped_nodes_deleted": 1,
-                            "scoped_relationships_deleted": 2,
-                            "company_relationships_deleted": 0,
-                            "company_node_deleted": 1,
-                            "orphan_nodes_deleted": 0,
-                        },
-                        len(triples),
-                    )
-
-                def setup_constraints(self):
-                    pass
-
-                def load_triples(self, triples, company_name):
-                    return len(triples)
-
-                def close(self):
-                    pass
-
-            layout = self._output_layout(run_dir)
-
-            with patch.object(main_module, "_prepare_output_layout", return_value=layout), patch.object(
-                main_module, "finalize_successful_run", return_value=run_dir
-            ), patch.object(
-                main_module, "finalize_failed_run", return_value=run_dir
-            ), patch.object(
-                main_module, "resolve_model_settings"
-            ) as mock_resolve, patch.object(main_module, "LLMExtractor", return_value=fake_extractor), patch.object(
-                main_module, "run_extraction_pipeline", return_value=fake_result
-            ) as mock_run_pipeline, patch.object(
-                main_module, "resolve_entities", return_value=[resolved_triple]
-            ), patch.object(
-                main_module, "validate_triples", return_value=fake_validation_report
-            ), patch.object(
-                main_module, "Neo4jLoader", FakeNeo4jLoader
-            ), patch(
-                "sys.argv",
-                ["main.py", str(filing_path), "--output-dir", str(tmp_path / "outputs"), "--pipeline", "literal", "--only-pass1"],
-            ):
-                mock_resolve.return_value = self._local_model_settings()
-                exit_code = main_module.main()
-
-            self.assertEqual(exit_code, 0)
-            self.assertTrue((run_dir / "skeleton_extraction.json").exists())
-            self.assertFalse((run_dir / "pass2_channels_extraction.json").exists())
-            self.assertTrue((run_dir / "resolved_triples.json").exists())
-            self.assertTrue((run_dir / "validation_report.json").exists())
-
-            summary = json.loads((run_dir / "run_summary.json").read_text(encoding="utf-8"))
-            self.assertTrue(summary["pass1_only"])
-            self.assertEqual(summary["stage_count"], 4)
-            self.assertFalse(summary["skip_neo4j"])
-            self.assertEqual(summary["status"], "success")
-            self.assertEqual(summary["loaded_triple_count"], 1)
-            self.assertEqual(load_call["company_name"], "Microsoft")
-            self.assertEqual(load_call["triple_count"], 1)
-            self.assertEqual(load_call["unloaded_company"], "Microsoft")
-
-            mock_resolve.assert_called_once()
-            mock_run_pipeline.assert_called_once()
-            self.assertIs(mock_run_pipeline.call_args.kwargs["extractor"], fake_extractor)
-            self.assertTrue(mock_run_pipeline.call_args.kwargs["stop_after_pass1"])
-
-    def test_main_only_pass1_requires_literal_pipeline(self):
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            tmp_path = Path(tmp_dir)
-            filing_path = tmp_path / "microsoft_10k.txt"
-            filing_path.write_text("ITEM 1. BUSINESS\nMicrosoft does business.\n", encoding="utf-8")
-
-            with patch("sys.argv", ["main.py", str(filing_path), "--output-dir", str(tmp_path / "outputs"), "--only-pass1"]):
-                with self.assertRaises(SystemExit) as ctx:
-                    main_module.main()
-
-        self.assertEqual(ctx.exception.code, 2)
-
     def test_main_passes_expected_validation_options(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp_path = Path(tmp_dir)
@@ -388,13 +274,7 @@ class RuntimeMainTests(unittest.TestCase):
                 object="Intelligent Cloud",
                 object_type="BusinessSegment",
             )
-            fake_result = CanonicalPipelineResult(
-                success=True,
-                skeleton_extraction=KnowledgeGraphExtraction(
-                    extraction_notes="skeleton",
-                    triples=[resolved_triple],
-                ),
-            )
+            fake_result = self._zero_shot_result(resolved_triple)
             fake_extractor = SimpleNamespace()
             captured_validation: dict[str, object] = {}
 
@@ -406,7 +286,7 @@ class RuntimeMainTests(unittest.TestCase):
                     "summary": {"invalid_triple_count": 0, "duplicate_triple_count": 0},
                 }
 
-            layout = self._output_layout(run_dir)
+            layout = self._output_layout(run_dir, pipeline="zero-shot")
 
             with patch.object(main_module, "_prepare_output_layout", return_value=layout), patch.object(
                 main_module, "finalize_successful_run", return_value=run_dir
@@ -421,7 +301,8 @@ class RuntimeMainTests(unittest.TestCase):
             ), patch.object(
                 main_module, "validate_triples", side_effect=validate_side_effect
             ), patch(
-                "sys.argv", ["main.py", str(filing_path), "--output-dir", str(tmp_path / "outputs"), "--skip-neo4j"]
+                "sys.argv",
+                ["main.py", str(filing_path), "--pipeline", "zero-shot", "--output-dir", str(tmp_path / "outputs"), "--skip-neo4j"],
             ):
                 exit_code = main_module.main()
 
@@ -445,18 +326,13 @@ class RuntimeMainTests(unittest.TestCase):
                 object="Intelligent Cloud",
                 object_type="BusinessSegment",
             )
-            fake_result = CanonicalPipelineResult(
-                success=True,
-                skeleton_extraction=KnowledgeGraphExtraction(
-                    extraction_notes="skeleton",
-                    triples=[resolved_triple],
-                ),
-            )
+            fake_result = self._zero_shot_result(resolved_triple)
             fake_extractor = SimpleNamespace()
             layout = self._output_layout(
                 run_dir,
                 company_name="Microsoft Corporation",
                 company_slug="microsoft_corporation",
+                pipeline="zero-shot",
             )
 
             with patch.object(main_module, "_prepare_output_layout", return_value=layout) as mock_prepare_layout, patch.object(
@@ -481,6 +357,8 @@ class RuntimeMainTests(unittest.TestCase):
                 [
                     "main.py",
                     str(filing_path),
+                    "--pipeline",
+                    "zero-shot",
                     "--output-dir",
                     str(tmp_path / "outputs"),
                     "--skip-neo4j",
@@ -511,16 +389,10 @@ class RuntimeMainTests(unittest.TestCase):
                 object="Intelligent Cloud",
                 object_type="BusinessSegment",
             )
-            fake_result = CanonicalPipelineResult(
-                success=True,
-                skeleton_extraction=KnowledgeGraphExtraction(
-                    extraction_notes="skeleton",
-                    triples=[resolved_triple],
-                ),
-            )
+            fake_result = self._zero_shot_result(resolved_triple)
             stdout = io.StringIO()
 
-            layout = self._output_layout(run_dir)
+            layout = self._output_layout(run_dir, pipeline="zero-shot")
 
             with patch.object(main_module, "_prepare_output_layout", return_value=layout), patch.object(
                 main_module, "finalize_successful_run", return_value=run_dir
@@ -535,7 +407,8 @@ class RuntimeMainTests(unittest.TestCase):
             ), patch.object(
                 main_module, "validate_triples"
             ) as mock_validate, redirect_stdout(stdout), patch(
-                "sys.argv", ["main.py", str(filing_path), "--output-dir", str(tmp_path / "outputs"), "--skip-neo4j"]
+                "sys.argv",
+                ["main.py", str(filing_path), "--pipeline", "zero-shot", "--output-dir", str(tmp_path / "outputs"), "--skip-neo4j"],
             ):
                 exit_code = main_module.main()
 
@@ -561,16 +434,10 @@ class RuntimeMainTests(unittest.TestCase):
                 object="Intelligent Cloud",
                 object_type="BusinessSegment",
             )
-            fake_result = CanonicalPipelineResult(
-                success=True,
-                skeleton_extraction=KnowledgeGraphExtraction(
-                    extraction_notes="skeleton",
-                    triples=[resolved_triple],
-                ),
-            )
+            fake_result = self._zero_shot_result(resolved_triple)
             stdout = io.StringIO()
 
-            layout = self._output_layout(run_dir)
+            layout = self._output_layout(run_dir, pipeline="zero-shot")
 
             with patch.object(main_module, "_prepare_output_layout", return_value=layout), patch.object(
                 main_module, "finalize_successful_run", return_value=run_dir
@@ -590,7 +457,8 @@ class RuntimeMainTests(unittest.TestCase):
                     "summary": {"invalid_triple_count": 1, "duplicate_triple_count": 0},
                 },
             ), patch.object(main_module, "Neo4jLoader") as mock_loader, redirect_stdout(stdout), patch(
-                "sys.argv", ["main.py", str(filing_path), "--output-dir", str(tmp_path / "outputs"), "--skip-neo4j"]
+                "sys.argv",
+                ["main.py", str(filing_path), "--pipeline", "zero-shot", "--output-dir", str(tmp_path / "outputs"), "--skip-neo4j"],
             ):
                 exit_code = main_module.main()
 
@@ -682,7 +550,7 @@ class RuntimeMainTests(unittest.TestCase):
             mock_resolve.assert_called_once()
             mock_run_pipeline.assert_called_once()
             self.assertEqual(mock_run_pipeline.call_args.kwargs["pipeline"], "analyst")
-            self.assertFalse(mock_run_pipeline.call_args.kwargs["stop_after_pass1"])
+            self.assertNotIn("stop_after_pass1", mock_run_pipeline.call_args.kwargs)
 
     def test_main_analyst_pipeline_persists_partial_memos_on_failure(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -800,7 +668,7 @@ class RuntimeMainTests(unittest.TestCase):
             mock_resolve.assert_called_once()
             mock_run_pipeline.assert_called_once()
             self.assertEqual(mock_run_pipeline.call_args.kwargs["pipeline"], "zero-shot")
-            self.assertFalse(mock_run_pipeline.call_args.kwargs["stop_after_pass1"])
+            self.assertNotIn("stop_after_pass1", mock_run_pipeline.call_args.kwargs)
 
     def test_main_keep_current_output_requires_skip_neo4j(self):
         with tempfile.TemporaryDirectory() as tmp_dir:

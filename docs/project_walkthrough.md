@@ -14,12 +14,12 @@ In short, the workflow is:
 4. save the run artifacts under `outputs/`
 5. optionally load the result into Neo4j
 
-## The Two Pipelines
+## The Supported Pipelines
 
-There are two main pipelines:
+There are two supported pipelines:
 
-- `literal`: a more direct staged extractor that works triple-first
 - `analyst`: a memo-first pipeline that builds a structured analyst view and then compiles that into the graph
+- `zero-shot`: a single-pass baseline that emits the ontology graph directly from the filing
 
 The default Neo4j reload commands prefer `analyst/latest` because that is the current preferred saved output for interactive reloads.
 
@@ -45,12 +45,12 @@ Outputs are organized by company and pipeline:
 ```text
 outputs/
   microsoft/
-    literal/
+    analyst/
       latest/
       runs/
       failed/
       manifest.json
-    analyst/
+    zero-shot/
       latest/
       runs/
       failed/

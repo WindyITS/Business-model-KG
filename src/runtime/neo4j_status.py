@@ -86,7 +86,7 @@ def main(argv: list[str] | None = None) -> int:
         "--pipeline",
         choices=implemented_pipeline_names(),
         default="analyst",
-        help="Pipeline output family to compare against Neo4j. Defaults to analyst; use literal explicitly for the staged literal extractor outputs.",
+        help="Pipeline output family to compare against Neo4j. Defaults to analyst.",
     )
     parser.add_argument("--neo4j-uri", type=str, default="bolt://localhost:7687", help="Neo4j connection URI.")
     parser.add_argument("--neo4j-user", type=str, default="neo4j", help="Neo4j username.")

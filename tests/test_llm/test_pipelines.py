@@ -17,8 +17,8 @@ from llm_extraction.prompting import pipeline_prompt_dir
 
 class ExtractionPipelineRegistryTests(unittest.TestCase):
     def test_known_pipelines_include_analyst(self):
-        self.assertEqual(known_pipeline_names(), ("literal", "analyst", "zero-shot"))
-        self.assertEqual(implemented_pipeline_names(), ("literal", "analyst", "zero-shot"))
+        self.assertEqual(known_pipeline_names(), ("analyst", "zero-shot"))
+        self.assertEqual(implemented_pipeline_names(), ("analyst", "zero-shot"))
 
     def test_analyst_pipeline_dispatches_runner(self):
         runner = build_pipeline_runner("analyst", SimpleNamespace())
@@ -31,11 +31,8 @@ class ExtractionPipelineRegistryTests(unittest.TestCase):
         self.assertIsInstance(runner, ZeroShotPipelineRunner)
 
     def test_pipeline_stage_metadata_tracks_analyst(self):
-        self.assertTrue(pipeline_supports_stop_after_pass1("literal"))
         self.assertFalse(pipeline_supports_stop_after_pass1("analyst"))
         self.assertFalse(pipeline_supports_stop_after_pass1("zero-shot"))
-        self.assertEqual(pipeline_stage_count("literal"), 10)
-        self.assertEqual(pipeline_stage_count("literal", stop_after_pass1=True), 4)
         self.assertEqual(pipeline_stage_count("analyst"), 7)
         self.assertEqual(pipeline_stage_count("zero-shot"), 4)
 
@@ -54,12 +51,6 @@ class ExtractionPipelineRegistryTests(unittest.TestCase):
             )
 
         self.assertIn("Unknown extraction pipeline", str(ctx.exception))
-
-    def test_literal_prompt_assets_live_under_top_level_prompts_dir(self):
-        prompt_dir = pipeline_prompt_dir("canonical")
-
-        self.assertEqual(prompt_dir.parts[-2:], ("prompts", "canonical"))
-        self.assertTrue((prompt_dir / "system.txt").is_file())
 
     def test_analyst_prompt_assets_live_under_top_level_prompts_dir(self):
         prompt_dir = pipeline_prompt_dir("analyst")

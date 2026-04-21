@@ -27,7 +27,7 @@ class OutputLayoutTests(unittest.TestCase):
     def test_finalize_successful_run_replaces_latest_only_after_success(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
             output_dir = Path(tmp_dir) / "outputs"
-            latest_dir = output_dir / "apple" / "canonical" / "latest"
+            latest_dir = output_dir / "apple" / "zero-shot" / "latest"
             latest_dir.mkdir(parents=True, exist_ok=True)
             (latest_dir / "run_summary.json").write_text(json.dumps({"run_dir": str(latest_dir)}), encoding="utf-8")
             (latest_dir / "marker.txt").write_text("old", encoding="utf-8")
@@ -35,7 +35,7 @@ class OutputLayoutTests(unittest.TestCase):
             layout = prepare_output_layout(
                 output_dir=output_dir,
                 company_name="Apple",
-                pipeline="canonical",
+                pipeline="zero-shot",
                 keep_current_output=False,
                 started_at=datetime(2026, 4, 17, 10, 0, 0, tzinfo=timezone.utc),
             )
@@ -46,9 +46,9 @@ class OutputLayoutTests(unittest.TestCase):
 
             self.assertEqual(final_dir, latest_dir)
             self.assertEqual((latest_dir / "marker.txt").read_text(encoding="utf-8"), "new")
-            self.assertFalse((output_dir / "apple" / "canonical" / ".previous_latest").exists())
+            self.assertFalse((output_dir / "apple" / "zero-shot" / ".previous_latest").exists())
             self.assertFalse(layout.staging_dir.exists())
-            manifest = json.loads(manifest_path(output_dir, "Apple", "canonical").read_text(encoding="utf-8"))
+            manifest = json.loads(manifest_path(output_dir, "Apple", "zero-shot").read_text(encoding="utf-8"))
             self.assertTrue(manifest["latest_available"])
             self.assertEqual(manifest["latest_run_dir"], str(latest_dir))
 
@@ -81,7 +81,7 @@ class OutputLayoutTests(unittest.TestCase):
             layout = prepare_output_layout(
                 output_dir=output_dir,
                 company_name="Palantir",
-                pipeline="canonical",
+                pipeline="zero-shot",
                 keep_current_output=False,
                 started_at=datetime(2026, 4, 17, 10, 0, 0, tzinfo=timezone.utc),
             )
@@ -90,10 +90,10 @@ class OutputLayoutTests(unittest.TestCase):
 
             final_dir = finalize_failed_run(layout)
 
-            self.assertEqual(final_dir, output_dir / "palantir" / "canonical" / "failed" / layout.run_token)
+            self.assertEqual(final_dir, output_dir / "palantir" / "zero-shot" / "failed" / layout.run_token)
             self.assertEqual((final_dir / "marker.txt").read_text(encoding="utf-8"), "failed")
             self.assertFalse(layout.staging_dir.exists())
-            manifest = json.loads(manifest_path(output_dir, "Palantir", "canonical").read_text(encoding="utf-8"))
+            manifest = json.loads(manifest_path(output_dir, "Palantir", "zero-shot").read_text(encoding="utf-8"))
             self.assertFalse(manifest["latest_available"])
             self.assertEqual(manifest["failed_run_tokens"], [layout.run_token])
 
@@ -102,7 +102,7 @@ class OutputLayoutTests(unittest.TestCase):
             output_dir = Path(tmp_dir) / "outputs"
             (company_pipeline_root(output_dir, "Google", "analyst") / "latest").mkdir(parents=True, exist_ok=True)
             (company_pipeline_root(output_dir, "Apple", "analyst") / "latest").mkdir(parents=True, exist_ok=True)
-            (company_pipeline_root(output_dir, "Apple", "canonical") / "latest").mkdir(parents=True, exist_ok=True)
+            (company_pipeline_root(output_dir, "Apple", "zero-shot") / "latest").mkdir(parents=True, exist_ok=True)
 
             latest_dirs = iter_latest_run_dirs(output_dir, "analyst")
 

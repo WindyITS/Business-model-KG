@@ -239,7 +239,7 @@ def main(
         "--pipeline",
         choices=implemented_pipeline_names(),
         default="analyst",
-        help="Pipeline output family to load. Defaults to analyst latest outputs; use literal explicitly for the staged literal extractor outputs.",
+        help="Pipeline output family to load. Defaults to analyst latest outputs.",
     )
     parser.add_argument("--company", type=str, default=None, help="Load only one company's saved output.")
     parser.add_argument(

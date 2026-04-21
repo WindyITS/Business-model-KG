@@ -19,7 +19,6 @@ def _sync_runtime_main_module() -> None:
 
     for name in (
         "AnalystPipelineResult",
-        "CanonicalPipelineResult",
         "ExtractionError",
         "ExtractionPipelineResult",
         "LLMExtractor",

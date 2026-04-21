@@ -11,9 +11,9 @@ from typing import Any
 
 
 COMPANY_SLUG_RE = re.compile(r"[^a-z0-9]+")
-PIPELINE_NAMES = ("literal", "analyst", "zero-shot")
+PIPELINE_NAMES = ("analyst", "zero-shot")
 LEGACY_OUTPUT_DIR_RE = re.compile(
-    rf"^(?P<source_stem>.+)_(?P<pipeline>{'|'.join(re.escape(name) for name in ('canonical', *PIPELINE_NAMES))})_pipeline_(?P<run_token>\d{{8}}T\d{{6}}Z(?:_\d+)?)$"
+    rf"^(?P<source_stem>.+)_(?P<pipeline>{'|'.join(re.escape(name) for name in PIPELINE_NAMES)})_pipeline_(?P<run_token>\d{{8}}T\d{{6}}Z(?:_\d+)?)$"
 )
 MANIFEST_FILENAME = "manifest.json"
 
@@ -351,8 +351,6 @@ def migrate_legacy_output_layout(output_dir: Path) -> list[tuple[Path, Path]]:
 
         source_stem = match.group("source_stem")
         pipeline = match.group("pipeline")
-        if pipeline == "canonical":
-            pipeline = "literal"
         run_token = match.group("run_token")
         company_name = infer_company_name_from_source_stem(source_stem)
         company_slug = slugify_company_name(company_name)

@@ -79,7 +79,7 @@ class Neo4jLoadTests(unittest.TestCase):
                 triple_subject="Google",
             )
             self._write_run(
-                output_dir / "apple" / "canonical" / "latest",
+                output_dir / "apple" / "zero-shot" / "latest",
                 company_name="Apple",
                 source_file="data/apple_10k.txt",
                 triple_subject="Apple",

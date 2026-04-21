@@ -11,12 +11,12 @@ class PromptLoadingTests(unittest.TestCase):
     def test_prompt_root_prefers_explicit_override_directory(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
             prompt_root = Path(tmp_dir)
-            (prompt_root / "canonical").mkdir()
-            (prompt_root / "canonical" / "system.txt").write_text("override", encoding="utf-8")
+            (prompt_root / "analyst").mkdir()
+            (prompt_root / "analyst" / "system.txt").write_text("override", encoding="utf-8")
 
             with patch.dict(os.environ, {prompting.PROMPTS_OVERRIDE_ENV: str(prompt_root)}, clear=False):
                 self.assertEqual(prompting.prompt_root(), prompt_root.resolve())
-                self.assertEqual(prompting.pipeline_prompt_dir("canonical"), prompt_root.resolve() / "canonical")
+                self.assertEqual(prompting.pipeline_prompt_dir("analyst"), prompt_root.resolve() / "analyst")
 
     def test_prompt_root_falls_back_to_bundled_prompts_when_repo_prompts_are_missing(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -25,9 +25,9 @@ class PromptLoadingTests(unittest.TestCase):
             with patch.dict(os.environ, {prompting.PROMPTS_OVERRIDE_ENV: ""}, clear=False), patch.object(
                 prompting, "REPO_PROMPTS_ROOT", missing_repo_root
             ):
-                prompt_dir = prompting.pipeline_prompt_dir("canonical")
+                prompt_dir = prompting.pipeline_prompt_dir("analyst")
 
-            self.assertEqual(prompt_dir.parts[-2:], ("_bundled_prompts", "canonical"))
+            self.assertEqual(prompt_dir.parts[-2:], ("_bundled_prompts", "analyst"))
             self.assertTrue((prompt_dir / "system.txt").is_file())
 
     def test_bundled_prompt_assets_match_repo_prompt_assets(self):

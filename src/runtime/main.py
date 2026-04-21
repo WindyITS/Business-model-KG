@@ -13,7 +13,6 @@ from graph.neo4j_loader import Neo4jLoader
 from llm.extractor import LLMExtractor
 from llm_extraction.models import (
     AnalystPipelineResult,
-    CanonicalPipelineResult,
     ExtractionError,
     ExtractionPipelineResult,
     ZeroShotPipelineResult,
@@ -32,7 +31,7 @@ logging.getLogger("httpcore").setLevel(logging.WARNING)
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logging.getLogger("neo4j.notifications").disabled = True
 
-TOTAL_STAGES = 10
+TOTAL_STAGES = max(pipeline_stage_count(name) for name in implemented_pipeline_names())
 CONSOLE_RULE = "=" * 50
 CONSOLE_SEPARATOR = "-" * 50
 
@@ -346,96 +345,7 @@ def _write_graph_extraction_artifact(
 def _prepare_pipeline_artifacts(
     run_dir: Path,
     chat_result: ExtractionPipelineResult,
-    *,
-    pass1_only: bool,
 ) -> dict[str, Any]:
-    if isinstance(chat_result, CanonicalPipelineResult):
-        _write_graph_extraction_artifact(run_dir / "skeleton_extraction.json", extraction=chat_result.skeleton_extraction)
-        if pass1_only:
-            return {
-                "extractions": [chat_result.skeleton_extraction],
-                "extraction_payload": {
-                    "skeleton_extraction": chat_result.skeleton_extraction.model_dump(),
-                },
-                "stage_audits": {
-                    "skeleton": chat_result.skeleton_audit,
-                },
-                "final_output_audit": chat_result.skeleton_audit,
-                "resolve_stage_index": 3,
-                "load_stage_index": 4,
-                "summary_metrics": {
-                    "skeleton_triple_count": len(chat_result.skeleton_extraction.triples),
-                },
-            }
-
-        _write_graph_extraction_artifact(
-            run_dir / "pass2_channels_extraction.json",
-            extraction=chat_result.pass2_channels_extraction,
-        )
-        _write_graph_extraction_artifact(
-            run_dir / "pass2_revenue_extraction.json",
-            extraction=chat_result.pass2_revenue_extraction,
-        )
-        _write_graph_extraction_artifact(
-            run_dir / "pass2_commercial_extraction.json",
-            extraction=chat_result.pass2_extraction,
-        )
-        _write_graph_extraction_artifact(
-            run_dir / "pass3_serves_extraction.json",
-            extraction=chat_result.pass3_serves_extraction,
-        )
-        _write_graph_extraction_artifact(
-            run_dir / "pass4_corporate_extraction.json",
-            extraction=chat_result.pass4_corporate_extraction,
-        )
-        _write_graph_extraction_artifact(
-            run_dir / "pre_reflection_extraction.json",
-            extraction=chat_result.pre_reflection_extraction,
-        )
-        _write_graph_extraction_artifact(
-            run_dir / "rule_reflection_extraction.json",
-            extraction=chat_result.rule_reflection_extraction,
-            attempts_used=chat_result.rule_reflection_attempts_used,
-            raw_response=chat_result.raw_rule_reflection_response,
-        )
-        _write_graph_extraction_artifact(
-            run_dir / "reflection_extraction.json",
-            extraction=chat_result.final_extraction,
-            attempts_used=chat_result.final_reflection_attempts_used,
-            raw_response=chat_result.raw_final_reflection_response,
-        )
-        return {
-            "extractions": [chat_result.final_extraction],
-            "extraction_payload": {
-                "skeleton_extraction": chat_result.skeleton_extraction.model_dump(),
-                "pass2_channels_extraction": chat_result.pass2_channels_extraction.model_dump(),
-                "pass2_revenue_extraction": chat_result.pass2_revenue_extraction.model_dump(),
-                "pass2_extraction": chat_result.pass2_extraction.model_dump(),
-                "pass3_serves_extraction": chat_result.pass3_serves_extraction.model_dump(),
-                "pass4_corporate_extraction": chat_result.pass4_corporate_extraction.model_dump(),
-                "pre_reflection_extraction": chat_result.pre_reflection_extraction.model_dump(),
-                "rule_reflection_extraction": chat_result.rule_reflection_extraction.model_dump(),
-                "final_extraction": chat_result.final_extraction.model_dump(),
-            },
-            "stage_audits": {
-                "skeleton": chat_result.skeleton_audit,
-                "pass2_channels": chat_result.pass2_channels_audit,
-                "pass2_revenue": chat_result.pass2_revenue_audit,
-                "pass2_commercial": chat_result.pass2_audit,
-                "pass3_serves": chat_result.pass3_serves_audit,
-                "pass4_corporate": chat_result.pass4_corporate_audit,
-                "pre_reflection": chat_result.pre_reflection_audit,
-                "rule_reflection": chat_result.rule_reflection_audit,
-                "reflection": chat_result.final_reflection_audit,
-            },
-            "final_output_audit": chat_result.final_reflection_audit,
-            "resolve_stage_index": 9,
-            "load_stage_index": 10,
-            "summary_metrics": {
-                "skeleton_triple_count": len(chat_result.skeleton_extraction.triples),
-            },
-        }
-
     if isinstance(chat_result, AnalystPipelineResult):
         (run_dir / "analyst_memo_foundation.md").write_text(chat_result.foundation_memo.content, encoding="utf-8")
         (run_dir / "analyst_memo_augmented.md").write_text(chat_result.augmented_memo.content, encoding="utf-8")
@@ -573,14 +483,9 @@ def main() -> int:
         "--pipeline",
         choices=implemented_pipeline_names(),
         default="analyst",
-        help="Extraction pipeline to run. Analyst is the default; literal keeps the staged literal extractor and must be requested explicitly.",
+        help="Extraction pipeline to run. Analyst is the default.",
     )
     parser.add_argument("--max-retries", type=int, default=3, help="Maximum LLM retries per call.")
-    parser.add_argument(
-        "--only-pass1",
-        action="store_true",
-        help="Run only literal Pass 1, then resolve/validate and load Neo4j unless --skip-neo4j is also set.",
-    )
     parser.add_argument(
         "--company-name",
         type=str,
@@ -599,8 +504,6 @@ def main() -> int:
 
     if args.keep_current_output and not args.skip_neo4j:
         parser.error("--keep-current-output requires --skip-neo4j so test outputs do not replace the live Neo4j graph.")
-    if args.only_pass1 and args.pipeline != "literal":
-        parser.error("--only-pass1 requires --pipeline literal.")
 
     source_file = Path(args.file_path)
     mode = _mode_name(args)
@@ -615,13 +518,7 @@ def main() -> int:
         started_at=run_started_at,
     )
     run_dir = output_layout.staging_dir
-    run_scope = "pass1-only" if args.only_pass1 else None
-    stage_count_error: ExtractionError | None = None
-    try:
-        stage_count = pipeline_stage_count(args.pipeline, stop_after_pass1=args.only_pass1)
-    except ExtractionError as exc:
-        stage_count = TOTAL_STAGES
-        stage_count_error = exc
+    stage_count = pipeline_stage_count(args.pipeline)
     console = PipelineConsole(total_stages=stage_count)
     effective_skip_neo4j = args.skip_neo4j
     summary: dict[str, Any] = {
@@ -638,9 +535,7 @@ def main() -> int:
         "requested_model": args.model,
         "requested_base_url": args.base_url,
         "requested_max_output_tokens": args.max_output_tokens,
-        "pass1_only": args.only_pass1,
         "stage_count": stage_count,
-        "run_scope": run_scope,
         "skip_neo4j": effective_skip_neo4j,
         "keep_current_output": args.keep_current_output,
         "started_at": run_started_at.isoformat(),
@@ -648,9 +543,6 @@ def main() -> int:
     _write_json(run_dir / "run_summary.json", summary)
 
     try:
-        if stage_count_error is not None:
-            raise stage_count_error
-
         model_settings = resolve_model_settings(
             provider=args.provider,
             model=args.model,
@@ -677,7 +569,6 @@ def main() -> int:
             provider=model_settings.provider,
             model=model_settings.model,
             neo4j_enabled=not effective_skip_neo4j,
-            run_scope=run_scope,
             llm_token_cap=model_settings.max_output_tokens,
         )
 
@@ -719,17 +610,12 @@ def main() -> int:
             full_text=full_text,
             company_name=company_name,
             max_retries=args.max_retries,
-            stop_after_pass1=args.only_pass1,
         )
         if not chat_result.success:
             _write_partial_pipeline_artifacts(run_dir, chat_result)
             raise ExtractionError(chat_result.error or f"{args.pipeline.title()} pipeline failed.")
 
-        artifact_bundle = _prepare_pipeline_artifacts(
-            run_dir,
-            chat_result,
-            pass1_only=args.only_pass1,
-        )
+        artifact_bundle = _prepare_pipeline_artifacts(run_dir, chat_result)
         extractions = artifact_bundle["extractions"]
         extraction_payload = artifact_bundle["extraction_payload"]
         stage_audits = artifact_bundle["stage_audits"]
@@ -857,7 +743,6 @@ def main() -> int:
                 "status": "failed",
                 "finished_at": datetime.now(timezone.utc).isoformat(),
                 "error": str(exc),
-                "pass1_only": args.only_pass1,
             }
         )
         final_run_dir = finalize_failed_run(output_layout)

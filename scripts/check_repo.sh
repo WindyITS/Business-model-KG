@@ -62,7 +62,6 @@ grep -q '^kg-neo4j-status = ' "${ENTRY_POINTS}"
 grep -q '^kg-neo4j-unload = ' "${ENTRY_POINTS}"
 
 test -f "${SMOKE_DIR}/ontology/ontology.json"
-test -f "${SMOKE_DIR}/llm_extraction/_bundled_prompts/canonical/system.txt"
 test -f "${SMOKE_DIR}/llm_extraction/_bundled_prompts/analyst/system.txt"
 test -f "${SMOKE_DIR}/llm_extraction/_bundled_prompts/zero-shot/extract.txt"
 

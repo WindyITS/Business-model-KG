@@ -2,7 +2,7 @@
 
 This folder contains the prompt files for the analyst-style extraction pipeline.
 
-The analyst pipeline is intentionally separate from the canonical extractor:
+The analyst pipeline is intentionally separate from the zero-shot baseline:
 
 - stage 1A builds the foundational analyst memo as structured plain text
 - stage 1B augments that memo with defensible detail, still as structured plain text

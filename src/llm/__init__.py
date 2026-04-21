@@ -1,6 +1,5 @@
 from llm.extractor import (
     AnalystPipelineResult,
-    CanonicalPipelineResult,
     ExtractionError,
     ExtractionPipelineResult,
     KnowledgeGraphExtraction,
@@ -11,7 +10,6 @@ from llm.extractor import (
 
 __all__ = [
     "AnalystPipelineResult",
-    "CanonicalPipelineResult",
     "ExtractionError",
     "ExtractionPipelineResult",
     "KnowledgeGraphExtraction",

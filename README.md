@@ -33,49 +33,26 @@ Full ontology spec: [`docs/ontology.md`](./docs/ontology.md)
 
 ## Pipeline Philosophy
 
-The literal runtime follows a few consistent rules:
+The maintained extraction runtimes follow a few consistent rules:
 
 - scope-first modeling: `Company` is the corporate shell, `BusinessSegment` is the primary semantic anchor, and `Offering` is the inventory layer
 - canonical extraction over convenience duplication: the extractor does not materialize inherited or rollup facts just to make the graph denser
 - closed semantic vocabularies: `CustomerType`, `Channel`, and `RevenueModel` must map to the approved canonical labels or be omitted
 - precision-first semantic extraction: `SERVES`, `SELLS_THROUGH`, `MONETIZES_VIA`, and `PARTNERS_WITH` favor standardization and explicit support over aggressive recall
 - broader but still text-grounded company geography capture: `OPERATES_IN` is more recall-friendly than the semantic business-model relations, but still constrained to meaningful company presence
-- staged extraction with supervision: the runtime extracts structure first, then relation families, then runs a rule-only reflection pass followed by a filing-aware reconciliation pass
+- pipeline-specific control flow: the analyst runtime is memo-first and staged, while the zero-shot runtime is a single-pass baseline
 
-This means the effective behavior of the literal pipeline comes from three layers together:
+This means the effective behavior of the maintained pipelines comes from three layers together:
 - the formal schema in [`src/ontology/ontology.json`](./src/ontology/ontology.json)
-- the staged extraction and reflection pipeline under [`src/llm/`](./src/llm/) and [`src/llm_extraction/pipelines/`](./src/llm_extraction/pipelines/) with prompt assets in [`prompts/canonical/`](./prompts/canonical/) backing the `literal` pipeline
+- the extraction pipeline implementations under [`src/llm/`](./src/llm/) and [`src/llm_extraction/pipelines/`](./src/llm_extraction/pipelines/) with prompt assets in [`prompts/analyst/`](./prompts/analyst/) and [`prompts/zero-shot/`](./prompts/zero-shot/)
 - the final normalization and structural enforcement in [`src/ontology/validator.py`](./src/ontology/validator.py)
 
 ## Extraction Pipelines
 
-The repo ships two extraction pipelines:
+The repo ships two supported extraction pipelines:
 
-- `literal`: the staged, ontology-constrained extraction runtime
-- `analyst`: a sibling runtime that first builds a structured analyst memo from the full filing, then compiles that memo into the ontology graph and runs a short overreach critique pass
-
-### Literal Extraction Pipeline
-
-High-level flow:
-
-1. Read the filing text, infer `company_name` from the input filename, and write `chunks.json`
-2. `PASS 1`: build the structural skeleton with only `HAS_SEGMENT` and `OFFERS`
-3. `PASS 2A`: extract only `SELLS_THROUGH`
-4. `PASS 2B`: extract only `MONETIZES_VIA`
-5. `PASS 3`: extract only `SERVES` from the structural graph
-6. `PASS 4`: extract only company-level `OPERATES_IN` and `PARTNERS_WITH`
-7. `Reflection 1`: enforce ontology and graph-rule compliance without adding new filing facts
-8. `Reflection 2`: reconcile the draft graph against the full filing
-9. Resolve surface forms, revalidate the final graph, and write final artifacts
-10. Optionally load the graph into Neo4j
-
-Runtime notes:
-- each LLM step is relation-scoped and independently audited
-- the pass outputs are merged incrementally rather than regenerated from scratch each time
-- the final CLI validation is ontology- and structure-driven, with duplicate removal and place normalization
-- the final CLI validation does not require strict text grounding by default
-- if a reflection pass fails or returns an empty graph, the runtime falls back to the prior graph instead of hard-failing the whole run
-- `--only-pass1` stops after the structural skeleton, then still resolves, validates, and can still load to Neo4j unless `--skip-neo4j` is also set
+- `analyst`: a memo-first runtime that builds a structured analyst memo from the full filing, then compiles that memo into the ontology graph and runs a short overreach critique pass
+- `zero-shot`: a single-pass baseline that emits the ontology graph directly from the filing
 
 ### Analyst Extraction Pipeline
 
@@ -93,7 +70,20 @@ Runtime notes:
 - the memo is a first-class structured plain-text artifact, not just hidden reasoning
 - the memo explicitly separates filing support, analyst inference, and uncertainty
 - the analyst runtime treats the ontology as the target graph structure, not as a literal paragraph-extraction cage
-- `--only-pass1` is intentionally literal-only because the analyst pipeline's first pass is a memo rather than a loadable graph
+
+### Zero-Shot Extraction Pipeline
+
+High-level flow:
+
+1. Read the filing text, infer `company_name` from the input filename, and write `chunks.json`
+2. `Zero-shot extraction`: build the full ontology graph in one pass
+3. Resolve surface forms, revalidate the final graph, and write final artifacts
+4. Optionally load the graph into Neo4j
+
+Runtime notes:
+- this path is the leanest extraction baseline in the repo
+- the single-pass output is still audited, resolved, validated, and optionally loaded with the same runtime tooling as the analyst pipeline
+- the final CLI validation does not require strict text grounding by default
 
 ## Query Interface
 
@@ -134,10 +124,10 @@ src/
   llm_extraction/
     prompting.py          lightweight prompt loading/rendering helpers
     pipelines/__init__.py pipeline registry and runner dispatch
-    pipelines/canonical/
-                          literal pipeline orchestration
     pipelines/analyst/
                           analyst memo -> graph pipeline orchestration
+    pipelines/zero_shot/
+                          single-pass ontology extraction orchestration
   ontology/
     ontology.json         canonical ontology config
     config.py             canonical ontology loader
@@ -153,8 +143,8 @@ src/
 
 prompts/
   README.md               prompt asset overview
-  canonical/              prompt assets backing the literal pipeline
   analyst/                analyst pipeline prompt assets
+  zero-shot/              zero-shot baseline prompt assets
 
 docs/
   ontology.md             canonical ontology specification
@@ -278,16 +268,10 @@ Run the extraction pipeline:
 ./scripts/kg-pipeline data/microsoft_10k.txt --skip-neo4j
 ```
 
-Optional explicit `literal` pipeline flag:
+Optional explicit `zero-shot` pipeline flag:
 
 ```bash
-./scripts/kg-pipeline data/microsoft_10k.txt --pipeline literal --skip-neo4j
-```
-
-Run only the structural skeleton:
-
-```bash
-./scripts/kg-pipeline data/microsoft_10k.txt --only-pass1 --skip-neo4j
+./scripts/kg-pipeline data/microsoft_10k.txt --pipeline zero-shot --skip-neo4j
 ```
 
 Render a Cypher query without executing it:
@@ -354,12 +338,11 @@ Provider notes:
 - `opencode-go` reads `--api-key` first, then `OPENCODE_GO_API_KEY`, then `OPENCODE_API_KEY`
 - for `opencode-go`, the runtime rewrites `system` messages to `user` messages for compatibility while keeping the rest of the pipeline flow unchanged
 - `opencode-go` defaults to `--max-output-tokens 20000`; override it if needed
-- the CLI exposes both the `literal` and `analyst` pipelines
+- the CLI exposes both the `analyst` and `zero-shot` pipelines
 - every run writes `run_summary.json`; the console header shows pipeline, provider, and model, and LLM attempt summaries show token counts when available
 - successful Neo4j loads now replace the previous graph footprint for that same company by default; use `--clear-neo4j` only when you truly want to wipe the entire database first
 
 Useful CLI flags:
-- `--only-pass1`: stop after structural extraction, then still resolve/validate and optionally load
 - `--company-name`: override the inferred company name used for output folders and company-scoped Neo4j operations
 - `--max-retries`: change the retry budget per LLM call
 - `--base-url`: pass either an API root or a full endpoint URL; the runtime normalizes common suffixes
@@ -409,7 +392,7 @@ Load one exact saved run for a company:
 
 You can also pass a relative path inside that company's pipeline folder, but `--run` is intentionally limited to that folder. It will not jump to another company or to an arbitrary filesystem path.
 
-Use `--pipeline literal` if you want the command to target literal outputs instead of the default analyst outputs.
+Use `--pipeline zero-shot` if you want the command to target zero-shot outputs instead of the default analyst outputs.
 Use `--yes` to skip the bulk-load warning when Neo4j already contains data.
 If you target one company with `--company` and that company is already loaded, the command now asks for confirmation before replacing that company graph.
 
@@ -463,7 +446,7 @@ These are the main commands that touch Neo4j, and they are meant for different m
 The most useful flags in practice are:
 
 - `--company-name` on `kg-pipeline` when the filename is not the company identity you want to use for outputs and Neo4j replacement.
-- `--pipeline literal|analyst` on `kg-pipeline`, `kg-neo4j-load`, and `kg-neo4j-status` when you want to work with literal outputs instead of the default analyst ones.
+- `--pipeline analyst|zero-shot` on `kg-pipeline`, `kg-neo4j-load`, and `kg-neo4j-status` when you want to switch output families.
 - `--keep-current-output --skip-neo4j` on `kg-pipeline` when you want to save a test run under `runs/` without replacing the current `latest/` output or the live Neo4j graph.
 - `--clear-neo4j` on `kg-pipeline` only when you intentionally want to wipe the entire Neo4j database before loading.
 - `--yes` on `kg-neo4j-load` or `kg-neo4j-unload` when the command is running in automation or a non-interactive script.
@@ -587,16 +570,11 @@ Outputs are now organized by company and pipeline:
 ```text
 outputs/
   microsoft/
-    literal/
+    analyst/
       latest/
         ...
-      runs/
-        20260417T101500Z/
-          ...
-      failed/
-        20260417T103000Z/
-          ...
-    analyst/
+      manifest.json
+    zero-shot/
       latest/
         ...
       manifest.json
@@ -629,31 +607,18 @@ Operational safety notes:
 - `bash ./scripts/check_repo.sh` is the deeper maintainer check that runs tests, compile checks, wrapper smoke checks, and a package-install smoke test
 - `.github/workflows/checks.yml` runs the same repo-check script on pushes and pull requests
 
-Literal pipeline runs write artifacts such as:
-- `run_summary.json`
-- `chunks.json`
-- `skeleton_extraction.json`
-- `pass2_channels_extraction.json`
-- `pass2_revenue_extraction.json`
-- `pass2_commercial_extraction.json`
-- `pass3_serves_extraction.json`
-- `pass4_corporate_extraction.json`
-- `pre_reflection_extraction.json`
-- `rule_reflection_extraction.json`
-- `reflection_extraction.json`
-- `extractions.json`
-- `extraction_audits.json`
-- `final_output_validation_report.json`
-- `resolved_triples.json`
-- `validation_report.json`
-
-`--only-pass1` writes the structural subset of these artifacts rather than the full multi-pass set.
-
 Analyst pipeline runs write a different mix centered on:
 - `analyst_memo_foundation.md`
 - `analyst_memo_augmented.md`
 - `analyst_graph_compilation.json`
 - `analyst_graph_critique.json`
+- `run_summary.json`
+- `chunks.json`
+- `resolved_triples.json`
+- `validation_report.json`
+
+Zero-shot pipeline runs write a smaller graph-only set centered on:
+- `zero_shot_extraction.json`
 - `run_summary.json`
 - `chunks.json`
 - `resolved_triples.json`

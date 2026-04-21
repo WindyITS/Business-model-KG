@@ -1,6 +1,6 @@
 # Business Model Ontology
 
-Final segment-centered ontology used by the canonical extraction pipeline.
+Final segment-centered ontology used by the maintained extraction pipelines.
 
 This version prioritizes:
 - canonical structure
@@ -60,7 +60,7 @@ The canonical node and relation schema lives in [`src/ontology/ontology.json`](.
 
 In practice, though, the production ontology is enforced through three layers together:
 - the formal schema and canonical labels
-- the staged extraction pipeline in [`src/llm/`](../src/llm/), the pipeline registry under [`src/llm_extraction/pipelines/`](../src/llm_extraction/pipelines/), and canonical prompt assets in [`prompts/canonical/`](../prompts/canonical/)
+- the maintained extraction runtimes in [`src/llm/`](../src/llm/), the pipeline registry under [`src/llm_extraction/pipelines/`](../src/llm_extraction/pipelines/), and the prompt assets in [`prompts/analyst/`](../prompts/analyst/) and [`prompts/zero-shot/`](../prompts/zero-shot/)
 - the runtime validator in [`src/ontology/validator.py`](../src/ontology/validator.py)
 
 This document records the full effective behavior of the maintained pipeline, not just the raw schema file.
