@@ -25,8 +25,6 @@ kg-pipeline = "runtime.main:main"
 kg-evaluate-graph = "graph.evaluate_graph:main"
 kg-query = "runtime.query:main_query"
 kg-query-cypher = "runtime.query_cypher:main"
-kg-query-jolly = "runtime.query_jolly:main"
-kg-query-cypher-jolly = "runtime.query_cypher_jolly:main"
 kg-neo4j-unload = "runtime.neo4j_admin:main"
 kg-neo4j-load = "runtime.neo4j_load:main"
 kg-neo4j-status = "runtime.neo4j_status:main"
@@ -58,6 +56,5 @@ llm_extraction = [
     "_bundled_prompts/README.md",
     "_bundled_prompts/analyst/README.md",
     "_bundled_prompts/analyst/*.txt",
-    "_bundled_prompts/canonical/*.txt",
     "_bundled_prompts/zero-shot/*.txt",
 ]

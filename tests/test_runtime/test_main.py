@@ -685,6 +685,78 @@ class RuntimeMainTests(unittest.TestCase):
 
         self.assertEqual(exc.exception.code, 2)
 
+    def test_main_rejects_removed_clear_neo4j_flag(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            filing_path = tmp_path / "microsoft_10k.txt"
+            filing_path.write_text("ITEM 1. BUSINESS\nMicrosoft does business.\n", encoding="utf-8")
+
+            with self.assertRaises(SystemExit) as exc:
+                with patch(
+                    "sys.argv",
+                    ["main.py", str(filing_path), "--clear-neo4j"],
+                ):
+                    main_module.main()
+
+        self.assertEqual(exc.exception.code, 2)
+
+    def test_main_replaces_company_graph_without_full_database_clear(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            filing_path = tmp_path / "microsoft_10k.txt"
+            filing_path.write_text("ITEM 1. BUSINESS\nMicrosoft does business.\n", encoding="utf-8")
+            run_dir = tmp_path / "outputs" / "run"
+            resolved_triple = Triple(
+                subject="Microsoft",
+                subject_type="Company",
+                relation="HAS_SEGMENT",
+                object="Intelligent Cloud",
+                object_type="BusinessSegment",
+            )
+            fake_result = self._zero_shot_result(resolved_triple)
+            layout = self._output_layout(run_dir, pipeline="zero-shot")
+            fake_loader = MagicMock()
+            fake_loader.replace_company_triples.return_value = (
+                {
+                    "company_name": "Microsoft",
+                    "scoped_nodes_deleted": 1,
+                    "scoped_relationships_deleted": 0,
+                    "company_relationships_deleted": 0,
+                    "company_node_deleted": 0,
+                    "orphan_nodes_deleted": 0,
+                },
+                1,
+            )
+
+            with patch.object(main_module, "_prepare_output_layout", return_value=layout), patch.object(
+                main_module, "finalize_successful_run", return_value=run_dir
+            ), patch.object(
+                main_module, "finalize_failed_run", return_value=run_dir
+            ), patch.object(
+                main_module, "resolve_model_settings", return_value=self._local_model_settings()
+            ), patch.object(main_module, "LLMExtractor", return_value=SimpleNamespace()), patch.object(
+                main_module, "run_extraction_pipeline", return_value=fake_result
+            ), patch.object(
+                main_module, "resolve_entities", return_value=[resolved_triple]
+            ), patch.object(
+                main_module,
+                "validate_triples",
+                return_value={
+                    "valid_triples": [resolved_triple.model_dump()],
+                    "summary": {"invalid_triple_count": 0, "duplicate_triple_count": 0},
+                },
+            ), patch.object(
+                main_module, "Neo4jLoader", return_value=fake_loader
+            ), patch(
+                "sys.argv", ["main.py", str(filing_path), "--pipeline", "zero-shot", "--output-dir", str(tmp_path / "outputs")]
+            ):
+                exit_code = main_module.main()
+
+        self.assertEqual(exit_code, 0)
+        fake_loader.setup_constraints.assert_called_once()
+        fake_loader.replace_company_triples.assert_called_once()
+        fake_loader.clear_graph.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()

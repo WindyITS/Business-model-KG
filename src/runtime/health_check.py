@@ -9,6 +9,7 @@ from pathlib import Path
 from graph.neo4j_loader import Neo4jLoader
 from llm_extraction.pipelines import implemented_pipeline_names
 from runtime.output_layout import discover_output_company_states
+from runtime.query_stack import local_stack_src, resolve_local_stack_config, resolve_local_stack_python
 
 
 @dataclass
@@ -75,6 +76,28 @@ def _check_packaging_tools() -> HealthCheckResult:
             "Run ./scripts/bootstrap_dev.sh to refresh pip/setuptools/wheel in the repo environment.",
         )
     return HealthCheckResult("packaging tools", "ok", ", ".join(versions))
+
+
+def _check_query_stack(root_dir: Path) -> HealthCheckResult:
+    python_path = Path(resolve_local_stack_python(root_dir=root_dir))
+    config_value = resolve_local_stack_config(root_dir=root_dir)
+    config_path = Path(config_value) if config_value else None
+    src_dir = local_stack_src(root_dir)
+    hint = "Routed queries fall back to the hosted planner automatically; fix this only if you want the local Qwen stack available."
+
+    if not python_path.exists():
+        return HealthCheckResult("query stack", "warn", f"local stack python missing at {python_path}", hint)
+    if not src_dir.is_dir():
+        return HealthCheckResult("query stack", "warn", f"local stack source missing at {src_dir}", hint)
+    if config_path is not None and not config_path.is_file():
+        return HealthCheckResult("query stack", "warn", f"local stack config missing at {config_path}", hint)
+
+    config_detail = str(config_path) if config_path is not None else "stack default"
+    return HealthCheckResult(
+        "query stack",
+        "ok",
+        f"python={python_path}; src={src_dir}; config={config_detail}",
+    )
 
 
 def _check_prompts(root_dir: Path) -> HealthCheckResult:
@@ -181,6 +204,7 @@ def main(argv: list[str] | None = None) -> int:
         _check_repo_venv(root_dir),
         _check_packaging_tools(),
         _check_env_example(root_dir),
+        _check_query_stack(root_dir),
         _check_prompts(root_dir),
         _check_ontology(root_dir),
         _check_outputs(root_dir, args.output_dir, args.pipeline),

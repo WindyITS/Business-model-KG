@@ -74,7 +74,7 @@ There are three main Neo4j helper commands:
 
 There is also one operational helper command:
 
-- `kg-health-check`: check whether the local repo, saved outputs, and optional Neo4j service look ready to use
+- `kg-health-check`: check whether the local repo, routed query stack, saved outputs, and optional Neo4j service look ready to use
 
 The important behavior is:
 
@@ -92,8 +92,6 @@ Use:
 - `./scripts/kg-pipeline`
 - `./scripts/kg-query`
 - `./scripts/kg-query-cypher`
-- `./scripts/kg-query-jolly`
-- `./scripts/kg-query-cypher-jolly`
 - `./scripts/kg-neo4j-load`
 - `./scripts/kg-neo4j-status`
 - `./scripts/kg-neo4j-unload`

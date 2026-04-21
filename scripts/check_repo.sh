@@ -38,8 +38,6 @@ for command in \
   kg-pipeline \
   kg-query \
   kg-query-cypher \
-  kg-query-jolly \
-  kg-query-cypher-jolly \
   kg-neo4j-load \
   kg-neo4j-status \
   kg-neo4j-unload \
@@ -66,13 +64,22 @@ if [[ -z "${TOP_LEVEL}" ]]; then
   exit 1
 fi
 
+grep -q '^kg-pipeline = runtime.main:main$' "${ENTRY_POINTS}"
+grep -q '^kg-evaluate-graph = graph.evaluate_graph:main$' "${ENTRY_POINTS}"
+grep -q '^kg-query = runtime.query:main_query$' "${ENTRY_POINTS}"
 grep -q '^kg-health-check = ' "${ENTRY_POINTS}"
 grep -q '^kg-neo4j-load = ' "${ENTRY_POINTS}"
 grep -q '^kg-neo4j-status = ' "${ENTRY_POINTS}"
 grep -q '^kg-neo4j-unload = ' "${ENTRY_POINTS}"
 grep -q '^kg-query-cypher = runtime.query_cypher:main$' "${ENTRY_POINTS}"
-grep -q '^kg-query-jolly = runtime.query_jolly:main$' "${ENTRY_POINTS}"
-grep -q '^kg-query-cypher-jolly = runtime.query_cypher_jolly:main$' "${ENTRY_POINTS}"
+if grep -q '^kg-query-jolly = ' "${ENTRY_POINTS}"; then
+  echo "Removed entry point still packaged: kg-query-jolly" >&2
+  exit 1
+fi
+if grep -q '^kg-query-cypher-jolly = ' "${ENTRY_POINTS}"; then
+  echo "Removed entry point still packaged: kg-query-cypher-jolly" >&2
+  exit 1
+fi
 
 for package_name in \
   graph \

@@ -6,7 +6,6 @@ import os
 import re
 import subprocess
 import sys
-from pathlib import Path
 from typing import Any, Literal
 
 from llm.extractor import LLMExtractor
@@ -17,34 +16,18 @@ from .cypher_validation import normalize_neo4j_uri
 from .model_provider import resolve_model_settings
 from .query_planner import QueryPlanEnvelope, QueryResult, compile_query_plan, validate_compiled_query
 from .query_prompt import QUERY_SYSTEM_PROMPT
+from .query_stack import LOCAL_STACK_MODULE, local_stack_src, resolve_local_stack_config, resolve_local_stack_python
 
 QUERY_FALLBACK_PAYLOAD = '{"answerable": false, "reason": "beyond_local_coverage"}'
 PARAM_REF_RE = re.compile(r"\$([A-Za-z_][A-Za-z0-9_]*)")
 DEFAULT_QUERY_MAX_OUTPUT_TOKENS = 1200
 DEFAULT_ROUTED_FALLBACK_PROVIDER = "opencode-go"
-DEFAULT_JOLLY_PROVIDER = "local"
 ROUTED_STACK_MODE = "routed"
-JOLLY_STACK_MODE = "jolly"
-QueryStackMode = Literal["routed", "jolly"]
-QueryStackSelection = Literal["routed", "fallback", "jolly"]
-LocalPlannerMode = Literal["qwen", "lmstudio"]
-LOCAL_STACK_MODULE = "kg_query_planner_ft.local_stack"
-LOCAL_ROUTER_MODULE = "kg_query_planner_ft.local_router"
+FALLBACK_STACK_MODE = "fallback"
+QueryStackSelection = Literal["routed", "fallback"]
 
 WRITE_REQUEST_RE = re.compile(r"\b(add|create|delete|drop|insert|load|merge|remove|set|update|upsert|write)\b", re.I)
 TIME_REQUEST_RE = re.compile(r"\b(\d{4}|quarter|q[1-4]|month|week|year|yoy|over time|trend|historic)\b", re.I)
-
-
-def _repo_root() -> Path:
-    return Path(__file__).resolve().parents[2]
-
-
-def _default_local_stack_python() -> str:
-    return str(_repo_root() / "finetuning" / ".venv" / "bin" / "python")
-
-
-def _default_local_stack_config() -> str:
-    return str(_repo_root() / "finetuning" / "config" / "default.json")
 
 
 def _json_safe(value: Any) -> Any:
@@ -116,49 +99,6 @@ def _tail(text: str, *, limit: int = 300) -> str:
     return f"...{compact[-(limit - 3):]}"
 
 
-def _is_interactive_terminal() -> bool:
-    return sys.stdin.isatty() and sys.stdout.isatty()
-
-
-def _prompt_yes_no(prompt: str, *, default_yes: bool = True) -> bool:
-    while True:
-        response = input(prompt).strip().casefold()
-        if not response:
-            return default_yes
-        if response in {"y", "yes"}:
-            return True
-        if response in {"n", "no"}:
-            return False
-        _print_status("Please answer Y or n.")
-
-
-def _confirm_api_fallback_after_local_error(error_detail: str) -> bool:
-    _print_status(f"Local model error: {_tail(error_detail)}")
-    if not _is_interactive_terminal():
-        _print_status("Cannot prompt for API fallback in non-interactive mode; aborting.")
-        return False
-    return _prompt_yes_no("Use API fallback instead? [Y/n] ", default_yes=True)
-
-
-def _resolve_local_stack_python(explicit_path: str | None) -> str:
-    if explicit_path:
-        return explicit_path
-    env_path = os.getenv("KG_QUERY_LOCAL_STACK_PYTHON")
-    if env_path:
-        return env_path
-    return _default_local_stack_python()
-
-
-def _resolve_local_stack_config(explicit_path: str | None) -> str | None:
-    if explicit_path:
-        return explicit_path
-    env_path = os.getenv("KG_QUERY_LOCAL_STACK_CONFIG")
-    if env_path:
-        return env_path
-    default_path = _default_local_stack_config()
-    return default_path if Path(default_path).exists() else None
-
-
 def _run_local_module(
     *,
     module_name: str,
@@ -167,14 +107,14 @@ def _run_local_module(
     local_stack_config: str | None,
     timeout_seconds: int,
 ) -> tuple[dict[str, Any] | None, str | None]:
-    python_executable = _resolve_local_stack_python(local_stack_python)
-    config_path = _resolve_local_stack_config(local_stack_config)
+    python_executable = resolve_local_stack_python(local_stack_python)
+    config_path = resolve_local_stack_config(local_stack_config)
     command = [python_executable, "-m", module_name, question]
     if config_path:
         command.extend(["--config", config_path])
 
     runtime_env = dict(os.environ)
-    finetuning_src = _repo_root() / "finetuning" / "src"
+    finetuning_src = local_stack_src()
     existing_pythonpath = runtime_env.get("PYTHONPATH")
     runtime_env["PYTHONPATH"] = (
         f"{finetuning_src}:{existing_pythonpath}" if existing_pythonpath else str(finetuning_src)
@@ -218,22 +158,6 @@ def _run_local_stack(
 ) -> tuple[dict[str, Any] | None, str | None]:
     return _run_local_module(
         module_name=LOCAL_STACK_MODULE,
-        question=question,
-        local_stack_python=local_stack_python,
-        local_stack_config=local_stack_config,
-        timeout_seconds=timeout_seconds,
-    )
-
-
-def _run_local_router(
-    *,
-    question: str,
-    local_stack_python: str | None,
-    local_stack_config: str | None,
-    timeout_seconds: int,
-) -> tuple[dict[str, Any] | None, str | None]:
-    return _run_local_module(
-        module_name=LOCAL_ROUTER_MODULE,
         question=question,
         local_stack_python=local_stack_python,
         local_stack_config=local_stack_config,
@@ -384,22 +308,6 @@ def _generate_fallback_query_with_retry(
             ) from second_error
 
 
-def _generate_local_lmstudio_query(
-    *,
-    question: str,
-    args: argparse.Namespace,
-) -> QueryResult:
-    return _generate_query_with_provider(
-        question=question,
-        provider=DEFAULT_JOLLY_PROVIDER,
-        model=args.local_model or args.model,
-        base_url=args.local_base_url or args.base_url,
-        api_key=args.local_api_key or args.api_key,
-        max_output_tokens=args.max_output_tokens,
-        max_retries=args.max_retries,
-    )
-
-
 def execute_live_query(
     *,
     cypher: str,
@@ -444,6 +352,11 @@ def _print_status(message: str) -> None:
 
 def _print_output(message: str) -> None:
     print(message, file=sys.stdout, flush=True)
+
+
+def _report_local_stack_error(error_detail: str) -> None:
+    _print_status(f"Local query stack unavailable: {_tail(error_detail)}")
+    _print_status("Falling back to hosted planner.")
 
 
 def _format_cell_value(value: Any) -> str:
@@ -505,84 +418,37 @@ def _resolve_query_result(
     *,
     question: str,
     args: argparse.Namespace,
-    mode: QueryStackMode,
 ) -> QueryResult:
-    if mode == JOLLY_STACK_MODE:
-        _print_status("LM Studio jolly mode: generating query plan directly...")
-        return _generate_query_with_provider(
-            question=question,
-            provider=DEFAULT_JOLLY_PROVIDER,
-            model=args.model,
-            base_url=args.base_url,
-            api_key=args.api_key,
-            max_output_tokens=args.max_output_tokens,
-            max_retries=args.max_retries,
-        )
-
-    force_fallback = bool(getattr(args, "skip_local_stack", False)) or getattr(args, "stack", ROUTED_STACK_MODE) == "fallback"
+    force_fallback = bool(getattr(args, "skip_local_stack", False)) or getattr(args, "stack", ROUTED_STACK_MODE) == FALLBACK_STACK_MODE
     if not force_fallback:
-        local_planner_mode: LocalPlannerMode = getattr(args, "local_planner", "qwen")
-        if local_planner_mode == "lmstudio":
-            _print_status("Routing with local DeBERTa router + LM Studio local planner...")
-            router_payload, router_error = _run_local_router(
-                question=question,
-                local_stack_python=args.local_stack_python,
-                local_stack_config=args.local_stack_config,
-                timeout_seconds=args.local_stack_timeout,
-            )
-            if router_payload is not None:
-                decision = str(router_payload.get("decision", "")).strip().casefold()
-                if decision == "refuse":
-                    refusal = QueryResult(answerable=False, reason=_infer_refusal_reason(question))
-                    _print_status(f"Router decision: refuse ({refusal.reason}).")
-                    return refusal
-                if decision == "local":
-                    _print_status("Router decision: local (using LM Studio local planner output).")
-                    try:
-                        return _generate_local_lmstudio_query(question=question, args=args)
-                    except Exception as local_planner_error:  # noqa: BLE001
-                        if not _confirm_api_fallback_after_local_error(str(local_planner_error)):
-                            raise ValueError("API fallback declined after local model error.") from local_planner_error
-                        _print_status("LM Studio local planner failed; falling back to remote planner.")
-                elif decision == "api_fallback":
-                    _print_status("Router decision: api_fallback (using remote planner fallback).")
+        _print_status("Routing with local Qwen planner...")
+        local_payload, local_error = _run_local_stack(
+            question=question,
+            local_stack_python=args.local_stack_python,
+            local_stack_config=args.local_stack_config,
+            timeout_seconds=args.local_stack_timeout,
+        )
+        if local_payload is not None:
+            local_result, decision = _result_from_local_stack(local_payload, question=question)
+            if local_result is not None:
+                if local_result.answerable:
+                    _print_status("Router decision: local (using local Qwen planner output).")
                 else:
-                    _print_status(f"Router decision: {decision or 'unknown'} (falling back to remote planner).")
-            elif router_error:
-                if not _confirm_api_fallback_after_local_error(router_error):
-                    raise ValueError("API fallback declined after local model error.")
-                _print_status("Local router unavailable; falling back to remote planner.")
-        else:
-            _print_status("Routing with local router + Qwen planner...")
-            local_payload, local_error = _run_local_stack(
-                question=question,
-                local_stack_python=args.local_stack_python,
-                local_stack_config=args.local_stack_config,
-                timeout_seconds=args.local_stack_timeout,
-            )
-            if local_payload is not None:
-                local_result, decision = _result_from_local_stack(local_payload, question=question)
-                if local_result is not None:
-                    if local_result.answerable:
-                        _print_status("Router decision: local (using local Qwen planner output).")
-                    else:
-                        _print_status(f"Router decision: refuse ({local_result.reason}).")
-                    return local_result
-                planner_error = _local_planner_error(local_payload)
-                if planner_error and not _confirm_api_fallback_after_local_error(planner_error):
-                    raise ValueError("API fallback declined after local model error.")
-                if decision == "api_fallback":
-                    _print_status("Router decision: api_fallback (using remote planner fallback).")
-                else:
-                    _print_status(f"Router decision: {decision or 'unknown'} (falling back to remote planner).")
-            elif local_error:
-                if not _confirm_api_fallback_after_local_error(local_error):
-                    raise ValueError("API fallback declined after local model error.")
-                _print_status("Falling back to remote planner.")
+                    _print_status(f"Router decision: refuse ({local_result.reason}).")
+                return local_result
+            planner_error = _local_planner_error(local_payload)
+            if planner_error:
+                _report_local_stack_error(planner_error)
+            elif decision == "api_fallback":
+                _print_status("Router decision: api_fallback (using hosted planner fallback).")
+            else:
+                _print_status(f"Router decision: {decision or 'unknown'} (using hosted planner fallback).")
+        elif local_error:
+            _report_local_stack_error(local_error)
     else:
-        _print_status("Using fallback planner only.")
+        _print_status("Using hosted planner only.")
 
-    _print_status("Generating fallback query plan...")
+    _print_status("Generating hosted fallback query plan...")
     return _generate_fallback_query_with_retry(
         question=question,
         provider=args.provider,
@@ -594,116 +460,68 @@ def _resolve_query_result(
     )
 
 
-def _build_parser(*, execute: bool, mode: QueryStackMode) -> argparse.ArgumentParser:
-    if mode == JOLLY_STACK_MODE:
-        description = (
-            "LM Studio jolly mode: generate read-only Cypher directly from a local model and run it against Neo4j."
-            if execute
-            else "LM Studio jolly mode: generate read-only Cypher directly from a local model."
-        )
-    else:
-        description = (
-            "Route query with local DeBERTa router and local planner first, then use remote planner fallback when needed, and run on Neo4j."
-            if execute
-            else "Route query with local DeBERTa router and local planner first, then use remote planner fallback when needed, and render Cypher."
-        )
-
+def _build_parser(*, execute: bool) -> argparse.ArgumentParser:
+    description = (
+        "Route query with the local Qwen planner first, then use hosted planner fallback when needed, and run on Neo4j."
+        if execute
+        else "Route query with the local Qwen planner first, then use hosted planner fallback when needed, and render Cypher."
+    )
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument("question", nargs="+", help="Natural-language question about the current knowledge graph.")
-    if mode == JOLLY_STACK_MODE:
-        parser.add_argument(
-            "--base-url",
-            type=str,
-            default=None,
-            help="Base URL for LM Studio's OpenAI-compatible API.",
-        )
-    else:
-        parser.add_argument(
-            "--stack",
-            choices=["routed", "fallback", "jolly"],
-            default="routed",
-            help="Execution stack: routed (default), fallback (skip local router/planner), or jolly (LM Studio direct).",
-        )
-        parser.add_argument(
-            "--local-planner",
-            choices=["qwen", "lmstudio"],
-            default="qwen",
-            help="Planner used for local-safe routed queries: qwen (default) or lmstudio.",
-        )
-        parser.add_argument(
-            "--provider",
-            "--fallback-provider",
-            dest="provider",
-            choices=["local", "opencode-go"],
-            default=DEFAULT_ROUTED_FALLBACK_PROVIDER,
-            help="Planner fallback provider used when local routing decides api_fallback or is unavailable.",
-        )
-        parser.add_argument(
-            "--base-url",
-            type=str,
-            default=None,
-            help="Base URL for selected stack API (fallback provider or LM Studio jolly).",
-        )
-        parser.add_argument(
-            "--skip-local-stack",
-            action="store_true",
-            help="Bypass local router/planner and always use fallback planner generation.",
-        )
-        parser.add_argument(
-            "--local-stack-python",
-            type=str,
-            default=None,
-            help="Python executable for local routing/planning (defaults to finetuning/.venv/bin/python).",
-        )
-        parser.add_argument(
-            "--local-stack-config",
-            type=str,
-            default=None,
-            help="Config path passed to the local router/planner stack.",
-        )
-        parser.add_argument(
-            "--local-stack-timeout",
-            type=int,
-            default=120,
-            help="Timeout in seconds for local router/local-planner execution.",
-        )
-        parser.add_argument(
-            "--local-model",
-            type=str,
-            default=None,
-            help="LM Studio model name/ID to use when --local-planner lmstudio.",
-        )
-        parser.add_argument(
-            "--local-base-url",
-            type=str,
-            default=None,
-            help="LM Studio base URL to use when --local-planner lmstudio.",
-        )
-        parser.add_argument(
-            "--local-api-key",
-            type=str,
-            default=None,
-            help="LM Studio API key to use when --local-planner lmstudio.",
-        )
+    parser.add_argument(
+        "--stack",
+        choices=["routed", "fallback"],
+        default="routed",
+        help="Execution stack: routed (default) or fallback (skip the local query stack).",
+    )
+    parser.add_argument(
+        "--provider",
+        "--fallback-provider",
+        dest="provider",
+        choices=["opencode-go"],
+        default=DEFAULT_ROUTED_FALLBACK_PROVIDER,
+        help="Hosted fallback planner provider.",
+    )
+    parser.add_argument(
+        "--base-url",
+        type=str,
+        default=None,
+        help="Base URL for the hosted fallback planner API.",
+    )
+    parser.add_argument(
+        "--skip-local-stack",
+        action="store_true",
+        help="Bypass the local query stack and always use hosted fallback planner generation.",
+    )
+    parser.add_argument(
+        "--local-stack-python",
+        type=str,
+        default=None,
+        help="Python executable for the local query stack (defaults to finetuning/.venv/bin/python).",
+    )
+    parser.add_argument(
+        "--local-stack-config",
+        type=str,
+        default=None,
+        help="Optional config path passed to the local query stack.",
+    )
+    parser.add_argument(
+        "--local-stack-timeout",
+        type=int,
+        default=120,
+        help="Timeout in seconds for local query-stack execution.",
+    )
     parser.add_argument(
         "--model",
         type=str,
         default=None,
-        help=(
-            "LM Studio model name/ID for jolly mode."
-            if mode == JOLLY_STACK_MODE
-            else "Model name/ID for fallback planner or LM Studio jolly stack."
-        ),
+        help="Model name/ID for the hosted fallback planner.",
     )
     parser.add_argument(
         "--api-key",
         type=str,
         default=None,
-        help=(
-            "API key for LM Studio's OpenAI-compatible API."
-            if mode == JOLLY_STACK_MODE
-            else "API key for fallback provider or LM Studio jolly stack."
-        ),
+        help="API key for the hosted fallback planner.",
     )
     parser.add_argument(
         "--max-output-tokens",
@@ -725,23 +543,13 @@ def _build_parser(*, execute: bool, mode: QueryStackMode) -> argparse.ArgumentPa
     return parser
 
 
-def _effective_mode(*, mode: QueryStackMode, args: argparse.Namespace) -> QueryStackMode:
-    if mode == JOLLY_STACK_MODE:
-        return JOLLY_STACK_MODE
-    stack = getattr(args, "stack", ROUTED_STACK_MODE)
-    if stack == JOLLY_STACK_MODE:
-        return JOLLY_STACK_MODE
-    return ROUTED_STACK_MODE
-
-
-def _run(argv: list[str] | None, *, execute: bool, mode: QueryStackMode) -> int:
-    parser = _build_parser(execute=execute, mode=mode)
+def _run(argv: list[str] | None, *, execute: bool) -> int:
+    parser = _build_parser(execute=execute)
     args = parser.parse_args(argv)
     question = _question_text(args.question)
-    effective_mode = _effective_mode(mode=mode, args=args)
 
     try:
-        query_result = _resolve_query_result(question=question, args=args, mode=effective_mode)
+        query_result = _resolve_query_result(question=question, args=args)
     except (ExtractionError, ValueError) as exc:
         _print_status(f"Error: {exc}")
         return 1
@@ -793,19 +601,11 @@ def _run(argv: list[str] | None, *, execute: bool, mode: QueryStackMode) -> int:
 
 
 def main_query(argv: list[str] | None = None) -> int:
-    return _run(argv, execute=True, mode=ROUTED_STACK_MODE)
+    return _run(argv, execute=True)
 
 
 def main_query_cypher(argv: list[str] | None = None) -> int:
-    return _run(argv, execute=False, mode=ROUTED_STACK_MODE)
-
-
-def main_query_jolly(argv: list[str] | None = None) -> int:
-    return _run(argv, execute=True, mode=JOLLY_STACK_MODE)
-
-
-def main_query_cypher_jolly(argv: list[str] | None = None) -> int:
-    return _run(argv, execute=False, mode=JOLLY_STACK_MODE)
+    return _run(argv, execute=False)
 
 
 if __name__ == "__main__":

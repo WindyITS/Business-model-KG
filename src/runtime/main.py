@@ -494,7 +494,6 @@ def main() -> int:
     )
     parser.add_argument("--output-dir", type=str, default="outputs", help="Directory where run artifacts are written.")
     parser.add_argument("--skip-neo4j", action="store_true", help="Skip Neo4j loading and only write extraction artifacts.")
-    parser.add_argument("--clear-neo4j", action="store_true", help="Clear the Neo4j database before loading triples. Use with care.")
     parser.add_argument(
         "--keep-current-output",
         action="store_true",
@@ -668,27 +667,18 @@ def main() -> int:
             console.finish_stage(status="skipped", details=[("load", "skipped by request")])
         else:
             loader = Neo4jLoader(uri=args.neo4j_uri, user=args.neo4j_user, password=args.neo4j_password)
-            graph_cleared = False
             unload_summary: dict[str, int | str] | None = None
             try:
-                if args.clear_neo4j:
-                    loader.clear_graph()
-                    graph_cleared = True
                 loader.setup_constraints()
-                if args.clear_neo4j:
-                    loaded_triples = loader.load_triples(resolved_triples, company_name=company_name)
-                else:
-                    unload_summary, loaded_triples = loader.replace_company_triples(
-                        resolved_triples,
-                        company_name=company_name,
-                    )
+                unload_summary, loaded_triples = loader.replace_company_triples(
+                    resolved_triples,
+                    company_name=company_name,
+                )
             finally:
                 loader.close()
 
             neo4j_details: list[tuple[str, Any]] = []
-            if graph_cleared:
-                neo4j_details.append(("database", "cleared before load"))
-            elif unload_summary is not None:
+            if unload_summary is not None:
                 unloaded_items = _company_unload_count(unload_summary)
                 if unloaded_items:
                     neo4j_details.append(("previous graph", f"replaced {unloaded_items} existing company graph items"))
@@ -716,7 +706,6 @@ def main() -> int:
                 "duplicate_triple_count": validation_report["summary"]["duplicate_triple_count"],
                 "loaded_triple_count": loaded_triples,
                 "skip_neo4j": args.skip_neo4j,
-                "clear_neo4j": args.clear_neo4j,
             }
         )
         summary.update(artifact_bundle["summary_metrics"])

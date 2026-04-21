@@ -18,6 +18,33 @@ class HealthCheckTests(unittest.TestCase):
         self.assertEqual(result.status, "warn")
         self.assertIn("bootstrap_dev.sh", result.hint or "")
 
+    def test_check_query_stack_warns_when_default_python_is_missing(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root_dir = Path(tmp_dir)
+
+            result = health_check._check_query_stack(root_dir)
+
+        self.assertEqual(result.status, "warn")
+        self.assertIn("local stack python missing", result.detail)
+        self.assertIn("hosted planner automatically", result.hint or "")
+
+    def test_check_query_stack_is_ok_when_python_and_source_exist(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root_dir = Path(tmp_dir)
+            python_path = root_dir / "finetuning" / ".venv" / "bin"
+            python_path.mkdir(parents=True, exist_ok=True)
+            (python_path / "python").write_text("#!/usr/bin/env python\n", encoding="utf-8")
+            (root_dir / "finetuning" / "src").mkdir(parents=True, exist_ok=True)
+            config_path = root_dir / "finetuning" / "config"
+            config_path.mkdir(parents=True, exist_ok=True)
+            (config_path / "default.json").write_text("{}", encoding="utf-8")
+
+            result = health_check._check_query_stack(root_dir)
+
+        self.assertEqual(result.status, "ok")
+        self.assertIn("python=", result.detail)
+        self.assertIn("config=", result.detail)
+
     def test_check_outputs_reports_latest_company_count(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
             root_dir = Path(tmp_dir)
@@ -43,6 +70,10 @@ class HealthCheckTests(unittest.TestCase):
             ontology_dir = root_dir / "src" / "ontology"
             ontology_dir.mkdir(parents=True, exist_ok=True)
             (ontology_dir / "ontology.json").write_text("{}", encoding="utf-8")
+            local_stack_python = root_dir / "finetuning" / ".venv" / "bin"
+            local_stack_python.mkdir(parents=True, exist_ok=True)
+            (local_stack_python / "python").write_text("#!/usr/bin/env python\n", encoding="utf-8")
+            (root_dir / "finetuning" / "src").mkdir(parents=True, exist_ok=True)
             venv_python = root_dir / "venv" / "bin"
             venv_python.mkdir(parents=True, exist_ok=True)
             (venv_python / "python").write_text("#!/usr/bin/env python\n", encoding="utf-8")
@@ -63,6 +94,7 @@ class HealthCheckTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         self.assertIn("REPO HEALTH CHECK", stdout.getvalue())
+        self.assertIn("query stack:", stdout.getvalue().lower())
         self.assertNotIn("neo4j:", stdout.getvalue().lower())
 
     def test_check_neo4j_warns_when_connection_fails(self):

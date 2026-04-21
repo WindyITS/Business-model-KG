@@ -89,9 +89,8 @@ Runtime notes:
 
 The runtime includes a read-only natural-language query path for the live Neo4j graph:
 
-- `kg-query-cypher` and `kg-query` use the routed stack: local DeBERTa router + local planner first (`qwen` or `lmstudio`), with remote planner fallback
-- `kg-query-cypher-jolly` and `kg-query-jolly` force LM Studio direct planning and bypass routing/fallback logic
-- `kg-query` and `kg-query-cypher` also accept `--stack routed|fallback|jolly` so one command can select the behavior
+- `kg-query-cypher` and `kg-query` use the routed stack: the local Qwen query stack first, with hosted planner fallback when needed
+- `kg-query` and `kg-query-cypher` also accept `--stack routed|fallback` so one command can either try the local stack first or force hosted fallback only
 
 The planner prompt lives in [`src/runtime/query_prompt.py`](./src/runtime/query_prompt.py), the deterministic compiler lives in [`src/runtime/query_planner.py`](./src/runtime/query_planner.py), and the read-only Cypher guards live in [`src/runtime/cypher_validation.py`](./src/runtime/cypher_validation.py).
 
@@ -155,8 +154,6 @@ scripts/
   kg-pipeline             source-checkout pipeline wrapper
   kg-query                source-checkout query wrapper
   kg-query-cypher         source-checkout query-to-Cypher wrapper
-  kg-query-jolly          source-checkout LM Studio direct query wrapper
-  kg-query-cypher-jolly   source-checkout LM Studio direct query-to-Cypher wrapper
   kg-neo4j-load           source-checkout saved-output load wrapper
   kg-neo4j-status         source-checkout Neo4j status wrapper
   kg-neo4j-unload         source-checkout Neo4j unload wrapper
@@ -211,8 +208,6 @@ That editable install creates the convenience commands in `venv/bin/`:
 - `kg-evaluate-graph`
 - `kg-query`
 - `kg-query-cypher`
-- `kg-query-jolly`
-- `kg-query-cypher-jolly`
 - `kg-neo4j-load`
 - `kg-neo4j-status`
 - `kg-neo4j-unload`
@@ -233,8 +228,6 @@ For day-to-day work from a source checkout, the most reliable commands are the w
 - `./scripts/kg-pipeline`
 - `./scripts/kg-query`
 - `./scripts/kg-query-cypher`
-- `./scripts/kg-query-jolly`
-- `./scripts/kg-query-cypher-jolly`
 - `./scripts/kg-neo4j-load`
 - `./scripts/kg-neo4j-status`
 - `./scripts/kg-neo4j-unload`
@@ -298,19 +291,12 @@ Force fallback planner only (skip local router/local planner) with one switch:
 ./scripts/kg-query-cypher "Which company segments sell through marketplaces?" --stack fallback
 ```
 
-Force LM Studio direct planning (jolly mode, no routing/fallback):
-
-```bash
-./scripts/kg-query-cypher-jolly "Which company segments sell through marketplaces?"
-./scripts/kg-query-jolly "Which company segments sell through marketplaces?"
-```
-
-Use LM Studio as the routed local planner (router still runs first):
+Point routed query commands at a specific local query-stack environment:
 
 ```bash
 ./scripts/kg-query-cypher "Which company segments sell through marketplaces?" \
-  --local-planner lmstudio \
-  --local-model my-base-model-in-lmstudio
+  --local-stack-python /path/to/finetuning/.venv/bin/python \
+  --local-stack-config /path/to/finetuning/config/default.json
 ```
 
 Run against OpenCode Go with a hosted open model:
@@ -343,7 +329,7 @@ Provider notes:
 - `opencode-go` defaults to `--max-output-tokens 20000`; override it if needed
 - the CLI exposes both the `analyst` and `zero-shot` pipelines
 - every run writes `run_summary.json`; the console header shows pipeline, provider, and model, and LLM attempt summaries show token counts when available
-- successful Neo4j loads now replace the previous graph footprint for that same company by default; use `--clear-neo4j` only when you truly want to wipe the entire database first
+- successful Neo4j loads now replace the previous graph footprint for that same company by default; use `kg-neo4j-unload --yes` when you intentionally want to wipe the full database first
 
 Useful CLI flags:
 - `--company-name`: override the inferred company name used for output folders and company-scoped Neo4j operations
@@ -353,14 +339,11 @@ Useful CLI flags:
 - `--max-output-tokens`: explicitly cap model output tokens
 - `kg-query` / `kg-query-cypher --skip-local-stack`: skip local router/local planner and force fallback planner generation
 - `kg-query` / `kg-query-cypher --stack fallback`: preferred single-switch way to force fallback planner generation
-- `kg-query` / `kg-query-cypher --stack jolly`: run LM Studio jolly mode from the same command surface
-- `kg-query` / `kg-query-cypher --local-planner qwen|lmstudio`: choose the local planner used after router `local` decisions
-- `kg-query` / `kg-query-cypher --local-model <name>`: choose the LM Studio model when `--local-planner lmstudio`
 - `kg-query` / `kg-query-cypher --local-stack-python /path/to/python`: point routed query commands to a specific local stack environment
-- `kg-query` / `kg-query-cypher --provider ...`: choose the fallback planner provider used only when local routing does not return a local-safe plan
-- when local planner errors in routed mode, the CLI asks `Use API fallback instead? [Y/n]` before continuing
+- `kg-query` / `kg-query-cypher --local-stack-config /path/to/config.json`: pass an explicit config to the local query stack
+- `kg-query` / `kg-query-cypher --provider opencode-go`: choose the hosted fallback planner provider used only when local routing does not return a local-safe plan
+- when the local query stack errors in routed mode, the CLI logs the problem and falls back automatically, even in non-interactive shells
 - fallback planner generation retries once with error context; if both attempts fail, the CLI prints a warning
-- `--clear-neo4j`: clear the target database before loading
 - `--keep-current-output`: keep the current `latest/` output untouched and store this successful run under `runs/` instead; requires `--skip-neo4j`
 - `kg-neo4j-load`: load saved outputs into Neo4j; defaults to all `analyst/latest` outputs under `outputs/`
 - `kg-neo4j-status`: report which companies are loaded in Neo4j and whether local latest outputs exist for them
@@ -444,14 +427,13 @@ These are the main commands that touch Neo4j, and they are meant for different m
 - `kg-neo4j-status`: compares Neo4j against the saved outputs for the selected pipeline. It tells you which companies are loaded, which are not, and, for the not-loaded ones, whether a latest output is ready to load. It is a reporting command only and does not modify outputs or Neo4j.
 - `kg-neo4j-unload`: clears the full Neo4j dataset. It asks for confirmation unless you pass `--yes`.
 - `kg-neo4j-unload --company "Name"`: removes only that company's graph footprint from Neo4j and leaves unrelated companies in place. It asks for confirmation unless you pass `--yes`.
-- `kg-health-check`: checks whether the local repo setup looks usable. It reports Python, the repo venv, `.env.example`, prompt assets, ontology assets, saved outputs, and optionally Neo4j connectivity.
+- `kg-health-check`: checks whether the local repo setup looks usable. It reports Python, the repo venv, `.env.example`, the routed query stack, prompt assets, ontology assets, saved outputs, and optionally Neo4j connectivity.
 
 The most useful flags in practice are:
 
 - `--company-name` on `kg-pipeline` when the filename is not the company identity you want to use for outputs and Neo4j replacement.
 - `--pipeline analyst|zero-shot` on `kg-pipeline`, `kg-neo4j-load`, and `kg-neo4j-status` when you want to switch output families.
 - `--keep-current-output --skip-neo4j` on `kg-pipeline` when you want to save a test run under `runs/` without replacing the current `latest/` output or the live Neo4j graph.
-- `--clear-neo4j` on `kg-pipeline` only when you intentionally want to wipe the entire Neo4j database before loading.
 - `--yes` on `kg-neo4j-load` or `kg-neo4j-unload` when the command is running in automation or a non-interactive script.
 - `--skip-neo4j` on `kg-health-check` when you want setup/output checks without treating a stopped Neo4j instance as part of the current task.
 
@@ -471,14 +453,7 @@ Generate the query and run it against the current Neo4j database:
 ./scripts/kg-query "Which companies sell to developers through direct sales?"
 ```
 
-These routed commands try local routing first, then run the configured local planner (`qwen` by default, or `lmstudio` when selected), and use fallback planner generation when needed.
-
-If you want to bypass routing and force LM Studio direct planning:
-
-```bash
-./scripts/kg-query-cypher-jolly "Which companies sell to developers through direct sales?"
-./scripts/kg-query-jolly "Which companies sell to developers through direct sales?"
-```
+These routed commands try the local Qwen query stack first and fall back to the hosted planner automatically when the local stack is unavailable or declines to handle the request. Use `--stack fallback` when you want to bypass the local stack entirely.
 
 `kg-query` returns rows from the live database as plain text, while `kg-query-cypher` returns a runnable
 plain-text Cypher query with generated params already inlined. Progress and error messages are printed to
