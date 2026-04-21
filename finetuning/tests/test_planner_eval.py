@@ -49,10 +49,9 @@ class PlannerEvalTests(unittest.TestCase):
             metrics = {
                 "count": 1,
                 "json_parse_rate": 1.0,
-                "schema_valid_rate": 1.0,
+                "contract_valid_rate": 1.0,
                 "family_accuracy": 1.0,
                 "exact_plan_match_rate": 1.0,
-                "compile_success_rate": 1.0,
                 "per_family": {},
             }
             predictions = [{"question": row["question"], "generated_text": "{\"answerable\":true}"}]
@@ -110,10 +109,9 @@ class PlannerEvalTests(unittest.TestCase):
             metrics = {
                 "count": 1,
                 "json_parse_rate": 1.0,
-                "schema_valid_rate": 1.0,
+                "contract_valid_rate": 1.0,
                 "family_accuracy": 1.0,
                 "exact_plan_match_rate": 1.0,
-                "compile_success_rate": 1.0,
                 "per_family": {},
             }
             predictions = [{"question": row["question"], "generated_text": "{\"answerable\":true}"}]

@@ -131,7 +131,6 @@ class AnalystPipelineRunner:
             schema_model=schema_model,
             fallback_payload=fallback_payload,
             max_retries=max_retries,
-            ontology_version="canonical",
         )
         self.extractor._emit_progress("stage_complete", details=self._stage_complete_details(parsed_payload))
         return parsed_payload, raw_response, attempts_used, audit
@@ -239,7 +238,6 @@ class AnalystPipelineRunner:
                     self.extractor._compact_json(state.compiled_graph_extraction.model_dump(mode="json")),
                 ),
                 stage_label="Analyst critique",
-                ontology_version="canonical",
             )
         except ExtractionError as exc:
             self.extractor._emit_progress("stage_failed", error=str(exc))

@@ -89,10 +89,11 @@ Runtime notes:
 
 The runtime includes a read-only natural-language query path for the live Neo4j graph:
 
-- `kg-query-cypher` and `kg-query` use the routed stack: the local Qwen query stack first, with hosted planner fallback when needed
+- `kg-query-cypher` and `kg-query` use the routed stack: a published local query-stack bundle first, with hosted planner fallback when needed
 - `kg-query` and `kg-query-cypher` also accept `--stack routed|fallback` so one command can either try the local stack first or force hosted fallback only
 
 The planner prompt lives in [`src/runtime/query_prompt.py`](./src/runtime/query_prompt.py), the deterministic compiler lives in [`src/runtime/query_planner.py`](./src/runtime/query_planner.py), and the read-only Cypher guards live in [`src/runtime/cypher_validation.py`](./src/runtime/cypher_validation.py).
+The deployed local query runtime reads a published bundle from `runtime_assets/query_stack/current/` by default; override that with `--local-stack-bundle-dir` or `KG_QUERY_STACK_BUNDLE_DIR` when needed.
 
 The final curated fine-tuning dataset for the query planner is preserved under [`data/query_planner_curated/v1_final`](./data/query_planner_curated/v1_final/). The repo intentionally does not keep a dataset-construction CLI surface.
 
@@ -202,6 +203,7 @@ pip install -e ".[dev]"
 
 The `dev` extra installs the test tooling used by `./scripts/check_repo.sh`. If you only want
 the runtime CLI surface and not the maintainer checks, `pip install -e .` is still enough.
+If you also want the main runtime to execute the published local query stack, install the optional runtime extras with `pip install -e ".[query-stack]"`.
 
 That editable install creates the convenience commands in `venv/bin/`:
 - `kg-pipeline`
@@ -291,12 +293,11 @@ Force fallback planner only (skip local router/local planner) with one switch:
 ./scripts/kg-query-cypher "Which company segments sell through marketplaces?" --stack fallback
 ```
 
-Point routed query commands at a specific local query-stack environment:
+Override the published local query-stack bundle directory:
 
 ```bash
 ./scripts/kg-query-cypher "Which company segments sell through marketplaces?" \
-  --local-stack-python /path/to/finetuning/.venv/bin/python \
-  --local-stack-config /path/to/finetuning/config/default.json
+  --local-stack-bundle-dir /path/to/runtime_assets/query_stack/current
 ```
 
 Run against OpenCode Go with a hosted open model:
@@ -339,8 +340,7 @@ Useful CLI flags:
 - `--max-output-tokens`: explicitly cap model output tokens
 - `kg-query` / `kg-query-cypher --skip-local-stack`: skip local router/local planner and force fallback planner generation
 - `kg-query` / `kg-query-cypher --stack fallback`: preferred single-switch way to force fallback planner generation
-- `kg-query` / `kg-query-cypher --local-stack-python /path/to/python`: point routed query commands to a specific local stack environment
-- `kg-query` / `kg-query-cypher --local-stack-config /path/to/config.json`: pass an explicit config to the local query stack
+- `kg-query` / `kg-query-cypher --local-stack-bundle-dir /path/to/query_stack/current`: point routed query commands to a specific published bundle
 - `kg-query` / `kg-query-cypher --provider opencode-go`: choose the hosted fallback planner provider used only when local routing does not return a local-safe plan
 - when the local query stack errors in routed mode, the CLI logs the problem and falls back automatically, even in non-interactive shells
 - fallback planner generation retries once with error context; if both attempts fail, the CLI prints a warning
@@ -427,7 +427,7 @@ These are the main commands that touch Neo4j, and they are meant for different m
 - `kg-neo4j-status`: compares Neo4j against the saved outputs for the selected pipeline. It tells you which companies are loaded, which are not, and, for the not-loaded ones, whether a latest output is ready to load. It is a reporting command only and does not modify outputs or Neo4j.
 - `kg-neo4j-unload`: clears the full Neo4j dataset. It asks for confirmation unless you pass `--yes`.
 - `kg-neo4j-unload --company "Name"`: removes only that company's graph footprint from Neo4j and leaves unrelated companies in place. It asks for confirmation unless you pass `--yes`.
-- `kg-health-check`: checks whether the local repo setup looks usable. It reports Python, the repo venv, `.env.example`, the routed query stack, prompt assets, ontology assets, saved outputs, and optionally Neo4j connectivity.
+- `kg-health-check`: checks whether the local repo setup looks usable. It reports Python, the repo venv, `.env.example`, the published query-stack bundle, prompt assets, ontology assets, saved outputs, and optionally Neo4j connectivity.
 
 The most useful flags in practice are:
 
@@ -453,7 +453,7 @@ Generate the query and run it against the current Neo4j database:
 ./scripts/kg-query "Which companies sell to developers through direct sales?"
 ```
 
-These routed commands try the local Qwen query stack first and fall back to the hosted planner automatically when the local stack is unavailable or declines to handle the request. Use `--stack fallback` when you want to bypass the local stack entirely.
+These routed commands try the published local query-stack bundle first and fall back to the hosted planner automatically when the local stack is unavailable or declines to handle the request. Use `--stack fallback` when you want to bypass the local stack entirely.
 
 `kg-query` returns rows from the live database as plain text, while `kg-query-cypher` returns a runnable
 plain-text Cypher query with generated params already inlined. Progress and error messages are printed to

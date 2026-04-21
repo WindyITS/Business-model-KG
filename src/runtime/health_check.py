@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import importlib
+import json
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -9,7 +10,7 @@ from pathlib import Path
 from graph.neo4j_loader import Neo4jLoader
 from llm_extraction.pipelines import implemented_pipeline_names
 from runtime.output_layout import discover_output_company_states
-from runtime.query_stack import local_stack_src, resolve_local_stack_config, resolve_local_stack_python
+from runtime.query_stack import load_query_stack_bundle, resolve_query_stack_bundle_dir
 
 
 @dataclass
@@ -79,24 +80,40 @@ def _check_packaging_tools() -> HealthCheckResult:
 
 
 def _check_query_stack(root_dir: Path) -> HealthCheckResult:
-    python_path = Path(resolve_local_stack_python(root_dir=root_dir))
-    config_value = resolve_local_stack_config(root_dir=root_dir)
-    config_path = Path(config_value) if config_value else None
-    src_dir = local_stack_src(root_dir)
-    hint = "Routed queries fall back to the hosted planner automatically; fix this only if you want the local Qwen stack available."
+    bundle_dir = resolve_query_stack_bundle_dir(root_dir=root_dir)
+    hint = (
+        "Routed queries fall back to the hosted planner automatically; publish a bundle with "
+        "publish-query-stack only if you want the local deployed stack available."
+    )
+    if not bundle_dir.exists():
+        return HealthCheckResult("query stack", "warn", f"published bundle missing at {bundle_dir}", hint)
 
-    if not python_path.exists():
-        return HealthCheckResult("query stack", "warn", f"local stack python missing at {python_path}", hint)
-    if not src_dir.is_dir():
-        return HealthCheckResult("query stack", "warn", f"local stack source missing at {src_dir}", hint)
-    if config_path is not None and not config_path.is_file():
-        return HealthCheckResult("query stack", "warn", f"local stack config missing at {config_path}", hint)
+    try:
+        bundle = load_query_stack_bundle(root_dir=root_dir)
+    except (FileNotFoundError, ValueError, json.JSONDecodeError) as exc:
+        return HealthCheckResult("query stack", "warn", str(exc), hint)
 
-    config_detail = str(config_path) if config_path is not None else "stack default"
+    missing_paths: list[str] = []
+    if not bundle.router_model_dir.is_dir():
+        missing_paths.append(f"router model dir missing at {bundle.router_model_dir}")
+    if not bundle.router_thresholds_path.is_file():
+        missing_paths.append(f"router thresholds missing at {bundle.router_thresholds_path}")
+    if not bundle.planner_adapter_dir.is_dir():
+        missing_paths.append(f"planner adapter dir missing at {bundle.planner_adapter_dir}")
+    if bundle.planner_system_prompt_path is not None and not bundle.planner_system_prompt_path.is_file():
+        missing_paths.append(f"planner system prompt missing at {bundle.planner_system_prompt_path}")
+
+    if missing_paths:
+        return HealthCheckResult("query stack", "warn", "; ".join(missing_paths), hint)
+
     return HealthCheckResult(
         "query stack",
         "ok",
-        f"python={python_path}; src={src_dir}; config={config_detail}",
+        (
+            f"bundle={bundle.root_dir}; router={bundle.router_model_dir}; "
+            f"planner_base_model={bundle.manifest.planner.base_model}; "
+            f"max_tokens={bundle.manifest.planner.max_tokens}"
+        ),
     )
 
 

@@ -7,8 +7,8 @@ from tempfile import TemporaryDirectory
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from kg_query_planner_ft.frozen_prompt import FROZEN_QUERY_SYSTEM_PROMPT
+from kg_query_planner_ft.offline_contract import validate_query_plan_contract
 from kg_query_planner_ft.prepare_data import prepare_data
-from kg_query_planner_ft.runtime_compat import load_runtime_contract
 
 
 class PrepareDataTests(unittest.TestCase):
@@ -186,8 +186,7 @@ class PrepareDataTests(unittest.TestCase):
             ]
             self.assertEqual(planner_train_rows[0]["messages"][0]["content"], FROZEN_QUERY_SYSTEM_PROMPT)
 
-            QueryPlanEnvelope, _, _ = load_runtime_contract()
-            QueryPlanEnvelope.model_validate(planner_train_rows[0]["gold_plan"])
+            self.assertTrue(validate_query_plan_contract(planner_train_rows[0]["gold_plan"]))
 
             balanced_rows = [
                 json.loads(line)

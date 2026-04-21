@@ -1,3 +1,4 @@
+import json
 import io
 import tempfile
 import unittest
@@ -9,6 +10,45 @@ from runtime import health_check
 
 
 class HealthCheckTests(unittest.TestCase):
+    @staticmethod
+    def _write_query_stack_bundle(root_dir: Path) -> Path:
+        bundle_dir = root_dir / "runtime_assets" / "query_stack" / "current"
+        (bundle_dir / "router" / "model").mkdir(parents=True, exist_ok=True)
+        (bundle_dir / "planner" / "adapter").mkdir(parents=True, exist_ok=True)
+        (bundle_dir / "router" / "thresholds.json").write_text(
+            json.dumps(
+                {
+                    "local_threshold": {"threshold": 0.97},
+                    "refuse_threshold": {"threshold": 0.95},
+                    "planner_gate_open": True,
+                    "temperature": 1.0,
+                }
+            ),
+            encoding="utf-8",
+        )
+        (bundle_dir / "planner" / "system_prompt.txt").write_text("You are a planner.\n", encoding="utf-8")
+        (bundle_dir / "manifest.json").write_text(
+            json.dumps(
+                {
+                    "bundle_format_version": 1,
+                    "router": {
+                        "model_dir": "router/model",
+                        "thresholds_path": "router/thresholds.json",
+                        "base_model": "microsoft/deberta-v3-small",
+                        "max_length": 256,
+                    },
+                    "planner": {
+                        "base_model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+                        "adapter_dir": "planner/adapter",
+                        "max_tokens": 256,
+                        "system_prompt_path": "planner/system_prompt.txt",
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
+        return bundle_dir
+
     def test_check_repo_venv_warns_when_default_venv_is_missing(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
             root_dir = Path(tmp_dir)
@@ -18,32 +58,26 @@ class HealthCheckTests(unittest.TestCase):
         self.assertEqual(result.status, "warn")
         self.assertIn("bootstrap_dev.sh", result.hint or "")
 
-    def test_check_query_stack_warns_when_default_python_is_missing(self):
+    def test_check_query_stack_warns_when_bundle_is_missing(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
             root_dir = Path(tmp_dir)
 
             result = health_check._check_query_stack(root_dir)
 
         self.assertEqual(result.status, "warn")
-        self.assertIn("local stack python missing", result.detail)
+        self.assertIn("published bundle missing", result.detail)
         self.assertIn("hosted planner automatically", result.hint or "")
 
-    def test_check_query_stack_is_ok_when_python_and_source_exist(self):
+    def test_check_query_stack_is_ok_when_bundle_artifacts_exist(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
             root_dir = Path(tmp_dir)
-            python_path = root_dir / "finetuning" / ".venv" / "bin"
-            python_path.mkdir(parents=True, exist_ok=True)
-            (python_path / "python").write_text("#!/usr/bin/env python\n", encoding="utf-8")
-            (root_dir / "finetuning" / "src").mkdir(parents=True, exist_ok=True)
-            config_path = root_dir / "finetuning" / "config"
-            config_path.mkdir(parents=True, exist_ok=True)
-            (config_path / "default.json").write_text("{}", encoding="utf-8")
+            bundle_dir = self._write_query_stack_bundle(root_dir)
 
             result = health_check._check_query_stack(root_dir)
 
         self.assertEqual(result.status, "ok")
-        self.assertIn("python=", result.detail)
-        self.assertIn("config=", result.detail)
+        self.assertIn(f"bundle={bundle_dir.resolve()}", result.detail)
+        self.assertIn("planner_base_model=", result.detail)
 
     def test_check_outputs_reports_latest_company_count(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -70,10 +104,7 @@ class HealthCheckTests(unittest.TestCase):
             ontology_dir = root_dir / "src" / "ontology"
             ontology_dir.mkdir(parents=True, exist_ok=True)
             (ontology_dir / "ontology.json").write_text("{}", encoding="utf-8")
-            local_stack_python = root_dir / "finetuning" / ".venv" / "bin"
-            local_stack_python.mkdir(parents=True, exist_ok=True)
-            (local_stack_python / "python").write_text("#!/usr/bin/env python\n", encoding="utf-8")
-            (root_dir / "finetuning" / "src").mkdir(parents=True, exist_ok=True)
+            self._write_query_stack_bundle(root_dir)
             venv_python = root_dir / "venv" / "bin"
             venv_python.mkdir(parents=True, exist_ok=True)
             (venv_python / "python").write_text("#!/usr/bin/env python\n", encoding="utf-8")

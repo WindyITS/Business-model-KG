@@ -24,7 +24,6 @@ def audit_knowledge_graph_payload(
     payload: Any,
     *,
     payload_parse_recovered: bool = False,
-    ontology_version: str = "canonical",
 ) -> tuple[list[dict[str, str]], dict[str, Any]]:
     normalized_payload = normalize_lenient_payload(payload)
     raw_triples = normalized_payload.get("triples", [])
@@ -45,7 +44,7 @@ def audit_knowledge_graph_payload(
             continue
         candidate_triples.append({key: triple.get(key) for key in TRIPLE_REQUIRED_KEYS})
 
-    validation_report = validate_triples(candidate_triples, dedupe=True, ontology_version=ontology_version)
+    validation_report = validate_triples(candidate_triples, dedupe=True)
     invalid_issue_counts: Counter[str] = Counter()
     malformed_from_validation = 0
     ontology_rejected_triple_count = 0
@@ -71,7 +70,7 @@ def audit_knowledge_graph_payload(
         "duplicate_triple_count": validation_report["summary"]["duplicate_triple_count"],
         "kept_triple_count": len(validation_report["valid_triples"]),
         "invalid_issue_counts": dict(sorted(invalid_issue_counts.items())),
-        "ontology_version": ontology_version,
+        "ontology_version": "canonical",
     }
     return validation_report["valid_triples"], audit
 

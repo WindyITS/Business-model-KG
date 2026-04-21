@@ -69,7 +69,6 @@ class ZeroShotPipelineRunner:
                 schema_model=KnowledgeGraphExtraction,
                 fallback_payload='{"extraction_notes":"Zero-shot extraction failed.","triples":[]}',
                 max_retries=max_retries,
-                ontology_version="canonical",
             )
         except ExtractionError as exc:
             self.extractor._emit_progress("stage_failed", error=str(exc))

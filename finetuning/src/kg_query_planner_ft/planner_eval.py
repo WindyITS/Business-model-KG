@@ -7,10 +7,10 @@ from typing import Any
 
 from .config import load_config
 from .json_utils import compact_json, extract_first_json_object, read_jsonl, write_json, write_jsonl
+from .offline_contract import normalize_query_plan_contract
 from .paths import planner_adapter_dir, planner_eval_dir, prepared_planner_raw_dir
 from .planner_worker import LMStudioPlannerGenerator, PlannerGenerator
 from .progress import StepProgress, track
-from .runtime_compat import load_runtime_contract
 
 
 def _family_summary(rows: list[dict[str, Any]]) -> dict[str, dict[str, int]]:
@@ -20,14 +20,12 @@ def _family_summary(rows: list[dict[str, Any]]) -> dict[str, dict[str, int]]:
         bucket[family]["count"] += 1
         if row["json_parse_ok"]:
             bucket[family]["json_parse_ok"] += 1
-        if row["schema_valid"]:
-            bucket[family]["schema_valid"] += 1
+        if row["contract_valid"]:
+            bucket[family]["contract_valid"] += 1
         if row["family_correct"]:
             bucket[family]["family_correct"] += 1
         if row["exact_match"]:
             bucket[family]["exact_match"] += 1
-        if row["compile_success"]:
-            bucket[family]["compile_success"] += 1
     return {family: dict(sorted(counts.items())) for family, counts in sorted(bucket.items())}
 
 
@@ -37,32 +35,27 @@ def _evaluate_split(
     *,
     max_tokens: int,
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
-    QueryPlanEnvelope, compile_query_plan, validate_compiled_query = load_runtime_contract()
     predictions: list[dict[str, Any]] = []
     for row in track(rows, total=len(rows), desc="planner eval", unit="row"):
         generated_text = generator.generate(row["question"], max_tokens=max_tokens)
         parsed_json: Any | None = None
         json_parse_ok = False
-        schema_valid = False
+        contract_valid = False
         family_correct = False
         exact_match = False
-        compile_success = False
         normalized_predicted_plan: dict[str, Any] | None = None
-        compile_reason: str | None = None
+        contract_error: str | None = None
         try:
             parsed_json = extract_first_json_object(generated_text)
             json_parse_ok = True
-            validated = QueryPlanEnvelope.model_validate(parsed_json)
-            normalized_predicted_plan = validated.model_dump(mode="json", exclude_none=True)
-            schema_valid = True
+            normalized_predicted_plan = normalize_query_plan_contract(parsed_json)
+            contract_valid = normalized_predicted_plan is not None
+            if not contract_valid:
+                raise ValueError("generated JSON does not match the expected planner contract")
             family_correct = normalized_predicted_plan.get("family") == row["gold_plan"].get("family")
             exact_match = compact_json(normalized_predicted_plan) == compact_json(row["gold_plan"])
-            compiled = compile_query_plan(validated)
-            compile_success = compiled.answerable and not validate_compiled_query(compiled)
-            if not compile_success:
-                compile_reason = compiled.reason
         except Exception as exc:  # noqa: BLE001
-            compile_reason = str(exc)
+            contract_error = str(exc)
         predictions.append(
             {
                 "question": row["question"],
@@ -71,11 +64,10 @@ def _evaluate_split(
                 "generated_text": generated_text,
                 "parsed_json": parsed_json,
                 "json_parse_ok": json_parse_ok,
-                "schema_valid": schema_valid,
+                "contract_valid": contract_valid,
                 "family_correct": family_correct,
                 "exact_match": exact_match,
-                "compile_success": compile_success,
-                "compile_reason": compile_reason,
+                "contract_error": contract_error,
             }
         )
 
@@ -83,10 +75,9 @@ def _evaluate_split(
     metrics = {
         "count": count,
         "json_parse_rate": sum(1 for row in predictions if row["json_parse_ok"]) / count if count else 0.0,
-        "schema_valid_rate": sum(1 for row in predictions if row["schema_valid"]) / count if count else 0.0,
+        "contract_valid_rate": sum(1 for row in predictions if row["contract_valid"]) / count if count else 0.0,
         "family_accuracy": sum(1 for row in predictions if row["family_correct"]) / count if count else 0.0,
         "exact_plan_match_rate": sum(1 for row in predictions if row["exact_match"]) / count if count else 0.0,
-        "compile_success_rate": sum(1 for row in predictions if row["compile_success"]) / count if count else 0.0,
         "per_family": _family_summary(predictions),
     }
     return metrics, predictions

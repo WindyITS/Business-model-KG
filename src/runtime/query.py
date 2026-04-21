@@ -2,9 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import re
-import subprocess
 import sys
 from typing import Any, Literal
 
@@ -13,10 +11,10 @@ from llm_extraction.models import ExtractionError
 from neo4j import GraphDatabase
 
 from .cypher_validation import normalize_neo4j_uri
+from .local_query_stack import run_local_query_stack
 from .model_provider import resolve_model_settings
 from .query_planner import QueryPlanEnvelope, QueryResult, compile_query_plan, validate_compiled_query
 from .query_prompt import QUERY_SYSTEM_PROMPT
-from .query_stack import LOCAL_STACK_MODULE, local_stack_src, resolve_local_stack_config, resolve_local_stack_python
 
 QUERY_FALLBACK_PAYLOAD = '{"answerable": false, "reason": "beyond_local_coverage"}'
 PARAM_REF_RE = re.compile(r"\$([A-Za-z_][A-Za-z0-9_]*)")
@@ -78,20 +76,6 @@ def validate_generated_query(result: QueryResult) -> list[str]:
     return validate_compiled_query(result)
 
 
-def _extract_first_json_object(raw_text: str) -> dict[str, Any]:
-    decoder = json.JSONDecoder()
-    for index, char in enumerate(raw_text):
-        if char != "{":
-            continue
-        try:
-            payload, _end = decoder.raw_decode(raw_text[index:])
-        except json.JSONDecodeError:
-            continue
-        if isinstance(payload, dict):
-            return payload
-    raise ValueError("No JSON object found in local stack output.")
-
-
 def _tail(text: str, *, limit: int = 300) -> str:
     compact = " ".join(text.split())
     if len(compact) <= limit:
@@ -99,70 +83,15 @@ def _tail(text: str, *, limit: int = 300) -> str:
     return f"...{compact[-(limit - 3):]}"
 
 
-def _run_local_module(
-    *,
-    module_name: str,
-    question: str,
-    local_stack_python: str | None,
-    local_stack_config: str | None,
-    timeout_seconds: int,
-) -> tuple[dict[str, Any] | None, str | None]:
-    python_executable = resolve_local_stack_python(local_stack_python)
-    config_path = resolve_local_stack_config(local_stack_config)
-    command = [python_executable, "-m", module_name, question]
-    if config_path:
-        command.extend(["--config", config_path])
-
-    runtime_env = dict(os.environ)
-    finetuning_src = local_stack_src()
-    existing_pythonpath = runtime_env.get("PYTHONPATH")
-    runtime_env["PYTHONPATH"] = (
-        f"{finetuning_src}:{existing_pythonpath}" if existing_pythonpath else str(finetuning_src)
-    )
-
-    try:
-        completed = subprocess.run(
-            command,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            check=False,
-            timeout=timeout_seconds,
-            env=runtime_env,
-        )
-    except FileNotFoundError:
-        return None, f"local stack python not found at {python_executable}"
-    except subprocess.TimeoutExpired:
-        return None, f"local stack timed out after {timeout_seconds}s"
-    except OSError as exc:
-        return None, f"local stack failed to start: {exc}"
-
-    if completed.returncode != 0:
-        detail = _tail(completed.stderr or completed.stdout or "no output")
-        return None, f"local stack exited with {completed.returncode}: {detail}"
-
-    try:
-        payload = _extract_first_json_object(completed.stdout)
-    except ValueError as exc:
-        return None, f"{exc} Raw output: {_tail(completed.stdout)}"
-
-    return payload, None
-
-
 def _run_local_stack(
     *,
     question: str,
-    local_stack_python: str | None,
-    local_stack_config: str | None,
-    timeout_seconds: int,
+    local_stack_bundle_dir: str | None,
 ) -> tuple[dict[str, Any] | None, str | None]:
-    return _run_local_module(
-        module_name=LOCAL_STACK_MODULE,
-        question=question,
-        local_stack_python=local_stack_python,
-        local_stack_config=local_stack_config,
-        timeout_seconds=timeout_seconds,
-    )
+    try:
+        return run_local_query_stack(question, bundle_dir=local_stack_bundle_dir), None
+    except Exception as exc:  # noqa: BLE001
+        return None, str(exc)
 
 
 def _infer_refusal_reason(question: str) -> str:
@@ -421,12 +350,10 @@ def _resolve_query_result(
 ) -> QueryResult:
     force_fallback = bool(getattr(args, "skip_local_stack", False)) or getattr(args, "stack", ROUTED_STACK_MODE) == FALLBACK_STACK_MODE
     if not force_fallback:
-        _print_status("Routing with local Qwen planner...")
+        _print_status("Routing with local deployed query stack...")
         local_payload, local_error = _run_local_stack(
             question=question,
-            local_stack_python=args.local_stack_python,
-            local_stack_config=args.local_stack_config,
-            timeout_seconds=args.local_stack_timeout,
+            local_stack_bundle_dir=args.local_stack_bundle_dir,
         )
         if local_payload is not None:
             local_result, decision = _result_from_local_stack(local_payload, question=question)
@@ -462,9 +389,9 @@ def _resolve_query_result(
 
 def _build_parser(*, execute: bool) -> argparse.ArgumentParser:
     description = (
-        "Route query with the local Qwen planner first, then use hosted planner fallback when needed, and run on Neo4j."
+        "Route query with the published local query stack first, then use hosted planner fallback when needed, and run on Neo4j."
         if execute
-        else "Route query with the local Qwen planner first, then use hosted planner fallback when needed, and render Cypher."
+        else "Route query with the published local query stack first, then use hosted planner fallback when needed, and render Cypher."
     )
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument("question", nargs="+", help="Natural-language question about the current knowledge graph.")
@@ -491,25 +418,13 @@ def _build_parser(*, execute: bool) -> argparse.ArgumentParser:
     parser.add_argument(
         "--skip-local-stack",
         action="store_true",
-        help="Bypass the local query stack and always use hosted fallback planner generation.",
+        help="Bypass the published local query stack and always use hosted fallback planner generation.",
     )
     parser.add_argument(
-        "--local-stack-python",
+        "--local-stack-bundle-dir",
         type=str,
         default=None,
-        help="Python executable for the local query stack (defaults to finetuning/.venv/bin/python).",
-    )
-    parser.add_argument(
-        "--local-stack-config",
-        type=str,
-        default=None,
-        help="Optional config path passed to the local query stack.",
-    )
-    parser.add_argument(
-        "--local-stack-timeout",
-        type=int,
-        default=120,
-        help="Timeout in seconds for local query-stack execution.",
+        help="Optional override for the published local query-stack bundle directory.",
     )
     parser.add_argument(
         "--model",

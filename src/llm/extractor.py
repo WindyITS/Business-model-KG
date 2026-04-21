@@ -479,7 +479,6 @@ class LLMExtractor:
         fallback_payload: str,
         max_retries: int,
         temperature: float = 0.0,
-        ontology_version: str = "canonical",
     ) -> tuple[BaseModel, str | None, int, dict[str, Any]]:
         request_messages = self._prepare_messages_for_provider(messages, self.provider)
         call_label = schema_name
@@ -567,7 +566,6 @@ class LLMExtractor:
                 parsed_model, audit = self._lenient_model_from_payload(
                     schema_model,
                     parsed_payload,
-                    ontology_version=ontology_version,
                 )
                 audit["payload_parse_recovered"] = payload_parse_recovered
                 self._emit_progress(
@@ -761,11 +759,9 @@ class LLMExtractor:
     def _lenient_model_from_payload(
         schema_model: type[BaseModel],
         payload: Any,
-        *,
-        ontology_version: str = "canonical",
     ) -> tuple[BaseModel, dict[str, Any]]:
         normalized_payload = normalize_lenient_payload(payload)
-        valid_triples, audit = audit_knowledge_graph_payload(normalized_payload, ontology_version=ontology_version)
+        valid_triples, audit = audit_knowledge_graph_payload(normalized_payload)
         extraction_notes = str(
             normalized_payload.get("extraction_notes", normalized_payload.get("chain_of_thought_reasoning", "")) or ""
         )
@@ -807,7 +803,6 @@ class LLMExtractor:
         fallback_payload: str,
         max_retries: int,
         temperature: float = 0.0,
-        ontology_version: str = "canonical",
     ) -> tuple[BaseModel, str | None, int, dict[str, Any]]:
         return self._call_structured_messages(
             messages=[
@@ -819,7 +814,6 @@ class LLMExtractor:
             fallback_payload=fallback_payload,
             max_retries=max_retries,
             temperature=temperature,
-            ontology_version=ontology_version,
         )
 
     def generate_structured_output(
@@ -831,7 +825,6 @@ class LLMExtractor:
         fallback_payload: str,
         max_retries: int,
         temperature: float = 0.0,
-        ontology_version: str = "canonical",
     ) -> tuple[BaseModel, str | None, int, dict[str, Any]]:
         return self._call_structured_messages(
             messages=messages,
@@ -840,7 +833,6 @@ class LLMExtractor:
             fallback_payload=fallback_payload,
             max_retries=max_retries,
             temperature=temperature,
-            ontology_version=ontology_version,
         )
 
     def reflect_extraction(
@@ -854,7 +846,6 @@ class LLMExtractor:
         system_prompt: str | None = None,
         user_prompt: str | None = None,
         stage_label: str = "Reflection",
-        ontology_version: str = "canonical",
     ) -> tuple[KnowledgeGraphExtraction, str | None, int, dict[str, Any]]:
         _ = full_text
         if system_prompt is None or user_prompt is None:
@@ -870,7 +861,6 @@ class LLMExtractor:
                 schema_model=KnowledgeGraphExtraction,
                 fallback_payload='{"extraction_notes":"Reflection failed.","triples":[]}',
                 max_retries=max_retries,
-                ontology_version=ontology_version,
             )
         except ExtractionError:
             if strict:
@@ -887,7 +877,6 @@ class LLMExtractor:
             logger.warning("%s failed. Falling back to prior graph.", stage_label)
             _, fallback_audit = audit_knowledge_graph_payload(
                 current_extraction.model_dump(mode="json"),
-                ontology_version=ontology_version,
             )
             return current_extraction, None, max_retries, fallback_audit
 
@@ -904,7 +893,6 @@ class LLMExtractor:
             logger.warning("%s returned no triples. Falling back to prior graph.", stage_label)
             _, fallback_audit = audit_knowledge_graph_payload(
                 current_extraction.model_dump(mode="json"),
-                ontology_version=ontology_version,
             )
             return current_extraction, raw_response, attempts_used, fallback_audit
 

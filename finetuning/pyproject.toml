@@ -30,7 +30,7 @@ train-router = "kg_query_planner_ft.router_train:main"
 eval-router = "kg_query_planner_ft.router_eval:main"
 train-planner = "kg_query_planner_ft.planner_train:main"
 eval-planner = "kg_query_planner_ft.planner_eval:main"
-run-local-stack = "kg_query_planner_ft.local_stack:main"
+publish-query-stack = "kg_query_planner_ft.publish_query_stack:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

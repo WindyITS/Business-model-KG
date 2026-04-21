@@ -637,7 +637,6 @@ def main() -> int:
             source_text=full_text,
             require_text_grounding=False,
             dedupe=True,
-            ontology_version=ontology_version,
         )
         _write_json(run_dir / "validation_report.json", validation_report)
 

@@ -29,6 +29,7 @@ dist/
 build/
 packaging/
 finetuning/artifacts/
+runtime_assets/query_stack/
 
 # OS
 .DS_Store

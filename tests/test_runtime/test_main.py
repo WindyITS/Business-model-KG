@@ -311,7 +311,6 @@ class RuntimeMainTests(unittest.TestCase):
             self.assertEqual(captured_validation["source_text"], filing_text)
             self.assertFalse(captured_validation["require_text_grounding"])
             self.assertTrue(captured_validation["dedupe"])
-            self.assertEqual(captured_validation["ontology_version"], "canonical")
 
     def test_main_uses_company_name_override_for_outputs_and_pipeline(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
