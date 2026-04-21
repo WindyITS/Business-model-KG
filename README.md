@@ -110,6 +110,7 @@ src/
   runtime/
     main.py               runtime CLI implementation
     query.py              natural-language query CLI
+    query_cypher.py       query-to-Cypher CLI entrypoint
     query_planner.py      family-based query-plan compiler
     neo4j_load.py         saved-output Neo4j load CLI
     neo4j_status.py       Neo4j vs saved-output status CLI
@@ -136,10 +137,6 @@ src/
   graph/
     neo4j_loader.py       Neo4j loading and company-level unload
     evaluate_graph.py     graph evaluation utilities
-
-  main.py                 compatibility CLI wrapper
-  llm_extractor.py        compatibility extractor wrapper
-  ontology_validator.py   compatibility validator wrapper
 
 prompts/
   README.md               prompt asset overview
@@ -171,6 +168,10 @@ tests/
   test_ontology/
   test_graph/
 ```
+
+The maintained import surface is package-based: `runtime.*`, `graph.*`, `ontology.*`, and `llm.*`.
+The old top-level `src/*.py` compatibility shims have been removed; new code should import the
+package modules directly.
 
 Pipeline structure notes:
 - prompt files are edited under `prompts/`; packaged installs carry a bundled fallback copy under `src/llm_extraction/_bundled_prompts/`
@@ -240,6 +241,8 @@ For day-to-day work from a source checkout, the most reliable commands are the w
 - `./scripts/kg-health-check`
 
 These wrappers run the repo source directly with the repo virtual environment, so they still work even if the editable-install entry points have not been refreshed yet.
+For direct module execution, use package entrypoints such as `python -m runtime.main`,
+`python -m runtime.query`, and `python -m runtime.query_cypher`.
 The retained query-planner training artifact lives under `data/query_planner_curated/v1_final/`. Training/export work should consume `supervision_target`, which makes `local_safe`, `strong_model_candidate`, and `refuse` explicit in the serialized supervision object.
 
 For a plain-language overview of how the project fits together, see [docs/project_walkthrough.md](./docs/project_walkthrough.md).

@@ -24,9 +24,9 @@ dev = [
 kg-pipeline = "runtime.main:main"
 kg-evaluate-graph = "graph.evaluate_graph:main"
 kg-query = "runtime.query:main_query"
-kg-query-cypher = "runtime.query:main_query_cypher"
-kg-query-jolly = "runtime.query:main_query_jolly"
-kg-query-cypher-jolly = "runtime.query:main_query_cypher_jolly"
+kg-query-cypher = "runtime.query_cypher:main"
+kg-query-jolly = "runtime.query_jolly:main"
+kg-query-cypher-jolly = "runtime.query_cypher_jolly:main"
 kg-neo4j-unload = "runtime.neo4j_admin:main"
 kg-neo4j-load = "runtime.neo4j_load:main"
 kg-neo4j-status = "runtime.neo4j_status:main"
@@ -34,18 +34,6 @@ kg-health-check = "runtime.health_check:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
-py-modules = [
-    "entity_resolver",
-    "evaluate_graph",
-    "llm_extractor",
-    "main",
-    "model_provider",
-    "neo4j_loader",
-    "ontology_config",
-    "ontology_validator",
-    "place_hierarchy",
-    "query_cypher",
-]
 
 [tool.setuptools.packages.find]
 where = ["src"]
