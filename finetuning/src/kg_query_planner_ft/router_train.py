@@ -8,6 +8,7 @@ from typing import Any
 import numpy as np
 
 from .config import load_config
+from .cli_output import render_router_training_summary
 from .constants import ROUTER_LABELS
 from .json_utils import compact_json, read_jsonl, write_json
 from .paths import prepared_router_dir, router_model_dir
@@ -76,7 +77,9 @@ def train_router(config_path: str | None = None) -> dict[str, Any]:
         valid_rows = read_jsonl(prepared_dir / "valid.jsonl")
         progress.advance("loaded prepared router splits")
 
-        tokenizer = AutoTokenizer.from_pretrained(config.router.base_model)
+        # DeBERTa V2's fast tokenizer can emit a misleading regex warning in recent transformers;
+        # the slow tokenizer yields the expected sentencepiece IDs without the warning noise.
+        tokenizer = AutoTokenizer.from_pretrained(config.router.base_model, use_fast=False)
         train_dataset = _dataset_from_rows(train_rows, Dataset, label2id)
         valid_dataset = _dataset_from_rows(valid_rows, Dataset, label2id)
 
@@ -184,13 +187,14 @@ def train_router(config_path: str | None = None) -> dict[str, Any]:
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Train the router classifier.")
     parser.add_argument("--config", type=str, default=None, help="Path to the fine-tuning JSON config.")
+    parser.add_argument("--json", action="store_true", help="Print the final summary as compact JSON.")
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
     summary = train_router(args.config)
-    print(compact_json(summary))
+    print(compact_json(summary) if args.json else render_router_training_summary(summary))
     return 0
 
 

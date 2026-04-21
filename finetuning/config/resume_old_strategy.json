@@ -21,17 +21,17 @@
     "alpha": 32.0,
     "dropout": 0.05,
     "num_layers": 16,
-    "batch_size": 4,
+    "batch_size": 2,
     "grad_checkpoint": true,
-    "grad_accumulation_steps": 4,
+    "grad_accumulation_steps": 8,
     "epochs": 3,
     "learning_rate": 0.0001,
-    "max_seq_length": 4096,
+    "max_seq_length": 2560,
     "max_tokens": 256,
     "seed": 7,
     "mask_prompt": true,
     "steps_per_report": 10,
     "checkpoint_every": 500,
-    "resume_adapter_file": null
+    "resume_adapter_file": "/Users/giuliosighieri/Desktop/kg-v0/finetuning/artifacts/kg-query-planner/planner/adapter/0002000_adapters.safetensors"
   }
 }

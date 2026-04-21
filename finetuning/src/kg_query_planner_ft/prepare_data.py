@@ -5,6 +5,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
+from .cli_output import render_prepare_data_summary
 from .config import load_config
 from .constants import ROUTE_TO_ROUTER_LABEL
 from .frozen_prompt import FROZEN_QUERY_SYSTEM_PROMPT
@@ -203,13 +204,14 @@ def prepare_data(config_path: str | None = None) -> dict[str, Any]:
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Prepare isolated fine-tuning datasets.")
     parser.add_argument("--config", type=str, default=None, help="Path to the fine-tuning JSON config.")
+    parser.add_argument("--json", action="store_true", help="Print the final summary as compact JSON.")
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
     summary = prepare_data(args.config)
-    print(compact_json(summary))
+    print(compact_json(summary) if args.json else render_prepare_data_summary(summary))
     return 0
 
 

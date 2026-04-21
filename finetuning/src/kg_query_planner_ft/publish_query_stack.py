@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from .config import load_config, repo_root
+from .cli_output import render_publish_query_stack_summary
 from .frozen_prompt import FROZEN_QUERY_SYSTEM_PROMPT
 from .json_utils import compact_json
 from .paths import planner_adapter_dir, router_eval_dir, router_model_dir
@@ -110,13 +111,14 @@ def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Publish the fine-tuned query stack as a main-runtime deployment bundle.")
     parser.add_argument("--config", type=str, default=None, help="Path to the fine-tuning JSON config.")
     parser.add_argument("--dest", type=str, default=None, help="Optional destination override for the published bundle.")
+    parser.add_argument("--json", action="store_true", help="Print the final summary as compact JSON.")
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
     summary = publish_query_stack(args.config, destination=args.dest)
-    print(compact_json(summary))
+    print(compact_json(summary) if args.json else render_publish_query_stack_summary(summary))
     return 0
 
 

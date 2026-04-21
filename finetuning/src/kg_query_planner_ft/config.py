@@ -28,6 +28,7 @@ class PlannerConfig(BaseModel):
     dropout: float = 0.05
     num_layers: int = 16
     batch_size: int = 4
+    grad_checkpoint: bool = True
     grad_accumulation_steps: int = 4
     epochs: int = 3
     learning_rate: float = 1e-4

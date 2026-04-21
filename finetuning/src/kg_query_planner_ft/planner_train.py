@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from .cli_output import render_planner_training_summary
 from .config import load_config
 from .json_utils import compact_json, read_jsonl, write_json
 from .paths import planner_adapter_dir, prepared_planner_balanced_dir, prepared_planner_raw_dir
@@ -22,21 +23,23 @@ _MLX_PROGRESS_PATTERNS = (
 
 def _yaml_dump(config: dict[str, object]) -> str:
     lines: list[str] = []
+
+    def _render_scalar(value: object) -> str:
+        if value is None:
+            return "null"
+        if isinstance(value, str):
+            return repr(value)
+        if isinstance(value, bool):
+            return "true" if value else "false"
+        return str(value)
+
     for key, value in config.items():
         if isinstance(value, dict):
             lines.append(f"{key}:")
             for inner_key, inner_value in value.items():
-                if isinstance(inner_value, str):
-                    lines.append(f"  {inner_key}: {inner_value!r}")
-                else:
-                    lines.append(f"  {inner_key}: {inner_value}")
+                lines.append(f"  {inner_key}: {_render_scalar(inner_value)}")
             continue
-        if isinstance(value, str):
-            lines.append(f"{key}: {value!r}")
-        elif isinstance(value, bool):
-            lines.append(f"{key}: {'true' if value else 'false'}")
-        else:
-            lines.append(f"{key}: {value}")
+        lines.append(f"{key}: {_render_scalar(value)}")
     return "\n".join(lines) + "\n"
 
 
@@ -188,8 +191,8 @@ def train_planner(config_path: str | None = None) -> dict[str, object]:
             "steps_per_eval": steps_per_eval,
             "adapter_path": str(adapter_dir),
             "save_every": save_every,
-            "resume_adapter_file": config.planner.resume_adapter_file,
             "max_seq_length": config.planner.max_seq_length,
+            "grad_checkpoint": config.planner.grad_checkpoint,
             "grad_accumulation_steps": config.planner.grad_accumulation_steps,
             "mask_prompt": config.planner.mask_prompt,
             "lora_parameters": {
@@ -198,11 +201,13 @@ def train_planner(config_path: str | None = None) -> dict[str, object]:
                 "scale": config.planner.alpha,
             },
         }
+        if config.planner.resume_adapter_file is not None:
+            mlx_config["resume_adapter_file"] = config.planner.resume_adapter_file
         yaml_path = adapter_dir / "train_config.yaml"
         yaml_path.write_text(_yaml_dump(mlx_config), encoding="utf-8")
         progress.advance("wrote MLX training config")
 
-        command = [sys.executable, "-m", "mlx_lm.lora", "--config", str(yaml_path)]
+        command = [sys.executable, "-m", "mlx_lm", "lora", "--config", str(yaml_path)]
         progress.advance("starting planner fine-tune")
         _run_mlx_training(command, total_iters=total_iters)
 
@@ -214,6 +219,7 @@ def train_planner(config_path: str | None = None) -> dict[str, object]:
             "total_iters": total_iters,
             "checkpoint_every": save_every,
             "resume_adapter_file": config.planner.resume_adapter_file,
+            "grad_checkpoint": config.planner.grad_checkpoint,
             "effective_batch_size": config.planner.batch_size * config.planner.grad_accumulation_steps,
             "config_path": str(yaml_path),
         }
@@ -227,13 +233,14 @@ def _build_parser() -> argparse.ArgumentParser:
         description="Train the local planner with MLX QLoRA."
     )
     parser.add_argument("--config", type=str, default=None, help="Path to the fine-tuning JSON config.")
+    parser.add_argument("--json", action="store_true", help="Print the final summary as compact JSON.")
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
     summary = train_planner(args.config)
-    print(compact_json(summary))
+    print(compact_json(summary) if args.json else render_planner_training_summary(summary))
     return 0
 
 

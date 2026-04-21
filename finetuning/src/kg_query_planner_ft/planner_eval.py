@@ -5,6 +5,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
+from .cli_output import render_planner_eval_summary
 from .config import load_config
 from .json_utils import compact_json, extract_first_json_object, read_jsonl, write_json, write_jsonl
 from .offline_contract import normalize_query_plan_contract
@@ -108,6 +109,7 @@ def evaluate_planner(
                 "mode": "base_model" if base_only else "adapter",
                 "base_model": config.planner.base_model,
                 "adapter_path": None if base_only else str(planner_adapter_dir(config)),
+                "artifact_dir": str(eval_dir),
             }
         elif backend == "lmstudio":
             resolved_lmstudio_model = lmstudio_model or config.planner.base_model
@@ -128,6 +130,7 @@ def evaluate_planner(
                 "adapter_path": None,
                 "served_model": resolved_lmstudio_model,
                 "lmstudio_base_url": lmstudio_base_url,
+                "artifact_dir": str(eval_dir),
             }
         else:
             raise ValueError(f"Unsupported planner eval backend: {backend}")
@@ -195,6 +198,7 @@ def _build_parser() -> argparse.ArgumentParser:
         default=None,
         help="API key for LM Studio's OpenAI-compatible API when --backend lmstudio.",
     )
+    parser.add_argument("--json", action="store_true", help="Print the final summary as compact JSON.")
     return parser
 
 
@@ -208,7 +212,7 @@ def main(argv: list[str] | None = None) -> int:
         lmstudio_base_url=args.lmstudio_base_url,
         lmstudio_api_key=args.lmstudio_api_key,
     )
-    print(compact_json(summary))
+    print(compact_json(summary) if args.json else render_planner_eval_summary(summary))
     return 0
 
 

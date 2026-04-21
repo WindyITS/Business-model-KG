@@ -1,5 +1,5 @@
 {
-  "artifact_root": "finetuning/artifacts/kg-query-planner",
+  "artifact_root": "finetuning/artifacts/kg-query-planner-fresh-adapter",
   "dataset_path": "data/query_planner_curated/v1_final",
   "router": {
     "base_model": "microsoft/deberta-v3-small",

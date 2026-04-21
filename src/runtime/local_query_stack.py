@@ -97,7 +97,9 @@ class DeployedRouterPredictor:
         self._temperature = temperature
         self._max_length = max_length
         self._device = self._resolve_device(torch)
-        self._tokenizer = AutoTokenizer.from_pretrained(model_dir)
+        # The slow DeBERTa tokenizer avoids an upstream fast-tokenizer regex warning
+        # without changing the sentencepiece IDs used for routing.
+        self._tokenizer = AutoTokenizer.from_pretrained(model_dir, use_fast=False)
         self._model = AutoModelForSequenceClassification.from_pretrained(model_dir)
         self._model.to(self._device)
         self._model.eval()

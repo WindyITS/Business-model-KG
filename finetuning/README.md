@@ -87,6 +87,7 @@ runtime_assets/query_stack/current/
 - The planner is trained only on `local_safe` rows.
 - The planner default base model is `mlx-community/Qwen3-4B-Instruct-2507-4bit`, so `train-planner` runs QLoRA rather than full-precision LoRA.
 - Planner training saves numbered adapter checkpoints every `500` iterations by default, for example `0000500_adapters.safetensors`.
+- `planner.grad_checkpoint` defaults to `true` so the planner train path favors lower memory usage on Apple Silicon. Set it to `false` only if you want to prioritize speed and have enough headroom.
 - To resume planner training, set `planner.resume_adapter_file` in `finetuning/config/default.json` to one of those checkpoint files.
 - `eval-planner --base-only` evaluates the standard 4-bit base model without loading adapter weights and writes artifacts under `planner/eval/base_model/`.
 - `eval-planner --backend lmstudio --lmstudio-model "<name>"` evaluates an LM Studio-served model with the same frozen planner system prompt and writes artifacts under `planner/eval/lmstudio/<model>/`.

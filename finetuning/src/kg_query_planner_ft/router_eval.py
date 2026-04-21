@@ -7,6 +7,7 @@ from typing import Any
 import numpy as np
 
 from .config import load_config
+from .cli_output import render_router_eval_summary
 from .constants import ROUTER_LABELS
 from .json_utils import compact_json, read_jsonl, write_json, write_jsonl
 from .paths import prepared_router_dir, router_eval_dir, router_model_dir
@@ -66,7 +67,9 @@ def _load_split_rows(prepared_dir: Path, split_name: str) -> list[dict[str, Any]
 
 def _load_router_bundle(model_dir: Path) -> tuple[Any, Any, Any]:
     torch, AutoModelForSequenceClassification, AutoTokenizer = _optional_router_deps()
-    tokenizer = AutoTokenizer.from_pretrained(model_dir)
+    # DeBERTa V2's fast tokenizer can emit a misleading regex warning in recent transformers;
+    # the slow tokenizer yields the same sentencepiece IDs we expect for router scoring.
+    tokenizer = AutoTokenizer.from_pretrained(model_dir, use_fast=False)
     model = AutoModelForSequenceClassification.from_pretrained(model_dir)
     device = _torch_device(torch)
     model.to(device)
@@ -250,6 +253,8 @@ def evaluate_router(config_path: str | None = None) -> dict[str, Any]:
         write_jsonl(eval_dir / "release_eval_predictions.jsonl", test_predictions)
 
         summary = {
+            "model_dir": str(model_dir),
+            "eval_dir": str(eval_dir),
             "thresholds": thresholds,
             "validation": validation_payload,
             "release_eval": test_payload,
@@ -300,6 +305,7 @@ def planner_gate_is_open(policy_metrics: dict[str, Any], *, min_local_precision:
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Evaluate and calibrate the router classifier.")
     parser.add_argument("--config", type=str, default=None, help="Path to the fine-tuning JSON config.")
+    parser.add_argument("--json", action="store_true", help="Print the final summary as compact JSON.")
     return parser
 
 
@@ -307,7 +313,7 @@ def main(argv: list[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
     summary = evaluate_router(args.config)
     write_json(router_eval_dir(load_config(args.config)) / "latest.json", summary)
-    print(compact_json(summary))
+    print(compact_json(summary) if args.json else render_router_eval_summary(summary))
     return 0
 
 
