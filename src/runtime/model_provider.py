@@ -69,7 +69,7 @@ def normalize_base_url(base_url: str | None) -> str | None:
         return base_url
 
     normalized = base_url.rstrip("/")
-    for suffix in ("/chat/completions", "/responses", "/messages"):
+    for suffix in ("/chat/completions", "/messages"):
         if normalized.endswith(suffix):
             return normalized[: -len(suffix)]
     return normalized

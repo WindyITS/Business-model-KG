@@ -46,7 +46,10 @@ class LLMExtractor:
         self.fallback_confirmation_callback = fallback_confirmation_callback
         self.client = None
 
-        if api_mode != "messages":
+        if api_mode not in {"chat_completions", "messages"}:
+            raise ValueError(f"Unsupported api_mode: {api_mode}")
+
+        if api_mode == "chat_completions":
             from openai import OpenAI
 
             self.client = OpenAI(base_url=self.base_url, api_key=api_key)
@@ -313,32 +316,6 @@ class LLMExtractor:
         return json.loads(fallback_payload), True, True
 
     @staticmethod
-    def _responses_refusal_text(response: Any) -> str | None:
-        for output_item in getattr(response, "output", []) or []:
-            for content_item in getattr(output_item, "content", []) or []:
-                if getattr(content_item, "type", None) == "refusal":
-                    refusal = getattr(content_item, "refusal", None)
-                    if refusal:
-                        return str(refusal)
-        return None
-
-    @staticmethod
-    def _responses_output_text(response: Any) -> str:
-        output_text = getattr(response, "output_text", None)
-        if output_text:
-            return str(output_text)
-
-        text_parts: list[str] = []
-        for output_item in getattr(response, "output", []) or []:
-            for content_item in getattr(output_item, "content", []) or []:
-                if getattr(content_item, "type", None) != "output_text":
-                    continue
-                text = getattr(content_item, "text", None)
-                if text:
-                    text_parts.append(str(text))
-        return "".join(text_parts)
-
-    @staticmethod
     def _messages_request_payload(
         messages: list[dict[str, str]],
         *,
@@ -499,30 +476,7 @@ class LLMExtractor:
             try:
                 content = ""
                 token_count: int | None = None
-                if self.api_mode == "responses":
-                    call_kwargs = {
-                        "model": self.model,
-                        "input": request_messages,
-                        "temperature": temperature,
-                    }
-                    response = self.client.responses.create(**call_kwargs)
-                    status = getattr(response, "status", None)
-                    usage = getattr(response, "usage", None)
-                    output_tokens = getattr(usage, "output_tokens", None) if usage is not None else None
-                    token_count = output_tokens
-                    logger.info(
-                        "Structured call %s attempt %s/%s status=%s output_tokens=%s",
-                        call_label,
-                        attempt,
-                        max_retries,
-                        status,
-                        output_tokens,
-                    )
-                    refusal_text = self._responses_refusal_text(response)
-                    if refusal_text:
-                        raise ExtractionError(f"Model refused request: {refusal_text}")
-                    content = self._responses_output_text(response)
-                elif self.api_mode == "messages":
+                if self.api_mode == "messages":
                     content, token_count = self._call_messages_api(
                         request_messages=request_messages,
                         temperature=temperature,
@@ -641,30 +595,7 @@ class LLMExtractor:
             try:
                 content = ""
                 token_count: int | None = None
-                if self.api_mode == "responses":
-                    call_kwargs = {
-                        "model": self.model,
-                        "input": request_messages,
-                        "temperature": temperature,
-                    }
-                    response = self.client.responses.create(**call_kwargs)
-                    status = getattr(response, "status", None)
-                    usage = getattr(response, "usage", None)
-                    output_tokens = getattr(usage, "output_tokens", None) if usage is not None else None
-                    token_count = output_tokens
-                    logger.info(
-                        "Text call %s attempt %s/%s status=%s output_tokens=%s",
-                        call_label,
-                        attempt,
-                        max_retries,
-                        status,
-                        output_tokens,
-                    )
-                    refusal_text = self._responses_refusal_text(response)
-                    if refusal_text:
-                        raise ExtractionError(f"Model refused request: {refusal_text}")
-                    content = self._responses_output_text(response)
-                elif self.api_mode == "messages":
+                if self.api_mode == "messages":
                     content, token_count = self._call_messages_api(
                         request_messages=request_messages,
                         temperature=temperature,
