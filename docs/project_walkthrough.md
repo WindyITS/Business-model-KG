@@ -83,6 +83,11 @@ The important behavior is:
 - status is read-only
 - unload supports full-dataset clear (no `--company`) and company-scoped removal (`--company`) that keeps unrelated shared graph state where possible
 
+For natural-language querying, the repo now uses two query modes behind the same CLI surface:
+
+- the published local query stack still returns a compact plan that Python compiles into Cypher
+- the hosted fallback returns full read-only Cypher JSON directly and retries once with error context if generation, validation, or Neo4j execution fails
+
 ## Recommended Commands From A Source Checkout
 
 When you are working directly from this repo, the most reliable commands are the wrapper scripts under `scripts/`.

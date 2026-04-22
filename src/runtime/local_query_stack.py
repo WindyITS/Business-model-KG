@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from .query_planner import QueryPlanEnvelope, compile_query_plan, validate_compiled_query
-from .query_prompt import QUERY_SYSTEM_PROMPT
+from .query_prompt import LOCAL_QUERY_SYSTEM_PROMPT
 from .query_stack import ResolvedQueryStackBundle, load_query_stack_bundle
 
 
@@ -76,7 +76,7 @@ def _decide_router_outcome(probabilities: dict[str, float], thresholds: dict[str
 def _system_prompt(bundle: ResolvedQueryStackBundle) -> str:
     prompt_path = bundle.planner_system_prompt_path
     if prompt_path is None:
-        return QUERY_SYSTEM_PROMPT
+        return LOCAL_QUERY_SYSTEM_PROMPT
     try:
         return prompt_path.read_text(encoding="utf-8").strip()
     except FileNotFoundError as exc:

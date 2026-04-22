@@ -89,10 +89,10 @@ Runtime notes:
 
 The runtime includes a read-only natural-language query path for the live Neo4j graph:
 
-- `kg-query-cypher` and `kg-query` use the routed stack: a published local query-stack bundle first, with hosted planner fallback when needed
+- `kg-query-cypher` and `kg-query` use the routed stack: a published local query-stack bundle first, with hosted free-form Cypher fallback when needed
 - `kg-query` and `kg-query-cypher` also accept `--stack routed|fallback` so one command can either try the local stack first or force hosted fallback only
 
-The planner prompt lives in [`src/runtime/query_prompt.py`](./src/runtime/query_prompt.py), the deterministic compiler lives in [`src/runtime/query_planner.py`](./src/runtime/query_planner.py), and the read-only Cypher guards live in [`src/runtime/cypher_validation.py`](./src/runtime/cypher_validation.py).
+The local planner and hosted query prompts live in [`src/runtime/query_prompt.py`](./src/runtime/query_prompt.py), the deterministic compiler used by the local stack lives in [`src/runtime/query_planner.py`](./src/runtime/query_planner.py), and the read-only Cypher guards live in [`src/runtime/cypher_validation.py`](./src/runtime/cypher_validation.py).
 The deployed local query runtime reads a published bundle from `runtime_assets/query_stack/current/` by default; override that with `--local-stack-bundle-dir` or `KG_QUERY_STACK_BUNDLE_DIR` when needed.
 
 The final curated fine-tuning dataset for the query planner is preserved under [`data/query_planner_curated/v1_final`](./data/query_planner_curated/v1_final/). The repo intentionally does not keep a dataset-construction CLI surface.
@@ -287,7 +287,7 @@ Run a query against Neo4j:
   --neo4j-password password
 ```
 
-Force fallback planner only (skip local router/local planner) with one switch:
+Force hosted fallback only (skip local router/local planner) with one switch:
 
 ```bash
 ./scripts/kg-query-cypher "Which company segments sell through marketplaces?" --stack fallback
@@ -338,12 +338,12 @@ Useful CLI flags:
 - `--base-url`: pass either an API root or a full endpoint URL; the runtime normalizes common suffixes
 - `--api-key`: override environment-based key resolution
 - `--max-output-tokens`: explicitly cap model output tokens
-- `kg-query` / `kg-query-cypher --skip-local-stack`: skip local router/local planner and force fallback planner generation
-- `kg-query` / `kg-query-cypher --stack fallback`: preferred single-switch way to force fallback planner generation
+- `kg-query` / `kg-query-cypher --skip-local-stack`: skip local router/local planner and force hosted fallback query generation
+- `kg-query` / `kg-query-cypher --stack fallback`: preferred single-switch way to force hosted fallback query generation
 - `kg-query` / `kg-query-cypher --local-stack-bundle-dir /path/to/query_stack/current`: point routed query commands to a specific published bundle
-- `kg-query` / `kg-query-cypher --provider opencode-go`: choose the hosted fallback planner provider used only when local routing does not return a local-safe plan
+- `kg-query` / `kg-query-cypher --provider opencode-go`: choose the hosted fallback query-generation provider used only when local routing does not return a local-safe plan
 - when the local query stack errors in routed mode, the CLI logs the problem and falls back automatically, even in non-interactive shells
-- fallback planner generation retries once with error context; if both attempts fail, the CLI prints a warning
+- hosted fallback query generation retries once with error context; if both attempts fail, the CLI prints a warning
 - `--keep-current-output`: keep the current `latest/` output untouched and store this successful run under `runs/` instead; requires `--skip-neo4j`
 - `kg-neo4j-load`: load saved outputs into Neo4j; defaults to all `analyst/latest` outputs under `outputs/`
 - `kg-neo4j-status`: report which companies are loaded in Neo4j and whether local latest outputs exist for them
@@ -453,7 +453,7 @@ Generate the query and run it against the current Neo4j database:
 ./scripts/kg-query "Which companies sell to developers through direct sales?"
 ```
 
-These routed commands try the published local query-stack bundle first and fall back to the hosted planner automatically when the local stack is unavailable or declines to handle the request. Use `--stack fallback` when you want to bypass the local stack entirely.
+These routed commands try the published local query-stack bundle first and fall back to hosted free-form Cypher generation automatically when the local stack is unavailable or declines to handle the request. The local stack stays compiler-based; the hosted fallback writes full Cypher JSON directly, still behind the read-only guards and Neo4j `EXPLAIN` preflight. Use `--stack fallback` when you want to bypass the local stack entirely.
 
 `kg-query` returns rows from the live database as plain text, while `kg-query-cypher` returns a runnable
 plain-text Cypher query with generated params already inlined. Progress and error messages are printed to

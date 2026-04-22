@@ -4,7 +4,8 @@ import argparse
 import json
 import re
 import sys
-from typing import Any, Literal
+from dataclasses import dataclass
+from typing import Any
 
 from llm.extractor import LLMExtractor
 from llm_extraction.models import ExtractionError
@@ -13,19 +14,32 @@ from neo4j import GraphDatabase
 from .cypher_validation import normalize_neo4j_uri
 from .local_query_stack import run_local_query_stack
 from .model_provider import resolve_model_settings
-from .query_planner import QueryPlanEnvelope, QueryResult, compile_query_plan, validate_compiled_query
-from .query_prompt import QUERY_SYSTEM_PROMPT
+from .query_planner import QueryResult, validate_compiled_query
+from .query_prompt import HOSTED_QUERY_SYSTEM_PROMPT
 
-QUERY_FALLBACK_PAYLOAD = '{"answerable": false, "reason": "beyond_local_coverage"}'
+QUERY_RESULT_FALLBACK_PAYLOAD = '{"answerable": false, "reason": "beyond_local_coverage"}'
 PARAM_REF_RE = re.compile(r"\$([A-Za-z_][A-Za-z0-9_]*)")
 DEFAULT_QUERY_MAX_OUTPUT_TOKENS = 1200
 DEFAULT_ROUTED_FALLBACK_PROVIDER = "opencode-go"
 ROUTED_STACK_MODE = "routed"
 FALLBACK_STACK_MODE = "fallback"
-QueryStackSelection = Literal["routed", "fallback"]
 
 WRITE_REQUEST_RE = re.compile(r"\b(add|create|delete|drop|insert|load|merge|remove|set|update|upsert|write)\b", re.I)
 TIME_REQUEST_RE = re.compile(r"\b(\d{4}|quarter|q[1-4]|month|week|year|yoy|over time|trend|historic)\b", re.I)
+
+
+@dataclass(frozen=True)
+class HostedQueryAttempt:
+    result: QueryResult
+    raw_response: str | None
+
+
+@dataclass(frozen=True)
+class HostedQueryRunOutcome:
+    result: QueryResult
+    columns: list[str] | None = None
+    rows: list[dict[str, Any]] | None = None
+    normalized_uri: str | None = None
 
 
 def _json_safe(value: Any) -> Any:
@@ -47,9 +61,9 @@ def _question_text(question_parts: list[str]) -> str:
     return question
 
 
-def _query_messages(question: str) -> list[dict[str, str]]:
+def _hosted_query_messages(question: str) -> list[dict[str, str]]:
     return [
-        {"role": "system", "content": QUERY_SYSTEM_PROMPT},
+        {"role": "system", "content": HOSTED_QUERY_SYSTEM_PROMPT},
         {"role": "user", "content": question},
     ]
 
@@ -60,16 +74,14 @@ def generate_query(
     extractor: LLMExtractor,
     max_retries: int,
 ) -> tuple[QueryResult, str | None, int, dict[str, Any]]:
-    plan, raw_response, attempts_used, audit = extractor.generate_structured_output(
-        messages=_query_messages(question),
-        schema_name="QueryPlanEnvelope",
-        schema_model=QueryPlanEnvelope,
-        fallback_payload=QUERY_FALLBACK_PAYLOAD,
+    return extractor.generate_structured_output(
+        messages=_hosted_query_messages(question),
+        schema_name="QueryResult",
+        schema_model=QueryResult,
+        fallback_payload=QUERY_RESULT_FALLBACK_PAYLOAD,
         max_retries=max_retries,
         temperature=0.0,
     )
-    result = compile_query_plan(plan)
-    return result, raw_response, attempts_used, audit
 
 
 def validate_generated_query(result: QueryResult) -> list[str]:
@@ -166,7 +178,7 @@ def _generate_query_with_provider(
     api_key: str | None,
     max_output_tokens: int | None,
     max_retries: int,
-) -> QueryResult:
+) -> HostedQueryAttempt:
     extractor = _build_extractor(
         provider=provider,
         model=model,
@@ -174,67 +186,67 @@ def _generate_query_with_provider(
         api_key=api_key,
         max_output_tokens=max_output_tokens,
     )
-    query_result, _raw_response, _attempts_used, _audit = generate_query(
+    query_result, raw_response, _attempts_used, _audit = generate_query(
         question=question,
         extractor=extractor,
         max_retries=max_retries,
     )
-    return query_result
+    return HostedQueryAttempt(result=query_result, raw_response=raw_response)
 
 
-def _retry_question_with_error_context(question: str, error: Exception) -> str:
-    return "\n".join(
-        [
-            question,
-            "",
-            "Planner retry context:",
-            f"Previous fallback planner call failed with: {_tail(str(error), limit=500)}",
-            "Return only compact valid JSON matching the required planner schema.",
-        ]
+def _failure_summary(stage: str, error: str) -> str:
+    return f"{stage}={_tail(error, limit=220)}"
+
+
+def _raise_double_failure(
+    *,
+    first_failure: tuple[str, str] | None,
+    second_stage: str,
+    second_error: str,
+) -> None:
+    _print_status("Warning: hosted query failed twice in a row.")
+    first_stage, first_error = first_failure or ("unknown", "unknown")
+    raise ValueError(
+        "Hosted query failed twice. "
+        f"first={_failure_summary(first_stage, first_error)}; "
+        f"second={_failure_summary(second_stage, second_error)}"
     )
 
 
-def _generate_fallback_query_with_retry(
-    *,
+def _retry_question_with_error_context(
     question: str,
-    provider: str,
-    model: str | None,
-    base_url: str | None,
-    api_key: str | None,
-    max_output_tokens: int | None,
-    max_retries: int,
-) -> QueryResult:
-    try:
-        return _generate_query_with_provider(
-            question=question,
-            provider=provider,
-            model=model,
-            base_url=base_url,
-            api_key=api_key,
-            max_output_tokens=max_output_tokens,
-            max_retries=max_retries,
+    *,
+    stage: str,
+    error: str,
+    raw_response: str | None = None,
+    query_result: QueryResult | None = None,
+) -> str:
+    context_lines = [
+        question,
+        "",
+        "Hosted query retry context:",
+        f"Failure stage: {stage}",
+        f"Previous attempt failed with: {_tail(error, limit=500)}",
+    ]
+
+    if raw_response:
+        context_lines.extend(
+            [
+                "Previous JSON response:",
+                _tail(raw_response, limit=1200),
+            ]
         )
-    except Exception as first_error:  # noqa: BLE001
-        _print_status(f"Fallback planner error (attempt 1): {_tail(str(first_error))}")
-        _print_status("Retrying fallback planner once with error context...")
-        retry_question = _retry_question_with_error_context(question, first_error)
-        try:
-            return _generate_query_with_provider(
-                question=retry_question,
-                provider=provider,
-                model=model,
-                base_url=base_url,
-                api_key=api_key,
-                max_output_tokens=max_output_tokens,
-                max_retries=max_retries,
-            )
-        except Exception as second_error:  # noqa: BLE001
-            _print_status("Warning: fallback planner failed twice in a row.")
-            raise ValueError(
-                "Fallback planner failed twice. "
-                f"first={_tail(str(first_error), limit=220)}; "
-                f"second={_tail(str(second_error), limit=220)}"
-            ) from second_error
+
+    if query_result is not None and query_result.answerable and query_result.cypher:
+        context_lines.extend(
+            [
+                "Previous generated Cypher:",
+                _tail(_render_runnable_query(query_result.cypher, _json_safe(query_result.params)), limit=1200),
+            ]
+        )
+
+    context_lines.append("Return only compact valid JSON matching the required hosted query schema.")
+    return "\n".join(context_lines)
 
 
 def execute_live_query(
@@ -285,7 +297,7 @@ def _print_output(message: str) -> None:
 
 def _report_local_stack_error(error_detail: str) -> None:
     _print_status(f"Local query stack unavailable: {_tail(error_detail)}")
-    _print_status("Falling back to hosted planner.")
+    _print_status("Falling back to hosted query generation.")
 
 
 def _format_cell_value(value: Any) -> str:
@@ -343,55 +355,179 @@ def _render_query_results(columns: list[str], rows: list[dict[str, Any]]) -> str
     return "\n".join(rendered_rows)
 
 
-def _resolve_query_result(
+def _resolve_local_query_result(
     *,
     question: str,
     args: argparse.Namespace,
-) -> QueryResult:
+) -> QueryResult | None:
     force_fallback = bool(getattr(args, "skip_local_stack", False)) or getattr(args, "stack", ROUTED_STACK_MODE) == FALLBACK_STACK_MODE
-    if not force_fallback:
-        _print_status("Routing with local deployed query stack...")
-        local_payload, local_error = _run_local_stack(
-            question=question,
-            local_stack_bundle_dir=args.local_stack_bundle_dir,
-        )
-        if local_payload is not None:
-            local_result, decision = _result_from_local_stack(local_payload, question=question)
-            if local_result is not None:
-                if local_result.answerable:
-                    _print_status("Router decision: local (using local Qwen planner output).")
-                else:
-                    _print_status(f"Router decision: refuse ({local_result.reason}).")
-                return local_result
-            planner_error = _local_planner_error(local_payload)
-            if planner_error:
-                _report_local_stack_error(planner_error)
-            elif decision == "api_fallback":
-                _print_status("Router decision: api_fallback (using hosted planner fallback).")
-            else:
-                _print_status(f"Router decision: {decision or 'unknown'} (using hosted planner fallback).")
-        elif local_error:
-            _report_local_stack_error(local_error)
-    else:
-        _print_status("Using hosted planner only.")
+    if force_fallback:
+        _print_status("Using hosted query generation only.")
+        return None
 
-    _print_status("Generating hosted fallback query plan...")
-    return _generate_fallback_query_with_retry(
+    _print_status("Routing with local deployed query stack...")
+    local_payload, local_error = _run_local_stack(
         question=question,
-        provider=args.provider,
-        model=args.model,
-        base_url=args.base_url,
-        api_key=args.api_key,
-        max_output_tokens=args.max_output_tokens,
-        max_retries=args.max_retries,
+        local_stack_bundle_dir=args.local_stack_bundle_dir,
     )
+    if local_payload is not None:
+        local_result, decision = _result_from_local_stack(local_payload, question=question)
+        if local_result is not None:
+            if local_result.answerable:
+                _print_status("Router decision: local (using local Qwen planner output).")
+            else:
+                _print_status(f"Router decision: refuse ({local_result.reason}).")
+            return local_result
+        planner_error = _local_planner_error(local_payload)
+        if planner_error:
+            _report_local_stack_error(planner_error)
+        elif decision == "api_fallback":
+            _print_status("Router decision: api_fallback (using hosted query generation).")
+        else:
+            _print_status(f"Router decision: {decision or 'unknown'} (using hosted query generation).")
+    elif local_error:
+        _report_local_stack_error(local_error)
+    return None
+
+
+def _run_hosted_query_with_retry(
+    *,
+    question: str,
+    args: argparse.Namespace,
+    execute: bool,
+) -> HostedQueryRunOutcome:
+    retry_question = question
+    first_failure: tuple[str, str] | None = None
+
+    for attempt_index in range(2):
+        if attempt_index == 0:
+            _print_status("Generating hosted fallback query...")
+
+        try:
+            query_attempt = _generate_query_with_provider(
+                question=retry_question,
+                provider=args.provider,
+                model=args.model,
+                base_url=args.base_url,
+                api_key=args.api_key,
+                max_output_tokens=args.max_output_tokens,
+                max_retries=args.max_retries,
+            )
+        except Exception as exc:  # noqa: BLE001
+            if attempt_index == 1:
+                _raise_double_failure(
+                    first_failure=first_failure,
+                    second_stage="generation",
+                    second_error=str(exc),
+                )
+            first_failure = ("generation", str(exc))
+            _print_status(f"Hosted query generation error (attempt 1): {_tail(str(exc))}")
+            _print_status("Retrying hosted query generation once with error context...")
+            retry_question = _retry_question_with_error_context(
+                question,
+                stage="generation",
+                error=str(exc),
+            )
+            continue
+
+        query_result = query_attempt.result
+        if not query_result.answerable:
+            return HostedQueryRunOutcome(result=query_result)
+
+        validation_failures = validate_generated_query(query_result)
+        if validation_failures:
+            validation_error = "; ".join(validation_failures)
+            if attempt_index == 1:
+                _raise_double_failure(
+                    first_failure=first_failure,
+                    second_stage="validation",
+                    second_error=validation_error,
+                )
+            first_failure = ("validation", validation_error)
+            _print_status(f"Hosted query validation error (attempt 1): {_tail(validation_error)}")
+            _print_status("Retrying hosted query generation once with error context...")
+            retry_question = _retry_question_with_error_context(
+                question,
+                stage="validation",
+                error=validation_error,
+                raw_response=query_attempt.raw_response,
+                query_result=query_result,
+            )
+            continue
+
+        if not execute:
+            return HostedQueryRunOutcome(result=query_result)
+
+        try:
+            preflight_live_query(
+                cypher=query_result.cypher or "",
+                params=query_result.params,
+                neo4j_uri=args.neo4j_uri,
+                neo4j_user=args.neo4j_user,
+                neo4j_password=args.neo4j_password,
+            )
+        except Exception as exc:  # noqa: BLE001
+            if attempt_index == 1:
+                _raise_double_failure(
+                    first_failure=first_failure,
+                    second_stage="neo4j_preflight",
+                    second_error=str(exc),
+                )
+            first_failure = ("neo4j_preflight", str(exc))
+            _print_status(f"Neo4j preflight error: {exc}")
+            _print_status("Retrying hosted query generation once with error context...")
+            retry_question = _retry_question_with_error_context(
+                question,
+                stage="neo4j_preflight",
+                error=str(exc),
+                raw_response=query_attempt.raw_response,
+                query_result=query_result,
+            )
+            continue
+
+        try:
+            _print_status("Running query on Neo4j...")
+            columns, rows, normalized_uri = execute_live_query(
+                cypher=query_result.cypher or "",
+                params=query_result.params,
+                neo4j_uri=args.neo4j_uri,
+                neo4j_user=args.neo4j_user,
+                neo4j_password=args.neo4j_password,
+            )
+        except Exception as exc:  # noqa: BLE001
+            if attempt_index == 1:
+                _raise_double_failure(
+                    first_failure=first_failure,
+                    second_stage="neo4j_execution",
+                    second_error=str(exc),
+                )
+            first_failure = ("neo4j_execution", str(exc))
+            _print_status(f"Neo4j execution error: {exc}")
+            _print_status("Retrying hosted query generation once with error context...")
+            retry_question = _retry_question_with_error_context(
+                question,
+                stage="neo4j_execution",
+                error=str(exc),
+                raw_response=query_attempt.raw_response,
+                query_result=query_result,
+            )
+            continue
+
+        return HostedQueryRunOutcome(
+            result=query_result,
+            columns=columns,
+            rows=rows,
+            normalized_uri=normalized_uri,
+        )
+
+    raise ValueError("Hosted query generation did not return a usable result.")
 
 
 def _build_parser(*, execute: bool) -> argparse.ArgumentParser:
     description = (
-        "Route query with the published local query stack first, then use hosted planner fallback when needed, and run on Neo4j."
+        "Route query with the published local query stack first, then use hosted free-form Cypher generation when needed, and run on Neo4j."
         if execute
-        else "Route query with the published local query stack first, then use hosted planner fallback when needed, and render Cypher."
+        else "Route query with the published local query stack first, then use hosted free-form Cypher generation when needed, and render Cypher."
     )
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument("question", nargs="+", help="Natural-language question about the current knowledge graph.")
@@ -407,18 +543,18 @@ def _build_parser(*, execute: bool) -> argparse.ArgumentParser:
         dest="provider",
         choices=["opencode-go"],
         default=DEFAULT_ROUTED_FALLBACK_PROVIDER,
-        help="Hosted fallback planner provider.",
+        help="Hosted fallback query-generation provider.",
     )
     parser.add_argument(
         "--base-url",
         type=str,
         default=None,
-        help="Base URL for the hosted fallback planner API.",
+        help="Base URL for the hosted fallback query-generation API.",
     )
     parser.add_argument(
         "--skip-local-stack",
         action="store_true",
-        help="Bypass the published local query stack and always use hosted fallback planner generation.",
+        help="Bypass the published local query stack and always use hosted fallback query generation.",
     )
     parser.add_argument(
         "--local-stack-bundle-dir",
@@ -430,26 +566,26 @@ def _build_parser(*, execute: bool) -> argparse.ArgumentParser:
         "--model",
         type=str,
         default=None,
-        help="Model name/ID for the hosted fallback planner.",
+        help="Model name/ID for the hosted fallback query generator.",
     )
     parser.add_argument(
         "--api-key",
         type=str,
         default=None,
-        help="API key for the hosted fallback planner.",
+        help="API key for the hosted fallback query generator.",
     )
     parser.add_argument(
         "--max-output-tokens",
         type=int,
         default=None,
-        help="Maximum completion tokens per planner call.",
+        help="Maximum completion tokens per hosted query-generation call.",
     )
-    parser.add_argument("--max-retries", type=int, default=3, help="Maximum planner retries per call.")
+    parser.add_argument("--max-retries", type=int, default=3, help="Maximum retries per hosted model call.")
     parser.add_argument(
         "--repair-attempts",
         type=int,
         default=0,
-        help="Reserved for compatibility. Planner-based queries refuse instead of attempting plan repair.",
+        help="Reserved for compatibility. Hosted fallback already retries once automatically with error context.",
     )
     if execute:
         parser.add_argument("--neo4j-uri", type=str, default=None, help="Neo4j connection URI.")
@@ -458,17 +594,12 @@ def _build_parser(*, execute: bool) -> argparse.ArgumentParser:
     return parser
 
 
-def _run(argv: list[str] | None, *, execute: bool) -> int:
-    parser = _build_parser(execute=execute)
-    args = parser.parse_args(argv)
-    question = _question_text(args.question)
-
-    try:
-        query_result = _resolve_query_result(question=question, args=args)
-    except (ExtractionError, ValueError) as exc:
-        _print_status(f"Error: {exc}")
-        return 1
-
+def _run_local_query_result(
+    *,
+    query_result: QueryResult,
+    args: argparse.Namespace,
+    execute: bool,
+) -> int:
     if not query_result.answerable:
         _print_status(f"Unsupported request: {query_result.reason}")
         return 0
@@ -507,6 +638,53 @@ def _run(argv: list[str] | None, *, execute: bool) -> int:
         _print_status(f"Neo4j execution error: {exc}")
         return 1
 
+    rendered_rows = _render_query_results(columns, rows)
+    if rendered_rows:
+        _print_output(rendered_rows)
+    else:
+        _print_status(f"No rows returned from {normalized_uri}.")
+    return 0
+
+
+def _run(argv: list[str] | None, *, execute: bool) -> int:
+    parser = _build_parser(execute=execute)
+    args = parser.parse_args(argv)
+    question = _question_text(args.question)
+
+    local_query_result = _resolve_local_query_result(question=question, args=args)
+    if local_query_result is not None:
+        return _run_local_query_result(
+            query_result=local_query_result,
+            args=args,
+            execute=execute,
+        )
+
+    try:
+        hosted_outcome = _run_hosted_query_with_retry(
+            question=question,
+            args=args,
+            execute=execute,
+        )
+    except (ExtractionError, ValueError) as exc:
+        _print_status(f"Error: {exc}")
+        return 1
+
+    if not hosted_outcome.result.answerable:
+        _print_status(f"Unsupported request: {hosted_outcome.result.reason}")
+        return 0
+
+    if not execute:
+        _print_output(
+            _render_runnable_query(
+                hosted_outcome.result.cypher or "",
+                _json_safe(hosted_outcome.result.params),
+            )
+        )
+        return 0
+
+    columns = hosted_outcome.columns or []
+    rows = hosted_outcome.rows or []
+    normalized_uri = hosted_outcome.normalized_uri or normalize_neo4j_uri(args.neo4j_uri)
     rendered_rows = _render_query_results(columns, rows)
     if rendered_rows:
         _print_output(rendered_rows)

@@ -24,7 +24,7 @@ _CHANNEL_LABELS = canonical_labels("Channel")
 _REVENUE_MODEL_LABELS = canonical_labels("RevenueModel")
 
 
-QUERY_SYSTEM_PROMPT = "\n\n".join(
+LOCAL_QUERY_SYSTEM_PROMPT = "\n\n".join(
     [
         (
             "You translate natural-language questions into compact JSON plans for the production "
@@ -138,6 +138,92 @@ QUERY_SYSTEM_PROMPT = "\n\n".join(
 )
 
 
+HOSTED_QUERY_SYSTEM_PROMPT = "\n\n".join(
+    [
+        (
+            "You translate natural-language questions into compact JSON containing a full read-only "
+            "Cypher query for the production business-model knowledge graph. Write the full Cypher "
+            "yourself. The runtime will not compile a plan for you."
+        ),
+        _section(
+            "OUTPUT CONTRACT",
+            [
+                'For answerable requests return {"answerable": true, "cypher": "...", "params": {...}}.',
+                'For unsupported, ambiguous, or out-of-coverage requests return {"answerable": false, "reason": "..."}',
+                (
+                    "Valid refusal reasons are unsupported_schema, unsupported_metric, unsupported_time, "
+                    "ambiguous_closed_label, ambiguous_request, write_request, and beyond_local_coverage."
+                ),
+                "Output compact JSON only. No markdown, no prose, no explanation, no chain-of-thought.",
+                "Cypher must be read-only. Never use CREATE, MERGE, DELETE, DETACH, SET, REMOVE, CALL, or LOAD CSV.",
+                "Always use named $params for user-provided values. The params object must exactly match the placeholders used in cypher.",
+            ],
+        ),
+        _section(
+            "DATABASE ARCHITECTURE",
+            [
+                "Node labels: Company, BusinessSegment, Offering, CustomerType, Channel, RevenueModel, and Place.",
+                "Relationship types: HAS_SEGMENT, OFFERS, SERVES, SELLS_THROUGH, MONETIZES_VIA, OPERATES_IN, and PARTNERS_WITH.",
+                "Company nodes are keyed globally by name.",
+                "BusinessSegment and Offering nodes are company-scoped: their downstream identity includes company_name as well as name.",
+                "When traversing from Company to BusinessSegment or Offering, keep queries inside the same company scope.",
+                "SERVES and SELLS_THROUGH live on BusinessSegment in the canonical graph.",
+                "MONETIZES_VIA lives only on Offering.",
+                "OPERATES_IN and PARTNERS_WITH live only on Company.",
+                "Offering families use Offering-[:OFFERS]->Offering recursively.",
+                "Place nodes may carry within_places and includes_places arrays for geographic rollups.",
+            ],
+        ),
+        _section(
+            "RELATION RULES",
+            [
+                "HAS_SEGMENT links Company -> BusinessSegment.",
+                "OFFERS links BusinessSegment -> Offering, Company -> Offering as a fallback, or Offering -> Offering for explicit offering families.",
+                "SERVES links BusinessSegment -> CustomerType.",
+                "SELLS_THROUGH links BusinessSegment -> Channel, with Offering -> Channel as a rare fallback when no BusinessSegment anchor exists.",
+                "MONETIZES_VIA links Offering -> RevenueModel.",
+                "OPERATES_IN links Company -> Place.",
+                "PARTNERS_WITH links Company -> Company.",
+                "To match Places broadly, a requested place may match place.name, place.includes_places, or place.within_places.",
+            ],
+        ),
+        _section(
+            "CLOSED LABELS",
+            [
+                (
+                    "CustomerType is a closed vocabulary. Valid labels are "
+                    f"{_format_label_list(_CUSTOMER_TYPE_LABELS)}."
+                ),
+                (
+                    "Channel is a closed vocabulary. Valid labels are "
+                    f"{_format_label_list(_CHANNEL_LABELS)}."
+                ),
+                (
+                    "RevenueModel is a closed vocabulary. Valid labels are "
+                    f"{_format_label_list(_REVENUE_MODEL_LABELS)}."
+                ),
+                "Always normalize user wording to the exact canonical closed label before using it in params.",
+                "Examples: government, public sector, or agencies -> government agencies.",
+                "Examples: healthcare firms, hospitals, providers, or health systems -> healthcare organizations.",
+                "Examples: enterprise customers -> large enterprises when that is the closest canonical label.",
+                "If the wording does not map clearly to one canonical closed label, refuse with ambiguous_closed_label.",
+            ],
+        ),
+        _section(
+            "QUERY AUTHORING RULES",
+            [
+                "Prefer DISTINCT when returning entity names to avoid duplicate rows.",
+                "Use exact node labels and relationship types from this schema only.",
+                "Keep params JSON-safe: strings, numbers, booleans, null, lists, and flat objects are acceptable.",
+                "If the request asks for writes or mutations, refuse with write_request.",
+                "If the request asks for unsupported temporal analytics, trends, or year-over-year analysis, refuse with unsupported_time.",
+                "If the request depends on metrics absent from this graph, such as revenue amounts, prices, growth, employees, or suppliers, refuse with unsupported_metric or unsupported_schema.",
+            ],
+        ),
+    ]
+)
+
+
 QUERY_REPAIR_SYSTEM_PROMPT = "\n\n".join(
     [
         (
@@ -158,4 +244,12 @@ QUERY_REPAIR_SYSTEM_PROMPT = "\n\n".join(
 )
 
 
-__all__ = ["QUERY_REPAIR_SYSTEM_PROMPT", "QUERY_SYSTEM_PROMPT"]
+QUERY_SYSTEM_PROMPT = LOCAL_QUERY_SYSTEM_PROMPT
+
+
+__all__ = [
+    "HOSTED_QUERY_SYSTEM_PROMPT",
+    "LOCAL_QUERY_SYSTEM_PROMPT",
+    "QUERY_REPAIR_SYSTEM_PROMPT",
+    "QUERY_SYSTEM_PROMPT",
+]
