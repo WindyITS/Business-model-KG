@@ -224,32 +224,7 @@ HOSTED_QUERY_SYSTEM_PROMPT = "\n\n".join(
 )
 
 
-QUERY_REPAIR_SYSTEM_PROMPT = "\n\n".join(
-    [
-        (
-            "You repair a previously generated query plan for the production business-model "
-            "knowledge graph. Return a corrected JSON plan only. Do not write Cypher."
-        ),
-        _section(
-            "REPAIR RULES",
-            [
-                "Return compact JSON only.",
-                "Keep the same family if the failure can be fixed inside that family.",
-                "Prefer the smallest safe correction.",
-                "Use the same closed-label normalization rules and refusal reasons as the main planner.",
-                "If the request is outside supported local coverage, refuse with beyond_local_coverage.",
-            ],
-        ),
-    ]
-)
-
-
-QUERY_SYSTEM_PROMPT = LOCAL_QUERY_SYSTEM_PROMPT
-
-
 __all__ = [
     "HOSTED_QUERY_SYSTEM_PROMPT",
     "LOCAL_QUERY_SYSTEM_PROMPT",
-    "QUERY_REPAIR_SYSTEM_PROMPT",
-    "QUERY_SYSTEM_PROMPT",
 ]

@@ -1,6 +1,6 @@
 import unittest
 
-from runtime.query_prompt import HOSTED_QUERY_SYSTEM_PROMPT, LOCAL_QUERY_SYSTEM_PROMPT, QUERY_REPAIR_SYSTEM_PROMPT
+from runtime.query_prompt import HOSTED_QUERY_SYSTEM_PROMPT, LOCAL_QUERY_SYSTEM_PROMPT
 
 
 class QueryPromptTests(unittest.TestCase):
@@ -24,12 +24,6 @@ class QueryPromptTests(unittest.TestCase):
         self.assertIn("within_places", prompt)
         self.assertIn("government agencies", prompt)
         self.assertIn("never use create", prompt)
-
-    def test_repair_prompt_keeps_repairs_in_plan_space(self):
-        prompt = QUERY_REPAIR_SYSTEM_PROMPT.casefold()
-        self.assertIn("return a corrected json plan only", prompt)
-        self.assertIn("do not write cypher", prompt)
-        self.assertIn("beyond_local_coverage", prompt)
 
 
 if __name__ == "__main__":

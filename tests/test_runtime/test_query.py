@@ -378,6 +378,24 @@ class RuntimeQueryTests(unittest.TestCase):
         self.assertEqual(ctx.exception.code, 2)
         self.assertIn("unrecognized arguments", stderr.getvalue())
 
+    def test_query_rejects_removed_skip_local_stack_flag(self):
+        stderr = io.StringIO()
+
+        with redirect_stderr(stderr), self.assertRaises(SystemExit) as ctx:
+            query_module.main_query_cypher(["Which companies are in the graph?", "--skip-local-stack"])
+
+        self.assertEqual(ctx.exception.code, 2)
+        self.assertIn("unrecognized arguments", stderr.getvalue())
+
+    def test_query_rejects_removed_repair_attempts_flag(self):
+        stderr = io.StringIO()
+
+        with redirect_stderr(stderr), self.assertRaises(SystemExit) as ctx:
+            query_module.main_query_cypher(["Which companies are in the graph?", "--repair-attempts", "1"])
+
+        self.assertEqual(ctx.exception.code, 2)
+        self.assertIn("unrecognized arguments", stderr.getvalue())
+
 
 if __name__ == "__main__":
     unittest.main()

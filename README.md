@@ -338,8 +338,7 @@ Useful CLI flags:
 - `--base-url`: pass either an API root or a full endpoint URL; the runtime normalizes common suffixes
 - `--api-key`: override environment-based key resolution
 - `--max-output-tokens`: explicitly cap model output tokens
-- `kg-query` / `kg-query-cypher --skip-local-stack`: skip local router/local planner and force hosted fallback query generation
-- `kg-query` / `kg-query-cypher --stack fallback`: preferred single-switch way to force hosted fallback query generation
+- `kg-query` / `kg-query-cypher --stack fallback`: single-switch way to skip the local router/planner and force hosted fallback query generation
 - `kg-query` / `kg-query-cypher --local-stack-bundle-dir /path/to/query_stack/current`: point routed query commands to a specific published bundle
 - `kg-query` / `kg-query-cypher --provider opencode-go`: choose the hosted fallback query-generation provider used only when local routing does not return a local-safe plan
 - when the local query stack errors in routed mode, the CLI logs the problem and falls back automatically, even in non-interactive shells

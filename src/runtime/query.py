@@ -360,7 +360,7 @@ def _resolve_local_query_result(
     question: str,
     args: argparse.Namespace,
 ) -> QueryResult | None:
-    force_fallback = bool(getattr(args, "skip_local_stack", False)) or getattr(args, "stack", ROUTED_STACK_MODE) == FALLBACK_STACK_MODE
+    force_fallback = getattr(args, "stack", ROUTED_STACK_MODE) == FALLBACK_STACK_MODE
     if force_fallback:
         _print_status("Using hosted query generation only.")
         return None
@@ -552,11 +552,6 @@ def _build_parser(*, execute: bool) -> argparse.ArgumentParser:
         help="Base URL for the hosted fallback query-generation API.",
     )
     parser.add_argument(
-        "--skip-local-stack",
-        action="store_true",
-        help="Bypass the published local query stack and always use hosted fallback query generation.",
-    )
-    parser.add_argument(
         "--local-stack-bundle-dir",
         type=str,
         default=None,
@@ -581,12 +576,6 @@ def _build_parser(*, execute: bool) -> argparse.ArgumentParser:
         help="Maximum completion tokens per hosted query-generation call.",
     )
     parser.add_argument("--max-retries", type=int, default=3, help="Maximum retries per hosted model call.")
-    parser.add_argument(
-        "--repair-attempts",
-        type=int,
-        default=0,
-        help="Reserved for compatibility. Hosted fallback already retries once automatically with error context.",
-    )
     if execute:
         parser.add_argument("--neo4j-uri", type=str, default=None, help="Neo4j connection URI.")
         parser.add_argument("--neo4j-user", type=str, default="neo4j", help="Neo4j username.")
