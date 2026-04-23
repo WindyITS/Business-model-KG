@@ -45,6 +45,7 @@ class PlannerTrainTests(unittest.TestCase):
                             "checkpoint_every": 500,
                             "grad_checkpoint": True,
                             "resume_adapter_file": str(resume_file),
+                            "resume_checkpoint_dir": str(artifact_root / "planner" / "adapter" / "checkpoints" / "0000500"),
                         },
                     }
                 ),
@@ -62,7 +63,14 @@ class PlannerTrainTests(unittest.TestCase):
                         "zero_target_rows": 0,
                     },
                 ),
-                patch("kg_query_planner_ft.planner_train._run_mlx_training"),
+                patch(
+                    "kg_query_planner_ft.planner_train._run_mlx_training_loop",
+                    return_value={
+                        "latest_resume_checkpoint_dir": str(
+                            artifact_root / "planner" / "adapter" / "checkpoints" / "0000500"
+                        )
+                    },
+                ),
             ):
                 summary = train_planner(str(config_path))
 
@@ -71,9 +79,17 @@ class PlannerTrainTests(unittest.TestCase):
             self.assertIn("save_every: 500", yaml_text)
             self.assertIn("grad_checkpoint: true", yaml_text)
             self.assertIn(f"resume_adapter_file: '{resume_file}'", yaml_text)
+            self.assertIn(
+                f"resume_checkpoint_dir: '{artifact_root / 'planner' / 'adapter' / 'checkpoints' / '0000500'}'",
+                yaml_text,
+            )
             self.assertEqual(summary["checkpoint_every"], 500)
             self.assertTrue(summary["grad_checkpoint"])
             self.assertEqual(summary["resume_adapter_file"], str(resume_file))
+            self.assertEqual(
+                summary["resume_checkpoint_dir"],
+                str(artifact_root / "planner" / "adapter" / "checkpoints" / "0000500"),
+            )
 
     def test_train_planner_omits_resume_adapter_when_starting_from_scratch(self):
         with TemporaryDirectory() as tmpdir:
@@ -125,7 +141,14 @@ class PlannerTrainTests(unittest.TestCase):
                         "zero_target_rows": 0,
                     },
                 ),
-                patch("kg_query_planner_ft.planner_train._run_mlx_training"),
+                patch(
+                    "kg_query_planner_ft.planner_train._run_mlx_training_loop",
+                    return_value={
+                        "latest_resume_checkpoint_dir": str(
+                            artifact_root / "planner" / "adapter" / "checkpoints" / "0000001"
+                        )
+                    },
+                ),
             ):
                 summary = train_planner(str(config_path))
 
@@ -133,8 +156,61 @@ class PlannerTrainTests(unittest.TestCase):
             yaml_text = yaml_path.read_text(encoding="utf-8")
             self.assertIn("grad_checkpoint: false", yaml_text)
             self.assertNotIn("resume_adapter_file:", yaml_text)
+            self.assertNotIn("resume_checkpoint_dir:", yaml_text)
             self.assertFalse(summary["grad_checkpoint"])
             self.assertEqual(summary["resume_adapter_file"], None)
+
+    def test_train_planner_rejects_checkpoint_intervals_off_update_boundaries(self):
+        with TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            artifact_root = tmp / "artifacts"
+            train_dir = artifact_root / "prepared" / "planner" / "balanced"
+            train_dir.mkdir(parents=True, exist_ok=True)
+            (train_dir / "train.jsonl").write_text(
+                json.dumps(
+                    {
+                        "question": "Which companies partner with Dell?",
+                        "messages": [
+                            {"role": "system", "content": "sys"},
+                            {"role": "user", "content": "Which companies partner with Dell?"},
+                            {"role": "assistant", "content": "{\"answerable\":true}"},
+                        ],
+                    }
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            config_path = tmp / "config.json"
+            config_path.write_text(
+                json.dumps(
+                    {
+                        "artifact_root": str(artifact_root),
+                        "dataset_path": str(tmp / "dataset"),
+                        "router": {"base_model": "microsoft/deberta-v3-small"},
+                        "planner": {
+                            "base_model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+                            "checkpoint_every": 501,
+                            "grad_checkpoint": True,
+                            "grad_accumulation_steps": 4,
+                        },
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            with patch(
+                "kg_query_planner_ft.planner_train._planner_length_preflight",
+                return_value={
+                    "count": 1,
+                    "full_max": 10,
+                    "prompt_max": 5,
+                    "completion_max": 5,
+                    "zero_target_rows": 0,
+                },
+            ):
+                with self.assertRaisesRegex(ValueError, "checkpoint_every must be divisible"):
+                    train_planner(str(config_path))
 
 
 if __name__ == "__main__":

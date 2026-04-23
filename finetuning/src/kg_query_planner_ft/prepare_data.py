@@ -12,6 +12,7 @@ from .frozen_prompt import FROZEN_QUERY_SYSTEM_PROMPT
 from .json_utils import compact_json, read_jsonl, write_json, write_jsonl
 from .paths import (
     dataset_root,
+    planner_train_augmentation_file,
     prepared_planner_balanced_dir,
     prepared_planner_raw_dir,
     prepared_router_dir,
@@ -35,6 +36,12 @@ def _load_source_rows(source_root: Path) -> dict[str, list[dict[str, Any]]]:
             unit="split",
         )
     }
+
+
+def _load_optional_rows(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    return read_jsonl(path)
 
 
 def _planner_row(row: dict[str, Any], split_name: str) -> dict[str, Any]:
@@ -94,6 +101,18 @@ def prepare_data(config_path: str | None = None) -> dict[str, Any]:
     with StepProgress(total=6, desc="prepare-data") as progress:
         source_root = dataset_root(config)
         rows_by_split = _load_source_rows(source_root)
+        planner_train_augmentation_paths = [
+            planner_train_augmentation_file(config),
+            source_root / "train_planner_augmentations.jsonl",
+        ]
+        planner_train_augmentation_rows: list[dict[str, Any]] = []
+        seen_augmentation_paths: set[Path] = set()
+        for augmentation_path in planner_train_augmentation_paths:
+            resolved_path = augmentation_path.resolve()
+            if resolved_path in seen_augmentation_paths:
+                continue
+            seen_augmentation_paths.add(resolved_path)
+            planner_train_augmentation_rows.extend(_load_optional_rows(augmentation_path))
         progress.advance("loaded source splits")
 
         router_rows_by_split: dict[str, list[dict[str, Any]]] = {}
@@ -110,6 +129,11 @@ def prepare_data(config_path: str | None = None) -> dict[str, Any]:
                 for row in rows
                 if row["route_label"] == "local_safe"
             ]
+        planner_raw_by_split["train"].extend(
+            _planner_row(row, "train")
+            for row in planner_train_augmentation_rows
+            if row["route_label"] == "local_safe"
+        )
         progress.advance("built router and planner rows")
 
         router_dir = prepared_router_dir(config)
@@ -170,6 +194,9 @@ def prepare_data(config_path: str | None = None) -> dict[str, Any]:
             "valid": planner_raw_stats["valid"],
             "test": planner_raw_stats["test"],
         }
+        planner_augmentation_stats = dict(
+            sorted(Counter(row["family"] for row in planner_train_augmentation_rows).items())
+        )
 
         summary = {
             "source_root": str(source_root),
@@ -182,6 +209,8 @@ def prepare_data(config_path: str | None = None) -> dict[str, Any]:
                 "output_dir": str(planner_raw_dir),
                 "counts_by_split": {split_name: len(rows) for split_name, rows in planner_raw_by_split.items()},
                 "family_counts_by_split": planner_raw_stats,
+                "train_augmentation_rows": len(planner_train_augmentation_rows),
+                "train_augmentation_family_counts": planner_augmentation_stats,
             },
             "planner_balanced": {
                 "output_dir": str(planner_balanced_dir),

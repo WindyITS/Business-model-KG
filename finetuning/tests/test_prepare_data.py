@@ -205,6 +205,121 @@ class PrepareDataTests(unittest.TestCase):
             )
             self.assertTrue((artifact_root / "prepared" / "planner" / "balanced" / "frozen_prompt.txt").exists())
 
+    def test_prepare_data_loads_planner_train_augmentations_without_touching_router(self):
+        with TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            source = tmp / "source"
+            source.mkdir()
+
+            def write_rows(name, rows):
+                (source / f"{name}.jsonl").write_text(
+                    "\n".join(json.dumps(row) for row in rows) + "\n",
+                    encoding="utf-8",
+                )
+
+            base_plan = {
+                "answerable": True,
+                "family": "ranking_topk",
+                "payload": {
+                    "companies": ["Aurora Systems"],
+                    "segments": [],
+                    "offerings": [],
+                    "customer_types": [],
+                    "channels": [],
+                    "revenue_models": [],
+                    "places": ["Germany"],
+                    "partners": [],
+                    "aggregate_spec": {"kind": "ranking", "ranking_metric": "channel_by_segment_count"},
+                    "limit": 3,
+                },
+            }
+            train_row = {
+                "question": "Top 3 channels by segment count at Aurora Systems in Germany.",
+                "route_label": "local_safe",
+                "family": "ranking_topk",
+                "supervision_target": {"plan": base_plan},
+            }
+            write_rows("train", [train_row])
+            write_rows("validation", [train_row])
+            write_rows("release_eval", [train_row])
+
+            augmentation_row = {
+                "case_id": "aug-ranking-001",
+                "template_id": "ranking_topk-augmentation",
+                "variant_id": "literal-copy",
+                "question": "Using only the supplied dataset, top 4 channels by segment count within segments at Harbor Health operating in France.",
+                "target": {
+                    "answerable": True,
+                    "family": "ranking_topk",
+                    "payload": {
+                        "companies": ["Harbor Health"],
+                        "segments": [],
+                        "offerings": [],
+                        "customer_types": [],
+                        "channels": [],
+                        "revenue_models": [],
+                        "places": ["France"],
+                        "partners": [],
+                        "aggregate_spec": {"kind": "ranking", "ranking_metric": "channel_by_segment_count"},
+                        "limit": 4,
+                    },
+                },
+                "supervision_target": {
+                    "plan": {
+                        "answerable": True,
+                        "family": "ranking_topk",
+                        "payload": {
+                            "companies": ["Harbor Health"],
+                            "segments": [],
+                            "offerings": [],
+                            "customer_types": [],
+                            "channels": [],
+                            "revenue_models": [],
+                            "places": ["France"],
+                            "partners": [],
+                            "aggregate_spec": {"kind": "ranking", "ranking_metric": "channel_by_segment_count"},
+                            "limit": 4,
+                        },
+                    }
+                },
+                "route_label": "local_safe",
+                "family": "ranking_topk",
+                "gold_cypher": "MATCH (c:Company)-[:OPERATES_IN]->(p:Place) RETURN c.name",
+                "gold_params": {"companies": ["Harbor Health"], "places": ["France"], "limit": 4},
+                "gold_rows": [],
+                "metadata": {"source": "augmentation"},
+            }
+            (source / "train_planner_augmentations.jsonl").write_text(
+                json.dumps(augmentation_row) + "\n",
+                encoding="utf-8",
+            )
+
+            config_path = tmp / "config.json"
+            artifact_root = tmp / "artifacts"
+            config_path.write_text(
+                json.dumps(
+                    {
+                        "artifact_root": str(artifact_root),
+                        "dataset_path": str(source),
+                        "router": {"base_model": "microsoft/deberta-v3-small"},
+                        "planner": {"base_model": "mlx-community/Qwen3-4B-Instruct-2507-4bit"},
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            summary = prepare_data(str(config_path))
+
+            self.assertEqual(summary["router"]["counts_by_split"]["train"], 1)
+            self.assertEqual(summary["planner_raw"]["counts_by_split"]["train"], 2)
+            self.assertEqual(summary["planner_raw"]["train_augmentation_rows"], 1)
+            self.assertEqual(summary["planner_raw"]["train_augmentation_family_counts"], {"ranking_topk": 1})
+            planner_train_rows = [
+                json.loads(line)
+                for line in (artifact_root / "prepared" / "planner" / "raw" / "train.jsonl").read_text(encoding="utf-8").splitlines()
+            ]
+            self.assertEqual(planner_train_rows[-1]["gold_plan"]["payload"]["companies"], ["Harbor Health"])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -28,18 +28,16 @@ LOCAL_QUERY_SYSTEM_PROMPT = "\n\n".join(
     [
         (
             "You translate natural-language questions into compact JSON plans for the production "
-            "business-model knowledge graph. Do not write Cypher. The runtime compiles your plan "
-            "into Cypher deterministically."
+            "business-model knowledge graph after the router has already selected the local planner "
+            "path. Do not write Cypher and do not return refusals. The runtime compiles your plan "
+            "into Cypher deterministically and falls back if your output is invalid."
         ),
         _section(
             "OUTPUT CONTRACT",
             [
-                'For supported requests return {"answerable": true, "family": "...", "payload": {...}}.',
-                'For unsupported, ambiguous, or out-of-coverage requests return {"answerable": false, "reason": "..."}',
-                (
-                    "Valid refusal reasons are unsupported_schema, unsupported_metric, unsupported_time, "
-                    "ambiguous_closed_label, ambiguous_request, write_request, and beyond_local_coverage."
-                ),
+                'Return {"answerable": true, "family": "...", "payload": {...}}.',
+                "answerable must always be true for this planner contract.",
+                "Do not return refusal reasons or alternate output shapes.",
                 "Output compact JSON only. No markdown, no prose, no explanation, no chain-of-thought.",
             ],
         ),
@@ -76,7 +74,7 @@ LOCAL_QUERY_SYSTEM_PROMPT = "\n\n".join(
                 "Examples: government, public sector, or agencies -> government agencies.",
                 "Examples: healthcare firms, hospitals, providers, or health systems -> healthcare organizations.",
                 "Examples: enterprise customers -> large enterprises when that is the closest canonical label.",
-                "If the wording does not map clearly to one canonical closed label, refuse with ambiguous_closed_label.",
+                "Only use a canonical closed label when the wording maps clearly. Do not invent unsupported labels.",
             ],
         ),
         _section(
@@ -125,13 +123,13 @@ LOCAL_QUERY_SYSTEM_PROMPT = "\n\n".join(
             ],
         ),
         _section(
-            "REFUSE IN THESE CASES",
+            "LOCAL PLANNER BOUNDS",
             [
-                "Temporal questions, trends, dates, or year-over-year requests -> unsupported_time.",
-                "Unsupported metrics such as revenue amounts, prices, growth, employees, or suppliers -> unsupported_metric or unsupported_schema.",
-                "Write or mutate requests -> write_request.",
-                "Free-form explanations, why-questions, and unsupported set comparisons -> beyond_local_coverage.",
-                "Ambiguous requests that do not map safely to one family and payload -> ambiguous_request.",
+                "The router, not this planner, owns refusals and hosted fallback.",
+                "Do not invent families or payload keys for temporal questions, trends, dates, or year-over-year analysis.",
+                "Do not invent families or payload keys for unsupported metrics such as revenue amounts, prices, growth, employees, or suppliers.",
+                "Do not invent families or payload keys for write or mutate requests.",
+                "Do not invent families or payload keys for free-form explanations, why-questions, or unsupported set comparisons.",
             ],
         ),
     ]

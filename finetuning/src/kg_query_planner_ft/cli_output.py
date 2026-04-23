@@ -131,11 +131,17 @@ def render_prepare_data_summary(summary: dict[str, Any]) -> str:
             "Planner raw dataset:",
             f"  Output dir: {planner_raw['output_dir']}",
             f"  Split counts: {_fmt_named_counts(planner_raw['counts_by_split'])}",
+            f"  Train augmentations: {_fmt_int(planner_raw.get('train_augmentation_rows', 0))}",
             "  Families by split:",
         ]
     )
     for split_name, counts in sorted(planner_raw["family_counts_by_split"].items()):
         lines.append(f"    {split_name}: {_fmt_named_counts(counts, sort_by_value=True)}")
+    if planner_raw.get("train_augmentation_family_counts"):
+        lines.append(
+            "  Augmentation families: "
+            f"{_fmt_named_counts(planner_raw['train_augmentation_family_counts'], sort_by_value=True)}"
+        )
 
     lines.extend(
         [
@@ -235,10 +241,16 @@ def render_planner_training_summary(summary: dict[str, Any]) -> str:
         f"Effective batch size: {_fmt_int(summary['effective_batch_size'])}",
         f"Config path: {summary['config_path']}",
     ]
+    if summary.get("checkpoint_root_dir"):
+        lines.insert(3, f"Checkpoint root dir: {summary['checkpoint_root_dir']}")
     if summary.get("resume_adapter_file"):
         lines.append(f"Resume adapter file: {summary['resume_adapter_file']}")
     else:
         lines.append("Resume adapter file: none (training from scratch)")
+    if summary.get("resume_checkpoint_dir"):
+        lines.append(f"Resume checkpoint dir: {summary['resume_checkpoint_dir']}")
+    if summary.get("latest_resume_checkpoint_dir"):
+        lines.append(f"Latest resume checkpoint dir: {summary['latest_resume_checkpoint_dir']}")
     return "\n".join(lines)
 
 

@@ -240,27 +240,9 @@ class QueryPlanPayload(BaseModel):
 
 
 class QueryPlanEnvelope(BaseModel):
-    answerable: bool
-    family: QueryFamily | None = None
-    payload: QueryPlanPayload | None = None
-    reason: RefusalReason | None = None
-
-    @model_validator(mode="after")
-    def _validate_contract(self) -> "QueryPlanEnvelope":
-        if self.answerable:
-            if self.family is None:
-                raise ValueError("Answerable responses must include a family.")
-            if self.payload is None:
-                raise ValueError("Answerable responses must include a payload object.")
-            if self.reason is not None:
-                raise ValueError("Answerable responses must not include a refusal reason.")
-            return self
-
-        if self.reason is None:
-            raise ValueError("Refusal responses must include a refusal reason.")
-        if self.family is not None or self.payload is not None:
-            raise ValueError("Refusal responses must not include family or payload.")
-        return self
+    answerable: Literal[True]
+    family: QueryFamily
+    payload: QueryPlanPayload
 
 
 class QueryResult(BaseModel):
@@ -313,12 +295,8 @@ def validate_compiled_query(result: QueryResult) -> list[str]:
 
 
 def compile_query_plan(plan: QueryPlanEnvelope) -> QueryResult:
-    if not plan.answerable:
-        return refusal_result(plan.reason or "beyond_local_coverage")
-
     try:
-        assert plan.family is not None
-        payload = _normalize_payload(plan.payload or QueryPlanPayload())
+        payload = _normalize_payload(plan.payload)
         family = plan.family
         if family == "companies_list":
             result = _compile_companies_list(payload)

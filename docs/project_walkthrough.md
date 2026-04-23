@@ -85,8 +85,15 @@ The important behavior is:
 
 For natural-language querying, the repo now uses two query modes behind the same CLI surface:
 
-- the published local query stack still returns a compact plan that Python compiles into Cypher
+- the router first decides `local`, `api_fallback`, or `refuse`
+- if the route is `local`, the published local planner returns an answerable-only compact plan that Python compiles into Cypher
 - the hosted fallback returns full read-only Cypher JSON directly and retries once with error context if generation, validation, or Neo4j execution fails
+
+The important design split is:
+
+- the router owns refusal and fallback decisions
+- the local planner only speaks in supported local plan space
+- the hosted fallback is the broader query-authoring path
 
 ## Recommended Commands From A Source Checkout
 
@@ -141,6 +148,10 @@ If you want to navigate the codebase, these are the most important areas:
 - `src/ontology/`: ontology rules and validation
 - `src/graph/`: Neo4j loading and graph evaluation helpers
 - `prompts/`: editable prompt assets used during development
+- `finetuning/`: the isolated training/export island for the local query router/planner
+- `data/query_planner_curated/`: preserved curated datasets for that finetuning workflow, not a live runtime input path
+
+The main runtime does not import from the finetuning island directly. The handoff back into production is the published local query bundle under `runtime_assets/query_stack/current/`.
 
 ## A Good Mental Model
 

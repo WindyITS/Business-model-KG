@@ -100,6 +100,23 @@ class LocalQueryStackTests(unittest.TestCase):
         self.assertEqual(result["decision"], "api_fallback")
         self.assertIn("No JSON object found", result["planner"]["error"])
 
+    def test_run_local_query_stack_downgrades_planner_side_refusal_outputs(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            bundle_dir = self._write_bundle(Path(tmp_dir))
+            router = Mock()
+            router.predict.return_value = {"local": 0.99, "refuse": 0.01, "api_fallback": 0.0}
+            planner = Mock()
+            planner.generate.return_value = '{"answerable": false, "reason": "beyond_local_coverage"}'
+
+            with patch("runtime.local_query_stack._router_predictor_for", return_value=router), patch(
+                "runtime.local_query_stack._planner_generator_for",
+                return_value=planner,
+            ):
+                result = run_local_query_stack("Why is Microsoft strong with developers?", bundle_dir=bundle_dir)
+
+        self.assertEqual(result["decision"], "api_fallback")
+        self.assertIn("answerable", result["planner"]["error"])
+
     def test_run_local_query_stack_skips_planner_for_refuse(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
             bundle_dir = self._write_bundle(Path(tmp_dir))

@@ -1,5 +1,7 @@
 import unittest
 
+from pydantic import ValidationError
+
 from runtime.query_planner import QueryPlanEnvelope, QueryPlanPayload, compile_query_plan
 
 
@@ -152,6 +154,15 @@ class QueryPlannerTests(unittest.TestCase):
 
         self.assertFalse(result.answerable)
         self.assertEqual(result.reason, "beyond_local_coverage")
+
+    def test_query_plan_envelope_rejects_planner_side_refusal(self):
+        with self.assertRaises(ValidationError):
+            QueryPlanEnvelope.model_validate(
+                {
+                    "answerable": False,
+                    "reason": "beyond_local_coverage",
+                }
+            )
 
 
 if __name__ == "__main__":

@@ -32,6 +32,10 @@ def prepared_router_dir(config: FineTuningConfig) -> Path:
     return artifact_root(config) / "prepared" / "router"
 
 
+def planner_train_augmentation_file(config: FineTuningConfig) -> Path:
+    return dataset_root(config) / "planner_only_open_literal_copying_augmentation.jsonl"
+
+
 def prepared_planner_raw_dir(config: FineTuningConfig) -> Path:
     return artifact_root(config) / "prepared" / "planner" / "raw"
 
@@ -50,6 +54,10 @@ def router_eval_dir(config: FineTuningConfig) -> Path:
 
 def planner_adapter_dir(config: FineTuningConfig) -> Path:
     return artifact_root(config) / "planner" / "adapter"
+
+
+def planner_checkpoint_root_dir(config: FineTuningConfig) -> Path:
+    return planner_adapter_dir(config) / "checkpoints"
 
 
 def planner_eval_dir(

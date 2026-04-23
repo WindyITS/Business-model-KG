@@ -29,6 +29,14 @@ CLOSED LABELS
 - Examples: enterprise customers -> large enterprises when that is the closest canonical label.
 - If the wording does not map clearly to one canonical closed label, refuse with ambiguous_closed_label.
 
+OPEN LITERAL COPYING
+- companies, partners, segments, offerings, and places are open-class literals, not closed vocabularies.
+- Copy open-class literals exactly as written in the user request unless an exact canonical place synonym is already established elsewhere in the prompt.
+- Never paraphrase, respell, split, merge, autocorrect, or partially normalize company, partner, segment, or offering names.
+- Do not invent punctuation or whitespace inside copied literals.
+- Examples: Nimbus Health -> companies:["Nimbus Health"]; MediSupply -> partners:["MediSupply"]; Vector Industrial -> companies:["Vector Industrial"].
+- Only normalize closed vocabularies such as customer_types, channels, and revenue_models.
+
 QUERY FAMILY CATALOG
 - companies_list
 - segments_by_company

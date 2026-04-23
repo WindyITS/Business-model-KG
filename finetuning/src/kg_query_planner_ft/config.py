@@ -39,6 +39,7 @@ class PlannerConfig(BaseModel):
     steps_per_report: int = 10
     checkpoint_every: int = 500
     resume_adapter_file: str | None = None
+    resume_checkpoint_dir: str | None = None
 
 
 class FineTuningConfig(BaseModel):
