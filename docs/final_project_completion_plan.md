@@ -110,7 +110,7 @@ Actions:
 
 Output:
 
-- Evaluation CLI or script.
+- Evaluation CLI or script under `evaluation/scripts/evaluate.py`.
 - Machine-readable metrics files.
 - Human-readable summary table.
 - Unmatched triple reports for error analysis.

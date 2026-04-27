@@ -55,3 +55,49 @@ Primary score:
 Secondary score:
 
 - alias-normalized typed-triple precision, recall, and F1, using only manually approved aliases
+
+## Run Evaluation
+
+Evaluate all companies in one split for one pipeline:
+
+```bash
+./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --split dev
+./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --split test
+```
+
+This writes results under:
+
+```text
+evaluation/results/zero-shot/dev/
+evaluation/results/zero-shot/test/
+```
+
+Evaluate one selected company for one selected pipeline:
+
+```bash
+./venv/bin/python -m evaluation.scripts.evaluate --pipeline analyst --company microsoft
+```
+
+This writes results under:
+
+```text
+evaluation/results/cherry_picked/analyst/microsoft/
+```
+
+Each evaluated company writes:
+
+- `metrics.json`
+- `matched.jsonl`
+- `false_positives.jsonl`
+- `false_negatives.jsonl`
+
+Each run also writes a `summary.json`.
+
+If the target result folder already contains files, the evaluator asks before overwriting them.
+Answer `n` to cancel and leave existing results untouched.
+
+For deliberate reruns, add `--yes`:
+
+```bash
+./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --split dev --yes
+```

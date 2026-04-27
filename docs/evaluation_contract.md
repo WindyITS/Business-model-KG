@@ -153,6 +153,69 @@ This means evaluation compares the same post-resolution, post-validation graph t
 
 For failed or incomplete runs, the evaluation should skip the run and report it as missing, not score it as zero unless we intentionally choose that policy later.
 
+The evaluation script is:
+
+```text
+evaluation/scripts/evaluate.py
+```
+
+Run all companies in a split for one selected pipeline with:
+
+```bash
+./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --split dev
+```
+
+Typical full-split runs:
+
+```bash
+./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --split dev
+./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --split test
+./venv/bin/python -m evaluation.scripts.evaluate --pipeline memo-only --split dev
+./venv/bin/python -m evaluation.scripts.evaluate --pipeline memo-only --split test
+./venv/bin/python -m evaluation.scripts.evaluate --pipeline analyst --split dev
+./venv/bin/python -m evaluation.scripts.evaluate --pipeline analyst --split test
+```
+
+Run one selected company and one selected pipeline with:
+
+```bash
+./venv/bin/python -m evaluation.scripts.evaluate --pipeline analyst --company microsoft
+```
+
+Example cherry-picked runs:
+
+```bash
+./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --company microsoft
+./venv/bin/python -m evaluation.scripts.evaluate --pipeline memo-only --company microsoft
+./venv/bin/python -m evaluation.scripts.evaluate --pipeline analyst --company microsoft
+```
+
+Split results should be written under:
+
+```text
+evaluation/results/<pipeline>/<split>/
+```
+
+Cherry-picked results should be written under:
+
+```text
+evaluation/results/cherry_picked/<pipeline>/<company>/
+```
+
+If the target results folder already contains files, the evaluator should ask before overwriting:
+
+```text
+There are already files in the results folder <path>. Proceeding with a new evaluation is going to overwrite them. Do you want to proceed? [Y/n]
+```
+
+If the answer is `n` or `no`, no evaluation should be performed and the existing files should be left unchanged.
+
+For intentional reruns that should overwrite existing results without an interactive prompt, use:
+
+```bash
+./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --split dev --yes
+```
+
 ## Strict Normalization
 
 Strict matching should normalize only mechanical surface differences.
