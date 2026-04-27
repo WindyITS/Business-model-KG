@@ -149,11 +149,9 @@ kg-v0/
       prompting.py                           - prompt loading and rendering helpers
       _bundled_prompts/                      - packaged fallback copy of prompt assets
         analyst/                             - bundled analyst prompts
-        canonical/                           - bundled canonical/internal prompt assets
         zero-shot/                           - bundled zero-shot prompts
       pipelines/
         analyst/                             - memo-first extraction runner and stages
-        canonical/                           - internal/shared canonical pipeline pieces
         zero_shot/                           - single-pass extraction runner
     ontology/
       config.py                              - ontology loader and canonical label access
@@ -176,14 +174,11 @@ kg-v0/
       neo4j_status.py                        - CLI for reporting Neo4j vs output status
       neo4j_admin.py                         - CLI for company/full Neo4j unload operations
       health_check.py                        - repo/query-stack/Neo4j readiness checks
-    training/
-      query_planner/                         - older in-repo training area / training-related code
   tests/
     test_graph/                              - tests for graph and Neo4j utilities
     test_llm/                                - tests for LLM transport and parsing logic
     test_ontology/                           - tests for ontology and validation behavior
     test_runtime/                            - tests for CLI/runtime/query/output behavior
-    test_training/                           - tests for training-side code in `src/training`
   finetuning/
     README.md                                - overview of the isolated finetuning workflow
     config/                                  - JSON configs for finetuning runs
@@ -191,6 +186,7 @@ kg-v0/
       bootstrap_env.sh                       - creates the dedicated finetuning environment
     src/
       kg_query_planner_ft/
+        cli_output.py                        - human-readable CLI summaries for finetuning commands
         config.py                            - finetuning config schema and loader
         constants.py                         - route labels and shared constants
         frozen_prompt.py                     - frozen planner prompt used during training and eval
