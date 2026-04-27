@@ -13,7 +13,6 @@ REMOVED_LEGACY_MODULES = (
     "entity_resolver",
     "model_provider",
     "neo4j_loader",
-    "evaluate_graph",
     "ontology_config",
     "ontology_validator",
     "place_hierarchy",

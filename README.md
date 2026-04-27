@@ -106,65 +106,105 @@ For Neo4j maintenance, the repo also ships:
 ## Repo Layout
 
 ```text
-src/
-  runtime/
-    main.py               runtime CLI implementation
-    query.py              natural-language query CLI
-    query_cypher.py       query-to-Cypher CLI entrypoint
-    query_planner.py      family-based query-plan compiler
-    neo4j_load.py         saved-output Neo4j load CLI
-    neo4j_status.py       Neo4j vs saved-output status CLI
-    neo4j_admin.py        Neo4j unload CLI (full dataset or one company)
-    output_layout.py      company/pipeline output staging and promotion helpers
-    query_prompt.py       prompt assets for query-plan generation and repair
-    cypher_validation.py  read-only query guards and Neo4j URI normalization
-    model_provider.py     provider/model resolution
-    entity_resolver.py    light entity normalization
-  llm/
-    extractor.py          generic LLM calling and extraction facade
-  llm_extraction/
-    prompting.py          lightweight prompt loading/rendering helpers
-    pipelines/__init__.py pipeline registry and runner dispatch
-    pipelines/analyst/
-                          analyst memo -> graph pipeline orchestration
-    pipelines/zero_shot/
-                          single-pass ontology extraction orchestration
-  ontology/
-    ontology.json         canonical ontology config
-    config.py             canonical ontology loader
-    validator.py          ontology validation and structural checks
-    place_hierarchy.py    place normalization and hierarchy helpers
-  graph/
-    neo4j_loader.py       Neo4j loading and company-level unload
-    evaluate_graph.py     graph evaluation utilities
-
-prompts/
-  README.md               prompt asset overview
-  analyst/                analyst pipeline prompt assets
-  zero-shot/              zero-shot baseline prompt assets
-
-docs/
-  ontology.md             canonical ontology specification
-  project_walkthrough.md  plain-language architecture and workflow guide
-
-scripts/
-  bootstrap_dev.sh        create or refresh the local dev environment
-  check_repo.sh           run the main local safety checks
-  clean_local_artifacts.sh
-                          remove caches and local scratch artifacts
-  kg-pipeline             source-checkout pipeline wrapper
-  kg-query                source-checkout query wrapper
-  kg-query-cypher         source-checkout query-to-Cypher wrapper
-  kg-neo4j-load           source-checkout saved-output load wrapper
-  kg-neo4j-status         source-checkout Neo4j status wrapper
-  kg-neo4j-unload         source-checkout Neo4j unload wrapper
-  kg-health-check         local repo and Neo4j health check
-
-tests/
-  test_runtime/
-  test_llm/
-  test_ontology/
-  test_graph/
+kg-v0/
+  README.md                                  - main overview, setup, commands, and repo conventions
+  docs/
+    ontology.md                              - human-readable ontology specification
+    project_walkthrough.md                   - plain-language architecture walkthrough
+  data/
+    query_planner_curated/                   - curated dataset for local query-stack finetuning
+      v1_baseline/                           - earlier curated dataset release
+      v1_final/                              - final curated dataset used by finetuning configs
+  prompts/
+    analyst/                                 - prompt assets for the memo-first extraction pipeline
+    zero-shot/                               - prompt assets for the direct extraction pipeline
+  runtime_assets/
+    query_stack/
+      current/                               - published local router/planner bundle used by runtime
+  outputs/
+    apple/                                   - saved extraction runs for Apple
+    google/                                  - saved extraction runs for Google
+    microsoft/                               - saved extraction runs for Microsoft
+    palantir/                                - saved extraction runs for Palantir
+  scripts/
+    _run_repo_module.sh                      - shared launcher for running repo Python modules
+    bootstrap_dev.sh                         - creates or refreshes the main repo virtualenv
+    check_repo.sh                            - maintainer smoke-check script
+    clean_local_artifacts.sh                 - removes caches and build noise without touching outputs
+    kg-pipeline                              - wrapper for the extraction runtime
+    kg-query                                 - wrapper for live natural-language querying
+    kg-query-cypher                          - wrapper for query-to-Cypher rendering
+    kg-neo4j-load                            - wrapper for loading saved outputs into Neo4j
+    kg-neo4j-status                          - wrapper for comparing Neo4j vs saved outputs
+    kg-neo4j-unload                          - wrapper for unloading Neo4j graph data
+    kg-health-check                          - wrapper for local readiness checks
+    sync_bundled_prompts.py                  - copies editable prompts into packaged bundled prompts
+  src/
+    graph/
+      neo4j_loader.py                        - Neo4j load/replace/unload logic
+    llm/
+      extractor.py                           - generic LLM transport, retries, parsing, and auditing
+    llm_extraction/
+      models.py                              - Pydantic models for triples, pipeline results, and memos
+      prompting.py                           - prompt loading and rendering helpers
+      _bundled_prompts/                      - packaged fallback copy of prompt assets
+        analyst/                             - bundled analyst prompts
+        canonical/                           - bundled canonical/internal prompt assets
+        zero-shot/                           - bundled zero-shot prompts
+      pipelines/
+        analyst/                             - memo-first extraction runner and stages
+        canonical/                           - internal/shared canonical pipeline pieces
+        zero_shot/                           - single-pass extraction runner
+    ontology/
+      config.py                              - ontology loader and canonical label access
+      ontology.json                          - machine-readable ontology definition
+      place_hierarchy.py                     - place normalization and geographic rollup helpers
+      validator.py                           - ontology validation, dedupe, and structural checks
+    runtime/
+      main.py                                - top-level extraction CLI runtime (`kg-pipeline`)
+      query.py                               - top-level query runtime (`kg-query`)
+      query_cypher.py                        - query-to-Cypher CLI entrypoint
+      query_planner.py                       - local query-plan schema and deterministic compiler
+      query_prompt.py                        - local and hosted query prompt contracts
+      query_stack.py                         - loader for the published local query bundle
+      local_query_stack.py                   - local router/planner orchestration
+      cypher_validation.py                   - read-only Cypher checks and Neo4j URI normalization
+      model_provider.py                      - provider/model/API-mode resolution
+      entity_resolver.py                     - light post-extraction surface-form normalization
+      output_layout.py                       - staging/latest/runs/failed output management
+      neo4j_load.py                          - CLI for loading saved runs into Neo4j
+      neo4j_status.py                        - CLI for reporting Neo4j vs output status
+      neo4j_admin.py                         - CLI for company/full Neo4j unload operations
+      health_check.py                        - repo/query-stack/Neo4j readiness checks
+    training/
+      query_planner/                         - older in-repo training area / training-related code
+  tests/
+    test_graph/                              - tests for graph and Neo4j utilities
+    test_llm/                                - tests for LLM transport and parsing logic
+    test_ontology/                           - tests for ontology and validation behavior
+    test_runtime/                            - tests for CLI/runtime/query/output behavior
+    test_training/                           - tests for training-side code in `src/training`
+  finetuning/
+    README.md                                - overview of the isolated finetuning workflow
+    config/                                  - JSON configs for finetuning runs
+    scripts/
+      bootstrap_env.sh                       - creates the dedicated finetuning environment
+    src/
+      kg_query_planner_ft/
+        config.py                            - finetuning config schema and loader
+        constants.py                         - route labels and shared constants
+        frozen_prompt.py                     - frozen planner prompt used during training and eval
+        paths.py                             - path resolution for datasets and artifacts
+        prepare_data.py                      - turns curated data into router/planner training splits
+        router_train.py                      - trains the DeBERTa router classifier
+        router_eval.py                       - calibrates and evaluates router, then writes thresholds
+        planner_train.py                     - trains the local planner with MLX QLoRA
+        planner_eval.py                      - evaluates planner JSON, contract, family, and exact-match quality
+        planner_worker.py                    - generation backends for planner evaluation
+        publish_query_stack.py               - publishes trained artifacts into the runtime bundle
+        offline_contract.py                  - training-side validation of planner JSON shape
+    tests/                                   - tests for the finetuning island
+    artifacts/                               - local finetuning outputs, checkpoints, and eval reports
 ```
 
 The maintained import surface is package-based: `runtime.*`, `graph.*`, `ontology.*`, and `llm.*`.
@@ -207,7 +247,6 @@ If you also want the main runtime to execute the published local query stack, in
 
 That editable install creates the convenience commands in `venv/bin/`:
 - `kg-pipeline`
-- `kg-evaluate-graph`
 - `kg-query`
 - `kg-query-cypher`
 - `kg-neo4j-load`
@@ -600,22 +639,6 @@ Zero-shot pipeline runs write a smaller graph-only set centered on:
 - `chunks.json`
 - `resolved_triples.json`
 - `validation_report.json`
-
-## Evaluation Utilities
-
-Compare a predicted extraction to a gold graph:
-
-```bash
-./scripts/kg-evaluate-graph compare path/to/predicted.json path/to/gold.json
-```
-
-Inspect the graph currently loaded in Neo4j:
-
-```bash
-./scripts/kg-evaluate-graph dump-neo4j
-```
-
-The evaluation utility accepts payloads wrapped as `triples`, `resolved_triples`, or `valid_triples`.
 
 ## Tests
 

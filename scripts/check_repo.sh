@@ -41,7 +41,6 @@ for command in \
   kg-neo4j-load \
   kg-neo4j-status \
   kg-neo4j-unload \
-  kg-evaluate-graph \
   kg-health-check; do
   bash "${ROOT_DIR}/scripts/${command}" --help >/dev/null
 done
@@ -65,7 +64,6 @@ if [[ -z "${TOP_LEVEL}" ]]; then
 fi
 
 grep -q '^kg-pipeline = runtime.main:main$' "${ENTRY_POINTS}"
-grep -q '^kg-evaluate-graph = graph.evaluate_graph:main$' "${ENTRY_POINTS}"
 grep -q '^kg-query = runtime.query:main_query$' "${ENTRY_POINTS}"
 grep -q '^kg-health-check = ' "${ENTRY_POINTS}"
 grep -q '^kg-neo4j-load = ' "${ENTRY_POINTS}"
@@ -93,7 +91,6 @@ done
 
 for legacy_module in \
   entity_resolver \
-  evaluate_graph \
   llm_extractor \
   main \
   model_provider \

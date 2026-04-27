@@ -16,7 +16,6 @@ Bootstrap complete.
 
 Reliable source-checkout commands:
   ./scripts/kg-pipeline
-  ./scripts/kg-evaluate-graph
   ./scripts/kg-query
   ./scripts/kg-query-cypher
   ./scripts/kg-neo4j-load

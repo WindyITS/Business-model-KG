@@ -146,7 +146,7 @@ If you want to navigate the codebase, these are the most important areas:
 - `src/llm_extraction/pipelines/`: pipeline-specific orchestration
 - `src/llm/`: model calling, retries, parsing, fallback behavior
 - `src/ontology/`: ontology rules and validation
-- `src/graph/`: Neo4j loading and graph evaluation helpers
+- `src/graph/`: Neo4j loading and graph maintenance helpers
 - `prompts/`: editable prompt assets used during development
 - `finetuning/`: the isolated training/export island for the local query router/planner
 - `data/query_planner_curated/`: preserved curated datasets for that finetuning workflow, not a live runtime input path
