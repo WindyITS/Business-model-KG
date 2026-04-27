@@ -11,14 +11,15 @@ from llm_extraction.pipelines import (
     run_extraction_pipeline,
 )
 from llm_extraction.pipelines.analyst.runner import AnalystPipelineRunner
+from llm_extraction.pipelines.memo_graph_only.runner import MemoGraphOnlyPipelineRunner
 from llm_extraction.pipelines.zero_shot.runner import ZeroShotPipelineRunner
 from llm_extraction.prompting import pipeline_prompt_dir
 
 
 class ExtractionPipelineRegistryTests(unittest.TestCase):
     def test_known_pipelines_include_analyst(self):
-        self.assertEqual(known_pipeline_names(), ("analyst", "zero-shot"))
-        self.assertEqual(implemented_pipeline_names(), ("analyst", "zero-shot"))
+        self.assertEqual(known_pipeline_names(), ("analyst", "memo_graph_only", "zero-shot"))
+        self.assertEqual(implemented_pipeline_names(), ("analyst", "memo_graph_only", "zero-shot"))
 
     def test_analyst_pipeline_dispatches_runner(self):
         runner = build_pipeline_runner("analyst", SimpleNamespace())
@@ -30,10 +31,17 @@ class ExtractionPipelineRegistryTests(unittest.TestCase):
 
         self.assertIsInstance(runner, ZeroShotPipelineRunner)
 
+    def test_memo_graph_only_pipeline_dispatches_runner(self):
+        runner = build_pipeline_runner("memo_graph_only", SimpleNamespace())
+
+        self.assertIsInstance(runner, MemoGraphOnlyPipelineRunner)
+
     def test_pipeline_stage_metadata_tracks_analyst(self):
         self.assertFalse(pipeline_supports_stop_after_pass1("analyst"))
+        self.assertFalse(pipeline_supports_stop_after_pass1("memo_graph_only"))
         self.assertFalse(pipeline_supports_stop_after_pass1("zero-shot"))
         self.assertEqual(pipeline_stage_count("analyst"), 7)
+        self.assertEqual(pipeline_stage_count("memo_graph_only"), 5)
         self.assertEqual(pipeline_stage_count("zero-shot"), 4)
 
         with self.assertRaises(ExtractionError) as ctx:
@@ -64,3 +72,12 @@ class ExtractionPipelineRegistryTests(unittest.TestCase):
 
         self.assertEqual(prompt_dir.parts[-2:], ("prompts", "zero-shot"))
         self.assertTrue((prompt_dir / "extract.txt").is_file())
+
+    def test_memo_graph_only_prompt_assets_live_under_top_level_prompts_dir(self):
+        prompt_dir = pipeline_prompt_dir("memo_graph_only")
+
+        self.assertEqual(prompt_dir.parts[-2:], ("prompts", "memo_graph_only"))
+        self.assertTrue((prompt_dir / "system.txt").is_file())
+        self.assertTrue((prompt_dir / "memo_foundation.txt").is_file())
+        self.assertTrue((prompt_dir / "graph_system.txt").is_file())
+        self.assertTrue((prompt_dir / "graph_compilation.txt").is_file())

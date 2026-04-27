@@ -40,18 +40,19 @@ The maintained extraction runtimes follow a few consistent rules:
 - closed semantic vocabularies: `CustomerType`, `Channel`, and `RevenueModel` must map to the approved canonical labels or be omitted
 - precision-first semantic extraction: `SERVES`, `SELLS_THROUGH`, `MONETIZES_VIA`, and `PARTNERS_WITH` favor standardization and explicit support over aggressive recall
 - broader but still text-grounded company geography capture: `OPERATES_IN` is more recall-friendly than the semantic business-model relations, but still constrained to meaningful company presence
-- pipeline-specific control flow: the analyst runtime is memo-first and staged, while the zero-shot runtime is a single-pass baseline
+- pipeline-specific control flow: the analyst runtime is memo-first and fully staged, `memo_graph_only` keeps only the first memo plus graph compilation, and the zero-shot runtime is a single-pass baseline
 
 This means the effective behavior of the maintained pipelines comes from three layers together:
 - the formal schema in [`src/ontology/ontology.json`](./src/ontology/ontology.json)
-- the extraction pipeline implementations under [`src/llm/`](./src/llm/) and [`src/llm_extraction/pipelines/`](./src/llm_extraction/pipelines/) with prompt assets in [`prompts/analyst/`](./prompts/analyst/) and [`prompts/zero-shot/`](./prompts/zero-shot/)
+- the extraction pipeline implementations under [`src/llm/`](./src/llm/) and [`src/llm_extraction/pipelines/`](./src/llm_extraction/pipelines/) with prompt assets in [`prompts/analyst/`](./prompts/analyst/), [`prompts/memo_graph_only/`](./prompts/memo_graph_only/), and [`prompts/zero-shot/`](./prompts/zero-shot/)
 - the final normalization and structural enforcement in [`src/ontology/validator.py`](./src/ontology/validator.py)
 
 ## Extraction Pipelines
 
-The repo ships two supported extraction pipelines:
+The repo ships three supported extraction pipelines:
 
 - `analyst`: a memo-first runtime that builds a structured analyst memo from the full filing, then compiles that memo into the ontology graph and runs a short overreach critique pass
+- `memo_graph_only`: an ablation runtime that builds only the first analyst memo, compiles that memo into the ontology graph, and skips memo augmentation and critique
 - `zero-shot`: a single-pass baseline that emits the ontology graph directly from the filing
 
 ### Analyst Extraction Pipeline
@@ -117,6 +118,7 @@ kg-v0/
       v1_final/                              - final curated dataset used by finetuning configs
   prompts/
     analyst/                                 - prompt assets for the memo-first extraction pipeline
+    memo_graph_only/                         - prompt assets for the memo graph-only ablation pipeline
     zero-shot/                               - prompt assets for the direct extraction pipeline
   runtime_assets/
     query_stack/
@@ -149,9 +151,11 @@ kg-v0/
       prompting.py                           - prompt loading and rendering helpers
       _bundled_prompts/                      - packaged fallback copy of prompt assets
         analyst/                             - bundled analyst prompts
+        memo_graph_only/                     - bundled memo graph-only prompts
         zero-shot/                           - bundled zero-shot prompts
       pipelines/
         analyst/                             - memo-first extraction runner and stages
+        memo_graph_only/                     - first-memo plus graph-compilation extraction runner
         zero_shot/                           - single-pass extraction runner
     ontology/
       config.py                              - ontology loader and canonical label access
@@ -363,7 +367,7 @@ Provider notes:
 - `opencode-go` reads `--api-key` first, then `OPENCODE_GO_API_KEY`, then `OPENCODE_API_KEY`
 - for `opencode-go`, the runtime rewrites `system` messages to `user` messages for compatibility while keeping the rest of the pipeline flow unchanged
 - `opencode-go` defaults to `--max-output-tokens 20000`; override it if needed
-- the CLI exposes both the `analyst` and `zero-shot` pipelines
+- the CLI exposes the `analyst`, `memo_graph_only`, and `zero-shot` pipelines
 - every run writes `run_summary.json`; the console header shows pipeline, provider, and model, and LLM attempt summaries show token counts when available
 - successful Neo4j loads now replace the previous graph footprint for that same company by default; use `kg-neo4j-unload --yes` when you intentionally want to wipe the full database first
 
@@ -412,7 +416,7 @@ Load one exact saved run for a company:
 
 You can also pass a relative path inside that company's pipeline folder, but `--run` is intentionally limited to that folder. It will not jump to another company or to an arbitrary filesystem path.
 
-Use `--pipeline zero-shot` if you want the command to target zero-shot outputs instead of the default analyst outputs.
+Use `--pipeline zero-shot` or `--pipeline memo_graph_only` if you want the command to target another output family instead of the default analyst outputs.
 Use `--yes` to skip the bulk-load warning when Neo4j already contains data.
 If you target one company with `--company` and that company is already loaded, the command now asks for confirmation before replacing that company graph.
 
@@ -466,7 +470,7 @@ These are the main commands that touch Neo4j, and they are meant for different m
 The most useful flags in practice are:
 
 - `--company-name` on `kg-pipeline` when the filename is not the company identity you want to use for outputs and Neo4j replacement.
-- `--pipeline analyst|zero-shot` on `kg-pipeline`, `kg-neo4j-load`, and `kg-neo4j-status` when you want to switch output families.
+- `--pipeline analyst|memo_graph_only|zero-shot` on `kg-pipeline`, `kg-neo4j-load`, and `kg-neo4j-status` when you want to switch output families.
 - `--keep-current-output --skip-neo4j` on `kg-pipeline` when you want to save a test run under `runs/` without replacing the current `latest/` output or the live Neo4j graph.
 - `--yes` on `kg-neo4j-load` or `kg-neo4j-unload` when the command is running in automation or a non-interactive script.
 - `--skip-neo4j` on `kg-health-check` when you want setup/output checks without treating a stopped Neo4j instance as part of the current task.
@@ -586,6 +590,10 @@ outputs/
       latest/
         ...
       manifest.json
+    memo_graph_only/
+      latest/
+        ...
+      manifest.json
     zero-shot/
       latest/
         ...
@@ -624,6 +632,14 @@ Analyst pipeline runs write a different mix centered on:
 - `analyst_memo_augmented.md`
 - `analyst_graph_compilation.json`
 - `analyst_graph_critique.json`
+- `run_summary.json`
+- `chunks.json`
+- `resolved_triples.json`
+- `validation_report.json`
+
+Memo graph-only pipeline runs write the ablation artifact set centered on:
+- `memo_graph_only_memo_foundation.md`
+- `memo_graph_only_graph_compilation.json`
 - `run_summary.json`
 - `chunks.json`
 - `resolved_triples.json`

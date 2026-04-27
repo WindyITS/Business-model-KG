@@ -161,17 +161,17 @@ New ablation:
 - skip graph critique
 - still run normal entity resolution, validation, artifact writing, and optional Neo4j loading
 
-Possible name:
+Pipeline name:
 
-- `memo-only`
+- `memo_graph_only`
 
 Actions:
 
-- Add a new pipeline runner reusing the analyst prompt helpers where possible.
+- Add a new pipeline runner using the copied analyst first-memo and graph-compilation prompts under `prompts/memo_graph_only/`.
 - Add the new pipeline to the pipeline registry.
 - Add runtime artifact handling for the new result type.
 - Add tests for stage ordering, output artifacts, and CLI pipeline selection.
-- Ensure the pipeline can write outputs under `outputs/<company>/memo-only/latest/`.
+- Ensure the pipeline can write outputs under `outputs/<company>/memo_graph_only/latest/`.
 
 Output:
 
@@ -194,7 +194,7 @@ Actions:
 - Decide final provider/model/settings.
 - Run each company through:
   - `zero-shot`
-  - `memo-only`
+  - `memo_graph_only`
   - `analyst`
 - Save outputs without overwriting important previous runs unless intended.
 - Record model, provider, date, and command settings.
@@ -221,7 +221,7 @@ Actions:
 - Compute per-company metrics.
 - Compare the three pipelines:
   - `zero-shot`
-  - `memo-only`
+  - `memo_graph_only`
   - `analyst`
 - Inspect false positives and false negatives.
 - Identify recurring error categories.

@@ -3,6 +3,7 @@
 This directory holds human-edited prompt assets for extraction pipelines.
 
 - `analyst/` contains the prompt files used by the analyst-style pipeline
+- `memo_graph_only/` contains the first memo and graph compilation prompts used by the `memo_graph_only` ablation pipeline
 - `zero-shot/` contains the single-pass baseline prompt used by the `zero-shot` pipeline
 
 Prompt loading order:

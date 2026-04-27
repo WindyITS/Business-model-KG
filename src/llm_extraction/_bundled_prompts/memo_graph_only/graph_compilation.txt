@@ -1,0 +1,82 @@
+<workflow_step>
+STAGE 2 - GRAPH COMPILATION
+</workflow_step>
+
+<objective>
+Convert the analyst memo into an in-depth ontology-valid business-model graph.
+</objective>
+
+<company_name>
+{{company_name}}
+</company_name>
+
+<analyst_memo>
+{{analyst_memo}}
+</analyst_memo>
+
+<output_contract>
+Return ONLY one raw JSON object with this exact shape:
+
+{
+  "extraction_notes": "brief note",
+  "triples": [
+    {
+      "subject": "node name",
+      "subject_type": "EXACT_NODE_TYPE",
+      "relation": "EXACT_RELATION",
+      "object": "node name or canonical label",
+      "object_type": "EXACT_NODE_TYPE"
+    }
+  ]
+}
+
+Every triple must be an object with exactly these keys:
+- subject
+- subject_type
+- relation
+- object
+- object_type
+
+Do not use:
+- `predicate` instead of `relation`
+- tuple or array triples
+- extra evidence markers inside triples
+- omitted node types
+</output_contract>
+
+<compilation_rules>
+- use the analyst memo text as the source structure; do not invent new nodes or relations outside it
+- the memo may contain both support and analyst inference; support is preferred
+- inference-only claims may be used only when they create a more defensible company-level structure and the ambiguity field does not signal material ambiguity
+- if ambiguity suggests the relation may be wrong or overly neat, omit it
+- preserve family-level offerings that appear in the memo as real offering nodes; do not flatten parent-child offering structure into only leaf offerings
+- preserve split-franchise hierarchy when the memo supports it; if a franchise is modeled as a family plus differentiated children, keep that structure in the graph
+- preserve distinct named franchises as standalone offerings when the memo frames them as standalone platforms or businesses, even if the memo also mentions their cloud or services lines inside a broader horizontal parent
+- preserve durable child families and variants from the memo; when the memo normalizes current release names into stable product, plan, tier, edition, or line families, keep those stable child nodes rather than reverting to transient labels
+- preserve depth when the memo supports it, but do not add speculative structure just to make the graph feel more complete
+- for each [Segment] block and each [Offering] block, read the entire block to avoid missing information and consider every non-empty subsection before emitting triples
+- do not use Company -> OFFERS unless the memo clearly requires it as a true fallback
+- compile these relations when support is strong enough:
+  - Company -> HAS_SEGMENT -> each segment
+  - BusinessSegment -> OFFERS -> each first-order offering anchored to that segment and represented as its own full `[Offering]` block
+  - Offering -> OFFERS -> child offering when `Parent Offering` or `Child Offerings` makes the hierarchy supportable
+  - BusinessSegment -> SERVES -> segment customer_types
+  - BusinessSegment -> SELLS_THROUGH -> segment channels
+  - Offering -> SELLS_THROUGH -> offering-specific channels only when the offering lacks a segment anchor or the memo shows a differentiated channel pattern not already carried by the anchored segment
+  - Offering -> MONETIZES_VIA -> offering revenue_models
+  - Company -> OPERATES_IN -> corporate_scope operating_geographies
+  - Company -> PARTNERS_WITH -> corporate_scope key_partners
+- if a parent family and its differentiated children are all supportable, preserve the parent node even when the children carry more specific monetization or channel detail
+- do not materialize a parent offering node that appears only as a reference inside `Parent Offering` unless that parent also has its own full `[Offering]` block
+- if a candidate child is only a broad descriptive bucket, accounting rollup, or unnamed generic category rather than a stable named offering family from the memo, omit it
+- if an offering has a parent_offering and only appears under that parent, do not also create a direct segment -> offering edge unless the memo independently supports that direct anchor
+- do not compile offering-level channels that merely restate inherited segment distribution
+- if the memo uses `Worldwide` or another macro geography to express the company's corporate footprint, preserve that cleaner geography instead of exploding it into many narrower places
+- prefer omission over weak guesses
+</compilation_rules>
+
+<format_reminder>
+Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array.
+Do not use markdown code blocks.
+The response must start with `{` and end with `}`.
+</format_reminder>

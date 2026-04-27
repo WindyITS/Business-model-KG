@@ -103,6 +103,17 @@ class AnalystPipelineResult(ExtractionPipelineResult):
     critique_attempts_used: int = 0
 
 
+class MemoGraphOnlyPipelineResult(ExtractionPipelineResult):
+    foundation_memo: AnalystBusinessModelMemo = Field(default_factory=AnalystBusinessModelMemo)
+    compiled_graph_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
+    foundation_memo_audit: dict[str, Any] = Field(default_factory=dict)
+    compiled_graph_audit: dict[str, Any] = Field(default_factory=dict)
+    raw_foundation_memo_response: str | None = None
+    raw_compiled_graph_response: str | None = None
+    foundation_memo_attempts_used: int = 0
+    compiled_graph_attempts_used: int = 0
+
+
 class ZeroShotPipelineResult(ExtractionPipelineResult):
     zero_shot_extraction: KnowledgeGraphExtraction = Field(default_factory=KnowledgeGraphExtraction)
     zero_shot_audit: dict[str, Any] = Field(default_factory=dict)

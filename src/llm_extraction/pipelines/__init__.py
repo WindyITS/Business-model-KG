@@ -2,17 +2,19 @@ from typing import TYPE_CHECKING, Any
 
 from llm_extraction.models import ExtractionError
 from llm_extraction.pipelines.analyst.runner import AnalystPipelineRunner
+from llm_extraction.pipelines.memo_graph_only.runner import MemoGraphOnlyPipelineRunner
 from llm_extraction.pipelines.zero_shot.runner import ZeroShotPipelineRunner
 
 if TYPE_CHECKING:
     from llm.extractor import LLMExtractor
 
 
-KNOWN_PIPELINES: tuple[str, ...] = ("analyst", "zero-shot")
-IMPLEMENTED_PIPELINES: tuple[str, ...] = ("analyst", "zero-shot")
+KNOWN_PIPELINES: tuple[str, ...] = ("analyst", "memo_graph_only", "zero-shot")
+IMPLEMENTED_PIPELINES: tuple[str, ...] = ("analyst", "memo_graph_only", "zero-shot")
 PASS1_SUPPORTED_PIPELINES: frozenset[str] = frozenset()
 PIPELINE_STAGE_COUNTS: dict[str, dict[str, int]] = {
     "analyst": {"full": 7},
+    "memo_graph_only": {"full": 5},
     "zero-shot": {"full": 4},
 }
 
@@ -44,6 +46,8 @@ def pipeline_stage_count(pipeline: str, *, stop_after_pass1: bool = False) -> in
 def build_pipeline_runner(pipeline: str, extractor: "LLMExtractor") -> Any:
     if pipeline == "analyst":
         return AnalystPipelineRunner(extractor)
+    if pipeline == "memo_graph_only":
+        return MemoGraphOnlyPipelineRunner(extractor)
     if pipeline == "zero-shot":
         return ZeroShotPipelineRunner(extractor)
     raise ExtractionError(f"Unknown extraction pipeline: {pipeline}")

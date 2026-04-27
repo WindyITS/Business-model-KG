@@ -15,6 +15,7 @@ from llm_extraction.models import (
     AnalystPipelineResult,
     ExtractionError,
     ExtractionPipelineResult,
+    MemoGraphOnlyPipelineResult,
     ZeroShotPipelineResult,
 )
 from llm_extraction.pipelines import (
@@ -408,6 +409,37 @@ def _prepare_pipeline_artifacts(
             },
         }
 
+    if isinstance(chat_result, MemoGraphOnlyPipelineResult):
+        (run_dir / "memo_graph_only_memo_foundation.md").write_text(
+            chat_result.foundation_memo.content,
+            encoding="utf-8",
+        )
+        _write_graph_extraction_artifact(
+            run_dir / "memo_graph_only_graph_compilation.json",
+            extraction=chat_result.compiled_graph_extraction,
+            attempts_used=chat_result.compiled_graph_attempts_used,
+            raw_response=chat_result.raw_compiled_graph_response,
+        )
+        return {
+            "extractions": [chat_result.final_extraction],
+            "extraction_payload": {
+                "foundation_memo": chat_result.foundation_memo.content,
+                "compiled_graph_extraction": chat_result.compiled_graph_extraction.model_dump(),
+                "final_extraction": chat_result.final_extraction.model_dump(),
+            },
+            "stage_audits": {
+                "foundation_memo": chat_result.foundation_memo_audit,
+                "graph_compilation": chat_result.compiled_graph_audit,
+            },
+            "final_output_audit": chat_result.compiled_graph_audit,
+            "resolve_stage_index": 4,
+            "load_stage_index": 5,
+            "summary_metrics": {
+                "foundation_memo_character_count": len(chat_result.foundation_memo.content),
+                "memo_graph_only_triple_count": len(chat_result.compiled_graph_extraction.triples),
+            },
+        }
+
     raise TypeError(f"Unsupported pipeline result type: {type(chat_result)!r}")
 
 
@@ -440,6 +472,21 @@ def _write_partial_pipeline_artifacts(run_dir: Path, chat_result: ExtractionPipe
                 extraction=chat_result.zero_shot_extraction,
                 attempts_used=chat_result.zero_shot_attempts_used,
                 raw_response=chat_result.raw_zero_shot_response,
+            )
+        return
+
+    if isinstance(chat_result, MemoGraphOnlyPipelineResult):
+        if chat_result.foundation_memo.content:
+            (run_dir / "memo_graph_only_memo_foundation.md").write_text(
+                chat_result.foundation_memo.content,
+                encoding="utf-8",
+            )
+        if chat_result.compiled_graph_extraction.triples or chat_result.raw_compiled_graph_response is not None:
+            _write_graph_extraction_artifact(
+                run_dir / "memo_graph_only_graph_compilation.json",
+                extraction=chat_result.compiled_graph_extraction,
+                attempts_used=chat_result.compiled_graph_attempts_used,
+                raw_response=chat_result.raw_compiled_graph_response,
             )
 
 

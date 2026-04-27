@@ -12,6 +12,7 @@ from llm_extraction.models import (
     AnalystBusinessModelMemo,
     AnalystPipelineResult,
     KnowledgeGraphExtraction,
+    MemoGraphOnlyPipelineResult,
     Triple,
     ZeroShotPipelineResult,
 )
@@ -590,6 +591,146 @@ class RuntimeMainTests(unittest.TestCase):
             self.assertTrue((run_dir / "analyst_memo_foundation.md").exists())
             self.assertTrue((run_dir / "analyst_memo_augmented.md").exists())
             self.assertFalse((run_dir / "analyst_graph_compilation.json").exists())
+
+            summary = json.loads((run_dir / "run_summary.json").read_text(encoding="utf-8"))
+            self.assertEqual(summary["status"], "failed")
+            self.assertIn("Empty response from model", summary["error"])
+            mock_resolve.assert_called_once()
+
+    def test_main_memo_graph_only_pipeline_writes_memo_and_graph_artifacts(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            filing_path = tmp_path / "microsoft_10k.txt"
+            filing_path.write_text("ITEM 1. BUSINESS\nMicrosoft does business.\n", encoding="utf-8")
+            run_dir = tmp_path / "outputs" / "run"
+            resolved_triple = Triple(
+                subject="Microsoft",
+                subject_type="Company",
+                relation="HAS_SEGMENT",
+                object="Intelligent Cloud",
+                object_type="BusinessSegment",
+            )
+
+            fake_result = MemoGraphOnlyPipelineResult(
+                success=True,
+                foundation_memo=AnalystBusinessModelMemo(
+                    content="ANALYTICAL FRAME\nSummary:\nCloud and software franchises drive the business.\n",
+                ),
+                compiled_graph_extraction=KnowledgeGraphExtraction(
+                    extraction_notes="compiled",
+                    triples=[resolved_triple],
+                ),
+                final_extraction=KnowledgeGraphExtraction(
+                    extraction_notes="compiled",
+                    triples=[resolved_triple],
+                ),
+                compiled_graph_audit={"kept_triple_count": 1, "raw_triple_count": 1},
+                compiled_graph_attempts_used=2,
+                raw_compiled_graph_response='{"triples":[]}',
+            )
+            fake_extractor = SimpleNamespace()
+            fake_validation_report = {
+                "valid_triples": [resolved_triple.model_dump()],
+                "summary": {
+                    "invalid_triple_count": 0,
+                    "duplicate_triple_count": 0,
+                },
+            }
+
+            layout = self._output_layout(run_dir, pipeline="memo_graph_only")
+
+            with patch.object(main_module, "_prepare_output_layout", return_value=layout), patch.object(
+                main_module, "finalize_successful_run", return_value=run_dir
+            ), patch.object(
+                main_module, "finalize_failed_run", return_value=run_dir
+            ), patch.object(
+                main_module, "resolve_model_settings"
+            ) as mock_resolve, patch.object(main_module, "LLMExtractor", return_value=fake_extractor), patch.object(
+                main_module, "run_extraction_pipeline", return_value=fake_result
+            ) as mock_run_pipeline, patch.object(
+                main_module, "resolve_entities", return_value=[resolved_triple]
+            ), patch.object(
+                main_module, "validate_triples", return_value=fake_validation_report
+            ), patch(
+                "sys.argv",
+                [
+                    "main.py",
+                    str(filing_path),
+                    "--pipeline",
+                    "memo_graph_only",
+                    "--output-dir",
+                    str(tmp_path / "outputs"),
+                    "--skip-neo4j",
+                ],
+            ):
+                mock_resolve.return_value = self._local_model_settings()
+                exit_code = main_module.main()
+
+            self.assertEqual(exit_code, 0)
+            self.assertTrue((run_dir / "memo_graph_only_memo_foundation.md").exists())
+            self.assertTrue((run_dir / "memo_graph_only_graph_compilation.json").exists())
+            self.assertTrue((run_dir / "resolved_triples.json").exists())
+
+            extractions = json.loads((run_dir / "extractions.json").read_text(encoding="utf-8"))
+            self.assertIn("foundation_memo", extractions)
+            self.assertIn("compiled_graph_extraction", extractions)
+            self.assertIn("final_extraction", extractions)
+
+            summary = json.loads((run_dir / "run_summary.json").read_text(encoding="utf-8"))
+            self.assertEqual(summary["stage_count"], 5)
+            self.assertEqual(summary["status"], "success")
+            self.assertGreater(summary["foundation_memo_character_count"], 0)
+            self.assertEqual(summary["memo_graph_only_triple_count"], 1)
+            self.assertTrue(summary["skip_neo4j"])
+
+            mock_resolve.assert_called_once()
+            mock_run_pipeline.assert_called_once()
+            self.assertEqual(mock_run_pipeline.call_args.kwargs["pipeline"], "memo_graph_only")
+
+    def test_main_memo_graph_only_pipeline_persists_partial_memo_on_failure(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            filing_path = tmp_path / "microsoft_10k.txt"
+            filing_path.write_text("ITEM 1. BUSINESS\nMicrosoft does business.\n", encoding="utf-8")
+            run_dir = tmp_path / "outputs" / "run"
+
+            failed_result = MemoGraphOnlyPipelineResult(
+                success=False,
+                foundation_memo=AnalystBusinessModelMemo(
+                    content="ANALYTICAL FRAME\nSummary:\nFoundation memo.\n",
+                ),
+                error="Failed after 3 attempts. Last error: Empty response from model.",
+            )
+            fake_extractor = SimpleNamespace()
+
+            layout = self._output_layout(run_dir, pipeline="memo_graph_only")
+
+            with patch.object(main_module, "_prepare_output_layout", return_value=layout), patch.object(
+                main_module, "finalize_successful_run", return_value=run_dir
+            ), patch.object(
+                main_module, "finalize_failed_run", return_value=run_dir
+            ), patch.object(
+                main_module, "resolve_model_settings"
+            ) as mock_resolve, patch.object(main_module, "LLMExtractor", return_value=fake_extractor), patch.object(
+                main_module, "run_extraction_pipeline", return_value=failed_result
+            ), patch(
+                "sys.argv",
+                [
+                    "main.py",
+                    str(filing_path),
+                    "--pipeline",
+                    "memo_graph_only",
+                    "--output-dir",
+                    str(tmp_path / "outputs"),
+                    "--skip-neo4j",
+                ],
+            ):
+                mock_resolve.return_value = self._local_model_settings()
+                exit_code = main_module.main()
+
+            self.assertEqual(exit_code, 1)
+            self.assertTrue((run_dir / "memo_graph_only_memo_foundation.md").exists())
+            self.assertFalse((run_dir / "memo_graph_only_graph_compilation.json").exists())
 
             summary = json.loads((run_dir / "run_summary.json").read_text(encoding="utf-8"))
             self.assertEqual(summary["status"], "failed")

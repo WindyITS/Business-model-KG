@@ -16,9 +16,10 @@ In short, the workflow is:
 
 ## The Supported Pipelines
 
-There are two supported pipelines:
+There are three supported pipelines:
 
 - `analyst`: a memo-first pipeline that builds a structured analyst view and then compiles that into the graph
+- `memo_graph_only`: an ablation pipeline that builds only the first analyst memo, compiles it into the graph, and skips memo augmentation and critique
 - `zero-shot`: a single-pass baseline that emits the ontology graph directly from the filing
 
 The default Neo4j reload commands prefer `analyst/latest` because that is the current preferred saved output for interactive reloads.
@@ -46,6 +47,11 @@ Outputs are organized by company and pipeline:
 outputs/
   microsoft/
     analyst/
+      latest/
+      runs/
+      failed/
+      manifest.json
+    memo_graph_only/
       latest/
       runs/
       failed/

@@ -111,6 +111,7 @@ done
 
 test -f "${SMOKE_DIR}/ontology/ontology.json"
 test -f "${SMOKE_DIR}/llm_extraction/_bundled_prompts/analyst/system.txt"
+test -f "${SMOKE_DIR}/llm_extraction/_bundled_prompts/memo_graph_only/memo_foundation.txt"
 test -f "${SMOKE_DIR}/llm_extraction/_bundled_prompts/zero-shot/extract.txt"
 
 echo "[6/6] Import-checking packaged modules"

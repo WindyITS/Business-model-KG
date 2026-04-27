@@ -170,8 +170,8 @@ Typical full-split runs:
 ```bash
 ./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --split dev
 ./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --split test
-./venv/bin/python -m evaluation.scripts.evaluate --pipeline memo-only --split dev
-./venv/bin/python -m evaluation.scripts.evaluate --pipeline memo-only --split test
+./venv/bin/python -m evaluation.scripts.evaluate --pipeline memo_graph_only --split dev
+./venv/bin/python -m evaluation.scripts.evaluate --pipeline memo_graph_only --split test
 ./venv/bin/python -m evaluation.scripts.evaluate --pipeline analyst --split dev
 ./venv/bin/python -m evaluation.scripts.evaluate --pipeline analyst --split test
 ```
@@ -186,7 +186,7 @@ Example cherry-picked runs:
 
 ```bash
 ./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --company microsoft
-./venv/bin/python -m evaluation.scripts.evaluate --pipeline memo-only --company microsoft
+./venv/bin/python -m evaluation.scripts.evaluate --pipeline memo_graph_only --company microsoft
 ./venv/bin/python -m evaluation.scripts.evaluate --pipeline analyst --company microsoft
 ```
 
@@ -359,7 +359,7 @@ The first evaluator should keep the metric surface small:
 Recommended pipeline comparison:
 
 - `zero-shot`
-- `memo-only`
+- `memo_graph_only`
 - `analyst`
 
 Relation-specific and entity-specific metrics can be added later once the core evaluator is stable.
