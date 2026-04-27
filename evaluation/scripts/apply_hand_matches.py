@@ -9,6 +9,7 @@ import shutil
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -37,8 +38,23 @@ def prepare_result_folder(path: Path, *, assume_yes: bool = False) -> bool:
         return True
     if not assume_yes and not confirm_overwrite(path):
         return False
-    shutil.rmtree(path)
     return True
+
+
+def staging_result_folder(path: Path) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    return path.parent / f".{path.name}.staging-{uuid4().hex[:8]}"
+
+
+def finalize_result_folder(staging_root: Path, final_root: Path) -> None:
+    if final_root.exists():
+        shutil.rmtree(final_root)
+    shutil.move(str(staging_root), str(final_root))
+
+
+def cleanup_staging_folder(staging_root: Path) -> None:
+    if staging_root.exists():
+        shutil.rmtree(staging_root)
 
 
 def metric_payload(tp: int, fp: int, fn: int) -> dict[str, Any]:
@@ -56,40 +72,48 @@ def metric_payload(tp: int, fp: int, fn: int) -> dict[str, Any]:
 
 
 def reviewed_match_count(review_csv: Path) -> tuple[int, list[dict[str, Any]]]:
-    groups: dict[str, dict[str, int]] = defaultdict(lambda: {"gold": 0, "predicted": 0})
+    groups: dict[str, dict[str, list[str]]] = defaultdict(lambda: {"gold": [], "predicted": []})
     with review_csv.open("r", encoding="utf-8-sig", newline="") as handle:
         reader = csv.DictReader(handle)
         for row in reader:
             match_id = (row.get("match_id") or "").strip()
             source = (row.get("source") or "").strip()
+            row_id = (row.get("row_id") or "").strip()
             if not match_id:
                 continue
             if source not in {"gold", "predicted"}:
                 continue
-            groups[match_id][source] += 1
+            groups[match_id][source].append(row_id)
 
     accepted_groups: list[dict[str, Any]] = []
     recovered = 0
     for match_id, counts in sorted(groups.items()):
-        group_recovered = min(counts["gold"], counts["predicted"])
-        if group_recovered <= 0:
+        gold_count = len(counts["gold"])
+        predicted_count = len(counts["predicted"])
+        if gold_count == 1 and predicted_count == 1:
+            recovered += 1
             accepted_groups.append(
                 {
                     "match_id": match_id,
-                    "gold_rows": counts["gold"],
-                    "predicted_rows": counts["predicted"],
-                    "recovered_matches": 0,
-                    "warning": "match_id must label at least one gold row and one predicted row to affect metrics",
+                    "gold_rows": gold_count,
+                    "predicted_rows": predicted_count,
+                    "gold_row_ids": counts["gold"],
+                    "predicted_row_ids": counts["predicted"],
+                    "recovered_matches": 1,
+                    "status": "accepted",
                 }
             )
             continue
-        recovered += group_recovered
         accepted_groups.append(
             {
                 "match_id": match_id,
-                "gold_rows": counts["gold"],
-                "predicted_rows": counts["predicted"],
-                "recovered_matches": group_recovered,
+                "gold_rows": gold_count,
+                "predicted_rows": predicted_count,
+                "gold_row_ids": counts["gold"],
+                "predicted_row_ids": counts["predicted"],
+                "recovered_matches": 0,
+                "status": "rejected",
+                "warning": "match_id must be used on exactly one gold row and exactly one predicted row to affect metrics",
             }
         )
     return recovered, accepted_groups
@@ -160,26 +184,32 @@ def apply_hand_matches(results_dir: Path, *, assume_yes: bool = False) -> dict[s
     output_root = results_dir / "hand_matched"
     if not prepare_result_folder(output_root, assume_yes=assume_yes):
         return None
+    staging_root = staging_result_folder(output_root)
 
-    company_payloads = [
-        payload
-        for company_dir in find_company_dirs(results_dir)
-        if (
-            payload := apply_hand_matches_to_company(
-                company_dir,
-                output_dir=output_root / "companies" / company_dir.name,
+    try:
+        company_payloads = [
+            payload
+            for company_dir in find_company_dirs(results_dir)
+            if (
+                payload := apply_hand_matches_to_company(
+                    company_dir,
+                    output_dir=staging_root / "companies" / company_dir.name,
+                )
             )
-        )
-        is not None
-    ]
-    summary = {
-        "results_dir": str(results_dir),
-        "output_dir": str(output_root),
-        "companies": company_payloads,
-        "aggregate": aggregate(company_payloads),
-    }
-    write_json(output_root / "summary.json", summary)
-    return summary
+            is not None
+        ]
+        summary = {
+            "results_dir": str(results_dir),
+            "output_dir": str(output_root),
+            "companies": company_payloads,
+            "aggregate": aggregate(company_payloads),
+        }
+        write_json(staging_root / "summary.json", summary)
+        finalize_result_folder(staging_root, output_root)
+        return summary
+    except Exception:
+        cleanup_staging_folder(staging_root)
+        raise
 
 
 def parse_args() -> argparse.Namespace:

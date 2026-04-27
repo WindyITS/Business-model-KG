@@ -210,6 +210,8 @@ There are already files in the results folder <path>. Proceeding with a new eval
 
 If the answer is `n` or `no`, no evaluation should be performed and the existing files should be left unchanged.
 
+If overwrite is approved, existing results should be replaced only after the new evaluation run succeeds.
+
 For intentional reruns that should overwrite existing results without an interactive prompt, use:
 
 ```bash
@@ -235,7 +237,7 @@ For `Place` values:
 
 For `CustomerType`, `Channel`, and `RevenueModel`:
 
-- require exact canonical labels after mechanical cleanup.
+- compare canonical labels case-insensitively after mechanical cleanup.
 
 For relation names and node types:
 
@@ -299,6 +301,8 @@ row_id,match_id,source,subject,subject_type,relation,object,object_type
 
 The human reviewer assigns the same `match_id` to gold and predicted rows that correspond to the same real triple despite naming differences. For example, the first hand-matched pair can use `match_id=1`, the second can use `match_id=2`, and so on.
 
+Each non-empty `match_id` must be used on exactly one `source=gold` row and exactly one `source=predicted` row. Reusing the same `match_id` for multiple pairs is treated as invalid and does not affect second-tier metrics.
+
 After the review CSV is edited, run:
 
 ```bash
@@ -315,6 +319,8 @@ hand_matched/summary.json
 ```
 
 If `hand_matched/` already contains files, the hand-match script should ask before overwriting. If the answer is `n` or `no`, no hand-matched metrics should be recomputed and existing files should be left unchanged.
+
+If overwrite is approved, existing hand-matched results should be replaced only after the new hand-matched computation succeeds.
 
 For intentional reruns that should overwrite existing hand-matched metrics without an interactive prompt, use:
 
@@ -371,7 +377,7 @@ Run alias-normalized evaluation with:
 
 When aliases are supplied, the evaluator should still write strict metrics and should additionally write alias-normalized metrics.
 
-## Relaxed Match Definition
+## Alias-Normalized Match Definition
 
 A predicted triple is an alias-normalized true positive if:
 
@@ -379,12 +385,13 @@ A predicted triple is an alias-normalized true positive if:
 2. approved aliases are applied to subject and object names by node type
 3. all five fields match a gold triple
 
-Relaxed metrics should be reported separately from strict metrics.
+Alias-normalized metrics are optional and should be reported separately from strict and hand-matched metrics.
 
 Recommended labels:
 
 - `Strict`
-- `Alias-normalized`
+- `Hand-matched`
+- `Alias-normalized` if an approved alias file is used
 
 ## Metric Scope For The First Evaluator
 
@@ -410,8 +417,7 @@ For each evaluated company and pipeline, write:
 - matched triples
 - false positives
 - false negatives
-- invalid predicted triples, if any
-- duplicate predicted triples, if any
+- unmatched review CSV
 - possible alias candidates
 
 The false positive and false negative reports are the main input for error analysis.
@@ -424,10 +430,10 @@ Use strict metrics as the cleanest objective score:
 Strict F1 measures exact graph agreement.
 ```
 
-Use alias-normalized metrics as a fairer semantic score:
+Use hand-matched metrics as the human-adjudicated semantic score:
 
 ```text
-Alias-normalized F1 measures graph agreement after adjudicated naming alignment.
+Hand-matched F1 measures graph agreement after manually recorded unmatched-triple correspondences.
 ```
 
-The final presentation should clearly state that alias-normalized metrics depend only on approved aliases, not uncontrolled fuzzy matching.
+The final presentation should clearly state that hand-matched metrics depend only on explicit `match_id` labels in the review CSV. Alias-normalized metrics, if reported, depend only on approved aliases and not uncontrolled fuzzy matching.

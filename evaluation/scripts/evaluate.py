@@ -8,9 +8,10 @@ import csv
 import json
 import shutil
 import unicodedata
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
 from runtime.output_layout import slugify_company_name
 
@@ -106,8 +107,10 @@ def unique_by_key(triples: list[Triple], aliases: AliasMap | None = None) -> dic
 
 
 def load_aliases(path: Path | None) -> AliasMap | None:
-    if path is None or not path.is_file():
+    if path is None:
         return None
+    if not path.is_file():
+        raise FileNotFoundError(f"Alias file not found: {path}")
 
     payload = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
@@ -212,8 +215,36 @@ def prepare_result_folder(path: Path, *, assume_yes: bool = False) -> bool:
     if not assume_yes and not confirm_overwrite(path):
         return False
 
-    shutil.rmtree(path)
     return True
+
+
+def staging_result_folder(path: Path) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    return path.parent / f".{path.name}.staging-{uuid4().hex[:8]}"
+
+
+def remap_evaluation_paths(
+    paths: list[EvaluationPaths],
+    *,
+    original_root: Path,
+    staging_root: Path,
+) -> list[EvaluationPaths]:
+    remapped: list[EvaluationPaths] = []
+    for path in paths:
+        relative_output_dir = path.output_dir.relative_to(original_root)
+        remapped.append(replace(path, output_dir=staging_root / relative_output_dir))
+    return remapped
+
+
+def finalize_result_folder(staging_root: Path, final_root: Path) -> None:
+    if final_root.exists():
+        shutil.rmtree(final_root)
+    shutil.move(str(staging_root), str(final_root))
+
+
+def cleanup_staging_folder(staging_root: Path) -> None:
+    if staging_root.exists():
+        shutil.rmtree(staging_root)
 
 
 def evaluate_triples(
@@ -562,7 +593,13 @@ def main() -> int:
         if not prepare_result_folder(output_root, assume_yes=args.yes):
             print("Evaluation cancelled. Existing results were left unchanged.")
             return 0
-        summary = evaluate_paths([path], output_root=output_root, aliases=aliases)
+        staging_root = staging_result_folder(output_root)
+        try:
+            summary = evaluate_paths([replace(path, output_dir=staging_root)], output_root=staging_root, aliases=aliases)
+            finalize_result_folder(staging_root, output_root)
+        except Exception:
+            cleanup_staging_folder(staging_root)
+            raise
     else:
         paths = build_split_evaluation_paths(
             root=root,
@@ -574,7 +611,14 @@ def main() -> int:
         if not prepare_result_folder(output_root, assume_yes=args.yes):
             print("Evaluation cancelled. Existing results were left unchanged.")
             return 0
-        summary = evaluate_paths(paths, output_root=output_root, aliases=aliases)
+        staging_root = staging_result_folder(output_root)
+        try:
+            staging_paths = remap_evaluation_paths(paths, original_root=output_root, staging_root=staging_root)
+            summary = evaluate_paths(staging_paths, output_root=staging_root, aliases=aliases)
+            finalize_result_folder(staging_root, output_root)
+        except Exception:
+            cleanup_staging_folder(staging_root)
+            raise
 
     aggregate = summary["aggregate"]
     print(

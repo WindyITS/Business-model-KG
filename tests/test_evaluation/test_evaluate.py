@@ -6,9 +6,11 @@ from evaluation.scripts.evaluate import (
     build_split_evaluation_paths,
     evaluate_paths,
     evaluate_triples,
+    finalize_result_folder,
     generate_alias_candidates,
     load_aliases,
     prepare_result_folder,
+    staging_result_folder,
 )
 
 
@@ -93,6 +95,29 @@ def test_evaluate_triples_applies_approved_aliases():
     assert relaxed["metrics"]["true_positives"] == 1
 
 
+def test_evaluate_triples_is_case_insensitive_for_entity_values():
+    gold = [
+        {
+            "subject": "LinkedIn",
+            "subject_type": "Offering",
+            "relation": "MONETIZES_VIA",
+            "object": "subscription",
+            "object_type": "RevenueModel",
+        }
+    ]
+    predicted = [
+        {
+            "subject": "linkedin",
+            "subject_type": "Offering",
+            "relation": "MONETIZES_VIA",
+            "object": "Subscription",
+            "object_type": "RevenueModel",
+        }
+    ]
+
+    assert evaluate_triples(gold, predicted)["metrics"]["true_positives"] == 1
+
+
 def test_generate_alias_candidates_pairs_compatible_unmatched_triples():
     false_positives = [
         {
@@ -133,6 +158,17 @@ def test_load_aliases_normalizes_alias_keys(tmp_path: Path):
     )
 
     assert load_aliases(alias_path) == {"Offering": {"azure": "Azure and other cloud services"}}
+
+
+def test_load_aliases_missing_file_raises(tmp_path: Path):
+    missing_alias_path = tmp_path / "missing_aliases.json"
+
+    try:
+        load_aliases(missing_alias_path)
+    except FileNotFoundError as exc:
+        assert str(missing_alias_path) in str(exc)
+    else:
+        raise AssertionError("Expected FileNotFoundError for missing alias file")
 
 
 def test_split_evaluation_writes_pipeline_split_results(tmp_path: Path):
@@ -305,10 +341,23 @@ def test_prepare_result_folder_cancel_keeps_existing_files(tmp_path: Path, monke
     assert stale_file.is_file()
 
 
-def test_prepare_result_folder_assume_yes_removes_existing_files(tmp_path: Path):
+def test_prepare_result_folder_assume_yes_keeps_existing_files_until_finalize(tmp_path: Path):
     result_dir = tmp_path / "results" / "zero-shot" / "dev"
     stale_file = result_dir / "summary.json"
     write_json(stale_file, {"old": True})
 
     assert prepare_result_folder(result_dir, assume_yes=True) is True
-    assert not result_dir.exists()
+    assert stale_file.is_file()
+
+
+def test_finalize_result_folder_replaces_existing_results_after_success(tmp_path: Path):
+    result_dir = tmp_path / "results" / "zero-shot" / "dev"
+    stale_file = result_dir / "summary.json"
+    write_json(stale_file, {"old": True})
+    staging_dir = staging_result_folder(result_dir)
+    write_json(staging_dir / "summary.json", {"new": True})
+
+    finalize_result_folder(staging_dir, result_dir)
+
+    assert not staging_dir.exists()
+    assert json.loads(stale_file.read_text(encoding="utf-8")) == {"new": True}

@@ -54,7 +54,7 @@ Primary score:
 
 Secondary score:
 
-- alias-normalized typed-triple precision, recall, and F1, using only manually approved aliases
+- hand-matched typed-triple precision, recall, and F1, using only manually tagged unmatched rows
 
 ## Run Evaluation
 
@@ -105,6 +105,7 @@ Each run also writes a `summary.json`.
 
 If the target result folder already contains files, the evaluator asks before overwriting them.
 Answer `n` to cancel and leave existing results untouched.
+If overwrite is approved, the old results are replaced only after the new evaluation succeeds.
 
 For deliberate reruns, add `--yes`:
 
@@ -122,6 +123,7 @@ The review CSV separates unmatched gold triples from unmatched predicted triples
 - `source=predicted`: predicted triples not found in the gold benchmark
 
 To hand-match two rows, put the same value in `match_id` for the corresponding gold and predicted rows. For example, use `1` for the first hand match, `2` for the second hand match, and so on.
+Each `match_id` must be used on exactly one `source=gold` row and exactly one `source=predicted` row. Reusing a `match_id` for multiple pairs is rejected and does not affect hand-matched metrics.
 
 After editing the review CSV, compute hand-matched second-tier metrics with:
 
@@ -135,6 +137,7 @@ This writes:
 - `hand_matched/summary.json` for the whole result folder
 
 If `hand_matched/` already contains files, the script asks before overwriting them.
+If overwrite is approved, the old hand-matched results are replaced only after the new computation succeeds.
 For deliberate reruns, add `--yes`:
 
 ```bash

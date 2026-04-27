@@ -89,7 +89,7 @@ Actions:
   - normalize quotes and Unicode forms
   - normalize repeated spaces
   - compare entity names case-insensitively
-  - normalize places using the existing place normalization
+  - compare place names with the same mechanical entity-name normalization
   - enforce exact node types and relation names
 - Compute strict exact-match metrics:
   - true positives
@@ -101,8 +101,7 @@ Actions:
 - Break metrics down by:
   - company
   - pipeline
-  - relation
-  - optionally node type pair
+  - company and pipeline
 - Write unmatched reports:
   - predicted triples not found in gold
   - gold triples missed by the model
@@ -217,13 +216,12 @@ Acceptance criteria:
 
 ## 7. Evaluate And Analyze Results
 
-Run the strict and alias-normalized evaluations on the final outputs.
+Run the strict and hand-matched evaluations on the final outputs.
 
 Actions:
 
 - Compute overall metrics.
 - Compute per-company metrics.
-- Compute per-relation metrics.
 - Compare the three pipelines:
   - `zero-shot`
   - `memo-only`
