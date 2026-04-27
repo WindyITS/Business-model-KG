@@ -271,9 +271,66 @@ If a denominator is zero, the evaluation script should handle it explicitly and 
 
 Strict matching is the primary metric, but it may penalize harmless naming differences.
 
-The relaxed metric should use only manually approved aliases.
+The preferred relaxed metric should use manually tagged unmatched triples.
 
-Automatic fuzzy matching may be used only to generate candidate aliases for review.
+For every evaluated company, the evaluator should write:
+
+```text
+unmatched_for_review.csv
+```
+
+The file should live inside the company-specific result folder for that exact run:
+
+```text
+evaluation/results/<pipeline>/<split>/companies/<company>/unmatched_for_review.csv
+evaluation/results/cherry_picked/<pipeline>/<company>/unmatched_for_review.csv
+```
+
+This file should contain all strict false positives and strict false negatives, separated by a `source` column:
+
+- `source=gold`: a gold triple missed by the pipeline
+- `source=predicted`: a predicted triple not present in the gold benchmark
+
+The review CSV should include these columns:
+
+```text
+row_id,match_id,source,subject,subject_type,relation,object,object_type
+```
+
+The human reviewer assigns the same `match_id` to gold and predicted rows that correspond to the same real triple despite naming differences. For example, the first hand-matched pair can use `match_id=1`, the second can use `match_id=2`, and so on.
+
+After the review CSV is edited, run:
+
+```bash
+./venv/bin/python -m evaluation.scripts.apply_hand_matches --results-dir evaluation/results/zero-shot/dev
+```
+
+The hand-match script should compute second-tier metrics by starting from strict TP/FP/FN and converting each accepted human match into one additional true positive, one fewer false positive, and one fewer false negative.
+
+The script should write:
+
+```text
+hand_matched/companies/<company>/metrics.json
+hand_matched/summary.json
+```
+
+If `hand_matched/` already contains files, the hand-match script should ask before overwriting. If the answer is `n` or `no`, no hand-matched metrics should be recomputed and existing files should be left unchanged.
+
+For intentional reruns that should overwrite existing hand-matched metrics without an interactive prompt, use:
+
+```bash
+./venv/bin/python -m evaluation.scripts.apply_hand_matches --results-dir evaluation/results/zero-shot/dev --yes
+```
+
+Automatic fuzzy matching may still be used only to generate candidate aliases for review.
+
+Every evaluated company may also write:
+
+```text
+alias_candidates.jsonl
+```
+
+These candidates are review aids only. They should not affect strict or hand-matched metrics.
 
 Examples of possible aliases:
 
@@ -294,11 +351,25 @@ Examples of possible aliases:
 Alias rules:
 
 - aliases are scoped by node type
-- aliases map alternative names to the chosen benchmark name
+- aliases map predicted alternative names to the chosen benchmark name
 - aliases must be explicitly saved in a versioned alias map
 - aliases should not change relation names or node types
 - aliases should not collapse genuinely different entities
 - aliases should be reviewed before relaxed metrics are reported
+
+Example approved alias file:
+
+```text
+evaluation/aliases/approved_aliases.example.json
+```
+
+Run alias-normalized evaluation with:
+
+```bash
+./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --split dev --aliases evaluation/aliases/approved_aliases.json
+```
+
+When aliases are supplied, the evaluator should still write strict metrics and should additionally write alias-normalized metrics.
 
 ## Relaxed Match Definition
 

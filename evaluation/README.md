@@ -90,6 +90,16 @@ Each evaluated company writes:
 - `matched.jsonl`
 - `false_positives.jsonl`
 - `false_negatives.jsonl`
+- `unmatched_for_review.csv`
+- `alias_candidates.jsonl`
+
+For example:
+
+```text
+evaluation/results/zero-shot/dev/companies/microsoft/unmatched_for_review.csv
+evaluation/results/zero-shot/test/companies/apple/unmatched_for_review.csv
+evaluation/results/cherry_picked/analyst/microsoft/unmatched_for_review.csv
+```
 
 Each run also writes a `summary.json`.
 
@@ -101,3 +111,60 @@ For deliberate reruns, add `--yes`:
 ```bash
 ./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --split dev --yes
 ```
+
+## Alias Review
+
+Strict metrics are always written. The evaluator writes every unmatched strict triple to `unmatched_for_review.csv` so naming differences can be reviewed manually in a spreadsheet.
+
+The review CSV separates unmatched gold triples from unmatched predicted triples:
+
+- `source=gold`: gold triples not matched by the pipeline
+- `source=predicted`: predicted triples not found in the gold benchmark
+
+To hand-match two rows, put the same value in `match_id` for the corresponding gold and predicted rows. For example, use `1` for the first hand match, `2` for the second hand match, and so on.
+
+After editing the review CSV, compute hand-matched second-tier metrics with:
+
+```bash
+./venv/bin/python -m evaluation.scripts.apply_hand_matches --results-dir evaluation/results/zero-shot/dev
+```
+
+This writes:
+
+- `hand_matched/companies/<company>/metrics.json` for each reviewed company
+- `hand_matched/summary.json` for the whole result folder
+
+If `hand_matched/` already contains files, the script asks before overwriting them.
+For deliberate reruns, add `--yes`:
+
+```bash
+./venv/bin/python -m evaluation.scripts.apply_hand_matches --results-dir evaluation/results/zero-shot/dev --yes
+```
+
+The evaluator may also write `alias_candidates.jsonl` files from unmatched strict triples. These are only review aids.
+
+Approved aliases use this shape:
+
+```json
+{
+  "Offering": {
+    "Azure": "Azure and other cloud services"
+  }
+}
+```
+
+Aliases are scoped by node type. The left side is a predicted name and the right side is the benchmark name.
+
+Run alias-normalized evaluation with:
+
+```bash
+./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --split dev --aliases evaluation/aliases/approved_aliases.json
+```
+
+When aliases are supplied, each company also writes:
+
+- `alias_normalized_matched.jsonl`
+- `alias_normalized_false_positives.jsonl`
+- `alias_normalized_false_negatives.jsonl`
+
+The run `summary.json` includes both strict aggregate metrics and `alias_normalized_aggregate`.

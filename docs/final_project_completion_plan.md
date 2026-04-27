@@ -129,24 +129,24 @@ The relaxed metric should not use uncontrolled fuzzy matching as the final score
 
 Actions:
 
-- Generate candidate alias matches only when relation and node types are compatible.
-- Rank candidates using string similarity or simple normalized containment.
-- Save candidates to a review file.
-- Manually approve aliases into a stable alias map.
-- Re-run evaluation with approved aliases applied.
-- Report both strict and alias-normalized metrics.
+- Save all strict false positives and false negatives to a human-editable review CSV.
+- Keep gold-side unmatched triples and predicted-side unmatched triples clearly separated.
+- Manually tag corresponding rows with a shared `match_id`.
+- Run a second command to compute hand-matched second-tier metrics from the reviewed CSV.
+- Optionally generate automatic alias candidates as review aids only.
+- Report both strict and hand-matched metrics.
 
 Output:
 
-- Alias candidate report.
-- Approved alias map.
-- Relaxed evaluation metrics.
+- Unmatched review CSV.
+- Hand-matched metrics.
+- Optional alias candidate report.
 
 Acceptance criteria:
 
 - Strict metrics remain the primary objective metric.
-- Relaxed metrics are reproducible because aliases are explicitly approved and versioned.
-- The presentation can explain the difference between exact graph agreement and adjudicated semantic agreement.
+- Relaxed metrics are reproducible because human matches are explicitly recorded in CSV.
+- The presentation can explain the difference between exact graph agreement and human-adjudicated semantic agreement.
 
 ## 5. Add The Middle-Way Ablation Pipeline
 
