@@ -269,7 +269,7 @@ F1        = 2 * precision * recall / (precision + recall)
 
 If a denominator is zero, the evaluation script should handle it explicitly and consistently.
 
-## Alias-Assisted Relaxed Evaluation
+## Hand-Matched Evaluation
 
 Strict matching is the primary metric, but it may penalize harmless naming differences.
 
@@ -328,70 +328,24 @@ For intentional reruns that should overwrite existing hand-matched metrics witho
 ./venv/bin/python -m evaluation.scripts.apply_hand_matches --results-dir evaluation/results/zero-shot/dev --yes
 ```
 
-Automatic fuzzy matching may still be used only to generate candidate aliases for review.
+## Hand-Matched Metric Definition
 
-Every evaluated company may also write:
+A hand-matched correspondence is accepted only when a `match_id` appears on exactly one unmatched gold row and exactly one unmatched predicted row.
 
-```text
-alias_candidates.jsonl
-```
-
-These candidates are review aids only. They should not affect strict or hand-matched metrics.
-
-Examples of possible aliases:
-
-```json
-{
-  "Company": {
-    "alphabet": "Alphabet Inc."
-  },
-  "BusinessSegment": {
-    "google services segment": "Google Services"
-  },
-  "Offering": {
-    "google cloud platform": "Google Cloud"
-  }
-}
-```
-
-Alias rules:
-
-- aliases are scoped by node type
-- aliases map predicted alternative names to the chosen benchmark name
-- aliases must be explicitly saved in a versioned alias map
-- aliases should not change relation names or node types
-- aliases should not collapse genuinely different entities
-- aliases should be reviewed before relaxed metrics are reported
-
-Example approved alias file:
+Each accepted correspondence converts one strict false positive and one strict false negative into one additional true positive:
 
 ```text
-evaluation/aliases/approved_aliases.example.json
+hand_matched_tp = strict_tp + accepted_matches
+hand_matched_fp = strict_fp - accepted_matches
+hand_matched_fn = strict_fn - accepted_matches
 ```
 
-Run alias-normalized evaluation with:
-
-```bash
-./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --split dev --aliases evaluation/aliases/approved_aliases.json
-```
-
-When aliases are supplied, the evaluator should still write strict metrics and should additionally write alias-normalized metrics.
-
-## Alias-Normalized Match Definition
-
-A predicted triple is an alias-normalized true positive if:
-
-1. strict normalization is applied
-2. approved aliases are applied to subject and object names by node type
-3. all five fields match a gold triple
-
-Alias-normalized metrics are optional and should be reported separately from strict and hand-matched metrics.
+Hand-matched metrics should be reported separately from strict metrics.
 
 Recommended labels:
 
 - `Strict`
 - `Hand-matched`
-- `Alias-normalized` if an approved alias file is used
 
 ## Metric Scope For The First Evaluator
 
@@ -418,7 +372,6 @@ For each evaluated company and pipeline, write:
 - false positives
 - false negatives
 - unmatched review CSV
-- possible alias candidates
 
 The false positive and false negative reports are the main input for error analysis.
 
@@ -436,4 +389,4 @@ Use hand-matched metrics as the human-adjudicated semantic score:
 Hand-matched F1 measures graph agreement after manually recorded unmatched-triple correspondences.
 ```
 
-The final presentation should clearly state that hand-matched metrics depend only on explicit `match_id` labels in the review CSV. Alias-normalized metrics, if reported, depend only on approved aliases and not uncontrolled fuzzy matching.
+The final presentation should clearly state that hand-matched metrics depend only on explicit `match_id` labels in the review CSV.

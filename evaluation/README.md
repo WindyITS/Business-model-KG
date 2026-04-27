@@ -91,7 +91,6 @@ Each evaluated company writes:
 - `false_positives.jsonl`
 - `false_negatives.jsonl`
 - `unmatched_for_review.csv`
-- `alias_candidates.jsonl`
 
 For example:
 
@@ -113,7 +112,7 @@ For deliberate reruns, add `--yes`:
 ./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --split dev --yes
 ```
 
-## Alias Review
+## Hand-Match Review
 
 Strict metrics are always written. The evaluator writes every unmatched strict triple to `unmatched_for_review.csv` so naming differences can be reviewed manually in a spreadsheet.
 
@@ -143,31 +142,3 @@ For deliberate reruns, add `--yes`:
 ```bash
 ./venv/bin/python -m evaluation.scripts.apply_hand_matches --results-dir evaluation/results/zero-shot/dev --yes
 ```
-
-The evaluator may also write `alias_candidates.jsonl` files from unmatched strict triples. These are only review aids.
-
-Approved aliases use this shape:
-
-```json
-{
-  "Offering": {
-    "Azure": "Azure and other cloud services"
-  }
-}
-```
-
-Aliases are scoped by node type. The left side is a predicted name and the right side is the benchmark name.
-
-Run alias-normalized evaluation with:
-
-```bash
-./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --split dev --aliases evaluation/aliases/approved_aliases.json
-```
-
-When aliases are supplied, each company also writes:
-
-- `alias_normalized_matched.jsonl`
-- `alias_normalized_false_positives.jsonl`
-- `alias_normalized_false_negatives.jsonl`
-
-The run `summary.json` includes both strict aggregate metrics and `alias_normalized_aggregate`.

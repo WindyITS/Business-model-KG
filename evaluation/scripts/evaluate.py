@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import difflib
 import csv
 import json
 import shutil
@@ -23,7 +22,6 @@ SPLITS: tuple[str, ...] = ("dev", "test")
 
 Triple = dict[str, str]
 TripleKey = tuple[str, str, str, str, str]
-AliasMap = dict[str, dict[str, str]]
 
 
 @dataclass(frozen=True)
@@ -50,21 +48,14 @@ def entity_key(name: str) -> str:
     return cleaned
 
 
-def apply_alias(name: str, node_type: str, aliases: AliasMap | None = None) -> str:
-    if not aliases:
-        return name
-    node_aliases = aliases.get(node_type, {})
-    return node_aliases.get(entity_key(name), name)
-
-
-def triple_key(triple: Triple, aliases: AliasMap | None = None) -> TripleKey:
+def triple_key(triple: Triple) -> TripleKey:
     subject_type = triple["subject_type"].strip()
     object_type = triple["object_type"].strip()
     return (
-        entity_key(apply_alias(triple["subject"], subject_type, aliases)),
+        entity_key(triple["subject"]),
         subject_type,
         triple["relation"].strip(),
-        entity_key(apply_alias(triple["object"], object_type, aliases)),
+        entity_key(triple["object"]),
         object_type,
     )
 
@@ -99,33 +90,11 @@ def read_prediction_triples(path: Path) -> list[Triple]:
     return [cleaned_triple(triple) for triple in triples if isinstance(triple, dict)]
 
 
-def unique_by_key(triples: list[Triple], aliases: AliasMap | None = None) -> dict[TripleKey, Triple]:
+def unique_by_key(triples: list[Triple]) -> dict[TripleKey, Triple]:
     records: dict[TripleKey, Triple] = {}
     for triple in triples:
-        records.setdefault(triple_key(triple, aliases), triple)
+        records.setdefault(triple_key(triple), triple)
     return records
-
-
-def load_aliases(path: Path | None) -> AliasMap | None:
-    if path is None:
-        return None
-    if not path.is_file():
-        raise FileNotFoundError(f"Alias file not found: {path}")
-
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(payload, dict):
-        raise ValueError(f"{path} must contain a JSON object.")
-
-    aliases: AliasMap = {}
-    for node_type, node_aliases in payload.items():
-        if not isinstance(node_type, str) or not isinstance(node_aliases, dict):
-            raise ValueError(f"{path} must map node type strings to alias objects.")
-        aliases[node_type] = {}
-        for alias, canonical in node_aliases.items():
-            if not isinstance(alias, str) or not isinstance(canonical, str):
-                raise ValueError(f"{path} aliases for {node_type} must map strings to strings.")
-            aliases[node_type][entity_key(alias)] = clean_entity_name(canonical)
-    return aliases
 
 
 def metric_payload(tp: int, fp: int, fn: int) -> dict[str, Any]:
@@ -247,13 +216,9 @@ def cleanup_staging_folder(staging_root: Path) -> None:
         shutil.rmtree(staging_root)
 
 
-def evaluate_triples(
-    gold_triples: list[Triple],
-    predicted_triples: list[Triple],
-    aliases: AliasMap | None = None,
-) -> dict[str, Any]:
-    gold_by_key = unique_by_key(gold_triples, aliases)
-    predicted_by_key = unique_by_key(predicted_triples, aliases)
+def evaluate_triples(gold_triples: list[Triple], predicted_triples: list[Triple]) -> dict[str, Any]:
+    gold_by_key = unique_by_key(gold_triples)
+    predicted_by_key = unique_by_key(predicted_triples)
 
     gold_keys = set(gold_by_key)
     predicted_keys = set(predicted_by_key)
@@ -279,111 +244,7 @@ def evaluate_triples(
     }
 
 
-def _similarity(left: str, right: str) -> float:
-    return difflib.SequenceMatcher(None, entity_key(left), entity_key(right)).ratio()
-
-
-def _candidate_alias(
-    *,
-    field: str,
-    node_type: str,
-    predicted_value: str,
-    gold_value: str,
-) -> dict[str, Any]:
-    return {
-        "field": field,
-        "node_type": node_type,
-        "predicted_value": predicted_value,
-        "gold_value": gold_value,
-        "score": _similarity(predicted_value, gold_value),
-        "suggested_alias_entry": {
-            node_type: {
-                predicted_value: gold_value,
-            }
-        },
-    }
-
-
-def generate_alias_candidates(
-    *,
-    false_positives: list[Triple],
-    false_negatives: list[Triple],
-    min_score: float = 0.70,
-) -> list[dict[str, Any]]:
-    candidates: list[dict[str, Any]] = []
-    seen: set[tuple[str, str, str, str, str]] = set()
-
-    for predicted in false_positives:
-        for gold in false_negatives:
-            if predicted["relation"] != gold["relation"]:
-                continue
-            if predicted["subject_type"] != gold["subject_type"] or predicted["object_type"] != gold["object_type"]:
-                continue
-
-            subject_matches = triple_key(
-                {
-                    **predicted,
-                    "object": gold["object"],
-                    "object_type": gold["object_type"],
-                }
-            ) == triple_key(gold)
-            object_matches = triple_key(
-                {
-                    **predicted,
-                    "subject": gold["subject"],
-                    "subject_type": gold["subject_type"],
-                }
-            ) == triple_key(gold)
-
-            alias_suggestions: list[dict[str, Any]] = []
-            if object_matches and entity_key(predicted["subject"]) != entity_key(gold["subject"]):
-                suggestion = _candidate_alias(
-                    field="subject",
-                    node_type=gold["subject_type"],
-                    predicted_value=predicted["subject"],
-                    gold_value=gold["subject"],
-                )
-                if suggestion["score"] >= min_score:
-                    alias_suggestions.append(suggestion)
-            if subject_matches and entity_key(predicted["object"]) != entity_key(gold["object"]):
-                suggestion = _candidate_alias(
-                    field="object",
-                    node_type=gold["object_type"],
-                    predicted_value=predicted["object"],
-                    gold_value=gold["object"],
-                )
-                if suggestion["score"] >= min_score:
-                    alias_suggestions.append(suggestion)
-
-            if not alias_suggestions:
-                continue
-
-            key = (
-                predicted["subject"],
-                predicted["relation"],
-                predicted["object"],
-                gold["subject"],
-                gold["object"],
-            )
-            if key in seen:
-                continue
-            seen.add(key)
-            candidates.append(
-                {
-                    "predicted_triple": predicted,
-                    "gold_triple": gold,
-                    "candidate_aliases": sorted(alias_suggestions, key=lambda item: item["score"], reverse=True),
-                }
-            )
-
-    return sorted(
-        candidates,
-        key=lambda item: max(alias["score"] for alias in item["candidate_aliases"]),
-        reverse=True,
-    )
-
-
-def evaluate_company(paths: EvaluationPaths, *, aliases: AliasMap | None = None) -> dict[str, Any]:
+def evaluate_company(paths: EvaluationPaths) -> dict[str, Any]:
     if not paths.prediction_path.is_file():
         result = {
             "company": paths.company,
@@ -400,11 +261,6 @@ def evaluate_company(paths: EvaluationPaths, *, aliases: AliasMap | None = None)
     gold_triples = read_jsonl(paths.gold_path)
     predicted_triples = read_prediction_triples(paths.prediction_path)
     result = evaluate_triples(gold_triples, predicted_triples)
-    alias_result = evaluate_triples(gold_triples, predicted_triples, aliases) if aliases else None
-    alias_candidates = generate_alias_candidates(
-        false_positives=result["false_positives"],
-        false_negatives=result["false_negatives"],
-    )
     summary = {
         "company": paths.company,
         "company_slug": paths.company_slug,
@@ -415,10 +271,7 @@ def evaluate_company(paths: EvaluationPaths, *, aliases: AliasMap | None = None)
         "prediction_path": str(paths.prediction_path),
         **result["counts"],
         **result["metrics"],
-        "alias_candidate_count": len(alias_candidates),
     }
-    if alias_result:
-        summary["alias_normalized"] = alias_result["metrics"]
 
     write_json(paths.output_dir / "metrics.json", summary)
     write_jsonl(paths.output_dir / "matched.jsonl", result["matched"])
@@ -429,25 +282,14 @@ def evaluate_company(paths: EvaluationPaths, *, aliases: AliasMap | None = None)
         false_positives=result["false_positives"],
         false_negatives=result["false_negatives"],
     )
-    write_jsonl_records(paths.output_dir / "alias_candidates.jsonl", alias_candidates)
-    if alias_result:
-        write_jsonl(paths.output_dir / "alias_normalized_matched.jsonl", alias_result["matched"])
-        write_jsonl(paths.output_dir / "alias_normalized_false_positives.jsonl", alias_result["false_positives"])
-        write_jsonl(paths.output_dir / "alias_normalized_false_negatives.jsonl", alias_result["false_negatives"])
     return summary
 
 
-def aggregate_metrics(results: list[dict[str, Any]], *, metric_key: str | None = None) -> dict[str, Any]:
+def aggregate_metrics(results: list[dict[str, Any]]) -> dict[str, Any]:
     evaluated = [result for result in results if result.get("status") == "evaluated"]
-    if metric_key is None:
-        tp = sum(int(result["true_positives"]) for result in evaluated)
-        fp = sum(int(result["false_positives"]) for result in evaluated)
-        fn = sum(int(result["false_negatives"]) for result in evaluated)
-    else:
-        metric_results = [result[metric_key] for result in evaluated if metric_key in result]
-        tp = sum(int(result["true_positives"]) for result in metric_results)
-        fp = sum(int(result["false_positives"]) for result in metric_results)
-        fn = sum(int(result["false_negatives"]) for result in metric_results)
+    tp = sum(int(result["true_positives"]) for result in evaluated)
+    fp = sum(int(result["false_positives"]) for result in evaluated)
+    fn = sum(int(result["false_negatives"]) for result in evaluated)
     return {
         "evaluated_company_count": len(evaluated),
         "missing_prediction_count": sum(1 for result in results if result.get("status") == "missing_prediction"),
@@ -527,15 +369,13 @@ def build_cherry_pick_evaluation_path(
     )
 
 
-def evaluate_paths(paths: list[EvaluationPaths], *, output_root: Path, aliases: AliasMap | None = None) -> dict[str, Any]:
-    results = [evaluate_company(path, aliases=aliases) for path in paths]
+def evaluate_paths(paths: list[EvaluationPaths], *, output_root: Path) -> dict[str, Any]:
+    results = [evaluate_company(path) for path in paths]
     summary = {
         "result_count": len(results),
         "results": results,
         "aggregate": aggregate_metrics(results),
     }
-    if aliases:
-        summary["alias_normalized_aggregate"] = aggregate_metrics(results, metric_key="alias_normalized")
     write_json(output_root / "summary.json", summary)
     return summary
 
@@ -562,12 +402,6 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Overwrite existing result files without prompting.",
     )
-    parser.add_argument(
-        "--aliases",
-        type=Path,
-        default=None,
-        help="Optional approved alias JSON file for alias-normalized metrics.",
-    )
     return parser.parse_args()
 
 
@@ -575,7 +409,6 @@ def main() -> int:
     args = parse_args()
     root = args.root.resolve()
     outputs_root = args.outputs_root.resolve()
-    aliases = load_aliases(args.aliases.resolve() if args.aliases else None)
 
     if args.company and args.split:
         raise SystemExit("--company and --split are separate modes. Use --company for cherry-picked evaluation or --split for all-company evaluation.")
@@ -595,7 +428,7 @@ def main() -> int:
             return 0
         staging_root = staging_result_folder(output_root)
         try:
-            summary = evaluate_paths([replace(path, output_dir=staging_root)], output_root=staging_root, aliases=aliases)
+            summary = evaluate_paths([replace(path, output_dir=staging_root)], output_root=staging_root)
             finalize_result_folder(staging_root, output_root)
         except Exception:
             cleanup_staging_folder(staging_root)
@@ -614,7 +447,7 @@ def main() -> int:
         staging_root = staging_result_folder(output_root)
         try:
             staging_paths = remap_evaluation_paths(paths, original_root=output_root, staging_root=staging_root)
-            summary = evaluate_paths(staging_paths, output_root=staging_root, aliases=aliases)
+            summary = evaluate_paths(staging_paths, output_root=staging_root)
             finalize_result_folder(staging_root, output_root)
         except Exception:
             cleanup_staging_folder(staging_root)

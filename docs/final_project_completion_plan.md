@@ -27,7 +27,6 @@ Actions:
   - relation names
   - canonical labels
   - normalization rules
-  - alias policy
   - strict and relaxed metric definitions
 
 Output:
@@ -105,7 +104,6 @@ Actions:
 - Write unmatched reports:
   - predicted triples not found in gold
   - gold triples missed by the model
-  - likely alias candidates
 
 Output:
 
@@ -117,14 +115,15 @@ Output:
 Acceptance criteria:
 
 - We can evaluate one company and one pipeline end to end.
-- We can evaluate all available companies and pipelines in one command.
+- We can evaluate all available companies for one selected pipeline in one command.
+- We can build full results by running the command once per pipeline.
 - The output is clear enough to use in the final presentation.
 
-## 4. Add Alias-Assisted Relaxed Evaluation
+## 4. Add Hand-Matched Relaxed Evaluation
 
 Strict exact matching is necessary, but it can unfairly penalize harmless naming differences.
 
-The relaxed metric should not use uncontrolled fuzzy matching as the final score. Instead, fuzzy matching should propose aliases, and humans should approve them.
+The relaxed metric should not use uncontrolled fuzzy matching as the final score. Instead, humans should review unmatched triples and explicitly tag corresponding rows.
 
 Actions:
 
@@ -132,14 +131,12 @@ Actions:
 - Keep gold-side unmatched triples and predicted-side unmatched triples clearly separated.
 - Manually tag corresponding rows with a shared `match_id`.
 - Run a second command to compute hand-matched second-tier metrics from the reviewed CSV.
-- Optionally generate automatic alias candidates as review aids only.
 - Report both strict and hand-matched metrics.
 
 Output:
 
 - Unmatched review CSV.
 - Hand-matched metrics.
-- Optional alias candidate report.
 
 Acceptance criteria:
 
