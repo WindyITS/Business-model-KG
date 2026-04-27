@@ -24,6 +24,24 @@ Clean benchmark files will use JSONL, with one triple per line:
 {"subject":"Microsoft","subject_type":"Company","relation":"HAS_SEGMENT","object":"Intelligent Cloud","object_type":"BusinessSegment"}
 ```
 
+Convert raw CSV files into clean JSONL files with:
+
+```bash
+./venv/bin/python -m evaluation.scripts.prepare_gold --split all
+```
+
+Useful variants:
+
+```bash
+./venv/bin/python -m evaluation.scripts.prepare_gold --split dev
+./venv/bin/python -m evaluation.scripts.prepare_gold --split test
+```
+
+The converter writes:
+
+- one `.jsonl` file in the matching `clean/` folder for each raw CSV
+- one `manifest.json` per converted split with file and triple counts
+
 The evaluation scripts should compare clean gold triples against pipeline outputs from:
 
 ```text
@@ -37,4 +55,3 @@ Primary score:
 Secondary score:
 
 - alias-normalized typed-triple precision, recall, and F1, using only manually approved aliases
-

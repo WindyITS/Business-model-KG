@@ -64,6 +64,20 @@ evaluation/benchmarks/test/clean/
 
 The clean format should be JSONL, with one typed triple per line.
 
+The raw-to-clean conversion script is:
+
+```text
+evaluation/scripts/prepare_gold.py
+```
+
+Run it with:
+
+```bash
+./venv/bin/python -m evaluation.scripts.prepare_gold --split all
+```
+
+The converter writes one clean `.jsonl` file per raw `.csv` file and a `manifest.json` for each converted split.
+
 ## Final Node Types
 
 Allowed node types are:

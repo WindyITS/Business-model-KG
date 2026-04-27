@@ -42,36 +42,38 @@ Acceptance criteria:
 
 ## 2. Standardize The Gold Benchmark Format
 
-The gold triples currently use the simple manual format:
+The gold triples use the typed manual format:
 
 ```text
-entity; entity_type; link; entity; entity_type
+subject; subject_type; relation; object; object_type
 ```
 
 Actions:
 
-- Decide where gold files live, for example `benchmarks/gold/`.
-- Decide one file per company or one combined file.
-- Parse the semicolon format into structured triples:
+- Store raw gold CSV files under:
+  - `evaluation/benchmarks/dev/raw/`
+  - `evaluation/benchmarks/test/raw/`
+- Use one raw CSV file per company.
+- Parse the CSV format into structured triples:
   - `subject`
   - `subject_type`
   - `relation`
   - `object`
   - `object_type`
-- Preserve original raw rows for auditability.
-- Validate gold triples against the ontology.
-- Produce a gold validation report per company.
+- Write clean JSONL files under:
+  - `evaluation/benchmarks/dev/clean/`
+  - `evaluation/benchmarks/test/clean/`
+- Write a manifest for each split with file and triple counts.
 
 Output:
 
 - Gold benchmark files in a stable repo location.
 - Parsed JSON or JSONL gold triples.
-- Validation reports.
+- Split manifests.
 
 Acceptance criteria:
 
 - Every gold triple can be loaded by code.
-- Every gold triple is either valid or explicitly flagged for manual correction.
 - The format is simple enough for presentation and reproducibility.
 
 ## 3. Build The Evaluation Pipeline
