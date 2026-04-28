@@ -1,7 +1,0 @@
-row_id,match_id,source,subject,subject_type,relation,object,object_type
-gold_0001,,gold,Intelligent Cloud,BusinessSegment,OFFERS,Azure and other cloud services,Offering
-gold_0002,,gold,Server products and cloud services,Offering,OFFERS,SQL Server,Offering
-gold_0003,,gold,Microsoft 365 Consumer products and cloud services,Offering,MONETIZES_VIA,subscription,RevenueModel
-predicted_0001,,predicted,Intelligent Cloud,BusinessSegment,OFFERS,Azure,Offering
-predicted_0002,,predicted,Server Products,Offering,OFFERS,SQL Server,Offering
-predicted_0003,,predicted,Microsoft 365 Consumer,Offering,MONETIZES_VIA,subscription,RevenueModel
