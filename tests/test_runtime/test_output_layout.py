@@ -153,6 +153,21 @@ class OutputLayoutTests(unittest.TestCase):
             summary = json.loads((target_dir / "run_summary.json").read_text(encoding="utf-8"))
             self.assertEqual(summary["run_dir"], str(target_dir))
 
+    def test_migrate_legacy_output_layout_handles_memo_graph_only_pipeline(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            output_dir = Path(tmp_dir) / "outputs"
+            legacy_dir = output_dir / "microsoft_10k_memo_graph_only_pipeline_20260416T201638Z"
+            legacy_dir.mkdir(parents=True, exist_ok=True)
+            (legacy_dir / "run_summary.json").write_text(json.dumps({"run_dir": str(legacy_dir)}), encoding="utf-8")
+
+            migrations = migrate_legacy_output_layout(output_dir)
+
+            target_dir = output_dir / "microsoft" / "memo_graph_only" / "latest"
+            self.assertEqual(migrations, [(legacy_dir, target_dir)])
+            self.assertTrue(target_dir.is_dir())
+            summary = json.loads((target_dir / "run_summary.json").read_text(encoding="utf-8"))
+            self.assertEqual(summary["run_dir"], str(target_dir))
+
     def test_discover_output_company_states_uses_saved_run_summary_when_latest_is_missing(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
             output_dir = Path(tmp_dir) / "outputs"
@@ -192,6 +207,30 @@ class OutputLayoutTests(unittest.TestCase):
             self.assertEqual(manifests, [manifest_file])
             payload = json.loads(manifest_file.read_text(encoding="utf-8"))
             self.assertEqual(payload["company_name"], "Google")
+            self.assertTrue(payload["latest_available"])
+
+    def test_refresh_output_manifests_includes_memo_graph_only_by_default(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            output_dir = Path(tmp_dir) / "outputs"
+            latest_dir = company_pipeline_root(output_dir, "Google", "memo_graph_only") / "latest"
+            latest_dir.mkdir(parents=True, exist_ok=True)
+            (latest_dir / "run_summary.json").write_text(
+                json.dumps(
+                    {
+                        "company_name": "Google",
+                        "source_file": "data/google_10k.txt",
+                        "run_dir": str(latest_dir),
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            manifests = refresh_output_manifests(output_dir)
+
+            manifest_file = manifest_path(output_dir, "Google", "memo_graph_only")
+            self.assertEqual(manifests, [manifest_file])
+            payload = json.loads(manifest_file.read_text(encoding="utf-8"))
+            self.assertEqual(payload["pipeline"], "memo_graph_only")
             self.assertTrue(payload["latest_available"])
 
 

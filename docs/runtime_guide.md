@@ -134,7 +134,9 @@ Generate the query and run it against the current Neo4j database:
 
 The routed query commands try the published local query-stack bundle first.
 They fall back to hosted free-form Cypher generation when the local stack is
-unavailable, errors, or declines to handle the request.
+unavailable, errors, or the router selects `api_fallback`. If the router selects
+`refuse`, the command returns an unsupported-request result instead of using the
+hosted fallback.
 
 Force hosted fallback only:
 

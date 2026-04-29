@@ -11,6 +11,7 @@ DISALLOWED_CLAUSE_PATTERNS = (
     r"\bMERGE\b",
     r"\bDELETE\b",
     r"\bDETACH\b",
+    r"\bDROP\b",
     r"\bSET\b",
     r"\bREMOVE\b",
     r"\bCALL\b",

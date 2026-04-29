@@ -73,6 +73,11 @@ class PublishQueryStackTests(unittest.TestCase):
             self.assertEqual(manifest["planner"]["adapter_dir"], "planner/adapter")
             self.assertEqual(manifest["planner"]["system_prompt_path"], "planner/system_prompt.txt")
             self.assertIn("published_at", manifest)
+            prompt = (destination_dir / "planner" / "system_prompt.txt").read_text(encoding="utf-8")
+            self.assertIn("answerable must always be true", prompt)
+            self.assertIn("router, not this planner, owns refusals", prompt)
+            self.assertNotIn('"answerable": false', prompt)
+            self.assertNotIn("Valid refusal reasons", prompt)
 
 
 if __name__ == "__main__":

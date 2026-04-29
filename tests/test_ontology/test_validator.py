@@ -75,6 +75,20 @@ class OntologyValidatorTests(unittest.TestCase):
         self.assertTrue(result["is_valid"])
         self.assertEqual(result["issues"], [])
 
+    def test_rejects_unknown_place_label(self):
+        triple = {
+            "subject": "Microsoft",
+            "subject_type": "Company",
+            "relation": "OPERATES_IN",
+            "object": "New York City",
+            "object_type": "Place",
+        }
+
+        result = validate_triple(triple)
+
+        self.assertFalse(result["is_valid"])
+        self.assertTrue(any(issue["code"] == "invalid_place" for issue in result["issues"]))
+
     def test_rejects_non_canonical_customer_type(self):
         triple = {
             "subject": "Intelligent Cloud",

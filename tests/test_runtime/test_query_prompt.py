@@ -27,6 +27,7 @@ class QueryPromptTests(unittest.TestCase):
         self.assertIn("within_places", prompt)
         self.assertIn("government agencies", prompt)
         self.assertIn("never use create", prompt)
+        self.assertIn("drop", prompt)
 
 
 if __name__ == "__main__":

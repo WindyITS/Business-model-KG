@@ -222,7 +222,7 @@ Rules:
 The runtime validator does more than just check the schema:
 
 - entity text is normalized with NFKC, quote cleanup, and whitespace cleanup before validation
-- `Place` values are normalized through the canonical place alias map
+- `Place` values are normalized through the canonical place alias map, then rejected when they are outside the approved place set
 - `CustomerType`, `Channel`, and `RevenueModel` are enforced as closed canonical labels
 - duplicate triples are removed using normalized entity keys
 - validator reports preserve invalid triples, duplicate triples, and issue codes as audit output

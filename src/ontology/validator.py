@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from .config import CANONICAL_ONTOLOGY_NAME, canonical_labels, is_valid_relation_schema, node_type_names, relation_names
-from .place_hierarchy import normalize_place_name
+from .place_hierarchy import is_known_place_name, normalize_place_name
 
 
 WHITESPACE_RE = re.compile(r"\s+")
@@ -80,6 +80,13 @@ def validate_triple(
     for node_field, type_field in (("subject", "subject_type"), ("object", "object_type")):
         if normalized[type_field] == "Place" and normalized[node_field]:
             normalized[node_field] = normalize_place_name(normalized[node_field])
+            if not is_known_place_name(normalized[node_field]):
+                issues.append(
+                    {
+                        "code": "invalid_place",
+                        "message": f"{node_field}={normalized[node_field]!r} is not an approved Place label.",
+                    }
+                )
 
     if not normalized["subject"]:
         issues.append({"code": "empty_subject", "message": "Subject is empty after normalization."})

@@ -530,6 +530,11 @@ def normalize_place_name(name: str) -> str:
     return _CANONICAL_PLACE_NAMES.get(key, cleaned)
 
 
+def is_known_place_name(name: str) -> bool:
+    normalized = normalize_place_name(name)
+    return _canonical_place_key(normalized) in _CANONICAL_PLACE_NAMES
+
+
 PLACE_PARENTS = {
     normalize_place_name(place): tuple(normalize_place_name(parent) for parent in parents)
     for place, parents in _RAW_PLACE_PARENTS.items()

@@ -52,6 +52,11 @@ class CypherValidationTests(unittest.TestCase):
 
         self.assertEqual(failures, [r"Query contains disallowed clause matching \bLOAD\s+CSV\b"])
 
+    def test_validate_read_only_cypher_rejects_drop_queries(self):
+        failures = validate_read_only_cypher("DROP INDEX company_name_index IF EXISTS")
+
+        self.assertEqual(failures, [r"Query contains disallowed clause matching \bDROP\b"])
+
 
 if __name__ == "__main__":
     unittest.main()

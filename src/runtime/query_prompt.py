@@ -153,7 +153,7 @@ HOSTED_QUERY_SYSTEM_PROMPT = "\n\n".join(
                     "ambiguous_closed_label, ambiguous_request, write_request, and beyond_local_coverage."
                 ),
                 "Output compact JSON only. No markdown, no prose, no explanation, no chain-of-thought.",
-                "Cypher must be read-only. Never use CREATE, MERGE, DELETE, DETACH, SET, REMOVE, CALL, or LOAD CSV.",
+                "Cypher must be read-only. Never use CREATE, MERGE, DELETE, DETACH, DROP, SET, REMOVE, CALL, or LOAD CSV.",
                 "Always use named $params for user-provided values. The params object must exactly match the placeholders used in cypher.",
             ],
         ),
