@@ -1,0 +1,1659 @@
+{
+  "foundation_memo": "# ANALYTICAL FRAME\n## Summary:\nMicrosoft Corporation operates a technology platform business organized around three durable business segments: Productivity and Business Processes (enterprise and consumer productivity, professional networking, and business applications), Intelligent Cloud (cloud infrastructure, developer platforms, and server products), and More Personal Computing (operating systems, devices, gaming, and advertising). The company monetizes through a diversified mix of subscriptions, licensing, consumption-based cloud services, hardware sales, and advertising, distributed via direct sales, OEM partnerships, and multi-tiered reseller channels to a customer base spanning consumers, small businesses, and large enterprises globally.\n\n## Explicit Support:\n- \"We operate our business and report our financial performance using three segments: Productivity and Business Processes, Intelligent Cloud, and More Personal Computing.\"\n- \"We develop and support a broad portfolio of technology solutions for individuals and businesses, focusing on secure, trusted, and innovative platforms and tools that meet evolving customer needs across cloud computing, productivity and collaboration, and personal computing.\"\n- \"We market and distribute our products and services through the following channels: direct, distributors and resellers, and OEMs.\"\n\n# SEGMENTS\n## [Segment] Productivity and Business Processes\n### Role in Business Model:\nPortfolio of productivity, communication, and information services spanning devices and platforms, generating revenue through commercial and consumer subscriptions, business application licenses, and professional networking services. This segment integrates AI-powered tools across communication, collaboration, and business process management.\n\n### Explicit Support:\n- \"Our Productivity and Business Processes segment consists of products and services in our portfolio of productivity, communication, and information services, spanning a variety of devices and platforms.\"\n\n### Customer Types:\n- large enterprises | primary target for Microsoft 365 Commercial and Dynamics solutions\n- small businesses | explicitly mentioned target for Dynamics and Microsoft 365 Commercial growth initiatives\n- consumers | target for Microsoft 365 Consumer subscriptions and LinkedIn Premium\n- healthcare organizations | served via LinkedIn Talent Solutions and implied professional services\n- educational institutions | served via LinkedIn learning pathways and implied productivity solutions\n\n### Channels:\n- direct sales | Enterprise Agreements and Enterprise Services contracts for volume licensing\n- resellers | Licensing Solution Partners (LSPs) for large organizations, Value-Added Resellers (VARs) for small and medium organizations\n- distributors | independent non-exclusive distributors supplying resellers\n- online | digital marketplaces for cloud services and consumer subscriptions\n- system integrators | partners advising on licensing and performing consulting functions\n\n## [Segment] Intelligent Cloud\n### Role in Business Model:\nPublic, private, and hybrid server products and cloud services that power modern business and developers. This segment captures value through consumption-based cloud computing (Azure), developer collaboration platforms (GitHub), healthcare AI solutions (Nuance), on-premises server licensing, and enterprise support services.\n\n### Explicit Support:\n- \"Our Intelligent Cloud segment consists of our public, private, and hybrid server products and cloud services that power modern business and developers.\"\n\n### Customer Types:\n- large enterprises | primary consumers of Azure cloud services and server infrastructure\n- developers | explicit target for Azure, GitHub, and Azure AI Foundry platform\n- IT professionals | explicit target for server products and management tools\n- healthcare organizations | explicit target for Nuance Healthcare cloud services\n- government agencies | Select Plus agreements designed for government organizations\n- educational institutions | Select Plus agreements designed for academic organizations\n\n### Channels:\n- direct sales | Enterprise Agreements and direct cloud service subscriptions\n- resellers | Cloud Solution Provider program partners\n- distributors | supplying indirect channel partners\n- system integrators | partners developing and deploying server solutions\n- managed service providers | Cloud Solution Provider program enabling partners to provision and manage customer subscriptions\n- OEMs | licenses sold to OEMs for server software pre-installation\n\n## [Segment] More Personal Computing\n### Role in Business Model:\nProducts and services centering the customer experience with Microsoft technology, including operating system licensing (Windows), device hardware (Surface), gaming platforms (Xbox), and search/advertising inventory (Bing). Revenue derives from OEM licensing, hardware sales, gaming subscriptions and content, and advertising.\n\n### Explicit Support:\n- \"Our More Personal Computing segment consists of products and services that put customers at the center of the experience with our technology.\"\n\n### Customer Types:\n- consumers | primary target for Windows OEM (non-Pro), Microsoft 365 Consumer, Xbox, and search services\n- large enterprises | target for Windows Pro licensing and Surface devices for organizations\n- small businesses | target for Windows commercial licenses and device procurement\n- educational institutions | explicit target for Surface devices (\"students\")\n\n### Channels:\n- OEMs | primary distribution for Windows operating system pre-installed on devices\n- retail | third-party retailers for Surface devices and Xbox hardware\n- online | digital marketplaces for gaming subscriptions, search, and cloud services\n- direct sales | for commercial Windows volume licensing\n\n# OFFERINGS\n## [Offering] Microsoft 365 Commercial\n### Role in Business Model:\nAI-powered business productivity platform that bundles Office applications, Windows cloud services, security tools, and collaboration software for organizational deployment. Serves as the anchor commercial productivity suite driving subscription revenue and user expansion across enterprise and SMB markets.\n\n### Explicit Support:\n- \"Microsoft 365 Commercial is an AI-powered business and productivity solutions platform that brings together Office, Windows, Microsoft 365 Copilot, and Enterprise Mobility + Security to help organizations empower their employees.\"\n\n### Segment Anchors:\n- Productivity and Business Processes | explicitly listed as primary component of this segment\n\n### Parent Offering:\n- none | top-level offering family\n\n### Child Offerings:\n- Enterprise Mobility + Security | component of Microsoft 365 Commercial cloud services providing endpoint security and identity management\n- Windows Commercial (cloud portion) | cloud-based Windows services included in the platform\n- Microsoft 365 Copilot | AI assistant component integrated into the platform\n- Exchange | communication service within the platform\n- SharePoint | collaboration service within the platform\n- Microsoft Teams | communication and collaboration hub within the platform\n- Microsoft 365 Security and Compliance | security and compliance component\n- Power BI (per-user portion) | business analytics component included in the platform\n\n### Channels:\n- none | inherits segment channels (direct sales, resellers, distributors)\n\n### Revenue Models:\n- subscription | Microsoft 365 Commercial cloud services\n- licensing | Office licensed on-premises and Windows Commercial on-premises\n\n## [Offering] Microsoft 365 Consumer\n### Role in Business Model:\nPersonal productivity and creativity suite designed for individual users, offering cloud-based subscriptions and on-premises licensed products for personal use.\n\n### Explicit Support:\n- \"Microsoft 365 Consumer products and cloud services, including Microsoft 365 Consumer subscriptions, Office licensed on-premises, and other consumer services.\"\n\n### Segment Anchors:\n- Productivity and Business Processes | explicitly listed within this segment\n\n### Parent Offering:\n- none | top-level offering family distinct from commercial variant\n\n### Child Offerings:\n- none | no durable named child variants specified beyond subscription vs. on-premises\n\n### Channels:\n- online | digital marketplaces and online stores for cloud services\n- retail | for packaged Office products\n\n### Revenue Models:\n- subscription | Microsoft 365 Consumer subscriptions\n- licensing | Office licensed on-premises\n- advertising | driven by Outlook.com and OneDrive demand\n\n## [Offering] LinkedIn\n### Role in Business Model:\nProfessional networking platform generating revenue through AI-enabled solutions for talent acquisition, marketing, sales intelligence, and premium professional subscriptions.\n\n### Explicit Support:\n- \"LinkedIn connects the world's professionals to make them more productive and successful and transforms the way companies hire, market, sell, and learn.\"\n\n### Segment Anchors:\n- Productivity and Business Processes | explicitly listed as component of this segment\n\n### Parent Offering:\n- none | top-level platform brand\n\n### Child Offerings:\n- Talent Solutions | subscription-based recruiting and talent management solutions\n- Marketing Solutions | advertising-based solutions for brand and content marketing\n- Premium Subscriptions | subscription-based professional services for individual members\n- Sales Solutions | subscription-based sales intelligence and prospecting tools\n\n### Channels:\n- online | digital platform delivery\n\n### Revenue Models:\n- subscription | Talent Solutions, Sales Solutions, and Premium Subscriptions\n- advertising | Marketing Solutions driven by sponsored content\n\n## [Offering] Dynamics\n### Role in Business Model:\nCloud-based and on-premises business solutions for financial management, ERP, CRM, and supply chain management, including low-code application development platforms for business automation.\n\n### Explicit Support:\n- \"Dynamics provides cloud-based and on-premises business solutions for financial management, enterprise resource planning ('ERP'), customer relationship management ('CRM'), and supply chain management, as well as agentic AI and other low code application development platforms.\"\n\n### Segment Anchors:\n- Productivity and Business Processes | explicitly listed as component of this segment\n\n### Parent Offering:\n- none | top-level business applications family\n\n### Child Offerings:\n- Dynamics 365 | unified set of cloud-based intelligent business applications\n- On-premises ERP and CRM | traditional licensed applications for on-premises deployment\n\n### Channels:\n- resellers | global network of channel partners providing vertical solutions and specialized services\n\n### Revenue Models:\n- subscription | Dynamics 365 cloud applications\n- licensing | on-premises ERP and CRM applications\n\n## [Offering] Dynamics 365\n### Role in Business Model:\nUnified cloud-based intelligent business applications spanning ERP, CRM, and low-code development platforms (Power Apps and Power Automate).\n\n### Explicit Support:\n- \"Dynamics 365, comprising a set of intelligent, cloud-based applications across ERP, CRM, Power Apps, and Power Automate.\"\n\n### Segment Anchors:\n- Productivity and Business Processes | child of Dynamics offering within this segment\n\n### Parent Offering:\n- Dynamics | unified cloud offering under the Dynamics business solutions family\n\n### Child Offerings:\n- Power Apps | low-code application development platform component\n- Power Automate | workflow automation and RPA component\n\n### Channels:\n- none | inherits Dynamics channel structure\n\n### Revenue Models:\n- subscription | cloud-based application consumption\n\n## [Offering] Azure\n### Role in Business Model:\nComprehensive cloud services platform offering infrastructure-as-a-service (IaaS), platform-as-a-service (PaaS), and AI services to developers and enterprises. Core consumption-based revenue driver for cloud computing workloads.\n\n### Explicit Support:\n- \"Azure is a comprehensive set of cloud services that offer developers, IT professionals, and enterprises freedom to build, deploy, and manage applications on any platform or device.\"\n\n### Segment Anchors:\n- Intelligent Cloud | explicitly listed under Server products and cloud services within this segment\n\n### Parent Offering:\n- none | top-level cloud platform\n\n### Child Offerings:\n- Azure AI Foundry | unified platform for developers to design, customize, and manage AI applications and agents\n\n### Channels:\n- none | inherits segment channels\n\n### Revenue Models:\n- consumption-based | infrastructure-as-a-service and platform-as-a-service usage\n- subscription | certain cloud service commitments\n\n## [Offering] GitHub\n### Role in Business Model:\nCollaboration platform for developers to manage code, incorporate AI tools, and utilize agent-based tools across the software development lifecycle.\n\n### Explicit Support:\n- \"GitHub provides a collaboration platform for developers to manage code and incorporate AI and agent-based tools across the software development lifecycle.\"\n\n### Segment Anchors:\n- Intelligent Cloud | explicitly listed under Server products and cloud services\n\n### Parent Offering:\n- none | distinct developer platform brand\n\n### Child Offerings:\n- none | no durable named child variants specified\n\n### Channels:\n- online | cloud-based platform delivery\n\n### Revenue Models:\n- subscription | GitHub cloud services\n\n## [Offering] Nuance Healthcare\n### Role in Business Model:\nAI solutions and professional services specifically targeting the healthcare industry, including conversational AI and ambient intelligence solutions.\n\n### Explicit Support:\n- \"Nuance Healthcare provides AI solutions to the healthcare industry.\"\n\n### Segment Anchors:\n- Intelligent Cloud | explicitly listed under Server products and cloud services and Enterprise and partner services\n\n### Parent Offering:\n- none | distinct vertical healthcare offering\n\n### Child Offerings:\n- none | no durable named child variants specified\n\n### Channels:\n- none | inherits segment channels\n\n### Revenue Models:\n- subscription | Nuance Healthcare cloud services\n- service fees | Nuance professional services\n\n## [Offering] Server Products\n### Role in Business Model:\nOn-premises server infrastructure and middleware including SQL Server, Windows Server, Visual Studio, and System Center, licensed through volume programs and OEMs.\n\n### Explicit Support:\n- \"Server products, comprising SQL Server, Windows Server, Visual Studio, System Center, related Client Access Licenses ('CALs'), and other on-premises offerings.\"\n\n### Segment Anchors:\n- Intelligent Cloud | explicitly listed under Server products and cloud services\n\n### Parent Offering:\n- none | top-level on-premises server family\n\n### Child Offerings:\n- SQL Server | database and business intelligence platform\n- Windows Server | server operating system platform\n- Visual Studio | software development lifecycle tools\n- System Center | server management and virtualization platform\n- Client Access Licenses (CALs) | access rights for server products\n\n### Channels:\n- OEMs | licenses sold to OEMs for pre-installation\n- retail | packaged products\n\n### Revenue Models:\n- licensing | perpetual licenses and CALs\n\n## [Offering] Enterprise and Partner Services\n### Role in Business Model:\nPortfolio of support, consulting, training, and partner enablement services assisting customers in deploying and managing Microsoft solutions.\n\n### Explicit Support:\n- \"Enterprise and partner services, including Enterprise Support Services, Industry Solutions, Nuance professional services, Microsoft Partner Network, and Learning Experience.\"\n\n### Segment Anchors:\n- Intelligent Cloud | explicitly listed as distinct component of this segment\n\n### Parent Offering:\n- none | top-level services family\n\n### Child Offerings:\n- Enterprise Support Services | technical support services\n- Industry Solutions | vertical-specific consulting and deployment services\n- Nuance professional services | healthcare-specific professional services\n- Microsoft Partner Network | partner enablement and certification programs\n- Learning Experience | training and certification for developers and IT professionals\n\n### Channels:\n- direct sales | services contracted directly with enterprise customers\n\n### Revenue Models:\n- service fees | consulting, support, and training services\n\n## [Offering] Windows\n### Role in Business Model:\nOperating system platform licensed primarily through OEM pre-installation on computing devices, with distinct Pro and non-Pro editions serving consumer and commercial markets.\n\n### Explicit Support:\n- \"The Windows operating system is designed to deliver a more personal computing experience for users by enabling consistency of experience, applications, and information across their devices.\"\n\n### Segment Anchors:\n- More Personal Computing | explicitly listed under Windows and Devices component\n\n### Parent Offering:\n- none | top-level OS platform\n\n### Child Offerings:\n- Windows OEM Pro | enterprise and business edition licensed through OEMs\n- Windows OEM non-Pro | consumer edition licensed through OEMs\n\n### Channels:\n- OEMs | primary distribution through direct OEM agreements and system builders\n\n### Revenue Models:\n- licensing | OEM licenses and Windows Commercial volume licensing\n\n## [Offering] Surface\n### Role in Business Model:\nFirst-party hardware devices including tablets, laptops (Copilot+ PCs), and related accessories designed to demonstrate Windows integration and productivity scenarios.\n\n### Explicit Support:\n- \"We design and sell devices, such as Surface (including Copilot+ PCs) and PC accessories.\"\n\n### Segment Anchors:\n- More Personal Computing | explicitly listed under Windows and Devices component\n\n### Parent Offering:\n- none | top-level device hardware family\n\n### Child Offerings:\n- Copilot+ PCs | specific AI-enabled PC variant within Surface family\n\n### Channels:\n- retail | third-party retailers\n- online | digital stores\n\n### Revenue Models:\n- hardware sales | device and accessory revenue\n\n## [Offering] Gaming\n### Role in Business Model:\nInteractive entertainment platform spanning console hardware, game content (first and third-party), subscription services (Game Pass), cloud gaming, and advertising.\n\n### Explicit Support:\n- \"Gaming, including Xbox hardware and Xbox content and services, comprising first- and third-party content (including games and in-game content), Xbox Game Pass and other subscriptions, Xbox Cloud Gaming, advertising, and other cloud services.\"\n\n### Segment Anchors:\n- More Personal Computing | explicitly listed as distinct component of this segment\n\n### Parent Offering:\n- none | top-level gaming franchise\n\n### Child Offerings:\n- Xbox Hardware | physical console devices\n- Xbox Content and Services | digital content library, Game Pass subscriptions, cloud gaming, and advertising\n\n### Channels:\n- retail | third-party retailers for hardware\n- online | digital store for content and subscriptions\n\n### Revenue Models:\n- hardware sales | Xbox console revenue\n- subscription | Xbox Game Pass and other subscriptions\n- transaction fees | in-game content purchases\n- advertising | gaming platform advertising\n\n## [Offering] Search and News Advertising\n### Role in Business Model:\nSearch engine and content advertising platform delivering relevant advertising to global audiences through search results, native content, and display inventory.\n\n### Explicit Support:\n- \"Search and news advertising, comprising Bing and Copilot, Microsoft News, Microsoft Edge, and third-party affiliates.\"\n\n### Segment Anchors:\n- More Personal Computing | explicitly listed as distinct component of this segment\n\n### Parent Offering:\n- none | top-level advertising platform family\n\n### Child Offerings:\n- Bing and Copilot | search engine and AI companion\n- Microsoft Edge | browser platform with integrated search\n- Microsoft News | content and news aggregation platform\n\n### Channels:\n- online | digital platform delivery inherent to the service\n\n### Revenue Models:\n- advertising | search, native, and display advertising revenue\n\n# CORPORATE SCOPE\n## Operating Geographies:\n- Worldwide | explicit commitment to \"every country around the world\" with regional operations centers in Americas, Asia Pacific, Europe, and Middle East\n\n## Key Partners:\n- Dell | multinational OEM with direct distribution agreement for Windows pre-installation\n- Hewlett-Packard | multinational OEM with direct distribution agreement for Windows pre-installation\n- Lenovo | multinational OEM with direct distribution agreement for Windows pre-installation",
+  "augmented_memo": "# ANALYTICAL FRAME\n## Summary:\nMicrosoft Corporation operates a technology platform business organized around three durable business segments: Productivity and Business Processes (enterprise and consumer productivity, professional networking, and business applications), Intelligent Cloud (cloud infrastructure, developer platforms, and server products), and More Personal Computing (operating systems, devices, gaming, and advertising). The company monetizes through a diversified mix of subscriptions, licensing, consumption-based cloud services, hardware sales, and advertising, distributed via direct sales, OEM partnerships, and multi-tiered reseller channels to a customer base spanning consumers, small businesses, and large enterprises globally.\n\n## Explicit Support:\n- \"We operate our business and report our financial performance using three segments: Productivity and Business Processes, Intelligent Cloud, and More Personal Computing.\"\n- \"We develop and support a broad portfolio of technology solutions for individuals and businesses, focusing on secure, trusted, and innovative platforms and tools that meet evolving customer needs across cloud computing, productivity and collaboration, and personal computing.\"\n- \"We market and distribute our products and services through the following channels: direct, distributors and resellers, and OEMs.\"\n\n# SEGMENTS\n## [Segment] Productivity and Business Processes\n### Role in Business Model:\nPortfolio of productivity, communication, and information services spanning devices and platforms, generating revenue through commercial and consumer subscriptions, business application licenses, and professional networking services. This segment integrates AI-powered tools across communication, collaboration, and business process management, and explicitly includes the commercial volume licensing of Windows and Office as components of the Microsoft 365 platform.\n\n### Explicit Support:\n- \"Our Productivity and Business Processes segment consists of products and services in our portfolio of productivity, communication, and information services, spanning a variety of devices and platforms.\"\n\n### Customer Types:\n- large enterprises | primary target for Microsoft 365 Commercial and Dynamics solutions\n- small businesses | explicitly mentioned target for Dynamics and Microsoft 365 Commercial growth initiatives\n- consumers | target for Microsoft 365 Consumer subscriptions and LinkedIn Premium\n- developers | target for Power Apps and Power Automate low-code platforms within Dynamics 365\n- healthcare organizations | served via LinkedIn Talent Solutions and implied professional services\n- educational institutions | served via LinkedIn learning pathways and implied productivity solutions\n\n### Channels:\n- direct sales | Enterprise Agreements and Enterprise Services contracts for volume licensing; Enterprise Agreement Software Advisors (ESAs)\n- resellers | Licensing Solution Partners (LSPs) for large organizations, Value-Added Resellers (VARs) for small and medium organizations, Cloud Solution Provider program partners\n- distributors | independent non-exclusive distributors supplying resellers\n- online | digital marketplaces for cloud services and consumer subscriptions\n- system integrators | partners advising on licensing and performing consulting functions\n\n## [Segment] Intelligent Cloud\n### Role in Business Model:\nPublic, private, and hybrid server products and cloud services that power modern business and developers. This segment captures value through consumption-based cloud computing (Azure), developer collaboration platforms (GitHub), healthcare AI solutions (Nuance), on-premises server licensing, and enterprise support services. The segment benefits from three economies of scale in datacenter operations: lower cost per unit computational resources, aggregated demand pattern utilization, and multi-tenancy labor cost reductions.\n\n### Explicit Support:\n- \"Our Intelligent Cloud segment consists of our public, private, and hybrid server products and cloud services that power modern business and developers.\"\n\n### Customer Types:\n- large enterprises | primary consumers of Azure cloud services and server infrastructure\n- developers | explicit target for Azure, GitHub, and Azure AI Foundry platform\n- IT professionals | explicit target for server products and management tools\n- healthcare organizations | explicit target for Nuance Healthcare cloud services\n- government agencies | Select Plus agreements designed for government organizations\n- educational institutions | Select Plus agreements designed for academic organizations\n\n### Channels:\n- direct sales | Enterprise Agreements and direct cloud service subscriptions\n- resellers | Cloud Solution Provider program partners\n- distributors | supplying indirect channel partners\n- system integrators | partners developing and deploying server solutions\n- managed service providers | Cloud Solution Provider program enabling partners to provision and manage customer subscriptions\n- OEMs | licenses sold to OEMs for server software pre-installation\n\n## [Segment] More Personal Computing\n### Role in Business Model:\nProducts and services centering the customer experience with Microsoft technology, including operating system licensing through OEM pre-installation (Windows), first-party device hardware (Surface), gaming platforms (Xbox), and search/advertising inventory (Bing). Revenue derives from OEM licensing, hardware sales, gaming subscriptions, content transactions, and advertising. The segment explicitly excludes Windows Commercial volume licensing, which is reported within Productivity and Business Processes.\n\n### Explicit Support:\n- \"Our More Personal Computing segment consists of products and services that put customers at the center of the experience with our technology.\"\n\n### Customer Types:\n- consumers | primary target for Windows OEM (non-Pro), Microsoft 365 Consumer, Xbox, and search services\n- large enterprises | target for Windows Pro OEM licensing and Surface devices for organizations\n- small businesses | target for Windows commercial licenses and device procurement\n- educational institutions | explicit target for Surface devices (\"students\")\n\n### Channels:\n- OEMs | primary distribution for Windows operating system pre-installed on devices; includes direct OEM agreements (Dell, HP, Lenovo) and system builders\n- retail | third-party retailers for Surface devices and Xbox hardware\n- online | digital marketplaces for gaming subscriptions, search, and cloud services\n- direct sales | for commercial Windows volume licensing\n\n# OFFERINGS\n## [Offering] Microsoft 365 Commercial\n### Role in Business Model:\nAI-powered business productivity platform that bundles Office applications, Windows commercial services, security tools, and collaboration software for organizational deployment. Serves as the anchor commercial productivity suite driving subscription revenue and user expansion across enterprise and SMB markets. Explicitly incorporates both cloud and on-premises licensing of Windows Commercial and Office as components of the platform offering.\n\n### Explicit Support:\n- \"Microsoft 365 Commercial is an AI-powered business and productivity solutions platform that brings together Office, Windows, Microsoft 365 Copilot, and Enterprise Mobility + Security to help organizations empower their employees.\"\n- \"Microsoft 365 Commercial products and cloud services, including Microsoft 365 Commercial cloud... and Microsoft 365 Commercial products, comprising Windows Commercial on-premises and Office licensed on-premises.\"\n\n### Segment Anchors:\n- Productivity and Business Processes | explicitly listed as primary component of this segment\n\n### Parent Offering:\n- none | top-level offering family\n\n### Child Offerings:\n- Enterprise Mobility + Security | component of Microsoft 365 Commercial cloud services providing endpoint security and identity management\n- Windows Commercial cloud portion | cloud-based Windows services included in the platform\n- Windows Commercial on-premises | enterprise volume-licensed Windows operating system for on-premises deployment\n- Office licensed on-premises | enterprise volume-licensed Office applications for on-premises deployment\n- Microsoft 365 Copilot | AI assistant component integrated into the platform\n- Exchange | communication service within the platform\n- SharePoint | collaboration service within the platform\n- Microsoft Teams | communication and collaboration hub within the platform\n- Microsoft 365 Security and Compliance | security and compliance component\n- Power BI per-user | business analytics component included in the platform\n\n### Channels:\n- none | inherits segment channels (direct sales, resellers, distributors)\n\n### Revenue Models:\n- subscription | Microsoft 365 Commercial cloud services\n- licensing | Office licensed on-premises and Windows Commercial on-premises\n\n## [Offering] Microsoft 365 Consumer\n### Role in Business Model:\nPersonal productivity and creativity suite designed for individual users, offering cloud-based subscriptions and on-premises licensed products for personal use. Revenue is driven by subscription demand as well as advertising-supported communication and storage services.\n\n### Explicit Support:\n- \"Microsoft 365 Consumer products and cloud services, including Microsoft 365 Consumer subscriptions, Office licensed on-premises, and other consumer services.\"\n- \"Microsoft 365 Consumer cloud revenue is also affected by the demand for communication and storage through Outlook.com and OneDrive, which is largely driven by subscriptions and advertising.\"\n\n### Segment Anchors:\n- Productivity and Business Processes | explicitly listed within this segment\n\n### Parent Offering:\n- none | top-level offering family distinct from commercial variant\n\n### Child Offerings:\n- Office licensed on-premises | consumer packaged Office products for local installation\n- Outlook.com | consumer email and communication service with advertising support\n- OneDrive | consumer cloud storage service with subscription and advertising support\n\n### Channels:\n- online | digital marketplaces and online stores for cloud services\n- retail | for packaged Office products\n\n### Revenue Models:\n- subscription | Microsoft 365 Consumer subscriptions\n- licensing | Office licensed on-premises\n- advertising | driven by Outlook.com and OneDrive demand\n\n## [Offering] LinkedIn\n### Role in Business Model:\nProfessional networking platform generating revenue through AI-enabled solutions for talent acquisition, marketing, sales intelligence, and premium professional subscriptions. The platform transforms how companies hire, market, sell, and learn through both free and monetized services.\n\n### Explicit Support:\n- \"LinkedIn connects the world's professionals to make them more productive and successful and transforms the way companies hire, market, sell, and learn.\"\n\n### Segment Anchors:\n- Productivity and Business Processes | explicitly listed as component of this segment\n\n### Parent Offering:\n- none | top-level platform brand\n\n### Child Offerings:\n- Talent Solutions | subscription-based recruiting and talent management solutions\n- Marketing Solutions | advertising-based solutions for brand and content marketing\n- Premium Subscriptions | subscription-based professional services for individual members\n- Sales Solutions | subscription-based sales intelligence and prospecting tools\n\n### Channels:\n- online | digital platform delivery\n\n### Revenue Models:\n- subscription | Talent Solutions, Sales Solutions, and Premium Subscriptions\n- advertising | Marketing Solutions driven by sponsored content\n\n## [Offering] Dynamics\n### Role in Business Model:\nCloud-based and on-premises business solutions for financial management, ERP, CRM, and supply chain management, including low-code application development platforms and agentic AI capabilities for business automation.\n\n### Explicit Support:\n- \"Dynamics provides cloud-based and on-premises business solutions for financial management, enterprise resource planning ('ERP'), customer relationship management ('CRM'), and supply chain management, as well as agentic AI and other low code application development platforms.\"\n\n### Segment Anchors:\n- Productivity and Business Processes | explicitly listed as component of this segment\n\n### Parent Offering:\n- none | top-level business applications family\n\n### Child Offerings:\n- Dynamics 365 | unified set of cloud-based intelligent business applications\n- On-premises ERP and CRM | traditional licensed applications for on-premises deployment\n\n### Channels:\n- resellers | global network of channel partners providing vertical solutions and specialized services\n\n### Revenue Models:\n- subscription | Dynamics 365 cloud applications\n- licensing | on-premises ERP and CRM applications\n\n## [Offering] Dynamics 365\n### Role in Business Model:\nUnified cloud-based intelligent business applications spanning ERP, CRM, and low-code development platforms (Power Apps and Power Automate).\n\n### Explicit Support:\n- \"Dynamics 365, comprising a set of intelligent, cloud-based applications across ERP, CRM, Power Apps, and Power Automate.\"\n\n### Segment Anchors:\n- Productivity and Business Processes | child of Dynamics offering within this segment\n\n### Parent Offering:\n- Dynamics | unified cloud offering under the Dynamics business solutions family\n\n### Child Offerings:\n- Power Apps | low-code application development platform component\n- Power Automate | workflow automation and RPA component\n\n### Channels:\n- none | inherits Dynamics channel structure\n\n### Revenue Models:\n- subscription | cloud-based application consumption\n\n## [Offering] Azure\n### Role in Business Model:\nComprehensive cloud services platform offering infrastructure-as-a-service (IaaS), platform-as-a-service (PaaS), and AI services to developers and enterprises. Core consumption-based revenue driver for cloud computing workloads, including supercomputing power for AI at scale and custom-built silicon partnerships.\n\n### Explicit Support:\n- \"Azure is a comprehensive set of cloud services that offer developers, IT professionals, and enterprises freedom to build, deploy, and manage applications on any platform or device.\"\n\n### Segment Anchors:\n- Intelligent Cloud | explicitly listed under Server products and cloud services within this segment\n\n### Parent Offering:\n- none | top-level cloud platform\n\n### Child Offerings:\n- Azure AI Foundry | unified platform for developers to design, customize, and manage AI applications and agents\n- Azure Virtual Desktop | virtual desktop infrastructure and cloud PC services\n\n### Channels:\n- none | inherits segment channels\n\n### Revenue Models:\n- consumption-based | infrastructure-as-a-service and platform-as-a-service usage\n- subscription | certain cloud service commitments\n\n## [Offering] GitHub\n### Role in Business Model:\nCollaboration platform for developers to manage code, incorporate AI tools, and utilize agent-based tools across the software development lifecycle.\n\n### Explicit Support:\n- \"GitHub provides a collaboration platform for developers to manage code and incorporate AI and agent-based tools across the software development lifecycle.\"\n\n### Segment Anchors:\n- Intelligent Cloud | explicitly listed under Server products and cloud services\n\n### Parent Offering:\n- none | distinct developer platform brand\n\n### Child Offerings:\n- none | no durable named child variants specified\n\n### Channels:\n- online | cloud-based platform delivery\n\n### Revenue Models:\n- subscription | GitHub cloud services\n\n## [Offering] Nuance Healthcare\n### Role in Business Model:\nAI solutions and professional services specifically targeting the healthcare industry, including conversational AI and ambient intelligence solutions delivered via cloud services and professional services.\n\n### Explicit Support:\n- \"Nuance Healthcare provides AI solutions to the healthcare industry.\"\n\n### Segment Anchors:\n- Intelligent Cloud | explicitly listed under Server products and cloud services and Enterprise and partner services\n\n### Parent Offering:\n- none | distinct vertical healthcare offering\n\n### Child Offerings:\n- none | no durable named child variants specified\n\n### Channels:\n- none | inherits segment channels\n\n### Revenue Models:\n- subscription | Nuance Healthcare cloud services\n- service fees | Nuance professional services\n\n## [Offering] Server Products\n### Role in Business Model:\nOn-premises server infrastructure and middleware including SQL Server, Windows Server, Visual Studio, and System Center, licensed through volume programs, OEMs, and retail. Includes Client Access Licenses (CALs) providing access rights to certain server products.\n\n### Explicit Support:\n- \"Server products, comprising SQL Server, Windows Server, Visual Studio, System Center, related Client Access Licenses ('CALs'), and other on-premises offerings.\"\n\n### Segment Anchors:\n- Intelligent Cloud | explicitly listed under Server products and cloud services\n\n### Parent Offering:\n- none | top-level on-premises server family\n\n### Child Offerings:\n- SQL Server | database and business intelligence platform\n- Windows Server | server operating system platform\n- Visual Studio | software development lifecycle tools\n- System Center | server management and virtualization platform\n- Client Access Licenses (CALs) | access rights for server products\n\n### Channels:\n- OEMs | licenses sold to OEMs for pre-installation\n- retail | packaged products\n\n### Revenue Models:\n- licensing | perpetual licenses and CALs\n\n## [Offering] Enterprise and Partner Services\n### Role in Business Model:\nPortfolio of support, consulting, training, and partner enablement services assisting customers in deploying and managing Microsoft solutions, including Nuance professional services for healthcare conversational AI.\n\n### Explicit Support:\n- \"Enterprise and partner services, including Enterprise Support Services, Industry Solutions, Nuance professional services, Microsoft Partner Network, and Learning Experience.\"\n\n### Segment Anchors:\n- Intelligent Cloud | explicitly listed as distinct component of this segment\n\n### Parent Offering:\n- none | top-level services family\n\n### Child Offerings:\n- Enterprise Support Services | technical support services\n- Industry Solutions | vertical-specific consulting and deployment services\n- Nuance Professional Services | healthcare-specific professional services for conversational AI and ambient intelligence\n- Microsoft Partner Network | partner enablement and certification programs\n- Learning Experience | training and certification for developers and IT professionals\n\n### Channels:\n- direct sales | services contracted directly with enterprise customers\n\n### Revenue Models:\n- service fees | consulting, support, and training services\n\n## [Offering] Windows\n### Role in Business Model:\nOperating system platform licensed primarily through OEM pre-installation on computing devices, with distinct Pro and non-Pro editions serving consumer and commercial markets through the OEM channel. Distinguished from Windows Commercial volume licensing reported in Productivity and Business Processes.\n\n### Explicit Support:\n- \"The Windows operating system is designed to deliver a more personal computing experience for users by enabling consistency of experience, applications, and information across their devices.\"\n- \"Windows OEM licensing (Windows Pro and non-Pro licenses sold through the OEM channel)\"\n\n### Segment Anchors:\n- More Personal Computing | explicitly listed under Windows and Devices component\n\n### Parent Offering:\n- none | top-level OS platform\n\n### Child Offerings:\n- Windows OEM Pro | enterprise and business edition licensed through OEMs\n- Windows OEM non-Pro | consumer edition licensed through OEMs\n\n### Channels:\n- OEMs | primary distribution through direct OEM agreements and system builders\n\n### Revenue Models:\n- licensing | OEM licenses\n\n## [Offering] Surface\n### Role in Business Model:\nFirst-party hardware devices including tablets, laptops (Copilot+ PCs), and related accessories designed to demonstrate Windows integration and productivity scenarios.\n\n### Explicit Support:\n- \"We design and sell devices, such as Surface (including Copilot+ PCs) and PC accessories.\"\n\n### Segment Anchors:\n- More Personal Computing | explicitly listed under Windows and Devices component\n\n### Parent Offering:\n- none | top-level device hardware family\n\n### Child Offerings:\n- Copilot+ PCs | specific AI-enabled PC variant within Surface family\n\n### Channels:\n- retail | third-party retailers\n- online | digital stores\n\n### Revenue Models:\n- hardware sales | device and accessory revenue\n\n## [Offering] Gaming\n### Role in Business Model:\nInteractive entertainment platform spanning console hardware, game content (first and third-party), subscription services (Game Pass), cloud gaming, and advertising. Content is developed through first-party studios creating exclusive gaming experiences that anchor the Xbox Game Pass subscription service.\n\n### Explicit Support:\n- \"Gaming, including Xbox hardware and Xbox content and services, comprising first- and third-party content (including games and in-game content), Xbox Game Pass and other subscriptions, Xbox Cloud Gaming, advertising, and other cloud services.\"\n\n### Segment Anchors:\n- More Personal Computing | explicitly listed as distinct component of this segment\n\n### Parent Offering:\n- none | top-level gaming franchise\n\n### Child Offerings:\n- Xbox Hardware | physical console devices\n- Xbox Game Pass | subscription service and gaming community with curated library access\n- Xbox Cloud Gaming | cloud-based game streaming service\n- Xbox Digital Content | first- and third-party games and in-game content transactions\n- Xbox Advertising | advertising revenue from gaming platform\n\n### Channels:\n- retail | third-party retailers for hardware\n- online | digital store for content and subscriptions\n\n### Revenue Models:\n- hardware sales | Xbox console revenue\n- subscription | Xbox Game Pass and other subscriptions\n- transaction fees | in-game content and game sales\n- advertising | gaming platform advertising\n\n## [Offering] Search and News Advertising\n### Role in Business Model:\nSearch engine and content advertising platform delivering relevant advertising to global audiences through search results, native content, and display inventory. Includes AI companion integration (Copilot) and third-party affiliate partnerships for search distribution.\n\n### Explicit Support:\n- \"Search and news advertising, comprising Bing and Copilot, Microsoft News, Microsoft Edge, and third-party affiliates.\"\n\n### Segment Anchors:\n- More Personal Computing | explicitly listed as distinct component of this segment\n\n### Parent Offering:\n- none | top-level advertising platform family\n\n### Child Offerings:\n- Bing and Copilot | search engine and AI companion\n- Microsoft Edge | browser platform with integrated search\n- Microsoft News | content and news aggregation platform\n\n### Channels:\n- online | digital platform delivery inherent to the service\n\n### Revenue Models:\n- advertising | search, native, and display advertising revenue\n\n# CORPORATE SCOPE\n## Operating Geographies:\n- Worldwide | explicit commitment to \"every country around the world\" with regional operations centers in Americas, Asia Pacific, Europe, and Middle East; datacenter operations throughout these regions\n\n## Key Partners:\n- Dell | multinational OEM with direct distribution agreement for Windows pre-installation\n- Hewlett-Packard | multinational OEM with direct distribution agreement for Windows pre-installation\n- Lenovo | multinational OEM with direct distribution agreement for Windows pre-installation\n- Chip manufacturers | strategic partners providing GPUs and custom silicon for Azure AI supercomputing infrastructure\n- Third-party manufacturers | contract manufacturers engaged for production of Surface and Xbox hardware devices",
+  "compiled_graph_extraction": {
+    "extraction_notes": "Compiled from analyst memo preserving three-segment structure, offering family hierarchies with parent-child relationships, and differentiated channel patterns at offering level where specified",
+    "triples": [
+      {
+        "subject": "Microsoft",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Productivity and Business Processes",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Microsoft",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Intelligent Cloud",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Microsoft",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "More Personal Computing",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Microsoft",
+        "subject_type": "Company",
+        "relation": "OPERATES_IN",
+        "object": "Worldwide",
+        "object_type": "Place"
+      },
+      {
+        "subject": "Microsoft",
+        "subject_type": "Company",
+        "relation": "PARTNERS_WITH",
+        "object": "Dell",
+        "object_type": "Company"
+      },
+      {
+        "subject": "Microsoft",
+        "subject_type": "Company",
+        "relation": "PARTNERS_WITH",
+        "object": "Hewlett-Packard",
+        "object_type": "Company"
+      },
+      {
+        "subject": "Microsoft",
+        "subject_type": "Company",
+        "relation": "PARTNERS_WITH",
+        "object": "Lenovo",
+        "object_type": "Company"
+      },
+      {
+        "subject": "Microsoft",
+        "subject_type": "Company",
+        "relation": "PARTNERS_WITH",
+        "object": "Chip manufacturers",
+        "object_type": "Company"
+      },
+      {
+        "subject": "Microsoft",
+        "subject_type": "Company",
+        "relation": "PARTNERS_WITH",
+        "object": "Third-party manufacturers",
+        "object_type": "Company"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "developers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "healthcare organizations",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "developers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "IT professionals",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "healthcare organizations",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "distributors",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "system integrators",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "distributors",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "system integrators",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "managed service providers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "OEMs",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "OEMs",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Microsoft 365 Commercial",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Microsoft 365 Consumer",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "LinkedIn",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Dynamics",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Azure",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "GitHub",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Nuance Healthcare",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Server Products",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Enterprise and Partner Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Windows",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Surface",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Gaming",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Search and News Advertising",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Commercial",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Enterprise Mobility + Security",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Commercial",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Windows Commercial cloud portion",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Commercial",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Windows Commercial on-premises",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Commercial",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Office licensed on-premises",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Commercial",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Microsoft 365 Copilot",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Commercial",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Exchange",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Commercial",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "SharePoint",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Commercial",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Microsoft Teams",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Commercial",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Microsoft 365 Security and Compliance",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Commercial",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Power BI per-user",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Consumer",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Outlook.com",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Consumer",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "OneDrive",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "LinkedIn",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Talent Solutions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "LinkedIn",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Marketing Solutions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "LinkedIn",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Premium Subscriptions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "LinkedIn",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Sales Solutions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Dynamics",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Dynamics 365",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Dynamics",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "On-premises ERP and CRM",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Dynamics 365",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Power Apps",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Dynamics 365",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Power Automate",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Azure",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Azure AI Foundry",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Azure",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Azure Virtual Desktop",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Server Products",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "SQL Server",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Server Products",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Windows Server",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Server Products",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Visual Studio",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Server Products",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "System Center",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Server Products",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Client Access Licenses (CALs)",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Enterprise and Partner Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Enterprise Support Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Enterprise and Partner Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Industry Solutions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Enterprise and Partner Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Nuance Professional Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Enterprise and Partner Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Microsoft Partner Network",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Enterprise and Partner Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Learning Experience",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Windows",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Windows OEM Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Windows",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Windows OEM non-Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Surface",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Copilot+ PCs",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Gaming",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Xbox Hardware",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Gaming",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Xbox Game Pass",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Gaming",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Xbox Cloud Gaming",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Gaming",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Xbox Digital Content",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Gaming",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Xbox Advertising",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Search and News Advertising",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Bing and Copilot",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Search and News Advertising",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Microsoft Edge",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Search and News Advertising",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Microsoft News",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Commercial",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Microsoft 365 Commercial",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Microsoft 365 Consumer",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Microsoft 365 Consumer",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Microsoft 365 Consumer",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "LinkedIn",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "LinkedIn",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Dynamics",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Dynamics",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Azure",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "consumption-based",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Azure",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "GitHub",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Nuance Healthcare",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Nuance Healthcare",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Server Products",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Enterprise and Partner Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Windows",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Surface",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Gaming",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Gaming",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Gaming",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "transaction fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Gaming",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Search and News Advertising",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      }
+    ]
+  },
+  "final_extraction": {
+    "extraction_notes": "Critiqued for overreach: removed category-level partner nodes ('Chip manufacturers','Third-party manufacturers') that lack specific company names per ontology Company definition; removed 'Windows Commercial cloud portion' as insufficiently distinct named offering in memo (memo cites 'Windows Commercial on-premises' explicitly but treats cloud component as part of bundled cloud services without standalone naming); preserved all other segment, offering hierarchy, customer, channel, and revenue model edges as memo-supported",
+    "triples": [
+      {
+        "subject": "Microsoft",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Productivity and Business Processes",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Microsoft",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Intelligent Cloud",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Microsoft",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "More Personal Computing",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Microsoft",
+        "subject_type": "Company",
+        "relation": "OPERATES_IN",
+        "object": "Worldwide",
+        "object_type": "Place"
+      },
+      {
+        "subject": "Microsoft",
+        "subject_type": "Company",
+        "relation": "PARTNERS_WITH",
+        "object": "Dell",
+        "object_type": "Company"
+      },
+      {
+        "subject": "Microsoft",
+        "subject_type": "Company",
+        "relation": "PARTNERS_WITH",
+        "object": "Hewlett-Packard",
+        "object_type": "Company"
+      },
+      {
+        "subject": "Microsoft",
+        "subject_type": "Company",
+        "relation": "PARTNERS_WITH",
+        "object": "Lenovo",
+        "object_type": "Company"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "developers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "healthcare organizations",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "developers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "IT professionals",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "healthcare organizations",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "distributors",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "system integrators",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "distributors",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "system integrators",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "managed service providers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "OEMs",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "OEMs",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Microsoft 365 Commercial",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Microsoft 365 Consumer",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "LinkedIn",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Productivity and Business Processes",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Dynamics",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Azure",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "GitHub",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Nuance Healthcare",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Server Products",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Intelligent Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Enterprise and Partner Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Windows",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Surface",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Gaming",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "More Personal Computing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Search and News Advertising",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Commercial",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Enterprise Mobility + Security",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Commercial",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Windows Commercial on-premises",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Commercial",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Office licensed on-premises",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Commercial",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Microsoft 365 Copilot",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Commercial",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Exchange",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Commercial",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "SharePoint",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Commercial",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Microsoft Teams",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Commercial",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Microsoft 365 Security and Compliance",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Commercial",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Power BI per-user",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Consumer",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Outlook.com",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Consumer",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "OneDrive",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "LinkedIn",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Talent Solutions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "LinkedIn",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Marketing Solutions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "LinkedIn",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Premium Subscriptions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "LinkedIn",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Sales Solutions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Dynamics",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Dynamics 365",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Dynamics",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "On-premises ERP and CRM",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Dynamics 365",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Power Apps",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Dynamics 365",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Power Automate",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Azure",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Azure AI Foundry",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Azure",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Azure Virtual Desktop",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Server Products",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "SQL Server",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Server Products",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Windows Server",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Server Products",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Visual Studio",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Server Products",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "System Center",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Server Products",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Client Access Licenses (CALs)",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Enterprise and Partner Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Enterprise Support Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Enterprise and Partner Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Industry Solutions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Enterprise and Partner Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Nuance Professional Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Enterprise and Partner Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Microsoft Partner Network",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Enterprise and Partner Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Learning Experience",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Windows",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Windows OEM Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Windows",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Windows OEM non-Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Surface",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Copilot+ PCs",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Gaming",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Xbox Hardware",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Gaming",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Xbox Game Pass",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Gaming",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Xbox Cloud Gaming",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Gaming",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Xbox Digital Content",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Gaming",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Xbox Advertising",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Search and News Advertising",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Bing and Copilot",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Search and News Advertising",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Microsoft Edge",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Search and News Advertising",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Microsoft News",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Microsoft 365 Commercial",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Microsoft 365 Commercial",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Microsoft 365 Consumer",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Microsoft 365 Consumer",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Microsoft 365 Consumer",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "LinkedIn",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "LinkedIn",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Dynamics",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Dynamics",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Azure",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "consumption-based",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Azure",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "GitHub",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Nuance Healthcare",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Nuance Healthcare",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Server Products",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Enterprise and Partner Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Windows",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Surface",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Gaming",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Gaming",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Gaming",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "transaction fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Gaming",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Search and News Advertising",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      }
+    ]
+  }
+}

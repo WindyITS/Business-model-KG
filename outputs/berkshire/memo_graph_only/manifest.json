@@ -1,0 +1,10 @@
+{
+  "company_name": "Berkshire",
+  "company_slug": "berkshire",
+  "pipeline": "memo_graph_only",
+  "latest_available": true,
+  "latest_run_dir": "outputs/berkshire/memo_graph_only/latest",
+  "available_run_tokens": [],
+  "failed_run_tokens": [],
+  "updated_at": "2026-04-27T20:06:43.962722+00:00"
+}

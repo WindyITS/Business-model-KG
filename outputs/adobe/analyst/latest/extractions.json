@@ -1,0 +1,1470 @@
+{
+  "foundation_memo": "# ANALYTICAL FRAME\n## Summary:\nAdobe Inc. operates a global software business centered on creativity, productivity, and customer experience management. The company organizes its operations into three reportable segments—Digital Media, Digital Experience, and Publishing and Advertising—serving business professionals, consumers, creative professionals, and marketing professionals. The business model is predominantly subscription-based, with revenue generated through cloud-hosted software-as-a-service (SaaS) offerings, term subscriptions, and managed services. Adobe's strategy focuses on integrating generative AI (Firefly) across its platforms, offering tiered subscription plans to cater to individual consumers, small businesses, and large enterprises, while maintaining direct sales forces for enterprise customers and digital channels for broader markets.\n\n## Explicit Support:\n- \"In fiscal 2025, our business consisted of three reportable segments: Digital Media, Digital Experience and Publishing and Advertising.\"\n- \"We license our software-as-a-service solutions to customers over multi-year service terms and license the majority of our software products through a subscription model...\"\n- \"We market our solutions directly to enterprise customers through our sales force... and directly to businesses and consumers.\"\n- \"Our focus revolves around serving our customer audiences: business professionals, consumers, creators, creative professionals and marketing professionals.\"\n\n# SEGMENTS\n## [Segment] Digital Media\n### Role in Business Model:\nDigital Media serves the productivity and creativity needs of business professionals, consumers, creators, and creative professionals. This segment generates revenue primarily through subscription offerings for document productivity (Acrobat), content creation (Creative Cloud), and AI-powered creative tools (Firefly). It represents Adobe's foundational creative and productivity franchise.\n\n### Explicit Support:\n- \"Digital Media. To serve the productivity and creativity needs of business professionals, consumers, creators and creative professionals, our Digital Media solutions include our Adobe Acrobat solutions, Adobe Express and our Creative Cloud subscriptions and flagship apps... as well as Adobe Firefly.\"\n\n### Customer Types:\n- consumers | Served through freemium models (Acrobat Reader, limited Express) and individual subscriptions.\n- small businesses | Served through Acrobat Standard and Pro plans, and Creative Cloud individual subscriptions.\n- large enterprises | Served through Creative Cloud Pro and enterprise Acrobat deployments.\n\n### Channels:\n- direct sales | Used for enterprise customer engagements and large creative deployments.\n- online | Primary channel for individual subscriptions through adobe.com and app stores.\n- marketplaces | App stores for mobile and desktop software distribution.\n\n## [Segment] Digital Experience\n### Role in Business Model:\nDigital Experience serves marketing professionals and large enterprises with end-to-end content supply chain solutions and customer experience orchestration. This segment provides enterprise-grade platforms for data management, content management, marketing automation, and commerce, monetized primarily through subscription and service fees. It integrates with the creative tools from Digital Media to form a unified content workflow.\n\n### Explicit Support:\n- \"Digital Experience. To serve the end-to-end content supply chain needs of marketing professionals, our Digital Experience solutions include Adobe Experience Platform and native applications...\"\n\n### Customer Types:\n- large enterprises | Primary target for Experience Platform, GenStudio, and enterprise marketing solutions.\n- mid-market companies | Served through scaled versions of marketing automation and analytics tools.\n\n### Channels:\n- direct sales | Primary channel for enterprise customers through dedicated sales force and field offices.\n- system integrators | Partners who implement and integrate Adobe solutions for enterprise customers.\n- managed service providers | Partners who operate Adobe platforms for customers.\n\n## [Segment] Publishing and Advertising\n### Role in Business Model:\nPublishing and Advertising contains legacy solutions including eLearning, technical document publishing, web conferencing, and Adobe Advertising. This segment represents mature, specialized offerings that are distinct from the core Digital Media and Digital Experience growth engines, with revenue from advertising, licensing, and service fees.\n\n### Explicit Support:\n- \"Publishing and Advertising. Our Publishing and Advertising offerings contain legacy solutions including eLearning solutions, technical document publishing, web conferencing, document and forms platform, web App development, high-end printing through Adobe PostScript and Adobe PDF standards and our Adobe Advertising offerings.\"\n\n### Customer Types:\n- large enterprises | For enterprise advertising, technical publishing, and legacy platform solutions.\n\n### Channels:\n- direct sales | For enterprise advertising and publishing contracts.\n- OEMs | For PostScript and PDF standards licensing to hardware manufacturers.\n\n# OFFERINGS\n## [Offering] Acrobat Solutions\n### Role in Business Model:\nAcrobat Solutions is Adobe's document productivity family, enabling users to consume, edit, sign, and create PDF documents across platforms. It serves as a core monetization engine for the Business Professionals & Consumers customer group through tiered subscription plans (Studio, Pro, Standard) and freemium distribution (Reader), with AI capabilities offered as add-ons.\n\n### Explicit Support:\n- \"Acrobat is our family of productivity solutions that allows users to consume, edit, sign, and create documents across platforms...\"\n- \"Our Adobe Acrobat solutions are available on desktop, mobile, and the web with Acrobat Studio, Acrobat Pro, Acrobat Standard tiered plans, and for free with Adobe Acrobat Reader.\"\n\n### Segment Anchors:\n- Digital Media | Primary segment for document productivity solutions.\n\n### Parent Offering:\n- none | This is a top-level offering family.\n\n### Child Offerings:\n- Acrobat Studio | All-in-one platform uniting Acrobat, Express, and AI agents for productivity and creation.\n- Adobe Acrobat | Comprehensive PDF solution with Standard and Pro tiered plans.\n- Adobe Acrobat Reader | Free software for viewing and basic annotation of PDFs.\n- Acrobat AI Assistant | Generative AI-powered conversational engine available as an add-on across Acrobat tiers.\n\n### Channels:\n- online | Primary distribution via adobe.com and app stores for individual plans.\n- direct sales | For enterprise Acrobat deployments.\n\n### Revenue Models:\n- subscription | Tiered plans (Studio, Pro, Standard) and enterprise term subscriptions.\n\n## [Offering] Adobe Express\n### Role in Business Model:\nAdobe Express is an all-in-one AI content creation application targeting novice creators and communicators. It bridges consumer and professional use cases, integrated into both Acrobat Studio (as a component) and Creative Cloud Pro (premium version), serving as a lightweight entry point into the Adobe ecosystem.\n\n### Explicit Support:\n- \"Adobe Express is our all-in-one AI content creation app for users of any level... to easily create video, marketing, and social content.\"\n- \"Acrobat Studio... unites Adobe Acrobat, Adobe Express and AI agents\"\n- \"Creative Cloud Pro includes... the premium version of Adobe Express\"\n\n### Segment Anchors:\n- Digital Media | Listed under Business Professionals & Consumers solutions.\n\n### Parent Offering:\n- none | Standalone offering integrated into multiple suites.\n\n### Child Offerings:\n- none | No named child variants in the filing.\n\n### Channels:\n- online | Distributed via adobe.com and app stores.\n\n### Revenue Models:\n- subscription | Standalone subscriptions and bundled in higher-tier suites.\n\n## [Offering] Creative Cloud Pro\n### Role in Business Model:\nCreative Cloud Pro is the flagship subscription ecosystem for creative professionals, providing access to a comprehensive suite of creative applications (photography, design, video, 3D), cloud storage, and AI-powered features. It serves as the primary monetization vehicle for professional creative workflows, available as a bundle or through individual app subscriptions.\n\n### Explicit Support:\n- \"Adobe Creative Cloud Pro is a cloud-based subscription to an ecosystem of apps that enables creative professionals and enthusiasts alike to express themselves...\"\n- \"Subscribers have access to cloud storage... Creative Cloud Pro includes the Adobe Firefly web app, the premium version of Adobe Express...\"\n\n### Segment Anchors:\n- Digital Media | Primary offering for creative professionals within this segment.\n\n### Parent Offering:\n- none | Top-level subscription platform.\n\n### Child Offerings:\n- Adobe Photoshop | Advanced digital imaging and design app.\n- Adobe Lightroom | Cloud-based photo editing and organization app.\n- Adobe Illustrator | Industry-standard vector graphics application.\n- Adobe Premiere Pro | Nonlinear video editing application for professional filmmakers.\n- Adobe After Effects | Motion graphics and visual effects application.\n- Adobe Substance 3D Collection | Ecosystem of 3D apps including Stager, Painter, Sampler, Assets, and Modeler.\n\n### Channels:\n- online | Primary distribution through adobe.com.\n- direct sales | For enterprise creative deployments.\n\n### Revenue Models:\n- subscription | Monthly/annual subscription plans for the full ecosystem or individual apps.\n\n## [Offering] Adobe Firefly Solutions\n### Role in Business Model:\nAdobe Firefly is the company's family of creative generative AI models spanning image, video, vector, and audio generation. It operates as a cross-platform capability infused across Creative Cloud, Acrobat, and Experience Cloud, while also offered as standalone tiered subscriptions (Standard, Pro, Premium) and enterprise services (Custom Models, Foundry, Services).\n\n### Explicit Support:\n- \"Adobe Firefly is Adobe's family of creative generative AI models that span image, video, vector, audio, and more.\"\n- \"Adobe Firefly solutions are available in tiered subscription plans: Firefly Standard, Firefly Pro and Firefly Premium.\"\n\n### Segment Anchors:\n- Digital Media | Powers creative and productivity workflows.\n- Digital Experience | Powers marketing content generation via Firefly Services in GenStudio.\n\n### Parent Offering:\n- none | Family of models and services.\n\n### Child Offerings:\n- Adobe Firefly App | AI-powered creative space for content ideation and production.\n- Adobe Firefly Custom Models | Enterprise-trained models for brand-specific content.\n- Adobe Firefly Foundry | Enterprise service for deeply customized AI models with Adobe engineering support.\n- Adobe Firefly Services | APIs and tools for automated enterprise content generation.\n- Firefly Tiered Plans | Standard, Pro, and Premium subscription levels for individual creators.\n\n### Channels:\n- online | Subscription plans via adobe.com.\n- direct sales | For Foundry and Services enterprise contracts.\n\n### Revenue Models:\n- subscription | Standard, Pro, Premium tiers.\n- consumption-based | Generative credits system for AI usage.\n- service fees | For Foundry custom model development and Services API implementation.\n\n## [Offering] Adobe Experience Platform\n### Role in Business Model:\nAdobe Experience Platform is the foundational customer data platform for enterprise experience orchestration. It unifies customer data, provides AI-driven insights, and serves as the infrastructure for activating applications like Real-Time CDP, Journey Optimizer, and Customer Journey Analytics. It represents the technical backbone of the Digital Experience segment.\n\n### Explicit Support:\n- \"Adobe Experience Platform is a purpose-built platform for customer experience orchestration that helps businesses collect, connect and activate their known and unknown customer data...\"\n- \"Our customers can leverage Adobe Experience Platform to activate AI-driven insights across apps such as Adobe Real-Time Customer Data Platform, Adobe Customer Journey Analytics and Adobe Journey Optimizer.\"\n\n### Segment Anchors:\n- Digital Experience | Core platform for this segment.\n\n### Parent Offering:\n- none | Foundational platform.\n\n### Child Offerings:\n- Adobe Real-Time Customer Data Platform | App for real-time personalization and data unification.\n- Adobe Customer Journey Analytics | App for cross-channel journey analysis and visualization.\n- Adobe Journey Optimizer | App for orchestrating personalized customer journeys.\n- Adobe Agent Orchestrator | Technology framework powering agentic capabilities on the platform.\n- Adobe Experience Platform AI Assistant | Conversational AI interface for platform productivity.\n\n### Channels:\n- direct sales | Enterprise platform sales through field teams.\n- system integrators | Implementation partners.\n\n### Revenue Models:\n- subscription | SaaS licensing for platform and attached apps.\n- service fees | Professional services for implementation and consulting.\n\n## [Offering] Adobe GenStudio\n### Role in Business Model:\nAdobe GenStudio is an end-to-end content supply chain solution that unifies creative production with marketing execution. It bundles multiple Adobe solutions (Experience Manager Assets, Workfront, Firefly Services) and third-party integrations to serve enterprise marketing teams with AI-first content creation and performance marketing capabilities.\n\n### Explicit Support:\n- \"Adobe GenStudio is an end-to-end, content supply chain solution for ideation, creation, production, activation, delivery, asset management, analytics and insights.\"\n- \"Adobe solutions offered within Adobe GenStudio include Adobe Experience Manager Assets, Adobe Workfront, Firefly Services and Adobe GenStudio for Performance Marketing...\"\n\n### Segment Anchors:\n- Digital Experience | Primary solution for marketing content supply chain.\n\n### Parent Offering:\n- none | Integrated solution suite.\n\n### Child Offerings:\n- GenStudio for Performance Marketing | AI-first solution for creating and optimizing on-brand digital experiences.\n- Adobe Experience Manager Assets | Cloud-native digital asset management (integrated component).\n- Adobe Workfront | Work management application for marketing operations (integrated component).\n- Firefly Services | Content generation APIs (integrated component).\n\n### Channels:\n- direct sales | Enterprise solution sales.\n\n### Revenue Models:\n- subscription | Enterprise subscription for the GenStudio solution.\n- service fees | Implementation and consulting services.\n\n## [Offering] Adobe Experience Manager\n### Role in Business Model:\nAdobe Experience Manager combines digital asset management, content management, and digital document solutions. It provides cloud-native infrastructure for creating, managing, and delivering personalized digital experiences across web, mobile, and forms, serving as a core content infrastructure offering within Digital Experience.\n\n### Explicit Support:\n- \"Adobe Experience Manager combines digital asset management with a content management system and an end-to-end digital document solution.\"\n\n### Segment Anchors:\n- Digital Experience | Content management offering.\n\n### Parent Offering:\n- none | Standalone offering; Assets component also available within GenStudio.\n\n### Child Offerings:\n- Adobe Experience Manager Sites | Content management and optimization system for web and mobile.\n- Adobe Experience Manager Assets | Cloud-native digital asset management.\n- Adobe Experience Manager Forms | Digital customer onboarding and enrollment solution.\n\n### Channels:\n- direct sales | Enterprise sales.\n- system integrators | For implementation.\n\n### Revenue Models:\n- subscription | Cloud-native SaaS offering.\n\n## [Offering] Adobe Journey Optimizer\n### Role in Business Model:\nAdobe Journey Optimizer is a scalable application built on Experience Platform that enables real-time orchestration of personalized customer journeys across B2B and B2C channels. It allows brands to manage inbound engagement and outbound campaigns within a single application.\n\n### Explicit Support:\n- \"Adobe Journey Optimizer is a scalable app built on Adobe Experience Platform that allows businesses to orchestrate and deliver personalized, connected customer journeys across any app, surface, screen, or channel across B2B and B2C.\"\n\n### Segment Anchors:\n- Digital Experience | Customer journey orchestration solution.\n\n### Parent Offering:\n- none | Built on Experience Platform but positioned as distinct application.\n\n### Child Offerings:\n- none | No named child variants.\n\n### Channels:\n- direct sales | Enterprise sales force.\n\n### Revenue Models:\n- subscription | SaaS application licensing.\n\n## [Offering] Adobe Marketo Engage\n### Role in Business Model:\nAdobe Marketo Engage is a B2B-focused customer experience management solution for cross-channel campaigns, integrating lead nurturing, account-based marketing, and sales alignment. It specifically targets B2B marketing professionals within the Digital Experience segment.\n\n### Explicit Support:\n- \"Adobe Marketo Engage is a customer experience management solution optimized for B2B, cross-channel campaigns...\"\n\n### Segment Anchors:\n- Digital Experience | B2B marketing automation solution.\n\n### Parent Offering:\n- none | Distinct application integrated with Experience Platform.\n\n### Child Offerings:\n- none | No named child variants in filing.\n\n### Channels:\n- direct sales | Enterprise B2B sales.\n\n### Revenue Models:\n- subscription | SaaS subscription model.\n\n## [Offering] Adobe Commerce\n### Role in Business Model:\nAdobe Commerce provides a customizable, end-to-end e-commerce platform for managing B2B, B2C, and direct-to-consumer commerce experiences. It extends Adobe's digital experience capabilities into transaction processing and order management.\n\n### Explicit Support:\n- \"Adobe Commerce offers a highly customizable, end-to-end e-commerce platform to manage, personalize and optimize the commerce experience for physical and digital goods across every touchpoint...\"\n\n### Segment Anchors:\n- Digital Experience | Commerce solution within segment.\n\n### Parent Offering:\n- none | Standalone platform.\n\n### Child Offerings:\n- none | No named child variants.\n\n### Channels:\n- direct sales | Enterprise commerce contracts.\n- system integrators | For implementation and customization.\n\n### Revenue Models:\n- subscription | Platform subscription.\n\n## [Offering] Adobe Workfront\n### Role in Business Model:\nAdobe Workfront provides unified work management for marketing teams, enabling strategic planning, execution, and delivery of complex workflows. It is offered both as a standalone solution and as an integrated component of GenStudio, serving enterprise marketing operations.\n\n### Explicit Support:\n- \"Adobe Workfront provides a unified work management app to enable teams to work more efficiently...\"\n- \"Adobe solutions offered within Adobe GenStudio include... Adobe Workfront\"\n\n### Segment Anchors:\n- Digital Experience | Work management for marketing.\n\n### Parent Offering:\n- none | Distinct offering also integrated into GenStudio.\n\n### Child Offerings:\n- Adobe Workfront Planning | Enterprise planning module for marketing activities.\n\n### Channels:\n- direct sales | Enterprise sales.\n\n### Revenue Models:\n- subscription | SaaS work management platform.\n\n## [Offering] Adobe Advertising\n### Role in Business Model:\nAdobe Advertising is the company's offering for managing advertising campaigns and delivering data-driven advertising experiences. It is part of the Publishing and Advertising segment, representing Adobe's advertising technology business.\n\n### Explicit Support:\n- \"Publishing and Advertising. Our Publishing and Advertising offerings contain... our Adobe Advertising offerings.\"\n\n### Segment Anchors:\n- Publishing and Advertising | Advertising solution within legacy segment.\n\n### Parent Offering:\n- none | Distinct offering in segment.\n\n### Child Offerings:\n- none | No named child variants.\n\n### Channels:\n- direct sales | For enterprise advertising clients.\n\n### Revenue Models:\n- advertising | Revenue from advertising services and technology.\n- service fees | Management and consulting for advertising campaigns.\n\n# CORPORATE SCOPE\n## Operating Geographies:\n- Worldwide | Adobe operates globally with field offices across North America, Europe, Asia Pacific, and Latin America, serving customers in nearly all markets worldwide.\n\n## Key Partners:\n- none | The filing mentions extensive partner ecosystems including systems integrators, agencies, third-party AI model providers, and universities, but does not name specific partner companies.",
+  "augmented_memo": "# ANALYTICAL FRAME\n## Summary:\nAdobe Inc. operates a global software business centered on creativity, productivity, and customer experience management. The company organizes its operations into three reportable segments—Digital Media, Digital Experience, and Publishing and Advertising—serving business professionals, consumers, creative professionals, marketing professionals, and developers. The business model is predominantly subscription-based, with revenue generated through cloud-hosted software-as-a-service (SaaS) offerings, term subscriptions, consumption-based generative credit systems, and managed services. Adobe's strategy focuses on integrating generative AI (Firefly) and agentic AI across its platforms, offering tiered subscription plans to cater to individual consumers, small businesses, and large enterprises, while maintaining direct sales forces for enterprise customers and digital channels for broader markets. Effective in fiscal 2026, management will combine the three segments into a single operating and reportable segment.\n\n## Explicit Support:\n- \"In fiscal 2025, our business consisted of three reportable segments: Digital Media, Digital Experience and Publishing and Advertising.\"\n- \"Effective in the first quarter of fiscal 2026, we will combine our prior segments—Digital Media, Digital Experience and Publishing and Advertising—into a single operating and reportable segment...\"\n- \"We license our software-as-a-service solutions to customers over multi-year service terms and license the majority of our software products through a subscription model...\"\n- \"We market our solutions directly to enterprise customers through our sales force... and directly to businesses and consumers.\"\n- \"Our focus revolves around serving our customer audiences: business professionals, consumers, creators, creative professionals and marketing professionals.\"\n\n# SEGMENTS\n## [Segment] Digital Media\n### Role in Business Model:\nDigital Media serves the productivity and creativity needs of business professionals, consumers, creators, and creative professionals. This segment generates revenue primarily through subscription offerings for document productivity (Acrobat), content creation (Creative Cloud), and AI-powered creative tools (Firefly). It represents Adobe's foundational creative and productivity franchise, encompassing both freemium entry points and professional tiered subscriptions.\n\n### Explicit Support:\n- \"Digital Media. To serve the productivity and creativity needs of business professionals, consumers, creators and creative professionals, our Digital Media solutions include our Adobe Acrobat solutions, Adobe Express and our Creative Cloud subscriptions and flagship apps... as well as Adobe Firefly.\"\n\n### Customer Types:\n- consumers | Served through freemium models (Acrobat Reader, limited Express, Firefly free plans) and individual subscriptions.\n- small businesses | Served through Acrobat Standard and Pro plans, Creative Cloud individual subscriptions, and Photography Plans.\n- large enterprises | Served through Creative Cloud Pro, enterprise Acrobat deployments, and Firefly enterprise services.\n- developers | Served through SDKs, APIs, and developer tools for platform extension.\n\n### Channels:\n- direct sales | Used for enterprise customer engagements and large creative deployments.\n- online | Primary channel for individual subscriptions through adobe.com and app stores.\n- marketplaces | App stores for mobile and desktop software distribution.\n- retailers | Physical and digital retail channels for software distribution.\n- OEMs | For preinstallation and bundling agreements.\n\n## [Segment] Digital Experience\n### Role in Business Model:\nDigital Experience serves marketing professionals, IT professionals, and large enterprises with end-to-end content supply chain solutions and customer experience orchestration. This segment provides enterprise-grade platforms for data management, content management, marketing automation, analytics, and commerce, monetized primarily through subscription and service fees. It integrates with the creative tools from Digital Media to form a unified content workflow, leveraging Adobe Experience Platform as its technical backbone.\n\n### Explicit Support:\n- \"Digital Experience. To serve the end-to-end content supply chain needs of marketing professionals, our Digital Experience solutions include Adobe Experience Platform and native applications...\"\n\n### Customer Types:\n- large enterprises | Primary target for Experience Platform, GenStudio, and enterprise marketing solutions.\n- mid-market companies | Served through scaled versions of marketing automation and analytics tools.\n- marketing professionals | End users of campaign management, content supply chain, and journey orchestration tools.\n- IT professionals | Technical staff responsible for platform implementation, data governance, and system integration.\n\n### Channels:\n- direct sales | Primary channel for enterprise customers through dedicated sales force and field offices.\n- system integrators | Partners who implement and integrate Adobe solutions for enterprise customers.\n- managed service providers | Partners who operate Adobe platforms for customers.\n\n## [Segment] Publishing and Advertising\n### Role in Business Model:\nPublishing and Advertising contains legacy solutions including eLearning solutions, technical document publishing, web conferencing, document and forms platforms, web application development, high-end printing through Adobe PostScript and Adobe PDF standards, and Adobe Advertising offerings. This segment represents mature, specialized offerings distinct from the core Digital Media and Digital Experience growth engines, with revenue from advertising, licensing, and service fees.\n\n### Explicit Support:\n- \"Publishing and Advertising. Our Publishing and Advertising offerings contain legacy solutions including eLearning solutions, technical document publishing, web conferencing, document and forms platform, web App development, high-end printing through Adobe PostScript and Adobe PDF standards and our Adobe Advertising offerings.\"\n\n### Customer Types:\n- large enterprises | For enterprise advertising, technical publishing, and legacy platform solutions.\n- educational institutions | For eLearning solutions and technical document publishing.\n- government agencies | For secure document and forms platforms.\n- manufacturers | For PostScript and PDF standards licensing in printing hardware.\n\n### Channels:\n- direct sales | For enterprise advertising and publishing contracts.\n- OEMs | For PostScript and PDF standards licensing to hardware manufacturers.\n- distributors | For legacy product distribution.\n\n# OFFERINGS\n## [Offering] Acrobat Solutions\n### Role in Business Model:\nAcrobat Solutions is Adobe's document productivity family, enabling users to consume, edit, sign, and create PDF documents across platforms. It serves as a core monetization engine for the Business Professionals & Consumers customer group through tiered subscription plans (Studio, Pro, Standard) and freemium distribution (Reader), with AI capabilities offered as cross-tier add-ons. The offering is evolving from a document tool to an integrated productivity destination.\n\n### Explicit Support:\n- \"Acrobat is our family of productivity solutions that allows users to consume, edit, sign, and create documents across platforms...\"\n- \"Our Adobe Acrobat solutions are available on desktop, mobile, and the web with Acrobat Studio, Acrobat Pro, Acrobat Standard tiered plans, and for free with Adobe Acrobat Reader.\"\n- \"Acrobat AI Assistant is available in Acrobat Studio and offered as an add-on to Acrobat Pro, Acrobat Standard and Acrobat Reader.\"\n\n### Segment Anchors:\n- Digital Media | Primary segment for document productivity solutions.\n\n### Parent Offering:\n- none | This is a top-level offering family.\n\n### Child Offerings:\n- Acrobat Studio | All-in-one platform uniting Acrobat, Express, and AI agents for productivity and creation.\n- Adobe Acrobat | Comprehensive PDF solution with Standard and Pro tiered plans.\n- Adobe Acrobat Reader | Free software for viewing and basic annotation of PDFs.\n- Acrobat AI Assistant | Generative AI-powered conversational engine available as an add-on across Acrobat tiers.\n\n### Channels:\n- online | Primary distribution via adobe.com and app stores for individual plans.\n- direct sales | For enterprise Acrobat deployments.\n- OEMs | For preinstallation on devices.\n\n### Revenue Models:\n- subscription | Tiered plans (Studio, Pro, Standard) and enterprise term subscriptions.\n- consumption-based | Add-on AI Assistant capabilities.\n\n## [Offering] Adobe Express\n### Role in Business Model:\nAdobe Express is an all-in-one AI content creation application targeting novice creators, communicators, and small businesses. It bridges consumer and professional use cases, integrated into both Acrobat Studio (as a component) and Creative Cloud Pro (premium version), serving as a lightweight entry point into the Adobe ecosystem for social content, video, and marketing materials.\n\n### Explicit Support:\n- \"Adobe Express is our all-in-one AI content creation app for users of any level... to easily create video, marketing, and social content.\"\n- \"Acrobat Studio... unites Adobe Acrobat, Adobe Express and AI agents\"\n- \"Creative Cloud Pro includes... the premium version of Adobe Express\"\n\n### Segment Anchors:\n- Digital Media | Listed under Business Professionals & Consumers solutions.\n\n### Parent Offering:\n- none | Standalone offering integrated into multiple suites.\n\n### Child Offerings:\n- none | No named child variants in the filing.\n\n### Channels:\n- online | Distributed via adobe.com and app stores.\n\n### Revenue Models:\n- subscription | Standalone subscriptions and bundled in higher-tier suites.\n- freemium | Free tier with limited features and generative credits.\n\n## [Offering] Creative Cloud Pro\n### Role in Business Model:\nCreative Cloud Pro is the flagship subscription ecosystem for creative professionals, providing access to a comprehensive suite of creative applications (photography, design, video, 3D), cloud storage, and AI-powered features. It serves as the primary monetization vehicle for professional creative workflows, available as a bundle or through individual app subscriptions, with specific plans tailored to photography workflows.\n\n### Explicit Support:\n- \"Adobe Creative Cloud Pro is a cloud-based subscription to an ecosystem of apps that enables creative professionals and enthusiasts alike to express themselves...\"\n- \"Subscribers have access to cloud storage... Creative Cloud Pro includes the Adobe Firefly web app, the premium version of Adobe Express...\"\n- \"All apps listed below and many more are available through subscriptions to Creative Cloud Pro (except Substance 3D Apps, which are sold separately through the Adobe Substance 3D Collection plan)...\"\n\n### Segment Anchors:\n- Digital Media | Primary offering for creative professionals within this segment.\n\n### Parent Offering:\n- none | Top-level subscription platform.\n\n### Child Offerings:\n- Adobe Photoshop | Advanced digital imaging and design app.\n- Adobe Lightroom | Cloud-based photo editing and organization app.\n- Photography Plan | Specific subscription tier bundling Photoshop, Lightroom, and Lightroom Classic for photographers.\n- Adobe Illustrator | Industry-standard vector graphics application.\n- Adobe Premiere Pro | Nonlinear video editing application for professional filmmakers.\n- Adobe After Effects | Motion graphics and visual effects application.\n- Adobe Substance 3D Collection | Ecosystem of 3D apps including Stager, Painter, Sampler, Assets, and Modeler (sold separately via Collection plan).\n\n### Channels:\n- online | Primary distribution through adobe.com.\n- direct sales | For enterprise creative deployments.\n\n### Revenue Models:\n- subscription | Monthly/annual subscription plans for the full ecosystem or individual apps.\n\n## [Offering] Adobe Substance 3D Collection\n### Role in Business Model:\nAdobe Substance 3D is a specialized ecosystem of applications and assets for 3D design, texturing, and staging, serving professional 3D artists, game developers, and designers. It is monetized separately from Creative Cloud Pro through the Substance 3D Collection plan, representing a distinct product line within the Digital Media segment focused on immersive and 3D content creation.\n\n### Explicit Support:\n- \"Adobe Substance 3D is an ecosystem of apps, including Substance 3D Stager, Substance 3D Painter, Substance 3D Sampler, Substance 3D Assets and Substance 3D Modeler.\"\n- \"Substance 3D Apps... are sold separately through the Adobe Substance 3D Collection plan\"\n\n### Segment Anchors:\n- Digital Media | 3D content creation solutions.\n\n### Parent Offering:\n- none | Standalone collection, though listed as exception under Creative Cloud Pro.\n\n### Child Offerings:\n- Substance 3D Stager | App for building and assembling 3D scenes.\n- Substance 3D Painter | App for texturing 3D assets.\n- Substance 3D Sampler | App for digitizing and enriching assets.\n- Substance 3D Assets | 3D materials library for professional quality textures.\n- Substance 3D Modeler | App for spatial sculpting on desktop and VR headsets.\n\n### Channels:\n- online | Subscription via adobe.com.\n- direct sales | Enterprise licensing.\n\n### Revenue Models:\n- subscription | Collection plan subscription.\n\n## [Offering] Adobe Stock\n### Role in Business Model:\nAdobe Stock provides designers and businesses with access to millions of high-quality, curated, royalty-free photos, vectors, illustrations, videos, templates, audio, and 3D assets. It is integrated directly into Creative Cloud applications, serving as a recurring revenue stream through individual asset licensing and multi-asset subscriptions, with both free and paid collections available.\n\n### Explicit Support:\n- \"Adobe Stock provides designers and businesses with access to millions of high-quality, curated, royalty-free photos, vectors, illustrations, videos, templates, audio and 3D assets...\"\n- \"Adobe Stock assets include free and paid collections and may be licensed directly within Adobe's apps, through stock.adobe.com or as a multi-asset subscription.\"\n\n### Segment Anchors:\n- Digital Media | Creative asset marketplace.\n\n### Parent Offering:\n- none | Standalone service integrated across Creative Cloud.\n\n### Child Offerings:\n- none | No named child variants; organized by media type (photos, vectors, etc.).\n\n### Channels:\n- online | Licensed within apps or via stock.adobe.com.\n\n### Revenue Models:\n- subscription | Multi-asset subscription plans.\n- licensing | Per-asset licensing fees.\n\n## [Offering] Adobe Firefly Solutions\n### Role in Business Model:\nAdobe Firefly is the company's family of creative generative AI models spanning image, video, vector, and audio generation. It operates as a cross-platform capability infused across Creative Cloud, Acrobat, and Experience Cloud, while also offered as standalone tiered subscriptions (Standard, Pro, Premium) and enterprise services (Custom Models, Foundry, Services). The monetization includes generative credits for consumption-based AI usage.\n\n### Explicit Support:\n- \"Adobe Firefly is Adobe's family of creative generative AI models that span image, video, vector, audio, and more.\"\n- \"Adobe Firefly solutions are available in tiered subscription plans: Firefly Standard, Firefly Pro and Firefly Premium.\"\n- \"Our Creative Cloud and Firefly subscriptions include a monthly plan-specific number of generative credits for generative AI tools...\"\n\n### Segment Anchors:\n- Digital Media | Powers creative and productivity workflows.\n- Digital Experience | Powers marketing content generation via Firefly Services in GenStudio.\n\n### Parent Offering:\n- none | Family of models and services.\n\n### Child Offerings:\n- Adobe Firefly App | AI-powered creative space for content ideation and production.\n- Adobe Firefly Custom Models | Enterprise-trained models for brand-specific content.\n- Adobe Firefly Foundry | Enterprise service for deeply customized AI models with Adobe engineering support.\n- Adobe Firefly Services | APIs and tools for automated enterprise content generation.\n- Firefly Standard | Entry-tier subscription plan.\n- Firefly Pro | Mid-tier subscription plan.\n- Firefly Premium | High-tier subscription plan.\n\n### Channels:\n- online | Subscription plans via adobe.com.\n- direct sales | For Foundry and Services enterprise contracts.\n\n### Revenue Models:\n- subscription | Standard, Pro, Premium tiers.\n- consumption-based | Generative credits system for AI usage beyond plan limits.\n- service fees | For Foundry custom model development and Services API implementation.\n\n## [Offering] Adobe Experience Platform\n### Role in Business Model:\nAdobe Experience Platform is the foundational customer data platform for enterprise experience orchestration. It unifies customer data, provides AI-driven insights, and serves as the infrastructure for activating applications like Real-Time CDP, Journey Optimizer, and Customer Journey Analytics. It represents the technical backbone of the Digital Experience segment, offering an open and extensible cloud infrastructure with AI Assistant and agent orchestration capabilities.\n\n### Explicit Support:\n- \"Adobe Experience Platform is a purpose-built platform for customer experience orchestration that helps businesses collect, connect and activate their known and unknown customer data...\"\n- \"Our customers can leverage Adobe Experience Platform to activate AI-driven insights across apps such as Adobe Real-Time Customer Data Platform, Adobe Customer Journey Analytics and Adobe Journey Optimizer.\"\n\n### Segment Anchors:\n- Digital Experience | Core platform for this segment.\n\n### Parent Offering:\n- none | Foundational platform.\n\n### Child Offerings:\n- Adobe Real-Time Customer Data Platform | App for real-time personalization and data unification.\n- Adobe Customer Journey Analytics | App for cross-channel journey analysis and visualization.\n- Adobe Journey Optimizer | App for orchestrating personalized customer journeys.\n- Adobe Agent Orchestrator | Technology framework powering agentic capabilities on the platform.\n- Adobe Experience Platform AI Assistant | Conversational AI interface for platform productivity.\n\n### Channels:\n- direct sales | Enterprise platform sales through field teams.\n- system integrators | Implementation partners.\n\n### Revenue Models:\n- subscription | SaaS licensing for platform and attached apps.\n- service fees | Professional services for implementation and consulting.\n\n## [Offering] Adobe Analytics\n### Role in Business Model:\nAdobe Analytics is a comprehensive analytics solution that creates holistic business views by turning customer interactions into actionable insights. It utilizes AI and machine learning to process data from virtually any channel, delivering real-time insights for conversion optimization and experience improvement. It serves as a core intelligence offering within the Digital Experience segment.\n\n### Explicit Support:\n- \"Adobe Analytics helps our customers create a holistic view of their business by turning their customer interactions into actionable insights.\"\n\n### Segment Anchors:\n- Digital Experience | Analytics and intelligence solutions.\n\n### Parent Offering:\n- none | Distinct analytics offering; complements Customer Journey Analytics.\n\n### Child Offerings:\n- Adobe Customer Journey Analytics | Powerful analytics tools for end-to-end customer journey exploration across channels.\n- Adobe Mix Modeler | AI-powered marketing measurement and planning solution unifying marketing mix modeling and multi-touch attribution.\n\n### Channels:\n- direct sales | Enterprise sales force.\n- system integrators | For implementation.\n\n### Revenue Models:\n- subscription | SaaS application licensing.\n\n## [Offering] Adobe GenStudio\n### Role in Business Model:\nAdobe GenStudio is an end-to-end content supply chain solution that unifies creative production with marketing execution. It bundles multiple Adobe solutions (Experience Manager Assets, Workfront, Firefly Services) and third-party integrations to serve enterprise marketing teams with AI-first content creation and performance marketing capabilities, streamlining ideation through delivery.\n\n### Explicit Support:\n- \"Adobe GenStudio is an end-to-end, content supply chain solution for ideation, creation, production, activation, delivery, asset management, analytics and insights.\"\n- \"Adobe solutions offered within Adobe GenStudio include Adobe Experience Manager Assets, Adobe Workfront, Firefly Services and Adobe GenStudio for Performance Marketing...\"\n\n### Segment Anchors:\n- Digital Experience | Primary solution for marketing content supply chain.\n\n### Parent Offering:\n- none | Integrated solution suite.\n\n### Child Offerings:\n- GenStudio for Performance Marketing | AI-first solution for creating and optimizing on-brand digital experiences.\n- Adobe Experience Manager Assets | Cloud-native digital asset management (integrated component).\n- Adobe Workfront | Work management application for marketing operations (integrated component).\n- Firefly Services | Content generation APIs (integrated component).\n\n### Channels:\n- direct sales | Enterprise solution sales.\n\n### Revenue Models:\n- subscription | Enterprise subscription for the GenStudio solution.\n- service fees | Implementation and consulting services.\n\n## [Offering] Adobe Experience Manager\n### Role in Business Model:\nAdobe Experience Manager combines digital asset management, content management, and digital document solutions. It provides cloud-native infrastructure for creating, managing, and delivering personalized digital experiences across web, mobile, and forms, serving as a core content infrastructure offering within Digital Experience.\n\n### Explicit Support:\n- \"Adobe Experience Manager combines digital asset management with a content management system and an end-to-end digital document solution.\"\n\n### Segment Anchors:\n- Digital Experience | Content management offering.\n\n### Parent Offering:\n- none | Standalone offering; Assets component also available within GenStudio.\n\n### Child Offerings:\n- Adobe Experience Manager Sites | Content management and optimization system for web and mobile.\n- Adobe Experience Manager Assets | Cloud-native digital asset management.\n- Adobe Experience Manager Forms | Digital customer onboarding and enrollment solution.\n\n### Channels:\n- direct sales | Enterprise sales.\n- system integrators | For implementation.\n\n### Revenue Models:\n- subscription | Cloud-native SaaS offering.\n\n## [Offering] Adobe Journey Optimizer\n### Role in Business Model:\nAdobe Journey Optimizer is a scalable application built on Experience Platform that enables real-time orchestration of personalized customer journeys across B2B and B2C channels. It allows brands to manage inbound engagement and outbound campaigns within a single application, leveraging real-time profiles and cloud-native scalability.\n\n### Explicit Support:\n- \"Adobe Journey Optimizer is a scalable app built on Adobe Experience Platform that allows businesses to orchestrate and deliver personalized, connected customer journeys across any app, surface, screen, or channel across B2B and B2C.\"\n\n### Segment Anchors:\n- Digital Experience | Customer journey orchestration solution.\n\n### Parent Offering:\n- none | Built on Experience Platform but positioned as distinct application.\n\n### Child Offerings:\n- none | No named child variants.\n\n### Channels:\n- direct sales | Enterprise sales force.\n\n### Revenue Models:\n- subscription | SaaS application licensing.\n\n## [Offering] Adobe Marketo Engage\n### Role in Business Model:\nAdobe Marketo Engage is a B2B-focused customer experience management solution for cross-channel campaigns, integrating lead nurturing, account-based marketing, and sales alignment. It specifically targets B2B marketing professionals within the Digital Experience segment, offering predictive account profiling and integrated sales applications.\n\n### Explicit Support:\n- \"Adobe Marketo Engage is a customer experience management solution optimized for B2B, cross-channel campaigns...\"\n\n### Segment Anchors:\n- Digital Experience | B2B marketing automation solution.\n\n### Parent Offering:\n- none | Distinct application integrated with Experience Platform.\n\n### Child Offerings:\n- none | No named child variants in filing.\n\n### Channels:\n- direct sales | Enterprise B2B sales.\n\n### Revenue Models:\n- subscription | SaaS subscription model.\n\n## [Offering] Adobe Commerce\n### Role in Business Model:\nAdobe Commerce provides a customizable, end-to-end e-commerce platform for managing B2B, B2C, and direct-to-consumer commerce experiences. It extends Adobe's digital experience capabilities into transaction processing and order management, offering an open-source ecosystem with thousands of third-party extensions and native integrations with other Adobe solutions.\n\n### Explicit Support:\n- \"Adobe Commerce offers a highly customizable, end-to-end e-commerce platform to manage, personalize and optimize the commerce experience for physical and digital goods across every touchpoint...\"\n\n### Segment Anchors:\n- Digital Experience | Commerce solution within segment.\n\n### Parent Offering:\n- none | Standalone platform.\n\n### Child Offerings:\n- none | No named child variants.\n\n### Channels:\n- direct sales | Enterprise commerce contracts.\n- system integrators | For implementation and customization.\n\n### Revenue Models:\n- subscription | Platform subscription.\n\n## [Offering] Adobe Workfront\n### Role in Business Model:\nAdobe Workfront provides unified work management for marketing teams, enabling strategic planning, execution, and delivery of complex workflows. It is offered both as a standalone solution and as an integrated component of GenStudio, serving enterprise marketing operations with tools for enterprise planning and full visibility into marketing operations.\n\n### Explicit Support:\n- \"Adobe Workfront provides a unified work management app to enable teams to work more efficiently...\"\n- \"Adobe solutions offered within Adobe GenStudio include... Adobe Workfront\"\n\n### Segment Anchors:\n- Digital Experience | Work management for marketing.\n\n### Parent Offering:\n- none | Distinct offering also integrated into GenStudio.\n\n### Child Offerings:\n- Adobe Workfront Planning | Enterprise planning module for marketing activities delivering comprehensive view of all marketing activities.\n\n### Channels:\n- direct sales | Enterprise sales.\n\n### Revenue Models:\n- subscription | SaaS work management platform.\n\n## [Offering] Adobe Brand Concierge\n### Role in Business Model:\nAdobe Brand Concierge is an AI-powered solution that helps enterprises configure and manage AI agents and deliver personalized, immersive, and conversational experiences for their customers. It represents a specialized enterprise offering within the Digital Experience segment for AI agent deployment and customer interaction management.\n\n### Explicit Support:\n- \"Adobe Brand Concierge is an AI-powered solution that helps enterprises configure and manage AI agents and deliver personalized, immersive and conversational experiences for their customers.\"\n\n### Segment Anchors:\n- Digital Experience | AI agent management solution.\n\n### Parent Offering:\n- none | Distinct offering.\n\n### Child Offerings:\n- none | No named child variants.\n\n### Channels:\n- direct sales | Enterprise sales.\n\n### Revenue Models:\n- subscription | SaaS licensing.\n- service fees | Configuration and management services.\n\n## [Offering] Adobe LLM Optimizer\n### Role in Business Model:\nAdobe LLM Optimizer is a generative engine optimization solution that helps enterprises improve brand visibility and discoverability across AI-powered search and discovery while providing actionable insights. It addresses emerging AI search optimization needs for enterprise marketing teams.\n\n### Explicit Support:\n- \"Adobe LLM Optimizer is a generative engine optimization solution, helping enterprises improve brand visibility and discoverability across AI-powered search and discovery while providing actionable insights.\"\n\n### Segment Anchors:\n- Digital Experience | Search optimization solution.\n\n### Parent Offering:\n- none | Distinct offering.\n\n### Child Offerings:\n- none | No named child variants.\n\n### Channels:\n- direct sales | Enterprise sales.\n\n### Revenue Models:\n- subscription | SaaS licensing.\n\n## [Offering] Adobe Advertising\n### Role in Business Model:\nAdobe Advertising is the company's offering for managing advertising campaigns and delivering data-driven advertising experiences rooted in first-party customer data. It is part of the Publishing and Advertising segment, representing Adobe's advertising technology business for delivering relevant, high-impact advertising experiences.\n\n### Explicit Support:\n- \"Publishing and Advertising. Our Publishing and Advertising offerings contain... our Adobe Advertising offerings.\"\n- \"Our innovations empower our customers to use their first-party customer data and deliver more relevant, high-impact advertising experiences...\"\n\n### Segment Anchors:\n- Publishing and Advertising | Advertising solution within legacy segment.\n\n### Parent Offering:\n- none | Distinct offering in segment.\n\n### Child Offerings:\n- none | No named child variants.\n\n### Channels:\n- direct sales | For enterprise advertising clients.\n\n### Revenue Models:\n- advertising | Revenue from advertising services and technology.\n- service fees | Management and consulting for advertising campaigns.\n\n## [Offering] Adobe PostScript and PDF Standards\n### Role in Business Model:\nAdobe PostScript and PDF Standards represent the company's legacy high-end printing and document format technologies, licensed to hardware manufacturers and OEMs for integration into printing systems and document workflows. These are mature, standards-based offerings within the Publishing and Advertising segment.\n\n### Explicit Support:\n- \"Publishing and Advertising. Our Publishing and Advertising offerings contain... high-end printing through Adobe PostScript and Adobe PDF standards...\"\n\n### Segment Anchors:\n- Publishing and Advertising | Legacy printing and standards.\n\n### Parent Offering:\n- none | Technology standards and licensing.\n\n### Child Offerings:\n- none | No named child variants.\n\n### Channels:\n- OEMs | Licensing to hardware manufacturers.\n- licensing | Direct technology licensing.\n\n### Revenue Models:\n- licensing | Technology and patent licensing.\n- royalties | Per-unit fees from hardware manufacturers.\n\n# CORPORATE SCOPE\n## Operating Geographies:\n- Worldwide | Adobe operates globally with field offices across North America, Europe, Asia Pacific, and Latin America, serving customers in nearly all markets worldwide. Field offices are located in Australia, Belgium, Brazil, Canada, China, Denmark, France, Germany, Hong Kong, India, Ireland, Italy, Japan, Mexico, the Netherlands, New Zealand, Poland, Romania, Kingdom of Saudi Arabia, Singapore, South Africa, Republic of Korea, Spain, Sweden, Switzerland, Taiwan, Thailand, the United Kingdom, and the United States.\n\n## Key Partners:\n- none | The filing mentions extensive partner ecosystems including systems integrators, agencies, third-party AI model providers, independent software vendors, value-added resellers, and universities, but does not name specific partner companies.",
+  "compiled_graph_extraction": {
+    "extraction_notes": "Compiled from analyst memo covering Adobe's three reportable segments (Digital Media, Digital Experience, Publishing and Advertising) and their respective offerings. Parent-child offering hierarchies preserved as specified in memo. Firefly Solutions anchored to both Digital Media and Digital Experience per explicit dual-segment support. Segment combination effective fiscal 2026 noted but current three-segment structure maintained per memo scope. Offering-level channels included where memo specifies differentiated distribution patterns.",
+    "triples": [
+      {
+        "subject": "Adobe",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Digital Media",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Adobe",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Digital Experience",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Adobe",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Publishing and Advertising",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Adobe",
+        "subject_type": "Company",
+        "relation": "OPERATES_IN",
+        "object": "Worldwide",
+        "object_type": "Place"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "developers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "marketplaces",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "OEMs",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "mid-market companies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "IT professionals",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "system integrators",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "managed service providers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Publishing and Advertising",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Publishing and Advertising",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Publishing and Advertising",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Publishing and Advertising",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "manufacturers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Publishing and Advertising",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Publishing and Advertising",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "OEMs",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Publishing and Advertising",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "distributors",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Acrobat Solutions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Express",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Creative Cloud Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Substance 3D Collection",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Stock",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Firefly Solutions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Experience Platform",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Analytics",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe GenStudio",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Experience Manager",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Journey Optimizer",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Marketo Engage",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Commerce",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Workfront",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Brand Concierge",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe LLM Optimizer",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Firefly Solutions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Publishing and Advertising",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Advertising",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Publishing and Advertising",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe PostScript and PDF Standards",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Acrobat Solutions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Acrobat Studio",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Acrobat Solutions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Acrobat",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Acrobat Solutions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Acrobat Reader",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Acrobat Solutions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Acrobat AI Assistant",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Creative Cloud Pro",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Photoshop",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Creative Cloud Pro",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Lightroom",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Creative Cloud Pro",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Photography Plan",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Creative Cloud Pro",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Illustrator",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Creative Cloud Pro",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Premiere Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Creative Cloud Pro",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe After Effects",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Substance 3D Collection",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Substance 3D Stager",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Substance 3D Collection",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Substance 3D Painter",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Substance 3D Collection",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Substance 3D Sampler",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Substance 3D Collection",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Substance 3D Assets",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Substance 3D Collection",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Substance 3D Modeler",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Firefly Solutions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Firefly App",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Firefly Solutions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Firefly Custom Models",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Firefly Solutions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Firefly Foundry",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Firefly Solutions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Firefly Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Firefly Solutions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Firefly Standard",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Firefly Solutions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Firefly Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Firefly Solutions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Firefly Premium",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Experience Platform",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Real-Time Customer Data Platform",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Experience Platform",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Customer Journey Analytics",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Experience Platform",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Journey Optimizer",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Experience Platform",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Agent Orchestrator",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Experience Platform",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Experience Platform AI Assistant",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Analytics",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Mix Modeler",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe GenStudio",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "GenStudio for Performance Marketing",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe GenStudio",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Experience Manager Assets",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe GenStudio",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Workfront",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe GenStudio",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Firefly Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Experience Manager",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Experience Manager Sites",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Experience Manager",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Experience Manager Forms",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Workfront",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Workfront Planning",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Acrobat Solutions",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Acrobat Solutions",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "consumption-based",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Express",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Creative Cloud Pro",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Substance 3D Collection",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Stock",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Stock",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Firefly Solutions",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Firefly Solutions",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "consumption-based",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Firefly Solutions",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Experience Platform",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Experience Platform",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Analytics",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe GenStudio",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe GenStudio",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Experience Manager",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Marketo Engage",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Commerce",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Brand Concierge",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Brand Concierge",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe LLM Optimizer",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Advertising",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Advertising",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe PostScript and PDF Standards",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe PostScript and PDF Standards",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "royalties",
+        "object_type": "RevenueModel"
+      }
+    ]
+  },
+  "final_extraction": {
+    "extraction_notes": "Critiqued for overreach. Added marketing professionals as a served customer type for Digital Experience per explicit memo support in the segment block. Added Adobe Customer Journey Analytics as a child offering of Adobe Analytics per explicit memo listing under that offering's child offerings section. Preserved all other defensible segment, offering, customer type, channel, and revenue model relationships. Retained Worldwide as sole geography to avoid mechanical expansion of the field office list. Maintained parent-child offering hierarchies as durable structures per memo, including duplicate references where offerings legitimately appear in multiple parents (e.g., Adobe Experience Manager Assets, Adobe Workfront, Firefly Services).",
+    "triples": [
+      {
+        "subject": "Adobe",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Digital Media",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Adobe",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Digital Experience",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Adobe",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Publishing and Advertising",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Adobe",
+        "subject_type": "Company",
+        "relation": "OPERATES_IN",
+        "object": "Worldwide",
+        "object_type": "Place"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "developers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "marketplaces",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "OEMs",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "mid-market companies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "IT professionals",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "system integrators",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "managed service providers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Publishing and Advertising",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Publishing and Advertising",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Publishing and Advertising",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Publishing and Advertising",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "manufacturers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Publishing and Advertising",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Publishing and Advertising",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "OEMs",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Publishing and Advertising",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "distributors",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Acrobat Solutions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Express",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Creative Cloud Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Substance 3D Collection",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Stock",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Media",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Firefly Solutions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Experience Platform",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Analytics",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe GenStudio",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Experience Manager",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Journey Optimizer",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Marketo Engage",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Commerce",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Workfront",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Brand Concierge",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe LLM Optimizer",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Digital Experience",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Firefly Solutions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Publishing and Advertising",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe Advertising",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Publishing and Advertising",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Adobe PostScript and PDF Standards",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Acrobat Solutions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Acrobat Studio",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Acrobat Solutions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Acrobat",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Acrobat Solutions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Acrobat Reader",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Acrobat Solutions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Acrobat AI Assistant",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Creative Cloud Pro",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Photoshop",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Creative Cloud Pro",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Lightroom",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Creative Cloud Pro",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Photography Plan",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Creative Cloud Pro",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Illustrator",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Creative Cloud Pro",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Premiere Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Creative Cloud Pro",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe After Effects",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Substance 3D Collection",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Substance 3D Stager",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Substance 3D Collection",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Substance 3D Painter",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Substance 3D Collection",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Substance 3D Sampler",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Substance 3D Collection",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Substance 3D Assets",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Substance 3D Collection",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Substance 3D Modeler",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Firefly Solutions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Firefly App",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Firefly Solutions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Firefly Custom Models",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Firefly Solutions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Firefly Foundry",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Firefly Solutions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Firefly Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Firefly Solutions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Firefly Standard",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Firefly Solutions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Firefly Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Firefly Solutions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Firefly Premium",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Experience Platform",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Real-Time Customer Data Platform",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Experience Platform",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Customer Journey Analytics",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Experience Platform",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Journey Optimizer",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Experience Platform",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Agent Orchestrator",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Experience Platform",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Experience Platform AI Assistant",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Analytics",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Mix Modeler",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe GenStudio",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "GenStudio for Performance Marketing",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe GenStudio",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Experience Manager Assets",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe GenStudio",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Workfront",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe GenStudio",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Firefly Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Experience Manager",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Experience Manager Sites",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Experience Manager",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Experience Manager Forms",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Adobe Workfront",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Adobe Workfront Planning",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Acrobat Solutions",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Acrobat Solutions",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "consumption-based",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Express",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Creative Cloud Pro",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Substance 3D Collection",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Stock",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Stock",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Firefly Solutions",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Firefly Solutions",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "consumption-based",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Firefly Solutions",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Experience Platform",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Experience Platform",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Analytics",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe GenStudio",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe GenStudio",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Experience Manager",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Marketo Engage",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Commerce",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Brand Concierge",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Brand Concierge",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe LLM Optimizer",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Advertising",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe Advertising",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe PostScript and PDF Standards",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Adobe PostScript and PDF Standards",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "royalties",
+        "object_type": "RevenueModel"
+      }
+    ]
+  }
+}

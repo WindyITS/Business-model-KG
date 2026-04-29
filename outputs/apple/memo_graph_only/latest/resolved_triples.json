@@ -1,0 +1,775 @@
+{
+  "triple_count": 110,
+  "triples": [
+    {
+      "subject": "Apple",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "iPhone",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Apple",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Mac",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Apple",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "iPad",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Apple",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Wearables, Home and Accessories",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Apple",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Services",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Apple",
+      "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "Worldwide",
+      "object_type": "Place"
+    },
+    {
+      "subject": "iPhone",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "iPhone",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "iPhone",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "mid-market companies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "iPhone",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "iPhone",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "educational institutions",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "iPhone",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "government agencies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "iPhone",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "iPhone",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "iPhone",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "iPhone",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "resellers",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "mid-market companies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "educational institutions",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "government agencies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "resellers",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "iPad",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "iPad",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "iPad",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "mid-market companies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "iPad",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "iPad",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "educational institutions",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "iPad",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "government agencies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "iPad",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "iPad",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "iPad",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "iPad",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "resellers",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Wearables, Home and Accessories",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Wearables, Home and Accessories",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Wearables, Home and Accessories",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Wearables, Home and Accessories",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Wearables, Home and Accessories",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Wearables, Home and Accessories",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Wearables, Home and Accessories",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "resellers",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Services",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Services",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Services",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "mid-market companies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Services",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Services",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "educational institutions",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Services",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "government agencies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Services",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Services",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Services",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "iPhone",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "iPhone",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Mac",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "iPad",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "iPad",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Wearables, Home and Accessories",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Apple Watch",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Wearables, Home and Accessories",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "AirPods",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Wearables, Home and Accessories",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Beats Products",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Wearables, Home and Accessories",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Apple Vision Pro",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Wearables, Home and Accessories",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Apple TV Hardware",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Wearables, Home and Accessories",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "HomePod",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Wearables, Home and Accessories",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Apple Accessories",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Apple Advertising",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "AppleCare",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "iCloud",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "App Store",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Apple Content Subscriptions",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Apple Pay",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Apple Card",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "iPhone",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "iPhone Pro",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "iPhone",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "iPhone Air",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "iPhone",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "iPhone Standard",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "iPhone",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "iPhone SE",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "MacBook Air",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "MacBook Pro",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "iMac",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Mac mini",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Mac Studio",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Mac Pro",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "iPad",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "iPad Pro",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "iPad",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "iPad Air",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "iPad",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "iPad Standard",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "iPad",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "iPad mini",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Apple Watch",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Apple Watch Series",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Apple Watch",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Apple Watch SE",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Apple Watch",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Apple Watch Ultra",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "AirPods",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "AirPods Standard",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "AirPods",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "AirPods Pro",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "AirPods",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "AirPods Max",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "HomePod",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "HomePod Standard",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "HomePod",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "HomePod mini",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Apple Content Subscriptions",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Apple Arcade",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Apple Content Subscriptions",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Apple Fitness+",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Apple Content Subscriptions",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Apple Music",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Apple Content Subscriptions",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Apple News+",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Apple Content Subscriptions",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Apple TV Service",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "iPhone",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "iPad",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Apple Watch",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "AirPods",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Beats Products",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Apple Vision Pro",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Apple TV Hardware",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "HomePod",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Apple Accessories",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Apple Advertising",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Apple Advertising",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "AppleCare",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Apple Content Subscriptions",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    }
+  ]
+}

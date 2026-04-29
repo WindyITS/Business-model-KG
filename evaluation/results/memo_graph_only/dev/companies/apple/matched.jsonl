@@ -1,0 +1,12 @@
+{"subject":"Apple","subject_type":"Company","relation":"OPERATES_IN","object":"Worldwide","object_type":"Place"}
+{"subject":"AppleCare","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"Mac","subject_type":"Offering","relation":"OFFERS","object":"Mac Pro","object_type":"Offering"}
+{"subject":"Mac","subject_type":"Offering","relation":"OFFERS","object":"Mac Studio","object_type":"Offering"}
+{"subject":"Mac","subject_type":"Offering","relation":"OFFERS","object":"Mac mini","object_type":"Offering"}
+{"subject":"Mac","subject_type":"Offering","relation":"OFFERS","object":"MacBook Air","object_type":"Offering"}
+{"subject":"Mac","subject_type":"Offering","relation":"OFFERS","object":"MacBook Pro","object_type":"Offering"}
+{"subject":"Mac","subject_type":"Offering","relation":"OFFERS","object":"iMac","object_type":"Offering"}
+{"subject":"iPad","subject_type":"Offering","relation":"OFFERS","object":"iPad Air","object_type":"Offering"}
+{"subject":"iPad","subject_type":"Offering","relation":"OFFERS","object":"iPad Pro","object_type":"Offering"}
+{"subject":"iPad","subject_type":"Offering","relation":"OFFERS","object":"iPad mini","object_type":"Offering"}
+{"subject":"iPhone","subject_type":"Offering","relation":"OFFERS","object":"iPhone Air","object_type":"Offering"}

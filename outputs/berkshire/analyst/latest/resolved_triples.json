@@ -1,0 +1,2091 @@
+{
+  "triple_count": 298,
+  "triples": [
+    {
+      "subject": "Berkshire",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Insurance",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Berkshire",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Burlington Northern Santa Fe",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Berkshire",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Berkshire Hathaway Energy",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Berkshire",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Manufacturing",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Berkshire",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Service and Retailing",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Berkshire",
+      "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "Worldwide",
+      "object_type": "Place"
+    },
+    {
+      "subject": "Berkshire",
+      "subject_type": "Company",
+      "relation": "PARTNERS_WITH",
+      "object": "Insurance Australia Group Limited",
+      "object_type": "Company"
+    },
+    {
+      "subject": "Berkshire",
+      "subject_type": "Company",
+      "relation": "PARTNERS_WITH",
+      "object": "Textron Inc.",
+      "object_type": "Company"
+    },
+    {
+      "subject": "Berkshire",
+      "subject_type": "Company",
+      "relation": "PARTNERS_WITH",
+      "object": "General Motors",
+      "object_type": "Company"
+    },
+    {
+      "subject": "Berkshire",
+      "subject_type": "Company",
+      "relation": "PARTNERS_WITH",
+      "object": "Ace Hardware Corporation",
+      "object_type": "Company"
+    },
+    {
+      "subject": "Berkshire",
+      "subject_type": "Company",
+      "relation": "PARTNERS_WITH",
+      "object": "Alleghany Corporation",
+      "object_type": "Company"
+    },
+    {
+      "subject": "Berkshire",
+      "subject_type": "Company",
+      "relation": "PARTNERS_WITH",
+      "object": "Occidental Petroleum Corporation",
+      "object_type": "Company"
+    },
+    {
+      "subject": "Insurance",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Insurance",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Insurance",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Insurance",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "healthcare organizations",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Insurance",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "government agencies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Insurance",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "financial services firms",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Insurance",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Insurance",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Insurance",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "resellers",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Insurance",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "GEICO",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Insurance",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Berkshire Hathaway Primary Group",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Insurance",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Berkshire Hathaway Reinsurance Group",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "GEICO",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Private Passenger Automobile Insurance",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "GEICO",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Motorcycle and Specialty Vehicle Insurance",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "GEICO",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "GEICO Insurance Agency",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "GEICO",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Berkshire Hathaway Primary Group",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "NICO Primary",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Berkshire Hathaway Primary Group",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Berkshire Hathaway Homestate Group",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Berkshire Hathaway Primary Group",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Berkshire Hathaway Specialty Insurance",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Berkshire Hathaway Primary Group",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "RSUI and CapSpecialty",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Berkshire Hathaway Primary Group",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "MedPro",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Berkshire Hathaway Primary Group",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "MLMIC",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Berkshire Hathaway Primary Group",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "USLI",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Berkshire Hathaway Primary Group",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "BH Direct and GUARD",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Berkshire Hathaway Primary Group",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Berkshire Hathaway Reinsurance Group",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "NICO Group",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Berkshire Hathaway Reinsurance Group",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "General Re Group",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Berkshire Hathaway Reinsurance Group",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "TransRe Group",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Berkshire Hathaway Reinsurance Group",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "BHLN",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Berkshire Hathaway Reinsurance Group",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Burlington Northern Santa Fe",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "manufacturers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Burlington Northern Santa Fe",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "retailers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Burlington Northern Santa Fe",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Burlington Northern Santa Fe",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "BNSF Railway",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "BNSF Railway",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Consumer Products Freight",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "BNSF Railway",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Industrial Products Freight",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "BNSF Railway",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Agricultural Products Freight",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "BNSF Railway",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Coal and Energy Freight",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "BNSF Railway",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Berkshire Hathaway Energy",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Berkshire Hathaway Energy",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Berkshire Hathaway Energy",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Berkshire Hathaway Energy",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "government agencies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Berkshire Hathaway Energy",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Berkshire Hathaway Energy",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Berkshire Hathaway Energy",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "U.S. Utilities",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Berkshire Hathaway Energy",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Natural Gas Pipelines",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Berkshire Hathaway Energy",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "HomeServices of America",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Berkshire Hathaway Energy",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "BHE Independent Power Projects",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Berkshire Hathaway Energy",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "BHE AltaLink",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Berkshire Hathaway Energy",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "BHE Northern Powergrid",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "U.S. Utilities",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "PacifiCorp",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "U.S. Utilities",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "MidAmerican Energy",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "U.S. Utilities",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "NV Energy",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "U.S. Utilities",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Natural Gas Pipelines",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "BHE GT&S",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Natural Gas Pipelines",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Northern Natural Gas",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Natural Gas Pipelines",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Kern River Gas Transmission",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Natural Gas Pipelines",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "HomeServices of America",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Berkshire Hathaway HomeServices",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "HomeServices of America",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Real Living",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "HomeServices of America",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Integrated Real Estate Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "HomeServices of America",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "HomeServices of America",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "royalties",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "BHE Independent Power Projects",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "BHE AltaLink",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "BHE Northern Powergrid",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Northern Powergrid (Northeast)",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "BHE Northern Powergrid",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Northern Powergrid (Yorkshire)",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "BHE Northern Powergrid",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "manufacturers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "retailers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "government agencies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "OEMs",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "distributors",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Precision Castparts",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Lubrizol",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Marmon Holdings",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "IMC International Metalworking Companies",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "CTB International",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "LSPI",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "W&W|AFCO Steel",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Bell Laboratories",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "OxyChem",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Clayton Homes",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Shaw Industries",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Johns Manville",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "MiTek",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Benjamin Moore",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Acme Brick",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Forest River",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Fruit of the Loom",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Garan",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Fechheimer Brothers",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "BH Shoe Holdings",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Brooks",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Duracell",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Jazwares",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Richline",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Manufacturing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Larson-Juhl",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Precision Castparts",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Investment Castings",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Precision Castparts",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Forged Products",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Precision Castparts",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Fastener Systems",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Precision Castparts",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Airframe Products",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Precision Castparts",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Lubrizol",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Lubrizol Additives",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Lubrizol",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Lubrizol Advanced Materials",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Lubrizol",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Marmon Holdings",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Foodservice Technologies",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Marmon Holdings",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Water Technologies",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Marmon Holdings",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Transportation Products",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Marmon Holdings",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Retail Solutions",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Marmon Holdings",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Metal Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Marmon Holdings",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Electrical",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Marmon Holdings",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Plumbing & Refrigeration",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Marmon Holdings",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Industrial Products",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Marmon Holdings",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Rail & Leasing",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Marmon Holdings",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Crane Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Marmon Holdings",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Medical",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Marmon Holdings",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Marmon Holdings",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "IMC International Metalworking Companies",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "ISCAR Brand Tools",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "IMC International Metalworking Companies",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "TaeguTec Brand Tools",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "IMC International Metalworking Companies",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Tungaloy Brand Tools",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "IMC International Metalworking Companies",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Ingersoll Brand Tools",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "IMC International Metalworking Companies",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "NTK Brand Tools",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "IMC International Metalworking Companies",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "CTB International",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "LSPI",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "W&W|AFCO Steel",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Bell Laboratories",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "OxyChem",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Chlor-Alkali Products",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "OxyChem",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Polyvinyl Chloride (PVC)",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "OxyChem",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Chlorinated Organics",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "OxyChem",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Clayton Homes",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Off-Site Built Homes",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Clayton Homes",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Site-Built Homes",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Clayton Homes",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Home Financing",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Clayton Homes",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Supply Division",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Clayton Homes",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Clayton Homes",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Shaw Industries",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Soft Flooring",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Shaw Industries",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Hard Surfaces",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Shaw Industries",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Shaw Sports Turf and Shawgrass",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Shaw Industries",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Watershed Geosynthetics",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Shaw Industries",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Johns Manville",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Building Insulation",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Johns Manville",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Mechanical and Industrial Insulation",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Johns Manville",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Commercial Roofing and Roof Insulation",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Johns Manville",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Reinforcement Fiberglass",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Johns Manville",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Technical Nonwovens",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Johns Manville",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "MiTek",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Residential Building Solutions",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "MiTek",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Commercial Building Solutions",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "MiTek",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "MiTek",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Benjamin Moore",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Premium Portfolio",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Benjamin Moore",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Diversified Brands",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Benjamin Moore",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Ace Hardware Exclusive Brands",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Benjamin Moore",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Acme Brick",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Acme Brick",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Acme Brick",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Featherlite",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Acme Brick",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Distributed Building Products",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Forest River",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Recreational Vehicles",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Forest River",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Commercial Trucks",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Forest River",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Buses",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Forest River",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Pontoon Boats",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Forest River",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Utility Cargo Trailers",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Forest River",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Fruit of the Loom",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Fruit of the Loom and JERZEES",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Fruit of the Loom",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Vanity Fair Brands",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Fruit of the Loom",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Russell Athletic and Spalding",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Fruit of the Loom",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Garan",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Garanimals and 365 Kids",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Garan",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Private Label and Licensed",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Garan",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Fechheimer Brothers",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "BH Shoe Holdings",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Justin and Double-H Boots",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "BH Shoe Holdings",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "BØRN and Söfft",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "BH Shoe Holdings",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Carolina",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "BH Shoe Holdings",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Brooks",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Duracell",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Jazwares",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Owned Brands",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Jazwares",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Licensed Brands",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Jazwares",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Jazwares",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Richline",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Richline Jewelry",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Richline",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "LeachGarner",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Richline",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Rio Grande",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Richline",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Inverness",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Richline",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Larson-Juhl",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "government agencies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "developers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "distributors",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "NetJets",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "FlightSafety",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "TTI",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "McLane",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "XTRA Lease",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "IPS",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Dairy Queen",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Business Wire",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "CORT",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "WPLG",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Charter Brokerage",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Berkshire Hathaway Automotive",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Home Furnishings Retail",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Pilot Travel Centers",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Jewelry Retail",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "See's Candies",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Pampered Chef",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Oriental Trading Company",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Service and Retailing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Detlev Louis",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "NetJets",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "NetJets Shares",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "NetJets",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "NetJets Leases",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "NetJets",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "NetJets Card Program",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "NetJets",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Aircraft Management",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "NetJets",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "NetJets",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "FlightSafety",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Professional Aviation Training",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "FlightSafety",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Flight Simulation Products",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "FlightSafety",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "TTI",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "TTI Core Distribution",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "TTI",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Mouser Electronics",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "TTI",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "XTG Division",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "TTI",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "McLane",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Retail Distribution",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "McLane",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Restaurant Distribution",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "McLane",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Beverage Distribution",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "McLane",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "XTRA Lease",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "IPS",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Dairy Queen",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "DQ Grill and Chill",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Dairy Queen",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Dairy Queen and DQ",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Dairy Queen",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Orange Julius",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Dairy Queen",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "royalties",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Business Wire",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "CORT",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "CORT",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "WPLG",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Charter Brokerage",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Berkshire Hathaway Automotive",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "New Vehicle Sales",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Berkshire Hathaway Automotive",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Used Vehicle Sales",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Berkshire Hathaway Automotive",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Service and Parts",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Berkshire Hathaway Automotive",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Finance and Insurance",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Berkshire Hathaway Automotive",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Auto Auctions",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Berkshire Hathaway Automotive",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Berkshire Hathaway Automotive",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Home Furnishings Retail",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Nebraska Furniture Mart",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Home Furnishings Retail",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "R.C. Willey",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Home Furnishings Retail",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Jordan's Furniture",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Home Furnishings Retail",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Star Furniture",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Home Furnishings Retail",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Home Furnishings Retail",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Pilot Travel Centers",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Travel Centers",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Pilot Travel Centers",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Wholesale Fuel",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Pilot Travel Centers",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "EV Charging",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Pilot Travel Centers",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Water Disposal",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Pilot Travel Centers",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Pilot Travel Centers",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Jewelry Retail",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Borsheims",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Jewelry Retail",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Helzberg Diamonds",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Jewelry Retail",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Ben Bridge Jeweler",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Jewelry Retail",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "See's Candies",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Pampered Chef",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Oriental Trading Company",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Oriental Trading",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Oriental Trading Company",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Fun Express",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Oriental Trading Company",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "MindWare",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Oriental Trading Company",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "SmileMakers",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Oriental Trading Company",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Morris Costumes and HalloweenExpress.com",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Oriental Trading Company",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Detlev Louis",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    }
+  ]
+}

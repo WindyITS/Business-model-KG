@@ -1,0 +1,79 @@
+{
+  "company": "Google",
+  "company_slug": "google",
+  "pipeline": "zero-shot",
+  "split": "dev",
+  "status": "hand_matched",
+  "review_csv": "/Users/giuliosighieri/Desktop/kg-v0/evaluation/results/zero-shot/dev/companies/google/unmatched_for_review.csv",
+  "strict": {
+    "true_positives": 33,
+    "false_positives": 20,
+    "false_negatives": 17,
+    "precision": 0.6226415094339622,
+    "recall": 0.66,
+    "f1": 0.6407766990291262
+  },
+  "recovered_matches": 4,
+  "hand_matched": {
+    "true_positives": 37,
+    "false_positives": 16,
+    "false_negatives": 13,
+    "precision": 0.6981132075471698,
+    "recall": 0.74,
+    "f1": 0.7184466019417476
+  },
+  "match_groups": [
+    {
+      "match_id": "1",
+      "gold_rows": 1,
+      "predicted_rows": 1,
+      "gold_row_ids": [
+        "gold_0003"
+      ],
+      "predicted_row_ids": [
+        "predicted_0002"
+      ],
+      "recovered_matches": 1,
+      "status": "accepted"
+    },
+    {
+      "match_id": "2",
+      "gold_rows": 1,
+      "predicted_rows": 1,
+      "gold_row_ids": [
+        "gold_0004"
+      ],
+      "predicted_row_ids": [
+        "predicted_0003"
+      ],
+      "recovered_matches": 1,
+      "status": "accepted"
+    },
+    {
+      "match_id": "3",
+      "gold_rows": 1,
+      "predicted_rows": 1,
+      "gold_row_ids": [
+        "gold_0007"
+      ],
+      "predicted_row_ids": [
+        "predicted_0005"
+      ],
+      "recovered_matches": 1,
+      "status": "accepted"
+    },
+    {
+      "match_id": "4",
+      "gold_rows": 1,
+      "predicted_rows": 1,
+      "gold_row_ids": [
+        "gold_0008"
+      ],
+      "predicted_row_ids": [
+        "predicted_0006"
+      ],
+      "recovered_matches": 1,
+      "status": "accepted"
+    }
+  ]
+}

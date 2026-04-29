@@ -1,0 +1,30 @@
+{"subject":"Commercial","subject_type":"BusinessSegment","relation":"OFFERS","object":"Palantir AIP","object_type":"Offering"}
+{"subject":"Commercial","subject_type":"BusinessSegment","relation":"OFFERS","object":"Palantir Apollo","object_type":"Offering"}
+{"subject":"Commercial","subject_type":"BusinessSegment","relation":"OFFERS","object":"Palantir Foundry","object_type":"Offering"}
+{"subject":"Commercial","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"resellers","object_type":"Channel"}
+{"subject":"Government","subject_type":"BusinessSegment","relation":"OFFERS","object":"Palantir AIP","object_type":"Offering"}
+{"subject":"Government","subject_type":"BusinessSegment","relation":"OFFERS","object":"Palantir Foundry","object_type":"Offering"}
+{"subject":"Government","subject_type":"BusinessSegment","relation":"OFFERS","object":"Palantir Gotham","object_type":"Offering"}
+{"subject":"Government","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"resellers","object_type":"Channel"}
+{"subject":"Palantir","subject_type":"Company","relation":"OFFERS","object":"AIP bootcamps","object_type":"Offering"}
+{"subject":"Palantir","subject_type":"Company","relation":"OFFERS","object":"Developer Tier","object_type":"Offering"}
+{"subject":"Palantir","subject_type":"Company","relation":"OFFERS","object":"Industry Operating Systems","object_type":"Offering"}
+{"subject":"Palantir","subject_type":"Company","relation":"OFFERS","object":"data provenance","object_type":"Offering"}
+{"subject":"Palantir","subject_type":"Company","relation":"OFFERS","object":"data retention and deletion","object_type":"Offering"}
+{"subject":"Palantir","subject_type":"Company","relation":"OFFERS","object":"granular access controls","object_type":"Offering"}
+{"subject":"Palantir","subject_type":"Company","relation":"OFFERS","object":"oversight and auditability","object_type":"Offering"}
+{"subject":"Palantir","subject_type":"Company","relation":"OFFERS","object":"privacy-enhancing technologies","object_type":"Offering"}
+{"subject":"Palantir","subject_type":"Company","relation":"OFFERS","object":"sensitive data discovery and management","object_type":"Offering"}
+{"subject":"Palantir AIP","subject_type":"Offering","relation":"OFFERS","object":"LLM-driven agents","object_type":"Offering"}
+{"subject":"Palantir AIP","subject_type":"Offering","relation":"OFFERS","object":"commercially available LLM access","object_type":"Offering"}
+{"subject":"Palantir AIP","subject_type":"Offering","relation":"OFFERS","object":"human review checkpoints","object_type":"Offering"}
+{"subject":"Palantir AIP","subject_type":"Offering","relation":"OFFERS","object":"open-source LLM access","object_type":"Offering"}
+{"subject":"Palantir AIP","subject_type":"Offering","relation":"OFFERS","object":"self-hosted LLM access","object_type":"Offering"}
+{"subject":"Palantir Apollo","subject_type":"Offering","relation":"OFFERS","object":"central software operations management","object_type":"Offering"}
+{"subject":"Palantir Apollo","subject_type":"Offering","relation":"OFFERS","object":"configuration management","object_type":"Offering"}
+{"subject":"Palantir Apollo","subject_type":"Offering","relation":"OFFERS","object":"continuous deployment","object_type":"Offering"}
+{"subject":"Palantir Apollo","subject_type":"Offering","relation":"OFFERS","object":"security updates delivery","object_type":"Offering"}
+{"subject":"Palantir Foundry","subject_type":"Offering","relation":"OFFERS","object":"data pipeline traceability","object_type":"Offering"}
+{"subject":"Palantir Foundry","subject_type":"Offering","relation":"OFFERS","object":"obfuscation tool","object_type":"Offering"}
+{"subject":"Palantir Gotham","subject_type":"Offering","relation":"OFFERS","object":"analyst-to-operator hand-off","object_type":"Offering"}
+{"subject":"Palantir Gotham","subject_type":"Offering","relation":"OFFERS","object":"threat response planning","object_type":"Offering"}

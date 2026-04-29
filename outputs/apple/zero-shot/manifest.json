@@ -1,0 +1,12 @@
+{
+  "company_name": "Apple",
+  "company_slug": "apple",
+  "pipeline": "zero-shot",
+  "latest_available": true,
+  "latest_run_dir": "outputs/apple/zero-shot/latest",
+  "available_run_tokens": [],
+  "failed_run_tokens": [
+    "20260424T183907Z"
+  ],
+  "updated_at": "2026-04-27T20:23:52.890574+00:00"
+}

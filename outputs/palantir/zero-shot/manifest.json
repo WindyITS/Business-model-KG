@@ -1,0 +1,12 @@
+{
+  "company_name": "Palantir",
+  "company_slug": "palantir",
+  "pipeline": "zero-shot",
+  "latest_available": true,
+  "latest_run_dir": "outputs/palantir/zero-shot/latest",
+  "available_run_tokens": [],
+  "failed_run_tokens": [
+    "20260424T183925Z"
+  ],
+  "updated_at": "2026-04-27T20:23:29.109713+00:00"
+}

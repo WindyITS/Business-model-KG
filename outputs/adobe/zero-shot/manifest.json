@@ -1,0 +1,10 @@
+{
+  "company_name": "Adobe",
+  "company_slug": "adobe",
+  "pipeline": "zero-shot",
+  "latest_available": true,
+  "latest_run_dir": "outputs/adobe/zero-shot/latest",
+  "available_run_tokens": [],
+  "failed_run_tokens": [],
+  "updated_at": "2026-04-27T19:56:55.751371+00:00"
+}

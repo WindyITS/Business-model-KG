@@ -1,0 +1,61 @@
+<workflow_step>
+STAGE 1B - ANALYST MEMO DETAIL AUGMENTATION
+</workflow_step>
+
+<objective>
+Take the current analyst memo and improve it.
+Preserve the strong business-model structure, then add only defensible detail that materially improves usefulness and makes the memo detailed for graph compilation.
+This is an expansion pass, not a correctness-review pass: deepen and sharpen the business-model understanding of the company from the filing.
+</objective>
+
+<company_name>
+{{company_name}}
+</company_name>
+
+<current_memo>
+{{current_memo}}
+</current_memo>
+
+<artifact_contract>
+Return the full memo again as structured markdown, not JSON.
+Keep the same section order and heading text as the current memo.
+Keep the same markdown structure unless the filing supports a better business-model structure.
+</artifact_contract>
+
+<augmentation_rules>
+- return the entire markdown memo again, not a patch
+- preserve prior structure by default; revise it only when the full filing supports a better interpretation
+- actively recover named offering families, suites, product lines, platforms, and franchises when they are material business-model structures rather than incidental mentions
+- for each top-level offering or offering family already in the memo, deepen it when the filing supports missing material child offerings, sharper hierarchy, or more analytically useful structure
+- add missing but defensible offerings, parent-offering structure, segment anchors, customer types, channels, revenue models, operating geographies, and meaningful partners
+- do not collapse important offering families into segment prose or generic summary text
+- when both a family-level offering and child offerings are supportable, keep the family-level offering and express the hierarchy explicitly through both `Child Offerings` on the parent and `Parent Offering` on the child
+- when a parent offering names durable variants, tiers, editions, plans, form factors, or line families, recover those child offerings even if the filing expresses them through current release names
+- normalize annual, release-specific, or version-specific names into durable child-offering families or variant nodes when that produces a more stable and analytically useful graph than keeping transient labels
+- when a named franchise spans materially different sub-businesses, segment anchors, channels, or monetization patterns, prefer a parent family plus differentiated child offerings over a single blended offering
+- if a named franchise remains analytically distinct in the filing, do not demote it under a broader cloud, services, or reporting bucket merely because one of its revenue lines is listed there
+- if you introduce a parent family that should appear as a segment-level or graph-level node, give it its own full `[Offering]` block instead of only mentioning it inside `Parent Offering`
+- do not leave a top-level family node under-specified if the filing clearly names its important sub-offerings
+- prefer business-model-relevant families and product lines over one-off features, implementation details, promotional labels, or generic bucket labels
+- avoid creating child offerings that are only broad descriptive categories unless the filing itself treats them as stable offering families or explicitly monetized sub-lines
+- remove offering-level `Channels` that merely restate inherited segment distribution; keep offering channels only when the filing supports a differentiated channel pattern or the offering truly lacks a segment anchor
+- if the company clearly operates globally, prefer a clean corporate-scope geography such as `Worldwide` over a mechanically expanded list derived from geographic segment definitions
+- your role here is to improve and deepen the memo, not to perform an abstract correctness audit detached from business-model usefulness
+- confident inference on customer types is allowed when product, platform, ecosystem, distribution, or support language strongly implies a commercially served constituency, even if the filing does not name that customer type directly in its generic markets sentence; use the closest canonical label and omit weak guesses
+- if a claim remains plausible but weak, keep it out rather than filling space
+- do not turn this into a long filing summary
+- do not add details from outside knowledge
+- do not create artificial completeness; empty arrays are allowed
+- add any missing material family-level offerings that a downstream analyst would need to understand the company's structure
+- deepen any family-level offering that still needs decomposition and split any franchise that is still being represented as one blended node when the filing supports it
+- restore any distinct named franchise that has been mistakenly absorbed into a broader parent and ensure any graph-worthy parent has its own full offering block
+- remove any item that appears only because it was mentioned once without business-model importance
+- keep the same section order, heading names, and markdown structure as the current memo
+- keep the artifact as markdown memo text, not JSON
+- if a list is empty, write `- none`
+</augmentation_rules>
+
+<format_reminder>
+Return ONLY the full markdown memo.
+Do not return JSON.
+</format_reminder>

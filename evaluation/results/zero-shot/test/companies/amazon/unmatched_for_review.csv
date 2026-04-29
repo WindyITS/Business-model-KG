@@ -1,0 +1,66 @@
+row_id,match_id,source,subject,subject_type,relation,object,object_type
+gold_0001,1,gold,Amazon,Company,HAS_SEGMENT,Amazon Web Services (AWS),BusinessSegment
+gold_0002,,gold,Amazon Prime,Offering,MONETIZES_VIA,hardware sales,RevenueModel
+gold_0003,,gold,Amazon Web Services (AWS),BusinessSegment,OFFERS,analytics services,Offering
+gold_0004,,gold,Amazon Web Services (AWS),BusinessSegment,OFFERS,artificial intelligence services,Offering
+gold_0005,,gold,Amazon Web Services (AWS),BusinessSegment,OFFERS,compute services,Offering
+gold_0006,,gold,Amazon Web Services (AWS),BusinessSegment,OFFERS,database services,Offering
+gold_0007,,gold,Amazon Web Services (AWS),BusinessSegment,OFFERS,machine learning services,Offering
+gold_0008,2,gold,Amazon Web Services (AWS),BusinessSegment,OFFERS,on-demand technology services,Offering
+gold_0009,,gold,Amazon Web Services (AWS),BusinessSegment,OFFERS,storage services,Offering
+gold_0010,4,gold,Amazon Web Services (AWS),BusinessSegment,SERVES,developers,CustomerType
+gold_0011,5,gold,Amazon Web Services (AWS),BusinessSegment,SERVES,educational institutions,CustomerType
+gold_0012,6,gold,Amazon Web Services (AWS),BusinessSegment,SERVES,government agencies,CustomerType
+gold_0013,7,gold,Amazon Web Services (AWS),BusinessSegment,SERVES,large enterprises,CustomerType
+gold_0014,,gold,Amazon Web Services (AWS),BusinessSegment,SERVES,mid-market companies,CustomerType
+gold_0015,,gold,Amazon Web Services (AWS),BusinessSegment,SERVES,small businesses,CustomerType
+gold_0016,,gold,International,BusinessSegment,OFFERS,display advertising,Offering
+gold_0017,,gold,International,BusinessSegment,OFFERS,media content,Offering
+gold_0018,,gold,International,BusinessSegment,OFFERS,programs,Offering
+gold_0019,,gold,International,BusinessSegment,OFFERS,sponsored ads,Offering
+gold_0020,,gold,International,BusinessSegment,OFFERS,video advertising,Offering
+gold_0021,,gold,International,BusinessSegment,SERVES,large enterprises,CustomerType
+gold_0022,,gold,International,BusinessSegment,SERVES,manufacturers,CustomerType
+gold_0023,,gold,International,BusinessSegment,SERVES,mid-market companies,CustomerType
+gold_0024,,gold,International,BusinessSegment,SERVES,retailers,CustomerType
+gold_0025,,gold,International,BusinessSegment,SERVES,small businesses,CustomerType
+gold_0026,,gold,North America,BusinessSegment,OFFERS,display advertising,Offering
+gold_0027,,gold,North America,BusinessSegment,OFFERS,media content,Offering
+gold_0028,,gold,North America,BusinessSegment,OFFERS,programs,Offering
+gold_0029,,gold,North America,BusinessSegment,OFFERS,sponsored ads,Offering
+gold_0030,,gold,North America,BusinessSegment,OFFERS,video advertising,Offering
+gold_0031,,gold,North America,BusinessSegment,SERVES,large enterprises,CustomerType
+gold_0032,,gold,North America,BusinessSegment,SERVES,manufacturers,CustomerType
+gold_0033,,gold,North America,BusinessSegment,SERVES,mid-market companies,CustomerType
+gold_0034,,gold,North America,BusinessSegment,SERVES,retailers,CustomerType
+gold_0035,,gold,North America,BusinessSegment,SERVES,small businesses,CustomerType
+gold_0036,,gold,analytics services,Offering,MONETIZES_VIA,service fees,RevenueModel
+gold_0037,,gold,artificial intelligence services,Offering,MONETIZES_VIA,consumption-based,RevenueModel
+gold_0038,,gold,compute services,Offering,MONETIZES_VIA,consumption-based,RevenueModel
+gold_0039,,gold,database services,Offering,MONETIZES_VIA,consumption-based,RevenueModel
+gold_0040,,gold,display advertising,Offering,MONETIZES_VIA,advertising,RevenueModel
+gold_0041,,gold,machine learning services,Offering,MONETIZES_VIA,consumption-based,RevenueModel
+gold_0042,,gold,media content,Offering,MONETIZES_VIA,hardware sales,RevenueModel
+gold_0043,3,gold,on-demand technology services,Offering,MONETIZES_VIA,consumption-based,RevenueModel
+gold_0044,,gold,sponsored ads,Offering,MONETIZES_VIA,advertising,RevenueModel
+gold_0045,,gold,storage services,Offering,MONETIZES_VIA,consumption-based,RevenueModel
+gold_0046,,gold,video advertising,Offering,MONETIZES_VIA,advertising,RevenueModel
+predicted_0001,2,predicted,AWS,BusinessSegment,OFFERS,AWS Services,Offering
+predicted_0002,4,predicted,AWS,BusinessSegment,SERVES,developers,CustomerType
+predicted_0003,5,predicted,AWS,BusinessSegment,SERVES,educational institutions,CustomerType
+predicted_0004,6,predicted,AWS,BusinessSegment,SERVES,government agencies,CustomerType
+predicted_0005,7,predicted,AWS,BusinessSegment,SERVES,large enterprises,CustomerType
+predicted_0006,3,predicted,AWS Services,Offering,MONETIZES_VIA,consumption-based,RevenueModel
+predicted_0007,1,predicted,Amazon,Company,HAS_SEGMENT,AWS,BusinessSegment
+predicted_0008,,predicted,Amazon,Company,OPERATES_IN,Worldwide,Place
+predicted_0009,,predicted,Amazon Prime,Offering,MONETIZES_VIA,subscription,RevenueModel
+predicted_0010,,predicted,International,BusinessSegment,OFFERS,Content Creator Programs,Offering
+predicted_0011,,predicted,International,BusinessSegment,OFFERS,Online Stores,Offering
+predicted_0012,,predicted,International,BusinessSegment,OFFERS,Physical Stores,Offering
+predicted_0013,,predicted,International,BusinessSegment,OFFERS,Seller Programs,Offering
+predicted_0014,,predicted,North America,BusinessSegment,OFFERS,Content Creator Programs,Offering
+predicted_0015,,predicted,North America,BusinessSegment,OFFERS,Online Stores,Offering
+predicted_0016,,predicted,North America,BusinessSegment,OFFERS,Physical Stores,Offering
+predicted_0017,,predicted,North America,BusinessSegment,OFFERS,Seller Programs,Offering
+predicted_0018,,predicted,Seller Programs,Offering,MONETIZES_VIA,service fees,RevenueModel
+predicted_0019,,predicted,Seller Programs,Offering,MONETIZES_VIA,transaction fees,RevenueModel

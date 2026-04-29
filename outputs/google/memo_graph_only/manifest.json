@@ -1,0 +1,10 @@
+{
+  "company_name": "Google",
+  "company_slug": "google",
+  "pipeline": "memo_graph_only",
+  "latest_available": true,
+  "latest_run_dir": "outputs/google/memo_graph_only/latest",
+  "available_run_tokens": [],
+  "failed_run_tokens": [],
+  "updated_at": "2026-04-27T20:01:53.734283+00:00"
+}

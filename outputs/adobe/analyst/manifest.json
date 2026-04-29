@@ -1,0 +1,10 @@
+{
+  "company_name": "Adobe",
+  "company_slug": "adobe",
+  "pipeline": "analyst",
+  "latest_available": true,
+  "latest_run_dir": "outputs/adobe/analyst/latest",
+  "available_run_tokens": [],
+  "failed_run_tokens": [],
+  "updated_at": "2026-04-27T20:17:52.126080+00:00"
+}

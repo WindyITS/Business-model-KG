@@ -1,0 +1,27 @@
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"Fuel and other","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"General merchandise","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"Grocery","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"Walmart Advertising Solutions","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"Walmart Data and Analytics Platform","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"Walmart Financial Services","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"Walmart Health and Wellness Services","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"home and auto solutions","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"operational insights","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"photo and tech assistance","object_type":"Offering"}
+{"subject":"Walmart","subject_type":"Company","relation":"HAS_SEGMENT","object":"Sam's Club U.S.","object_type":"BusinessSegment"}
+{"subject":"Walmart","subject_type":"Company","relation":"HAS_SEGMENT","object":"Walmart International","object_type":"BusinessSegment"}
+{"subject":"Walmart","subject_type":"Company","relation":"HAS_SEGMENT","object":"Walmart U.S.","object_type":"BusinessSegment"}
+{"subject":"Walmart","subject_type":"Company","relation":"OPERATES_IN","object":"Worldwide","object_type":"Place"}
+{"subject":"Walmart International","subject_type":"BusinessSegment","relation":"OFFERS","object":"Walmart Advertising Solutions","object_type":"Offering"}
+{"subject":"Walmart International","subject_type":"BusinessSegment","relation":"OFFERS","object":"Walmart Financial Services","object_type":"Offering"}
+{"subject":"Walmart International","subject_type":"BusinessSegment","relation":"OFFERS","object":"Walmart Fulfillment Services","object_type":"Offering"}
+{"subject":"Walmart International","subject_type":"BusinessSegment","relation":"OFFERS","object":"Walmart Health and Wellness Services","object_type":"Offering"}
+{"subject":"Walmart International","subject_type":"BusinessSegment","relation":"OFFERS","object":"Walmart Marketplace Platform","object_type":"Offering"}
+{"subject":"Walmart International","subject_type":"BusinessSegment","relation":"OFFERS","object":"delivery services","object_type":"Offering"}
+{"subject":"Walmart U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"General merchandise","object_type":"Offering"}
+{"subject":"Walmart U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"Grocery","object_type":"Offering"}
+{"subject":"Walmart U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"Walmart Advertising Solutions","object_type":"Offering"}
+{"subject":"Walmart U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"Walmart Data and Analytics Platform","object_type":"Offering"}
+{"subject":"Walmart U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"Walmart Financial Services","object_type":"Offering"}
+{"subject":"Walmart U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"Walmart Health and Wellness Services","object_type":"Offering"}
+{"subject":"Walmart U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"supply chain and fulfillment capabilities","object_type":"Offering"}

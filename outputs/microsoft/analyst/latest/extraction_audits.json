@@ -1,0 +1,46 @@
+{
+  "foundation_memo": {
+    "content_length": 20655,
+    "line_count": 428,
+    "format": "text"
+  },
+  "augmented_memo": {
+    "content_length": 23932,
+    "line_count": 442,
+    "format": "text"
+  },
+  "graph_compilation": {
+    "payload_parse_recovered": false,
+    "payload_triples_is_list": true,
+    "raw_triple_count": 135,
+    "non_dict_triple_count": 0,
+    "missing_key_triple_count": 0,
+    "malformed_triple_count": 0,
+    "ontology_rejected_triple_count": 16,
+    "invalid_triple_count": 16,
+    "duplicate_triple_count": 0,
+    "kept_triple_count": 119,
+    "invalid_issue_counts": {
+      "child_offering_monetizes_via": 1,
+      "multiple_offering_parents": 1,
+      "segment_anchored_offering_sells_through": 14
+    },
+    "ontology_version": "canonical"
+  },
+  "graph_critique": {
+    "payload_parse_recovered": false,
+    "payload_triples_is_list": true,
+    "raw_triple_count": 117,
+    "non_dict_triple_count": 0,
+    "missing_key_triple_count": 0,
+    "malformed_triple_count": 0,
+    "ontology_rejected_triple_count": 1,
+    "invalid_triple_count": 1,
+    "duplicate_triple_count": 0,
+    "kept_triple_count": 116,
+    "invalid_issue_counts": {
+      "multiple_offering_parents": 1
+    },
+    "ontology_version": "canonical"
+  }
+}

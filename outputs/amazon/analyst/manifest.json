@@ -1,0 +1,10 @@
+{
+  "company_name": "Amazon",
+  "company_slug": "amazon",
+  "pipeline": "analyst",
+  "latest_available": true,
+  "latest_run_dir": "outputs/amazon/analyst/latest",
+  "available_run_tokens": [],
+  "failed_run_tokens": [],
+  "updated_at": "2026-04-27T20:44:42.343758+00:00"
+}

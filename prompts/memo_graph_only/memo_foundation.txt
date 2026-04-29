@@ -1,0 +1,87 @@
+<workflow_step>
+STAGE 1A - ANALYST MEMO FOUNDATION
+</workflow_step>
+
+<objective>
+Build the foundational analyst business-model memo for the company.
+Focus first on the core organizing structure of how the company makes money and how its main businesses fit together.
+</objective>
+
+<company_name>
+{{company_name}}
+</company_name>
+
+<artifact_contract>
+Return a structured markdown memo, not JSON.
+
+Use this exact section order and keep the heading text verbatim.
+Render the memo in markdown using headings and bullet lists.
+
+# ANALYTICAL FRAME
+## Summary:
+...
+## Explicit Support:
+- ...
+
+# SEGMENTS
+## [Segment] <name>
+### Role in Business Model:
+...
+### Explicit Support:
+- ...
+### Customer Types:
+- <canonical customer label> | <why it fits>
+### Channels:
+- <canonical channel label> | <why it fits>
+
+# OFFERINGS
+## [Offering] <name>
+### Role in Business Model:
+...
+### Explicit Support:
+- ...
+### Segment Anchors:
+- <segment name> | <why it belongs there>
+### Parent Offering:
+- <parent offering name> | <why this is the parent>
+### Child Offerings:
+- <child offering name> | <why it belongs under this parent>
+### Channels:
+- <canonical channel label> | <why it fits>
+### Revenue Models:
+- <canonical revenue-model label> | <why it fits>
+
+# CORPORATE SCOPE
+## Operating Geographies:
+- <place> | <why it matters>
+## Key Partners:
+- <company> | <why the partnership is meaningful>
+</artifact_contract>
+
+<foundation_rules>
+- this pass is for the fundamental structure, not exhaustive detail
+- choose the most defensible business-model anchors, even if the filing's reporting segmentation is not the best analytical frame
+- do not create decorative segments just to make the company look tidy
+- keep only the offerings that matter to the core structure in this first pass
+- if a core offering family clearly contains a few material child offerings named in the filing, include those child offerings explicitly rather than leaving the family undecomposed
+- if a core offering clearly contains stable named variants, tiers, editions, plans, form factors, or line families, include those child offerings even when the filing presents them through current release names
+- normalize annual, release-specific, or version-specific names into durable family-level or variant-level child offerings when that yields a more stable business-model structure than using the transient label verbatim
+- if a core franchise is split across materially different sub-businesses, preserve the family and the split children when that decomposition is central to understanding the business model
+- if a named franchise is described as distinct in the filing, keep it as its own offering rather than subordinating it under a broader horizontal platform just because its cloud services or professional services are reported inside that platform's bucket
+- any offering that should exist as a first-order graph node or as a parent family for another first-order offering must have its own full `[Offering]` block
+- prefer named products, brands, platforms, suites, and franchises over generic category labels such as broad functional buckets or accounting-style rollups
+- do not use segment_anchors on child offerings just to restate inheritance from a parent offering
+- do not populate `Channels` on a segment-anchored offering just to restate the same distribution channels already carried by the segment; use offering-level channels only when the filing supports a differentiated channel pattern or the offering has no clear segment anchor
+- in `Operating Geographies`, prefer `Worldwide` when the filing clearly supports global operations and a longer geography list would only mirror segment coverage rather than add distinct corporate-scope signal
+- use canonical labels exactly for CustomerType, Channel, and RevenueModel; otherwise omit
+- confident inference on customer types is allowed when product, platform, ecosystem, distribution, or support language strongly implies a commercially served constituency, even if the filing does not name that customer type directly in its generic markets sentence; use the closest canonical label and omit weak guesses
+- explicit_support should capture what the filing clearly supports
+- prefer omission over weak guesses
+- do not use your own knowledge to recover missing business-model details
+- if a list is empty, write `- none`
+</foundation_rules>
+
+<format_reminder>
+Return ONLY the markdown memo.
+Do not return JSON.
+</format_reminder>

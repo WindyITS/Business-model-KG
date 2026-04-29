@@ -1,0 +1,10 @@
+{
+  "company_name": "Microsoft",
+  "company_slug": "microsoft",
+  "pipeline": "zero-shot",
+  "latest_available": true,
+  "latest_run_dir": "outputs/microsoft/zero-shot/latest",
+  "available_run_tokens": [],
+  "failed_run_tokens": [],
+  "updated_at": "2026-04-27T19:56:01.788094+00:00"
+}

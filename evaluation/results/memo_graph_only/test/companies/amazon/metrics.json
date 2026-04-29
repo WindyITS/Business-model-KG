@@ -1,0 +1,19 @@
+{
+  "company": "Amazon",
+  "company_slug": "amazon",
+  "pipeline": "memo_graph_only",
+  "split": "test",
+  "status": "evaluated",
+  "gold_path": "/Users/giuliosighieri/Desktop/kg-v0/evaluation/benchmarks/test/clean/amazon.jsonl",
+  "prediction_path": "/Users/giuliosighieri/Desktop/kg-v0/outputs/amazon/memo_graph_only/latest/resolved_triples.json",
+  "gold_triples": 80,
+  "gold_unique_triples": 80,
+  "predicted_triples": 48,
+  "predicted_unique_triples": 48,
+  "true_positives": 22,
+  "false_positives": 26,
+  "false_negatives": 58,
+  "precision": 0.4583333333333333,
+  "recall": 0.275,
+  "f1": 0.34374999999999994
+}

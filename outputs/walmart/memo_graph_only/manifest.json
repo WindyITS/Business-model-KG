@@ -1,0 +1,10 @@
+{
+  "company_name": "Walmart",
+  "company_slug": "walmart",
+  "pipeline": "memo_graph_only",
+  "latest_available": true,
+  "latest_run_dir": "outputs/walmart/memo_graph_only/latest",
+  "available_run_tokens": [],
+  "failed_run_tokens": [],
+  "updated_at": "2026-04-27T20:49:45.758136+00:00"
+}

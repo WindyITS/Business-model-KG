@@ -1,0 +1,10 @@
+{
+  "company_name": "Walmart",
+  "company_slug": "walmart",
+  "pipeline": "zero-shot",
+  "latest_available": true,
+  "latest_run_dir": "outputs/walmart/zero-shot/latest",
+  "available_run_tokens": [],
+  "failed_run_tokens": [],
+  "updated_at": "2026-04-27T20:42:39.675676+00:00"
+}

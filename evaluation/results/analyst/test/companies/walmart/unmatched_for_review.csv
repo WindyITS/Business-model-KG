@@ -1,0 +1,50 @@
+row_id,match_id,source,subject,subject_type,relation,object,object_type
+gold_0001,,gold,Club Membership,Offering,MONETIZES_VIA,subscription,RevenueModel
+gold_0002,,gold,Plus Membership,Offering,MONETIZES_VIA,subscription,RevenueModel
+gold_0003,,gold,Sam's Club U.S.,BusinessSegment,OFFERS,Club Membership,Offering
+gold_0004,,gold,Sam's Club U.S.,BusinessSegment,OFFERS,Fuel and other,Offering
+gold_0005,,gold,Sam's Club U.S.,BusinessSegment,OFFERS,General merchandise,Offering
+gold_0006,,gold,Sam's Club U.S.,BusinessSegment,OFFERS,Grocery,Offering
+gold_0007,,gold,Sam's Club U.S.,BusinessSegment,OFFERS,Plus Membership,Offering
+gold_0008,,gold,Sam's Club U.S.,BusinessSegment,OFFERS,home and auto solutions,Offering
+gold_0009,,gold,Sam's Club U.S.,BusinessSegment,OFFERS,operational insights,Offering
+gold_0010,,gold,Sam's Club U.S.,BusinessSegment,OFFERS,photo and tech assistance,Offering
+gold_0011,,gold,Sam's Club U.S.,BusinessSegment,OFFERS,tire and battery installation services,Offering
+gold_0012,,gold,Walmart International,BusinessSegment,OFFERS,delivery services,Offering
+gold_0013,,gold,Walmart U.S.,BusinessSegment,OFFERS,General merchandise,Offering
+gold_0014,,gold,Walmart U.S.,BusinessSegment,OFFERS,Grocery,Offering
+gold_0015,,gold,Walmart U.S.,BusinessSegment,OFFERS,fuel,Offering
+gold_0016,1,gold,Walmart U.S.,BusinessSegment,OFFERS,supply chain and fulfillment capabilities,Offering
+predicted_0001,,predicted,Flipkart Platform,Offering,MONETIZES_VIA,advertising,RevenueModel
+predicted_0002,,predicted,Flipkart Platform,Offering,MONETIZES_VIA,transaction fees,RevenueModel
+predicted_0003,,predicted,PhonePe Platform,Offering,MONETIZES_VIA,transaction fees,RevenueModel
+predicted_0004,,predicted,Sam's Club Ancillary Services,Offering,MONETIZES_VIA,service fees,RevenueModel
+predicted_0005,,predicted,Sam's Club Membership Program,Offering,MONETIZES_VIA,subscription,RevenueModel
+predicted_0006,,predicted,Sam's Club Membership Program,Offering,OFFERS,Club Membership Tier,Offering
+predicted_0007,,predicted,Sam's Club Membership Program,Offering,OFFERS,Plus Membership Tier,Offering
+predicted_0008,,predicted,Sam's Club Membership Program,Offering,OFFERS,Sam's Cash Rewards Program,Offering
+predicted_0009,,predicted,Sam's Club U.S.,BusinessSegment,OFFERS,Member's Mark Product Family,Offering
+predicted_0010,,predicted,Sam's Club U.S.,BusinessSegment,OFFERS,Sam's Club Ancillary Services,Offering
+predicted_0011,,predicted,Sam's Club U.S.,BusinessSegment,OFFERS,Sam's Club Membership Program,Offering
+predicted_0012,,predicted,Sam's Club U.S.,BusinessSegment,SERVES,small businesses,CustomerType
+predicted_0013,,predicted,Walmart Advertising Solutions,Offering,MONETIZES_VIA,advertising,RevenueModel
+predicted_0014,,predicted,Walmart Data and Analytics Platform,Offering,MONETIZES_VIA,service fees,RevenueModel
+predicted_0015,,predicted,Walmart Financial Services,Offering,MONETIZES_VIA,service fees,RevenueModel
+predicted_0016,,predicted,Walmart Financial Services,Offering,MONETIZES_VIA,transaction fees,RevenueModel
+predicted_0017,,predicted,Walmart Fulfillment Services,Offering,MONETIZES_VIA,service fees,RevenueModel
+predicted_0018,,predicted,Walmart Health and Wellness Services,Offering,MONETIZES_VIA,service fees,RevenueModel
+predicted_0019,,predicted,Walmart International,BusinessSegment,OFFERS,Equate Product Family,Offering
+predicted_0020,,predicted,Walmart International,BusinessSegment,OFFERS,Flipkart Platform,Offering
+predicted_0021,,predicted,Walmart International,BusinessSegment,OFFERS,Great Value Product Family,Offering
+predicted_0022,,predicted,Walmart International,BusinessSegment,OFFERS,Member's Mark Product Family,Offering
+predicted_0023,,predicted,Walmart International,BusinessSegment,OFFERS,PhonePe Platform,Offering
+predicted_0024,,predicted,Walmart International,BusinessSegment,SERVES,consumers,CustomerType
+predicted_0025,,predicted,Walmart International,BusinessSegment,SERVES,small businesses,CustomerType
+predicted_0026,,predicted,Walmart Marketplace Platform,Offering,MONETIZES_VIA,transaction fees,RevenueModel
+predicted_0027,,predicted,Walmart U.S.,BusinessSegment,OFFERS,Equate Product Family,Offering
+predicted_0028,,predicted,Walmart U.S.,BusinessSegment,OFFERS,Great Value Product Family,Offering
+predicted_0029,1,predicted,Walmart U.S.,BusinessSegment,OFFERS,Walmart Fulfillment Services,Offering
+predicted_0030,,predicted,Walmart U.S.,BusinessSegment,OFFERS,Walmart Marketplace Platform,Offering
+predicted_0031,,predicted,Walmart U.S.,BusinessSegment,OFFERS,Walmart+ Membership Program,Offering
+predicted_0032,,predicted,Walmart U.S.,BusinessSegment,SERVES,small businesses,CustomerType
+predicted_0033,,predicted,Walmart+ Membership Program,Offering,MONETIZES_VIA,subscription,RevenueModel

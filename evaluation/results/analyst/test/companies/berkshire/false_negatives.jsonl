@@ -1,0 +1,310 @@
+{"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"Brooks","object_type":"Offering"}
+{"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"BØRN","object_type":"Offering"}
+{"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"Carolina","object_type":"Offering"}
+{"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"Curvation","object_type":"Offering"}
+{"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"Double-H Boots","object_type":"Offering"}
+{"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"Fruit of the Loom","object_type":"Offering"}
+{"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"JERZEES","object_type":"Offering"}
+{"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"Justin","object_type":"Offering"}
+{"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"Radiant by Vanity Fair","object_type":"Offering"}
+{"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"Russell Athletic","object_type":"Offering"}
+{"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"Spalding","object_type":"Offering"}
+{"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"Söfft","object_type":"Offering"}
+{"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"Vassarette","object_type":"Offering"}
+{"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"children's apparel","object_type":"Offering"}
+{"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"SERVES","object":"consumers","object_type":"CustomerType"}
+{"subject":"Berkshire Hathaway","subject_type":"Company","relation":"HAS_SEGMENT","object":"Apparel and Footwear","object_type":"BusinessSegment"}
+{"subject":"Berkshire Hathaway","subject_type":"Company","relation":"HAS_SEGMENT","object":"Berkshire Hathaway Energy","object_type":"BusinessSegment"}
+{"subject":"Berkshire Hathaway","subject_type":"Company","relation":"HAS_SEGMENT","object":"Building Products","object_type":"BusinessSegment"}
+{"subject":"Berkshire Hathaway","subject_type":"Company","relation":"HAS_SEGMENT","object":"Burlington Northern Santa Fe","object_type":"BusinessSegment"}
+{"subject":"Berkshire Hathaway","subject_type":"Company","relation":"HAS_SEGMENT","object":"Electrical Group","object_type":"BusinessSegment"}
+{"subject":"Berkshire Hathaway","subject_type":"Company","relation":"HAS_SEGMENT","object":"Foodservice Technologies","object_type":"BusinessSegment"}
+{"subject":"Berkshire Hathaway","subject_type":"Company","relation":"HAS_SEGMENT","object":"Industrial products manufacturing","object_type":"BusinessSegment"}
+{"subject":"Berkshire Hathaway","subject_type":"Company","relation":"HAS_SEGMENT","object":"Insurance","object_type":"BusinessSegment"}
+{"subject":"Berkshire Hathaway","subject_type":"Company","relation":"HAS_SEGMENT","object":"Metal Services","object_type":"BusinessSegment"}
+{"subject":"Berkshire Hathaway","subject_type":"Company","relation":"HAS_SEGMENT","object":"Other Consumer Products","object_type":"BusinessSegment"}
+{"subject":"Berkshire Hathaway","subject_type":"Company","relation":"HAS_SEGMENT","object":"Plumbing & Refrigeration","object_type":"BusinessSegment"}
+{"subject":"Berkshire Hathaway","subject_type":"Company","relation":"HAS_SEGMENT","object":"Rail & Leasing","object_type":"BusinessSegment"}
+{"subject":"Berkshire Hathaway","subject_type":"Company","relation":"HAS_SEGMENT","object":"Recreational Vehicles","object_type":"BusinessSegment"}
+{"subject":"Berkshire Hathaway","subject_type":"Company","relation":"HAS_SEGMENT","object":"Retail Solutions","object_type":"BusinessSegment"}
+{"subject":"Berkshire Hathaway","subject_type":"Company","relation":"HAS_SEGMENT","object":"Service and Retailing","object_type":"BusinessSegment"}
+{"subject":"Berkshire Hathaway","subject_type":"Company","relation":"HAS_SEGMENT","object":"Transportation Products","object_type":"BusinessSegment"}
+{"subject":"Berkshire Hathaway","subject_type":"Company","relation":"HAS_SEGMENT","object":"Water Technologies","object_type":"BusinessSegment"}
+{"subject":"Berkshire Hathaway","subject_type":"Company","relation":"OPERATES_IN","object":"Worldwide","object_type":"Place"}
+{"subject":"Berkshire Hathaway","subject_type":"Company","relation":"PARTNERS_WITH","object":"Insurance Australia Group Limited","object_type":"Company"}
+{"subject":"Berkshire Hathaway Energy","subject_type":"BusinessSegment","relation":"OFFERS","object":"Electric Utility Services","object_type":"Offering"}
+{"subject":"Berkshire Hathaway Energy","subject_type":"BusinessSegment","relation":"OFFERS","object":"Natural Gas Pipeline Services","object_type":"Offering"}
+{"subject":"Berkshire Hathaway Energy","subject_type":"BusinessSegment","relation":"OFFERS","object":"home warranties","object_type":"Offering"}
+{"subject":"Berkshire Hathaway Energy","subject_type":"BusinessSegment","relation":"OFFERS","object":"mortgage banking","object_type":"Offering"}
+{"subject":"Berkshire Hathaway Energy","subject_type":"BusinessSegment","relation":"OFFERS","object":"mortgage originations","object_type":"Offering"}
+{"subject":"Berkshire Hathaway Energy","subject_type":"BusinessSegment","relation":"OFFERS","object":"relocation services","object_type":"Offering"}
+{"subject":"Berkshire Hathaway Energy","subject_type":"BusinessSegment","relation":"OFFERS","object":"renewable energy","object_type":"Offering"}
+{"subject":"Berkshire Hathaway Energy","subject_type":"BusinessSegment","relation":"OFFERS","object":"residential real estate brokerage","object_type":"Offering"}
+{"subject":"Berkshire Hathaway Energy","subject_type":"BusinessSegment","relation":"OFFERS","object":"title and closing services","object_type":"Offering"}
+{"subject":"Berkshire Hathaway Energy","subject_type":"BusinessSegment","relation":"SERVES","object":"mid-market companies","object_type":"CustomerType"}
+{"subject":"Building Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"Home Financing","object_type":"Offering"}
+{"subject":"Building Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"architectural paints","object_type":"Offering"}
+{"subject":"Building Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"carpet tile","object_type":"Offering"}
+{"subject":"Building Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"cladding tile","object_type":"Offering"}
+{"subject":"Building Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"clay bricks","object_type":"Offering"}
+{"subject":"Building Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"fiberglass","object_type":"Offering"}
+{"subject":"Building Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"floor tile","object_type":"Offering"}
+{"subject":"Building Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"modular homes","object_type":"Offering"}
+{"subject":"Building Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"specialty paints","object_type":"Offering"}
+{"subject":"Building Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"tiny homes","object_type":"Offering"}
+{"subject":"Building Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"tufted carpet","object_type":"Offering"}
+{"subject":"Building Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"wall tile","object_type":"Offering"}
+{"subject":"Building Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"wood flooring","object_type":"Offering"}
+{"subject":"Building Products","subject_type":"BusinessSegment","relation":"SERVES","object":"consumers","object_type":"CustomerType"}
+{"subject":"Building Products","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
+{"subject":"Building Products","subject_type":"BusinessSegment","relation":"SERVES","object":"mid-market companies","object_type":"CustomerType"}
+{"subject":"Building Products","subject_type":"BusinessSegment","relation":"SERVES","object":"retailers","object_type":"CustomerType"}
+{"subject":"Building Products","subject_type":"BusinessSegment","relation":"SERVES","object":"small businesses","object_type":"CustomerType"}
+{"subject":"Burlington Northern Santa Fe","subject_type":"BusinessSegment","relation":"OFFERS","object":"Freight Rail Transportation","object_type":"Offering"}
+{"subject":"Burlington Northern Santa Fe","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
+{"subject":"Buses","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"BØRN","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Carolina","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Commercial Trucks","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Curvation","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Double-H Boots","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Electric Utility Services","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"Electrical Group","subject_type":"BusinessSegment","relation":"OFFERS","object":"electrical wire","object_type":"Offering"}
+{"subject":"Electrical Group","subject_type":"BusinessSegment","relation":"OFFERS","object":"specialty cable","object_type":"Offering"}
+{"subject":"Electrical Group","subject_type":"BusinessSegment","relation":"OFFERS","object":"specialty wire","object_type":"Offering"}
+{"subject":"Electrical Group","subject_type":"BusinessSegment","relation":"SERVES","object":"consumers","object_type":"CustomerType"}
+{"subject":"Electrical Group","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
+{"subject":"Electrical Group","subject_type":"BusinessSegment","relation":"SERVES","object":"mid-market companies","object_type":"CustomerType"}
+{"subject":"Electrical Group","subject_type":"BusinessSegment","relation":"SERVES","object":"small businesses","object_type":"CustomerType"}
+{"subject":"Fastener Systems","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Flight Simulation Products","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Foodservice Technologies","subject_type":"BusinessSegment","relation":"OFFERS","object":"beverage cooling equipment","object_type":"Offering"}
+{"subject":"Foodservice Technologies","subject_type":"BusinessSegment","relation":"OFFERS","object":"beverage dispensing equipment","object_type":"Offering"}
+{"subject":"Foodservice Technologies","subject_type":"BusinessSegment","relation":"OFFERS","object":"food preparation equipment","object_type":"Offering"}
+{"subject":"Foodservice Technologies","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
+{"subject":"Foodservice Technologies","subject_type":"BusinessSegment","relation":"SERVES","object":"mid-market companies","object_type":"CustomerType"}
+{"subject":"Foodservice Technologies","subject_type":"BusinessSegment","relation":"SERVES","object":"small businesses","object_type":"CustomerType"}
+{"subject":"Freight Rail Transportation","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"HVAC systems","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Home Financing","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"Fastener Systems","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"Polyvinyl Chloride (PVC)","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"aerostructures","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"axles","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"castings","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"caustic soda","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"chlorine","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"construction fasteners","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"driveline lubricant additives","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"educational software and literature","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"engine lubricant additives","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"engineered polymers","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"fan drives","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"forgings","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"gear drives","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"gearboxes","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"gloves and protective wear","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"hole making tools","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"lighting products","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"masonry anchoring systems","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"milling tools","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"parting tools","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"performance coatings","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"pump drives","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"round tools","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"stone anchoring systems","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"turning/thread tools","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"wheels","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"wind machines","object_type":"Offering"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"SERVES","object":"manufacturers","object_type":"CustomerType"}
+{"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"SERVES","object":"mid-market companies","object_type":"CustomerType"}
+{"subject":"Insurance","subject_type":"BusinessSegment","relation":"OFFERS","object":"Private Passenger Automobile Insurance","object_type":"Offering"}
+{"subject":"Insurance","subject_type":"BusinessSegment","relation":"OFFERS","object":"Retroactive Reinsurance","object_type":"Offering"}
+{"subject":"Insurance","subject_type":"BusinessSegment","relation":"OFFERS","object":"commercial auto insurance","object_type":"Offering"}
+{"subject":"Insurance","subject_type":"BusinessSegment","relation":"OFFERS","object":"commercial property insurance","object_type":"Offering"}
+{"subject":"Insurance","subject_type":"BusinessSegment","relation":"OFFERS","object":"commercial vehicle insurance","object_type":"Offering"}
+{"subject":"Insurance","subject_type":"BusinessSegment","relation":"OFFERS","object":"healthcare liability insurance","object_type":"Offering"}
+{"subject":"Insurance","subject_type":"BusinessSegment","relation":"OFFERS","object":"life and health reinsurance","object_type":"Offering"}
+{"subject":"Insurance","subject_type":"BusinessSegment","relation":"OFFERS","object":"motorcycle insurance","object_type":"Offering"}
+{"subject":"Insurance","subject_type":"BusinessSegment","relation":"OFFERS","object":"property reinsurance","object_type":"Offering"}
+{"subject":"Insurance","subject_type":"BusinessSegment","relation":"OFFERS","object":"workers compensation insurance","object_type":"Offering"}
+{"subject":"Insurance","subject_type":"BusinessSegment","relation":"SERVES","object":"mid-market companies","object_type":"CustomerType"}
+{"subject":"JERZEES","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Justin","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Metal Services","subject_type":"BusinessSegment","relation":"OFFERS","object":"metal pipe","object_type":"Offering"}
+{"subject":"Metal Services","subject_type":"BusinessSegment","relation":"OFFERS","object":"tubing","object_type":"Offering"}
+{"subject":"Metal Services","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
+{"subject":"Metal Services","subject_type":"BusinessSegment","relation":"SERVES","object":"manufacturers","object_type":"CustomerType"}
+{"subject":"Natural Gas Pipeline Services","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"Other Consumer Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"Larson-Juhl","object_type":"Offering"}
+{"subject":"Other Consumer Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"alkaline batteries","object_type":"Offering"}
+{"subject":"Other Consumer Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"costumes","object_type":"Offering"}
+{"subject":"Other Consumer Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"lithium coin batteries","object_type":"Offering"}
+{"subject":"Other Consumer Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"plush","object_type":"Offering"}
+{"subject":"Other Consumer Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"toys","object_type":"Offering"}
+{"subject":"Other Consumer Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"virtual games","object_type":"Offering"}
+{"subject":"Other Consumer Products","subject_type":"BusinessSegment","relation":"SERVES","object":"consumers","object_type":"CustomerType"}
+{"subject":"Other Consumer Products","subject_type":"BusinessSegment","relation":"SERVES","object":"retailers","object_type":"CustomerType"}
+{"subject":"Plumbing & Refrigeration","subject_type":"BusinessSegment","relation":"OFFERS","object":"HVAC systems","object_type":"Offering"}
+{"subject":"Plumbing & Refrigeration","subject_type":"BusinessSegment","relation":"OFFERS","object":"air handling units","object_type":"Offering"}
+{"subject":"Plumbing & Refrigeration","subject_type":"BusinessSegment","relation":"OFFERS","object":"copper tubing","object_type":"Offering"}
+{"subject":"Plumbing & Refrigeration","subject_type":"BusinessSegment","relation":"OFFERS","object":"ducting units","object_type":"Offering"}
+{"subject":"Plumbing & Refrigeration","subject_type":"BusinessSegment","relation":"OFFERS","object":"heat exchange units","object_type":"Offering"}
+{"subject":"Plumbing & Refrigeration","subject_type":"BusinessSegment","relation":"OFFERS","object":"heating components","object_type":"Offering"}
+{"subject":"Plumbing & Refrigeration","subject_type":"BusinessSegment","relation":"OFFERS","object":"plumbing components","object_type":"Offering"}
+{"subject":"Plumbing & Refrigeration","subject_type":"BusinessSegment","relation":"OFFERS","object":"ventilation components","object_type":"Offering"}
+{"subject":"Plumbing & Refrigeration","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
+{"subject":"Plumbing & Refrigeration","subject_type":"BusinessSegment","relation":"SERVES","object":"manufacturers","object_type":"CustomerType"}
+{"subject":"Plumbing & Refrigeration","subject_type":"BusinessSegment","relation":"SERVES","object":"mid-market companies","object_type":"CustomerType"}
+{"subject":"Polyvinyl Chloride (PVC)","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Pontoon Boats","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Private Passenger Automobile Insurance","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"Radiant by Vanity Fair","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Rail & Leasing","subject_type":"BusinessSegment","relation":"OFFERS","object":"intermodal tank containers leasing","object_type":"Offering"}
+{"subject":"Rail & Leasing","subject_type":"BusinessSegment","relation":"OFFERS","object":"mobile railcar movers","object_type":"Offering"}
+{"subject":"Rail & Leasing","subject_type":"BusinessSegment","relation":"OFFERS","object":"rail switching and loading services","object_type":"Offering"}
+{"subject":"Rail & Leasing","subject_type":"BusinessSegment","relation":"OFFERS","object":"railcars leasing","object_type":"Offering"}
+{"subject":"Rail & Leasing","subject_type":"BusinessSegment","relation":"OFFERS","object":"track construction and maintenance","object_type":"Offering"}
+{"subject":"Rail & Leasing","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
+{"subject":"Recreational Vehicles","subject_type":"BusinessSegment","relation":"OFFERS","object":"Buses","object_type":"Offering"}
+{"subject":"Recreational Vehicles","subject_type":"BusinessSegment","relation":"OFFERS","object":"Commercial Trucks","object_type":"Offering"}
+{"subject":"Recreational Vehicles","subject_type":"BusinessSegment","relation":"OFFERS","object":"Pontoon Boats","object_type":"Offering"}
+{"subject":"Recreational Vehicles","subject_type":"BusinessSegment","relation":"OFFERS","object":"Utility Cargo Trailers","object_type":"Offering"}
+{"subject":"Recreational Vehicles","subject_type":"BusinessSegment","relation":"SERVES","object":"consumers","object_type":"CustomerType"}
+{"subject":"Recreational Vehicles","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
+{"subject":"Recreational Vehicles","subject_type":"BusinessSegment","relation":"SERVES","object":"mid-market companies","object_type":"CustomerType"}
+{"subject":"Recreational Vehicles","subject_type":"BusinessSegment","relation":"SERVES","object":"retailers","object_type":"CustomerType"}
+{"subject":"Retail Solutions","subject_type":"BusinessSegment","relation":"OFFERS","object":"dispensing fixtures","object_type":"Offering"}
+{"subject":"Retail Solutions","subject_type":"BusinessSegment","relation":"OFFERS","object":"display fixtures","object_type":"Offering"}
+{"subject":"Retail Solutions","subject_type":"BusinessSegment","relation":"OFFERS","object":"in-store digital merchandising","object_type":"Offering"}
+{"subject":"Retail Solutions","subject_type":"BusinessSegment","relation":"OFFERS","object":"material handling","object_type":"Offering"}
+{"subject":"Retail Solutions","subject_type":"BusinessSegment","relation":"OFFERS","object":"retailer design services","object_type":"Offering"}
+{"subject":"Retail Solutions","subject_type":"BusinessSegment","relation":"OFFERS","object":"security carts","object_type":"Offering"}
+{"subject":"Retail Solutions","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
+{"subject":"Retail Solutions","subject_type":"BusinessSegment","relation":"SERVES","object":"mid-market companies","object_type":"CustomerType"}
+{"subject":"Retroactive Reinsurance","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"Russell Athletic","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Service and Retailing","subject_type":"BusinessSegment","relation":"OFFERS","object":"Flight Simulation Products","object_type":"Offering"}
+{"subject":"Service and Retailing","subject_type":"BusinessSegment","relation":"OFFERS","object":"aviation training services","object_type":"Offering"}
+{"subject":"Service and Retailing","subject_type":"BusinessSegment","relation":"OFFERS","object":"private aviation services","object_type":"Offering"}
+{"subject":"Service and Retailing","subject_type":"BusinessSegment","relation":"OFFERS","object":"wholesale distribution services","object_type":"Offering"}
+{"subject":"Service and Retailing","subject_type":"BusinessSegment","relation":"SERVES","object":"mid-market companies","object_type":"CustomerType"}
+{"subject":"Spalding","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Söfft","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Transportation Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"aluminium extrusions","object_type":"Offering"}
+{"subject":"Transportation Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"aluminium tubing","object_type":"Offering"}
+{"subject":"Transportation Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"dry van trailers","object_type":"Offering"}
+{"subject":"Transportation Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"flatbed trailers","object_type":"Offering"}
+{"subject":"Transportation Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"precision-molded plastic components","object_type":"Offering"}
+{"subject":"Transportation Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"replacement parts","object_type":"Offering"}
+{"subject":"Transportation Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"specialty trailers","object_type":"Offering"}
+{"subject":"Transportation Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"truck and trailer components","object_type":"Offering"}
+{"subject":"Transportation Products","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
+{"subject":"Transportation Products","subject_type":"BusinessSegment","relation":"SERVES","object":"manufacturers","object_type":"CustomerType"}
+{"subject":"Utility Cargo Trailers","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Vassarette","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Water Technologies","subject_type":"BusinessSegment","relation":"OFFERS","object":"water treatment equipment","object_type":"Offering"}
+{"subject":"Water Technologies","subject_type":"BusinessSegment","relation":"SERVES","object":"consumers","object_type":"CustomerType"}
+{"subject":"Water Technologies","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
+{"subject":"Water Technologies","subject_type":"BusinessSegment","relation":"SERVES","object":"mid-market companies","object_type":"CustomerType"}
+{"subject":"Water Technologies","subject_type":"BusinessSegment","relation":"SERVES","object":"small businesses","object_type":"CustomerType"}
+{"subject":"aerostructures","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"air handling units","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"alkaline batteries","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"aluminium extrusions","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"aluminium tubing","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"architectural paints","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"aviation training services","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"axles","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"beverage cooling equipment","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"beverage dispensing equipment","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"carpet tile","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"castings","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"caustic soda","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"children's apparel","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"chlorine","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"cladding tile","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"clay bricks","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"commercial auto insurance","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"commercial property insurance","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"commercial vehicle insurance","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"construction fasteners","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"copper tubing","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"costumes","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"dispensing fixtures","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"display fixtures","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"driveline lubricant additives","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"dry van trailers","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"ducting units","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"educational software and literature","subject_type":"Offering","relation":"MONETIZES_VIA","object":"licensing","object_type":"RevenueModel"}
+{"subject":"electrical wire","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"engine lubricant additives","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"engineered polymers","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"fan drives","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"fiberglass","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"flatbed trailers","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"floor tile","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"food preparation equipment","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"forgings","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"gear drives","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"gearboxes","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"gloves and protective wear","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"healthcare liability insurance","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"heat exchange units","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"heating components","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"hole making tools","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"home warranties","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"in-store digital merchandising","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"intermodal tank containers leasing","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"life and health reinsurance","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"lighting products","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"lithium coin batteries","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"masonry anchoring systems","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"material handling","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"metal pipe","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"milling tools","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"mobile railcar movers","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"modular homes","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"mortgage banking","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"mortgage originations","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"motorcycle insurance","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"parting tools","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"performance coatings","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"plumbing components","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"plush","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"precision-molded plastic components","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"private aviation services","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"property reinsurance","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"pump drives","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"rail switching and loading services","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"railcars leasing","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"relocation services","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"renewable energy","subject_type":"Offering","relation":"MONETIZES_VIA","object":"consumption-based","object_type":"RevenueModel"}
+{"subject":"replacement parts","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"residential real estate brokerage","subject_type":"Offering","relation":"MONETIZES_VIA","object":"transaction fees","object_type":"RevenueModel"}
+{"subject":"retailer design services","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"round tools","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"security carts","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"specialty cable","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"specialty paints","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"specialty trailers","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"specialty wire","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"stone anchoring systems","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"tiny homes","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"title and closing services","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"toys","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"track construction and maintenance","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"truck and trailer components","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"tubing","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"tufted carpet","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"turning/thread tools","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"ventilation components","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"virtual games","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"wall tile","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"water treatment equipment","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"wheels","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"wholesale distribution services","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"wind machines","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"wood flooring","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"workers compensation insurance","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}

@@ -1,0 +1,743 @@
+{
+  "summary": {
+    "input_triple_count": 104,
+    "valid_triple_count": 104,
+    "invalid_triple_count": 0,
+    "duplicate_triple_count": 0,
+    "output_triple_count": 104,
+    "require_text_grounding": false,
+    "ontology_version": "canonical"
+  },
+  "valid_triples": [
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Productivity and Business Processes",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Intelligent Cloud",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "More Personal Computing",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "Worldwide",
+      "object_type": "Place"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "PARTNERS_WITH",
+      "object": "Dell",
+      "object_type": "Company"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "PARTNERS_WITH",
+      "object": "Hewlett-Packard",
+      "object_type": "Company"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "PARTNERS_WITH",
+      "object": "Lenovo",
+      "object_type": "Company"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "mid-market companies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "developers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "IT professionals",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "government agencies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "educational institutions",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "resellers",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "distributors",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Microsoft 365 Commercial",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Microsoft 365 Consumer",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "LinkedIn",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Dynamics 365",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "mid-market companies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "developers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "IT professionals",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "healthcare organizations",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "resellers",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "distributors",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "OEMs",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Azure",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "GitHub",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Nuance Healthcare",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Windows Server Products",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "developers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "OEMs",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Windows OEM",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Surface",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Xbox Gaming Platform",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Search and News Advertising",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Microsoft 365 Commercial",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Microsoft Teams",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Microsoft 365 Commercial",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Exchange",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Microsoft 365 Commercial",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "SharePoint",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Microsoft 365 Commercial",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Enterprise Mobility + Security",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Microsoft 365 Commercial",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Microsoft 365 Copilot",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Microsoft 365 Commercial",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Microsoft 365 Commercial",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Microsoft 365 Consumer",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Office Consumer",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Microsoft 365 Consumer",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Outlook.com",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Microsoft 365 Consumer",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "OneDrive",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Microsoft 365 Consumer",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Microsoft 365 Consumer",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Microsoft 365 Consumer",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "LinkedIn",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Talent Solutions",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "LinkedIn",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Marketing Solutions",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "LinkedIn",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Sales Solutions",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "LinkedIn",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Premium Subscriptions",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "LinkedIn",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "LinkedIn",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Dynamics 365",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Power Apps",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Dynamics 365",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Power Automate",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Dynamics 365",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Dynamics 365",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Azure",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Azure AI Foundry",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Azure",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Azure AI Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Azure",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "consumption-based",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Azure",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "GitHub",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Nuance Healthcare",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Nuance Healthcare",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Windows Server Products",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "SQL Server",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Windows Server Products",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Windows Server",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Windows Server Products",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Visual Studio",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Windows Server Products",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "System Center",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Windows Server Products",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Client Access Licenses (CALs)",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Windows Server Products",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Windows OEM",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Windows Pro",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Windows OEM",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Windows non-Pro",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Windows OEM",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Surface",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Surface Devices",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Surface",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "PC Accessories",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Surface",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Xbox Gaming Platform",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Xbox Hardware",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Xbox Gaming Platform",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Xbox Game Pass",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Xbox Gaming Platform",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Xbox Cloud Gaming",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Xbox Gaming Platform",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "First-Party Content",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Xbox Gaming Platform",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Third-Party Content",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Xbox Gaming Platform",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Xbox Gaming Platform",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Xbox Gaming Platform",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Search and News Advertising",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Bing",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Search and News Advertising",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Microsoft Edge",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Search and News Advertising",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Microsoft News",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Search and News Advertising",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    }
+  ],
+  "invalid_triples": [],
+  "duplicate_triples": []
+}

@@ -1,0 +1,38 @@
+row_id,match_id,source,subject,subject_type,relation,object,object_type
+gold_0001,,gold,Agents,Offering,OFFERS,Gemini Enterprise,Offering
+gold_0002,,gold,Agents,Offering,OFFERS,Gemini for Google Workspace,Offering
+gold_0003,1,gold,Alphabet,Company,HAS_SEGMENT,Google Cloud,BusinessSegment
+gold_0004,2,gold,Alphabet,Company,HAS_SEGMENT,Google Services,BusinessSegment
+gold_0005,,gold,Developer Platform,Offering,OFFERS,Vertex AI,Offering
+gold_0006,,gold,Google Cloud,BusinessSegment,OFFERS,Agents,Offering
+gold_0007,3,gold,Google Cloud,BusinessSegment,OFFERS,Cybersecurity,Offering
+gold_0008,4,gold,Google Cloud,BusinessSegment,OFFERS,Data and Analytics,Offering
+gold_0009,,gold,Google Cloud,BusinessSegment,OFFERS,Developer Platform,Offering
+gold_0010,,gold,Google Cloud,BusinessSegment,SELLS_THROUGH,online,Channel
+gold_0011,,gold,Google Cloud Platform,Offering,MONETIZES_VIA,subscription,RevenueModel
+gold_0012,,gold,Google Services,BusinessSegment,OFFERS,Advertising,Offering
+gold_0013,,gold,Google Services,BusinessSegment,SELLS_THROUGH,online,Channel
+gold_0014,,gold,Other Bets,BusinessSegment,SELLS_THROUGH,online,Channel
+gold_0015,,gold,Waymo,Offering,MONETIZES_VIA,service fees,RevenueModel
+gold_0016,,gold,Waymo,Offering,OFFERS,paid ride-hailing services,Offering
+gold_0017,,gold,YouTube,Offering,OFFERS,YouTube Partner Program,Offering
+predicted_0001,,predicted,AI-optimized Infrastructure,Offering,MONETIZES_VIA,consumption-based,RevenueModel
+predicted_0002,1,predicted,Google,Company,HAS_SEGMENT,Google Cloud,BusinessSegment
+predicted_0003,2,predicted,Google,Company,HAS_SEGMENT,Google Services,BusinessSegment
+predicted_0004,,predicted,Google,Company,OPERATES_IN,Worldwide,Place
+predicted_0005,3,predicted,Google Cloud,BusinessSegment,OFFERS,Cybersecurity solutions,Offering
+predicted_0006,4,predicted,Google Cloud,BusinessSegment,OFFERS,Data and Analytics platform,Offering
+predicted_0007,,predicted,Google Cloud,BusinessSegment,OFFERS,Gemini Enterprise,Offering
+predicted_0008,,predicted,Google Cloud,BusinessSegment,OFFERS,Gemini for Google Workspace,Offering
+predicted_0009,,predicted,Google Cloud,BusinessSegment,OFFERS,Vertex AI,Offering
+predicted_0010,,predicted,Google Cloud,BusinessSegment,SERVES,developers,CustomerType
+predicted_0011,,predicted,Google Cloud,BusinessSegment,SERVES,large enterprises,CustomerType
+predicted_0012,,predicted,Google One,Offering,MONETIZES_VIA,subscription,RevenueModel
+predicted_0013,,predicted,Google Services,BusinessSegment,OFFERS,Chrome OS,Offering
+predicted_0014,,predicted,Google Services,BusinessSegment,OFFERS,Demand Gen,Offering
+predicted_0015,,predicted,Google Services,BusinessSegment,OFFERS,Performance Max,Offering
+predicted_0016,,predicted,Google Services,BusinessSegment,OFFERS,Product Studio,Offering
+predicted_0017,,predicted,Google Services,BusinessSegment,SERVES,consumers,CustomerType
+predicted_0018,,predicted,Google Services,BusinessSegment,SERVES,large enterprises,CustomerType
+predicted_0019,,predicted,Google Services,BusinessSegment,SERVES,small businesses,CustomerType
+predicted_0020,,predicted,Other Bets,BusinessSegment,SERVES,consumers,CustomerType

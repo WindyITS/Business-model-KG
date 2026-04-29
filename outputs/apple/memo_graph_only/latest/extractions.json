@@ -1,0 +1,1553 @@
+{
+  "foundation_memo": "# ANALYTICAL FRAME\n## Summary:\nApple Inc. operates an integrated hardware-software-services ecosystem centered on premium consumer electronics devices and digital services. The company designs, manufactures and markets smartphones, personal computers, tablets, wearables and accessories, complemented by a portfolio of services including cloud storage, digital content distribution, payment systems, advertising, and extended warranty/support programs. The business model relies on high-margin hardware franchises with recurring services revenue, distributed through a hybrid direct-indirect channel strategy.\n\n## Explicit Support:\n- \"The Company designs, manufactures and markets smartphones, personal computers, tablets, wearables and accessories, and sells a variety of related services.\"\n\n# SEGMENTS\n## [Segment] iPhone\n### Role in Business Model:\nThe iPhone segment represents the core smartphone franchise based on the iOS operating system, serving as the primary customer acquisition vehicle and ecosystem anchor for the company's platform strategy.\n\n### Explicit Support:\n- \"iPhone® is the Company’s line of smartphones based on its iOS operating system.\"\n\n### Customer Types:\n- consumers | Primary market for smartphones with consumer-focused features and marketing\n- small businesses | Explicitly mentioned as part of target markets\n- mid-market companies | Explicitly mentioned as \"mid-sized business\" in target markets\n- large enterprises | Explicitly mentioned as \"enterprise\" in target markets\n- educational institutions | Explicitly mentioned as \"education\" in target markets\n- government agencies | Explicitly mentioned as \"government\" in target markets\n\n### Channels:\n- direct sales | Company utilizes direct sales force for enterprise and other markets\n- online | Sales through company's online stores\n- retail | Sales through company's retail stores\n- resellers | Third-party cellular network carriers and other resellers account for 60% of distribution\n\n## [Segment] Mac\n### Role in Business Model:\nThe Mac segment comprises the personal computer franchise based on macOS, serving professional and consumer computing needs through laptop and desktop form factors.\n\n### Explicit Support:\n- \"Mac® is the Company’s line of personal computers based on its macOS® operating system.\"\n\n### Customer Types:\n- consumers | End users purchasing for personal use\n- small businesses | Target market segment\n- mid-market companies | Target market segment (\"mid-sized\")\n- large enterprises | Target market segment\n- educational institutions | Target market segment\n- government agencies | Target market segment\n\n### Channels:\n- direct sales | Direct sales force engagement\n- online | Online stores\n- retail | Retail stores\n- resellers | Indirect distribution channels\n\n## [Segment] iPad\n### Role in Business Model:\nThe iPad segment addresses the tablet computing market with multipurpose devices based on iPadOS, positioned for both content consumption and productivity use cases.\n\n### Explicit Support:\n- \"iPad® is the Company’s line of multipurpose tablets based on its iPadOS® operating system.\"\n\n### Customer Types:\n- consumers | End user market\n- small businesses | Target market\n- mid-market companies | Target market\n- large enterprises | Target market\n- educational institutions | Target market (historically strong in education)\n- government agencies | Target market\n\n### Channels:\n- direct sales | Direct sales capabilities\n- online | Online stores\n- retail | Retail stores\n- resellers | Indirect channels including carriers and resellers\n\n## [Segment] Wearables, Home and Accessories\n### Role in Business Model:\nThis segment encompasses adjacent device categories including wearable technology (smartwatches, headphones, spatial computing), home entertainment devices, and accessory products that extend the ecosystem beyond core computing devices.\n\n### Explicit Support:\n- \"Wearables, Home and Accessories\" section header and description of wearables, home devices, and accessories.\n\n### Customer Types:\n- consumers | Primary purchasers of wearables and home devices\n- small businesses | Included in target markets\n- large enterprises | Potential market for certain accessories and deployments\n\n### Channels:\n- direct sales | Direct sales force\n- online | Online stores\n- retail | Retail stores\n- resellers | Indirect distribution channels\n\n## [Segment] Services\n### Role in Business Model:\nThe Services segment aggregates high-margin recurring revenue streams including digital content distribution, cloud services, payment systems, advertising platforms, and extended warranty programs that monetize the installed base of hardware devices.\n\n### Explicit Support:\n- \"Services\" section header describing advertising, AppleCare, cloud services, digital content, and payment services.\n\n### Customer Types:\n- consumers | Primary users of digital content and payment services\n- small businesses | Target market for certain services\n- mid-market companies | Target market\n- large enterprises | Target market for cloud and support services\n- educational institutions | Target market\n- government agencies | Target market\n\n### Channels:\n- online | Service platforms and online stores\n- direct sales | Direct sales for enterprise services\n- retail | Retail stores for service sales and support\n\n# OFFERINGS\n## [Offering] iPhone\n### Role in Business Model:\nThe flagship smartphone franchise serving as the primary revenue driver and ecosystem entry point, integrating hardware, iOS operating system, and services.\n\n### Explicit Support:\n- \"iPhone® is the Company’s line of smartphones based on its iOS operating system.\"\n\n### Segment Anchors:\n- iPhone | Primary segment for smartphone products\n\n### Parent Offering:\n- none | Top-level franchise\n\n### Child Offerings:\n- iPhone Pro | Professional-tier models (iPhone 17 Pro mentioned as current example, normalized to durable tier)\n- iPhone Air | Distinct tier positioned between Pro and Standard (iPhone Air mentioned)\n- iPhone Standard | Mainstream models (iPhone 17, iPhone 16 mentioned, normalized to tier)\n- iPhone SE | Entry-level models (iPhone 16e mentioned as current iteration, normalized to SE tier)\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales | Primary monetization through device sales\n\n## [Offering] iPhone Pro\n### Role in Business Model:\nPremium tier of iPhone targeting professional users and high-end consumers with advanced camera and performance capabilities.\n\n### Explicit Support:\n- \"iPhone 17 Pro\"\n\n### Segment Anchors:\n- iPhone | Belongs to iPhone segment\n\n### Parent Offering:\n- iPhone | Tier within iPhone family\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales | Device sales\n\n## [Offering] iPhone Air\n### Role in Business Model:\nMid-tier iPhone variant positioned between standard and Pro lines with distinct form factor or feature positioning.\n\n### Explicit Support:\n- \"iPhone Air™\"\n\n### Segment Anchors:\n- iPhone | Part of iPhone line\n\n### Parent Offering:\n- iPhone | Distinct tier within family\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] iPhone Standard\n### Role in Business Model:\nMainstream iPhone tier balancing features and accessibility for broad consumer and enterprise adoption.\n\n### Explicit Support:\n- \"iPhone 17\", \"iPhone 16\"\n\n### Segment Anchors:\n- iPhone | Belongs to iPhone segment\n\n### Parent Offering:\n- iPhone | Core tier within family\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] iPhone SE\n### Role in Business Model:\nEntry-level iPhone tier targeting price-sensitive customers and emerging markets with compact form factor.\n\n### Explicit Support:\n- \"iPhone 16e\" (normalized to SE tier as successor to SE line)\n\n### Segment Anchors:\n- iPhone | Entry tier of iPhone segment\n\n### Parent Offering:\n- iPhone | Budget tier within family\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] Mac\n### Role in Business Model:\nPersonal computer franchise spanning laptop and desktop form factors with integrated macOS ecosystem.\n\n### Explicit Support:\n- \"Mac® is the Company’s line of personal computers\"\n\n### Segment Anchors:\n- Mac | Anchored to Mac segment\n\n### Parent Offering:\n- none | Top-level franchise\n\n### Child Offerings:\n- MacBook Air | Thin-and-light laptop variant\n- MacBook Pro | Professional-grade laptop variant\n- iMac | All-in-one desktop computer\n- Mac mini | Compact headless desktop\n- Mac Studio | Professional compact workstation\n- Mac Pro | High-end professional workstation\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] MacBook Air\n### Role in Business Model:\nConsumer and entry-professional laptop emphasizing portability and battery life.\n\n### Explicit Support:\n- \"MacBook Air®\"\n\n### Segment Anchors:\n- Mac | Within Mac segment\n\n### Parent Offering:\n- Mac | Laptop variant within Mac family\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] MacBook Pro\n### Role in Business Model:\nHigh-performance laptop for professional workflows and power users.\n\n### Explicit Support:\n- \"MacBook Pro®\"\n\n### Segment Anchors:\n- Mac | Within Mac segment\n\n### Parent Offering:\n- Mac | Professional laptop variant\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] iMac\n### Role in Business Model:\nAll-in-one desktop computer integrating display and processing unit for consumer and professional environments.\n\n### Explicit Support:\n- \"iMac®\"\n\n### Segment Anchors:\n- Mac | Desktop offering within Mac segment\n\n### Parent Offering:\n- Mac | All-in-one desktop variant\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] Mac mini\n### Role in Business Model:\nCompact headless desktop computer for users providing their own display and peripherals, popular for server and specific workstation use cases.\n\n### Explicit Support:\n- \"Mac mini®\"\n\n### Segment Anchors:\n- Mac | Within Mac segment\n\n### Parent Offering:\n- Mac | Compact desktop variant\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] Mac Studio\n### Role in Business Model:\nHigh-performance compact workstation targeting creative professionals and power users requiring desktop-class performance.\n\n### Explicit Support:\n- \"Mac Studio®\"\n\n### Segment Anchors:\n- Mac | Within Mac segment\n\n### Parent Offering:\n- Mac | Professional workstation variant\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] Mac Pro\n### Role in Business Model:\nMaximum-performance modular workstation for professional workflows including video production, software development, and scientific computing.\n\n### Explicit Support:\n- \"Mac Pro®\"\n\n### Segment Anchors:\n- Mac | Within Mac segment\n\n### Parent Offering:\n- Mac | High-end workstation variant\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] iPad\n### Role in Business Model:\nTablet computing franchise bridging smartphone and laptop use cases with touchscreen interface and iPadOS ecosystem.\n\n### Explicit Support:\n- \"iPad® is the Company’s line of multipurpose tablets\"\n\n### Segment Anchors:\n- iPad | Anchored to iPad segment\n\n### Parent Offering:\n- none | Top-level franchise\n\n### Child Offerings:\n- iPad Pro | Professional tablet with advanced features\n- iPad Air | Mid-tier tablet balancing performance and price\n- iPad Standard | Standard consumer tablet (normalized from \"iPad\")\n- iPad mini | Compact tablet variant\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] iPad Pro\n### Role in Business Model:\nProfessional-grade tablet with largest display and highest performance for creative and business productivity.\n\n### Explicit Support:\n- \"iPad Pro®\"\n\n### Segment Anchors:\n- iPad | Within iPad segment\n\n### Parent Offering:\n- iPad | Professional tier\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] iPad Air\n### Role in Business Model:\nMid-tier tablet offering performance near Pro level at more accessible price point.\n\n### Explicit Support:\n- \"iPad Air®\"\n\n### Segment Anchors:\n- iPad | Within iPad segment\n\n### Parent Offering:\n- iPad | Mid-tier variant\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] iPad Standard\n### Role in Business Model:\nMainstream tablet for general consumer and educational use.\n\n### Explicit Support:\n- \"iPad\" (base model mentioned alongside Pro, Air, mini)\n\n### Segment Anchors:\n- iPad | Within iPad segment\n\n### Parent Offering:\n- iPad | Standard tier\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] iPad mini\n### Role in Business Model:\nCompact tablet emphasizing portability and one-handed use for readers and mobile users.\n\n### Explicit Support:\n- \"iPad mini®\"\n\n### Segment Anchors:\n- iPad | Within iPad segment\n\n### Parent Offering:\n- iPad | Compact variant\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] Apple Watch\n### Role in Business Model:\nSmartwatch franchise based on watchOS serving health, fitness, and communication use cases.\n\n### Explicit Support:\n- \"Apple Watch®\" line described as smartwatches based on watchOS\n\n### Segment Anchors:\n- Wearables, Home and Accessories | Primary wearable device franchise\n\n### Parent Offering:\n- none | Top-level wearable franchise\n\n### Child Offerings:\n- Apple Watch Series | Mainstream annual smartwatch updates (Series 11 mentioned)\n- Apple Watch SE | Entry-level smartwatch (SE 3 mentioned)\n- Apple Watch Ultra | Rugged professional/extreme environment variant (Ultra 3 mentioned)\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] Apple Watch Series\n### Role in Business Model:\nStandard smartwatch line with annual updates serving mainstream health and connectivity needs.\n\n### Explicit Support:\n- \"Apple Watch® Series 11\"\n\n### Segment Anchors:\n- Wearables, Home and Accessories | Wearable offering\n\n### Parent Offering:\n- Apple Watch | Main product line within smartwatch family\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] Apple Watch SE\n### Role in Business Model:\nEntry-level smartwatch providing core Apple Watch experience at lower price point.\n\n### Explicit Support:\n- \"Apple Watch SE® 3\"\n\n### Segment Anchors:\n- Wearables, Home and Accessories | Wearable offering\n\n### Parent Offering:\n- Apple Watch | Entry tier within smartwatch family\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] Apple Watch Ultra\n### Role in Business Model:\nPremium rugged smartwatch for extreme sports, outdoor adventure, and industrial use with enhanced durability and battery life.\n\n### Explicit Support:\n- \"Apple Watch Ultra® 3\"\n\n### Segment Anchors:\n- Wearables, Home and Accessories | Wearable offering\n\n### Parent Offering:\n- Apple Watch | Professional/extreme tier within smartwatch family\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] AirPods\n### Role in Business Model:\nWireless audio franchise including standard, professional, and premium over-ear headphones.\n\n### Explicit Support:\n- \"AirPods®, AirPods Pro®, AirPods Max®\"\n\n### Segment Anchors:\n- Wearables, Home and Accessories | Wearable audio accessories\n\n### Parent Offering:\n- none | Top-level audio franchise\n\n### Child Offerings:\n- AirPods Standard | Standard wireless earbuds (normalized from context)\n- AirPods Pro | Professional-grade with active noise cancellation\n- AirPods Max | Premium over-ear headphones\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] AirPods Standard\n### Role in Business Model:\nEntry and mainstream wireless earbuds for general consumer use.\n\n### Explicit Support:\n- \"AirPods®\" (distinct from Pro and Max in the listing)\n\n### Segment Anchors:\n- Wearables, Home and Accessories | Within WHA segment\n\n### Parent Offering:\n- AirPods | Standard tier within audio family\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] AirPods Pro\n### Role in Business Model:\nAdvanced wireless earbuds with noise cancellation and enhanced features for immersive audio.\n\n### Explicit Support:\n- \"AirPods Pro®\"\n\n### Segment Anchors:\n- Wearables, Home and Accessories | Within WHA segment\n\n### Parent Offering:\n- AirPods | Professional tier within audio family\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] AirPods Max\n### Role in Business Model:\nPremium over-ear headphones for audiophiles and professional audio work.\n\n### Explicit Support:\n- \"AirPods Max®\"\n\n### Segment Anchors:\n- Wearables, Home and Accessories | Within WHA segment\n\n### Parent Offering:\n- AirPods | Premium over-ear tier within audio family\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] Beats Products\n### Role in Business Model:\nDistinct audio brand offering wireless headphones with different design language and market positioning from AirPods.\n\n### Explicit Support:\n- \"Beats® products\"\n\n### Segment Anchors:\n- Wearables, Home and Accessories | Audio accessories\n\n### Parent Offering:\n- none | Distinct brand listed alongside AirPods variants\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] Apple Vision Pro\n### Role in Business Model:\nSpatial computing device representing new product category based on visionOS for augmented/virtual reality applications.\n\n### Explicit Support:\n- \"Apple Vision Pro™ is the Company’s spatial computer based on its visionOS® operating system.\"\n\n### Segment Anchors:\n- Wearables, Home and Accessories | Wearable/spatial computing category\n\n### Parent Offering:\n- none | Distinct top-level spatial computer offering\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] Apple TV Hardware\n### Role in Business Model:\nMedia streaming and gaming device connecting to television displays for content consumption. (Distinguished from Apple TV service)\n\n### Explicit Support:\n- \"Apple TV 4K®, the Company’s media streaming and gaming device\"\n\n### Segment Anchors:\n- Wearables, Home and Accessories | Home category within WHA segment\n\n### Parent Offering:\n- none | Top-level home device\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] HomePod\n### Role in Business Model:\nHigh-fidelity wireless smart speaker for home audio and smart home control.\n\n### Explicit Support:\n- \"HomePod® and HomePod mini®, high-fidelity wireless smart speakers.\"\n\n### Segment Anchors:\n- Wearables, Home and Accessories | Home category\n\n### Parent Offering:\n- none | Top-level smart speaker franchise\n\n### Child Offerings:\n- HomePod Standard | Full-size smart speaker (normalized from \"HomePod\")\n- HomePod mini | Compact smart speaker variant\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] HomePod Standard\n### Role in Business Model:\nFull-size high-fidelity smart speaker for primary home audio environments.\n\n### Explicit Support:\n- \"HomePod®\" (distinct from mini)\n\n### Segment Anchors:\n- Wearables, Home and Accessories | Home devices\n\n### Parent Offering:\n- HomePod | Standard size variant\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] HomePod mini\n### Role in Business Model:\nCompact smart speaker for secondary rooms and entry-level smart home audio.\n\n### Explicit Support:\n- \"HomePod mini®\"\n\n### Segment Anchors:\n- Wearables, Home and Accessories | Home devices\n\n### Parent Offering:\n- HomePod | Compact variant\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] Apple Accessories\n### Role in Business Model:\nFirst and third-party accessories supporting the device ecosystem including cases, cables, and peripherals.\n\n### Explicit Support:\n- \"Accessories includes Apple-branded and third-party accessories.\"\n\n### Segment Anchors:\n- Wearables, Home and Accessories | Accessories category\n\n### Parent Offering:\n- none | Catch-all accessory category\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- hardware sales\n\n## [Offering] Apple Advertising\n### Role in Business Model:\nAdvertising platforms and third-party licensing arrangements monetizing attention across services and devices.\n\n### Explicit Support:\n- \"The Company’s advertising services include third-party licensing arrangements and the Company’s own advertising platforms.\"\n\n### Segment Anchors:\n- Services | Advertising service category\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- advertising | Advertising platforms and licensing\n- licensing | Third-party licensing arrangements\n\n## [Offering] AppleCare\n### Role in Business Model:\nFee-based service and support portfolio providing technical support, repair services, and extended coverage.\n\n### Explicit Support:\n- \"portfolio of fee-based service and support products under the AppleCare® brand\"\n\n### Segment Anchors:\n- Services | Service and support category\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- service fees | Fee-based service and support products\n\n## [Offering] iCloud\n### Role in Business Model:\nCloud storage and synchronization service keeping content available across devices and platforms.\n\n### Explicit Support:\n- \"The Company’s cloud services store and keep customers’ content up-to-date and available across multiple Apple devices and Windows personal computers.\"\n\n### Segment Anchors:\n- Services | Cloud services category\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- none | Filing does not specify monetization mechanism for cloud services\n\n## [Offering] App Store\n### Role in Business Model:\nPlatform enabling discovery and download of applications and digital content across device ecosystems.\n\n### Explicit Support:\n- \"the App Store®, that allow customers to discover and download applications and digital content\"\n\n### Segment Anchors:\n- Services | Digital content platform\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- none\n\n### Channels:\n- online | Digital platform accessed through devices\n\n### Revenue Models:\n- none | Filing does not specify monetization model\n\n## [Offering] Apple Content Subscriptions\n### Role in Business Model:\nPortfolio of subscription-based digital content services including gaming, fitness, music, news, and video entertainment.\n\n### Explicit Support:\n- \"subscription-based services, including Apple Arcade®, Apple Fitness+®, Apple Music®, Apple News+®, and Apple TV®\"\n\n### Segment Anchors:\n- Services | Digital content services\n\n### Parent Offering:\n- none | Umbrella for content subscription services\n\n### Child Offerings:\n- Apple Arcade | Gaming subscription service\n- Apple Fitness+ | Fitness subscription service\n- Apple Music | Music streaming subscription\n- Apple News+ | News and magazine subscription\n- Apple TV Service | Video content subscription (distinct from Apple TV hardware)\n\n### Channels:\n- online | Digital platforms\n\n### Revenue Models:\n- subscription | Explicitly stated as subscription-based services\n\n## [Offering] Apple Arcade\n### Role in Business Model:\nGame subscription service providing access to curated game library.\n\n### Explicit Support:\n- \"Apple Arcade®, a game service\"\n\n### Segment Anchors:\n- Services | Digital content\n\n### Parent Offering:\n- Apple Content Subscriptions | Gaming component of subscription portfolio\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- subscription\n\n## [Offering] Apple Fitness+\n### Role in Business Model:\nPersonalized fitness and workout subscription service.\n\n### Explicit Support:\n- \"Apple Fitness+®, a personalized fitness service\"\n\n### Segment Anchors:\n- Services | Digital content\n\n### Parent Offering:\n- Apple Content Subscriptions | Fitness component\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- subscription\n\n## [Offering] Apple Music\n### Role in Business Model:\nMusic streaming service with curated listening and on-demand radio.\n\n### Explicit Support:\n- \"Apple Music®, which offers users a curated listening experience with on-demand radio stations\"\n\n### Segment Anchors:\n- Services | Digital content\n\n### Parent Offering:\n- Apple Content Subscriptions | Music component\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- subscription\n\n## [Offering] Apple News+\n### Role in Business Model:\nNews and magazine aggregation subscription service.\n\n### Explicit Support:\n- \"Apple News+®, a news and magazine service\"\n\n### Segment Anchors:\n- Services | Digital content\n\n### Parent Offering:\n- Apple Content Subscriptions | News component\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- subscription\n\n## [Offering] Apple TV Service\n### Role in Business Model:\nVideo streaming service offering exclusive original programming and live sports content. Distinguished from Apple TV 4K hardware.\n\n### Explicit Support:\n- \"Apple TV®, which offers exclusive original content and live sports\" (distinguished from \"Apple TV 4K\" hardware device)\n\n### Segment Anchors:\n- Services | Digital content\n\n### Parent Offering:\n- Apple Content Subscriptions | Video component\n\n### Child Offerings:\n- none\n\n### Channels:\n- none\n\n### Revenue Models:\n- subscription\n\n## [Offering] Apple Pay\n### Role in Business Model:\nCashless payment service enabling secure transactions across device ecosystem.\n\n### Explicit Support:\n- \"Apple Pay®, a cashless payment service\"\n\n### Segment Anchors:\n- Services | Payment services\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- none\n\n### Channels:\n- online | Integrated into digital platforms and devices\n\n### Revenue Models:\n- none | Filing does not specify revenue mechanism\n\n## [Offering] Apple Card\n### Role in Business Model:\nCo-branded credit card product integrated with Apple Pay and Wallet ecosystem.\n\n### Explicit Support:\n- \"Apple Card®, a co-branded credit card\"\n\n### Segment Anchors:\n- Services | Payment services\n\n### Parent Offering:\n- none | Distinct from Apple Pay though related\n\n### Child Offerings:\n- none\n\n### Channels:\n- online | Digital application and management\n\n### Revenue Models:\n- none | Filing does not specify revenue mechanism\n\n# CORPORATE SCOPE\n## Operating Geographies:\n- Worldwide | The filing describes operations across Americas, Europe, Greater China, Japan and Rest of Asia Pacific, indicating global footprint across all major markets.\n\n## Key Partners:\n- none | The filing references third-party cellular network carriers, resellers, component suppliers, and licensing partners, but does not name specific external companies as material business-model partners.",
+  "compiled_graph_extraction": {
+    "extraction_notes": "Preserved hierarchical offering structure with parent-child tiers for iPhone, Mac, iPad, Apple Watch, AirPods, HomePod, and Apple Content Subscriptions. Mapped five reportable segments with segment-level channels and customer types. Applied hardware sales revenue model to all device offerings and differentiated service revenue models for advertising, care, and content subscriptions.",
+    "triples": [
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "iPhone",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Mac",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "iPad",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Wearables, Home and Accessories",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Services",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "OPERATES_IN",
+        "object": "Worldwide",
+        "object_type": "Place"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "mid-market companies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "mid-market companies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "mid-market companies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "mid-market companies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPhone",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Mac",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPad",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Apple Watch",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "AirPods",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Beats Products",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Apple Vision Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Apple TV Hardware",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "HomePod",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Apple Accessories",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Apple Advertising",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "AppleCare",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iCloud",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "App Store",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Apple Content Subscriptions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Apple Pay",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Apple Card",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPhone Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPhone Air",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPhone Standard",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPhone SE",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "MacBook Air",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "MacBook Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iMac",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Mac mini",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Mac Studio",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Mac Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPad Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPad Air",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPad Standard",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPad mini",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Apple Watch",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Watch Series",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Apple Watch",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Watch SE",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Apple Watch",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Watch Ultra",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "AirPods",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "AirPods Standard",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "AirPods",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "AirPods Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "AirPods",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "AirPods Max",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "HomePod",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "HomePod Standard",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "HomePod",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "HomePod mini",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Apple Content Subscriptions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Arcade",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Apple Content Subscriptions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Fitness+",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Apple Content Subscriptions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Music",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Apple Content Subscriptions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple News+",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Apple Content Subscriptions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple TV Service",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Apple Watch",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "AirPods",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Beats Products",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Apple Vision Pro",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Apple TV Hardware",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "HomePod",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Apple Accessories",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Apple Advertising",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Apple Advertising",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "AppleCare",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Apple Content Subscriptions",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      }
+    ]
+  },
+  "final_extraction": {
+    "extraction_notes": "Preserved hierarchical offering structure with parent-child tiers for iPhone, Mac, iPad, Apple Watch, AirPods, HomePod, and Apple Content Subscriptions. Mapped five reportable segments with segment-level channels and customer types. Applied hardware sales revenue model to all device offerings and differentiated service revenue models for advertising, care, and content subscriptions.",
+    "triples": [
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "iPhone",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Mac",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "iPad",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Wearables, Home and Accessories",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Services",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "OPERATES_IN",
+        "object": "Worldwide",
+        "object_type": "Place"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "mid-market companies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "mid-market companies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "mid-market companies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "mid-market companies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPhone",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Mac",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPad",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Apple Watch",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "AirPods",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Beats Products",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Apple Vision Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Apple TV Hardware",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "HomePod",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables, Home and Accessories",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Apple Accessories",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Apple Advertising",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "AppleCare",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iCloud",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "App Store",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Apple Content Subscriptions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Apple Pay",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Apple Card",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPhone Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPhone Air",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPhone Standard",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPhone SE",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "MacBook Air",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "MacBook Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iMac",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Mac mini",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Mac Studio",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Mac Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPad Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPad Air",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPad Standard",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPad mini",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Apple Watch",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Watch Series",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Apple Watch",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Watch SE",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Apple Watch",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Watch Ultra",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "AirPods",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "AirPods Standard",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "AirPods",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "AirPods Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "AirPods",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "AirPods Max",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "HomePod",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "HomePod Standard",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "HomePod",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "HomePod mini",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Apple Content Subscriptions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Arcade",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Apple Content Subscriptions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Fitness+",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Apple Content Subscriptions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Music",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Apple Content Subscriptions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple News+",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Apple Content Subscriptions",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple TV Service",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Apple Watch",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "AirPods",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Beats Products",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Apple Vision Pro",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Apple TV Hardware",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "HomePod",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Apple Accessories",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Apple Advertising",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Apple Advertising",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "AppleCare",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Apple Content Subscriptions",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      }
+    ]
+  }
+}

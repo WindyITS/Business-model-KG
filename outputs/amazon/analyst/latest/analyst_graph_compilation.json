@@ -1,0 +1,413 @@
+{
+  "triples": [
+    {
+      "subject": "Amazon",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "North America",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Amazon",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "International",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Amazon",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Amazon Web Services (AWS)",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Amazon",
+      "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "Worldwide",
+      "object_type": "Place"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Amazon Web Services (AWS)",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "developers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Amazon Web Services (AWS)",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Amazon Web Services (AWS)",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Amazon Web Services (AWS)",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "government agencies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Amazon Web Services (AWS)",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "educational institutions",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Amazon Web Services (AWS)",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Amazon Web Services (AWS)",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Online Stores",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Online Stores",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Physical Stores",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Physical Stores",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Amazon Prime",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Amazon Prime",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Amazon Prime",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Electronic Devices",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Electronic Devices",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Electronic Devices",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Kindle",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Electronic Devices",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Fire tablet",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Electronic Devices",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Fire TV",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Electronic Devices",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Echo",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Electronic Devices",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Ring",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Electronic Devices",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Blink",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Electronic Devices",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "eero",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Electronic Devices",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Seller Programs",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Seller Programs",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Seller Programs",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "transaction fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Seller Programs",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Amazon Web Services (AWS)",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "AWS Cloud Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "AWS Cloud Services",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Compute Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "AWS Cloud Services",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Storage Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "AWS Cloud Services",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Database Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "AWS Cloud Services",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Analytics Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "AWS Cloud Services",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "AI/ML Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "AWS Cloud Services",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "consumption-based",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Advertising Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Advertising Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Advertising Services",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Sponsored Ads",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Advertising Services",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Display Advertising",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Advertising Services",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Video Advertising",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Advertising Services",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Content Publishing Programs",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Content Publishing Programs",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Content Publishing Programs",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Twitch",
+      "object_type": "Offering"
+    }
+  ],
+  "extraction_notes": "Compiled Amazon's three-segment structure (North America, International, AWS) with segment-level customer types and channels. Preserved offering hierarchies including Electronic Devices (Kindle, Fire, Echo, Ring, Blink, eero), AWS Cloud Services (Compute, Storage, Database, Analytics, AI/ML), Advertising Services (Sponsored, Display, Video), and Content Publishing Programs (Twitch). Revenue models attached to specific offerings where explicitly stated. Geographic scope set to Worldwide. No partner relationships materialized per memo.",
+  "attempts_used": 1,
+  "raw_response": "{\n  \"extraction_notes\": \"Compiled Amazon's three-segment structure (North America, International, AWS) with segment-level customer types and channels. Preserved offering hierarchies including Electronic Devices (Kindle, Fire, Echo, Ring, Blink, eero), AWS Cloud Services (Compute, Storage, Database, Analytics, AI/ML), Advertising Services (Sponsored, Display, Video), and Content Publishing Programs (Twitch). Revenue models attached to specific offerings where explicitly stated. Geographic scope set to Worldwide. No partner relationships materialized per memo.\",\n  \"triples\": [\n    {\n      \"subject\": \"Amazon\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"HAS_SEGMENT\",\n      \"object\": \"North America\",\n      \"object_type\": \"BusinessSegment\"\n    },\n    {\n      \"subject\": \"Amazon\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"HAS_SEGMENT\",\n      \"object\": \"International\",\n      \"object_type\": \"BusinessSegment\"\n    },\n    {\n      \"subject\": \"Amazon\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"HAS_SEGMENT\",\n      \"object\": \"Amazon Web Services (AWS)\",\n      \"object_type\": \"BusinessSegment\"\n    },\n    {\n      \"subject\": \"Amazon\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"OPERATES_IN\",\n      \"object\": \"Worldwide\",\n      \"object_type\": \"Place\"\n    },\n    {\n      \"subject\": \"North America\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"consumers\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"North America\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"small businesses\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"North America\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"large enterprises\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"North America\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SELLS_THROUGH\",\n      \"object\": \"online\",\n      \"object_type\": \"Channel\"\n    },\n    {\n      \"subject\": \"North America\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SELLS_THROUGH\",\n      \"object\": \"retail\",\n      \"object_type\": \"Channel\"\n    },\n    {\n      \"subject\": \"International\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"consumers\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"International\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"small businesses\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"International\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"large enterprises\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"International\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SELLS_THROUGH\",\n      \"object\": \"online\",\n      \"object_type\": \"Channel\"\n    },\n    {\n      \"subject\": \"International\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SELLS_THROUGH\",\n      \"object\": \"retail\",\n      \"object_type\": \"Channel\"\n    },\n    {\n      \"subject\": \"Amazon Web Services (AWS)\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"developers\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Amazon Web Services (AWS)\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"large enterprises\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Amazon Web Services (AWS)\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"small businesses\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Amazon Web Services (AWS)\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"government agencies\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Amazon Web Services (AWS)\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"educational institutions\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Amazon Web Services (AWS)\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SELLS_THROUGH\",\n      \"object\": \"online\",\n      \"object_type\": \"Channel\"\n    },\n    {\n      \"subject\": \"Amazon Web Services (AWS)\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SELLS_THROUGH\",\n      \"object\": \"direct sales\",\n      \"object_type\": \"Channel\"\n    },\n    {\n      \"subject\": \"North America\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Online Stores\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"International\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Online Stores\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"North America\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Physical Stores\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"International\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Physical Stores\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"North America\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Amazon Prime\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"International\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Amazon Prime\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Amazon Prime\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"subscription\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"North America\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Electronic Devices\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"International\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Electronic Devices\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Electronic Devices\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Kindle\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Electronic Devices\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Fire tablet\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Electronic Devices\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Fire TV\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Electronic Devices\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Echo\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Electronic Devices\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Ring\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Electronic Devices\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Blink\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Electronic Devices\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"eero\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Electronic Devices\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"hardware sales\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"North America\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Seller Programs\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"International\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Seller Programs\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Seller Programs\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"transaction fees\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"Seller Programs\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"service fees\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"Amazon Web Services (AWS)\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"AWS Cloud Services\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"AWS Cloud Services\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Compute Services\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"AWS Cloud Services\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Storage Services\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"AWS Cloud Services\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Database Services\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"AWS Cloud Services\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Analytics Services\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"AWS Cloud Services\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"AI/ML Services\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"AWS Cloud Services\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"consumption-based\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"North America\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Advertising Services\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"International\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Advertising Services\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Advertising Services\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Sponsored Ads\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Advertising Services\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Display Advertising\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Advertising Services\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Video Advertising\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Advertising Services\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"advertising\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"North America\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Content Publishing Programs\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"International\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Content Publishing Programs\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Content Publishing Programs\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Twitch\",\n      \"object_type\": \"Offering\"\n    }\n  ]\n}"
+}

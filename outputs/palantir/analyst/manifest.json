@@ -1,0 +1,10 @@
+{
+  "company_name": "Palantir",
+  "company_slug": "palantir",
+  "pipeline": "analyst",
+  "latest_available": true,
+  "latest_run_dir": "outputs/palantir/analyst/latest",
+  "available_run_tokens": [],
+  "failed_run_tokens": [],
+  "updated_at": "2026-04-27T20:38:13.849093+00:00"
+}

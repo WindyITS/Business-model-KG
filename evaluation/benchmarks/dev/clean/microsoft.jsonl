@@ -1,0 +1,120 @@
+{"subject":"Microsoft","subject_type":"Company","relation":"HAS_SEGMENT","object":"Productivity and Business Processes","object_type":"BusinessSegment"}
+{"subject":"Microsoft","subject_type":"Company","relation":"HAS_SEGMENT","object":"Intelligent Cloud","object_type":"BusinessSegment"}
+{"subject":"Microsoft","subject_type":"Company","relation":"HAS_SEGMENT","object":"More Personal Computing","object_type":"BusinessSegment"}
+{"subject":"Productivity and Business Processes","subject_type":"BusinessSegment","relation":"OFFERS","object":"Microsoft 365 Commercial","object_type":"Offering"}
+{"subject":"Productivity and Business Processes","subject_type":"BusinessSegment","relation":"OFFERS","object":"Microsoft 365 Consumer","object_type":"Offering"}
+{"subject":"Productivity and Business Processes","subject_type":"BusinessSegment","relation":"OFFERS","object":"LinkedIn","object_type":"Offering"}
+{"subject":"Productivity and Business Processes","subject_type":"BusinessSegment","relation":"OFFERS","object":"Dynamics","object_type":"Offering"}
+{"subject":"Microsoft 365 Commercial","subject_type":"Offering","relation":"OFFERS","object":"Microsoft 365 Commercial cloud","object_type":"Offering"}
+{"subject":"Microsoft 365 Commercial cloud","subject_type":"Offering","relation":"OFFERS","object":"Microsoft 365 Commercial","object_type":"Offering"}
+{"subject":"Microsoft 365 Commercial cloud","subject_type":"Offering","relation":"OFFERS","object":"Enterprise Mobility + Security","object_type":"Offering"}
+{"subject":"Microsoft 365 Commercial cloud","subject_type":"Offering","relation":"OFFERS","object":"cloud portion of Windows Commercial","object_type":"Offering"}
+{"subject":"Microsoft 365 Commercial cloud","subject_type":"Offering","relation":"OFFERS","object":"Power BI per-user","object_type":"Offering"}
+{"subject":"Microsoft 365 Commercial cloud","subject_type":"Offering","relation":"OFFERS","object":"Exchange","object_type":"Offering"}
+{"subject":"Microsoft 365 Commercial cloud","subject_type":"Offering","relation":"OFFERS","object":"SharePoint","object_type":"Offering"}
+{"subject":"Microsoft 365 Commercial cloud","subject_type":"Offering","relation":"OFFERS","object":"Microsoft Teams","object_type":"Offering"}
+{"subject":"Microsoft 365 Commercial cloud","subject_type":"Offering","relation":"OFFERS","object":"Microsoft 365 Security and Compliance","object_type":"Offering"}
+{"subject":"Microsoft 365 Commercial cloud","subject_type":"Offering","relation":"OFFERS","object":"Microsoft 365 Copilot","object_type":"Offering"}
+{"subject":"Microsoft 365 Commercial","subject_type":"Offering","relation":"OFFERS","object":"Office","object_type":"Offering"}
+{"subject":"Microsoft 365 Commercial","subject_type":"Offering","relation":"OFFERS","object":"Windows","object_type":"Offering"}
+{"subject":"Microsoft 365 Commercial","subject_type":"Offering","relation":"OFFERS","object":"Microsoft 365 Copilot","object_type":"Offering"}
+{"subject":"Microsoft 365 Commercial","subject_type":"Offering","relation":"OFFERS","object":"Enterprise Mobility + Security","object_type":"Offering"}
+{"subject":"Microsoft 365 Commercial","subject_type":"Offering","relation":"OFFERS","object":"Microsoft 365 Commercial products","object_type":"Offering"}
+{"subject":"Microsoft 365 Commercial products","subject_type":"Offering","relation":"OFFERS","object":"Windows Commercial on-premises","object_type":"Offering"}
+{"subject":"Microsoft 365 Commercial products","subject_type":"Offering","relation":"OFFERS","object":"Office licensed on-premises","object_type":"Offering"}
+{"subject":"Microsoft 365 Consumer","subject_type":"Offering","relation":"OFFERS","object":"Microsoft 365 Consumer subscriptions","object_type":"Offering"}
+{"subject":"Microsoft 365 Consumer","subject_type":"Offering","relation":"OFFERS","object":"Office licensed on-premises","object_type":"Offering"}
+{"subject":"Microsoft 365 Consumer","subject_type":"Offering","relation":"OFFERS","object":"other consumer services","object_type":"Offering"}
+{"subject":"LinkedIn","subject_type":"Offering","relation":"OFFERS","object":"Talent Solutions","object_type":"Offering"}
+{"subject":"LinkedIn","subject_type":"Offering","relation":"OFFERS","object":"Marketing Solutions","object_type":"Offering"}
+{"subject":"LinkedIn","subject_type":"Offering","relation":"OFFERS","object":"Premium Subscriptions","object_type":"Offering"}
+{"subject":"LinkedIn","subject_type":"Offering","relation":"OFFERS","object":"Sales Solutions","object_type":"Offering"}
+{"subject":"Dynamics","subject_type":"Offering","relation":"OFFERS","object":"Dynamics 365","object_type":"Offering"}
+{"subject":"Dynamics 365","subject_type":"Offering","relation":"OFFERS","object":"ERP","object_type":"Offering"}
+{"subject":"Dynamics 365","subject_type":"Offering","relation":"OFFERS","object":"CRM","object_type":"Offering"}
+{"subject":"Dynamics 365","subject_type":"Offering","relation":"OFFERS","object":"Power Apps","object_type":"Offering"}
+{"subject":"Dynamics 365","subject_type":"Offering","relation":"OFFERS","object":"Power Automate","object_type":"Offering"}
+{"subject":"Dynamics","subject_type":"Offering","relation":"OFFERS","object":"On-premises ERP and CRM","object_type":"Offering"}
+{"subject":"Intelligent Cloud","subject_type":"BusinessSegment","relation":"OFFERS","object":"Server products and cloud services","object_type":"Offering"}
+{"subject":"Intelligent Cloud","subject_type":"BusinessSegment","relation":"OFFERS","object":"Enterprise and Partner Services","object_type":"Offering"}
+{"subject":"Server products and cloud services","subject_type":"Offering","relation":"OFFERS","object":"Azure and other cloud services","object_type":"Offering"}
+{"subject":"Azure and other cloud services","subject_type":"Offering","relation":"OFFERS","object":"cloud and AI consumption-based services","object_type":"Offering"}
+{"subject":"Azure and other cloud services","subject_type":"Offering","relation":"OFFERS","object":"GitHub","object_type":"Offering"}
+{"subject":"Azure and other cloud services","subject_type":"Offering","relation":"OFFERS","object":"Nuance Healthcare","object_type":"Offering"}
+{"subject":"Azure and other cloud services","subject_type":"Offering","relation":"OFFERS","object":"virtual desktop offerings","object_type":"Offering"}
+{"subject":"Azure and other cloud services","subject_type":"Offering","relation":"OFFERS","object":"other cloud services","object_type":"Offering"}
+{"subject":"Server products and cloud services","subject_type":"Offering","relation":"OFFERS","object":"Server Products","object_type":"Offering"}
+{"subject":"Server Products","subject_type":"Offering","relation":"OFFERS","object":"SQL Server","object_type":"Offering"}
+{"subject":"Server Products","subject_type":"Offering","relation":"OFFERS","object":"Windows Server","object_type":"Offering"}
+{"subject":"Server Products","subject_type":"Offering","relation":"OFFERS","object":"Visual Studio","object_type":"Offering"}
+{"subject":"Server Products","subject_type":"Offering","relation":"OFFERS","object":"System Center","object_type":"Offering"}
+{"subject":"Server Products","subject_type":"Offering","relation":"OFFERS","object":"Client Access Licenses (CALs)","object_type":"Offering"}
+{"subject":"Server Products","subject_type":"Offering","relation":"OFFERS","object":"other on-premises offerings","object_type":"Offering"}
+{"subject":"Enterprise and Partner Services","subject_type":"Offering","relation":"OFFERS","object":"Enterprise Support Services","object_type":"Offering"}
+{"subject":"Enterprise and Partner Services","subject_type":"Offering","relation":"OFFERS","object":"Industry Solutions","object_type":"Offering"}
+{"subject":"Enterprise and Partner Services","subject_type":"Offering","relation":"OFFERS","object":"Nuance Professional Services","object_type":"Offering"}
+{"subject":"Enterprise and Partner Services","subject_type":"Offering","relation":"OFFERS","object":"Microsoft Partner Network","object_type":"Offering"}
+{"subject":"Enterprise and Partner Services","subject_type":"Offering","relation":"OFFERS","object":"Learning Experience","object_type":"Offering"}
+{"subject":"More Personal Computing","subject_type":"BusinessSegment","relation":"OFFERS","object":"Windows and Devices","object_type":"Offering"}
+{"subject":"More Personal Computing","subject_type":"BusinessSegment","relation":"OFFERS","object":"Gaming","object_type":"Offering"}
+{"subject":"More Personal Computing","subject_type":"BusinessSegment","relation":"OFFERS","object":"Search and News Advertising","object_type":"Offering"}
+{"subject":"Windows and Devices","subject_type":"Offering","relation":"OFFERS","object":"Windows OEM","object_type":"Offering"}
+{"subject":"Windows and Devices","subject_type":"Offering","relation":"OFFERS","object":"Devices","object_type":"Offering"}
+{"subject":"Devices","subject_type":"Offering","relation":"OFFERS","object":"Surface","object_type":"Offering"}
+{"subject":"Devices","subject_type":"Offering","relation":"OFFERS","object":"PC Accessories","object_type":"Offering"}
+{"subject":"Gaming","subject_type":"Offering","relation":"OFFERS","object":"Xbox hardware","object_type":"Offering"}
+{"subject":"Gaming","subject_type":"Offering","relation":"OFFERS","object":"Xbox content and services","object_type":"Offering"}
+{"subject":"Xbox content and services","subject_type":"Offering","relation":"OFFERS","object":"first- and third-party content","object_type":"Offering"}
+{"subject":"Xbox content and services","subject_type":"Offering","relation":"OFFERS","object":"Xbox Game Pass and other subscriptions","object_type":"Offering"}
+{"subject":"Xbox content and services","subject_type":"Offering","relation":"OFFERS","object":"Xbox Cloud Gaming","object_type":"Offering"}
+{"subject":"Xbox content and services","subject_type":"Offering","relation":"OFFERS","object":"advertising","object_type":"Offering"}
+{"subject":"Xbox content and services","subject_type":"Offering","relation":"OFFERS","object":"other cloud services","object_type":"Offering"}
+{"subject":"Search and News Advertising","subject_type":"Offering","relation":"OFFERS","object":"Bing and Copilot","object_type":"Offering"}
+{"subject":"Search and News Advertising","subject_type":"Offering","relation":"OFFERS","object":"Microsoft News","object_type":"Offering"}
+{"subject":"Search and News Advertising","subject_type":"Offering","relation":"OFFERS","object":"Microsoft Edge","object_type":"Offering"}
+{"subject":"Search and News Advertising","subject_type":"Offering","relation":"OFFERS","object":"third-party affiliates","object_type":"Offering"}
+{"subject":"Microsoft","subject_type":"Company","relation":"OPERATES_IN","object":"Worldwide","object_type":"Place"}
+{"subject":"Productivity and Business Processes","subject_type":"BusinessSegment","relation":"SERVES","object":"small businesses","object_type":"CustomerType"}
+{"subject":"Productivity and Business Processes","subject_type":"BusinessSegment","relation":"SERVES","object":"mid-market companies","object_type":"CustomerType"}
+{"subject":"Productivity and Business Processes","subject_type":"BusinessSegment","relation":"SERVES","object":"consumers","object_type":"CustomerType"}
+{"subject":"Productivity and Business Processes","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
+{"subject":"Intelligent Cloud","subject_type":"BusinessSegment","relation":"SERVES","object":"developers","object_type":"CustomerType"}
+{"subject":"Intelligent Cloud","subject_type":"BusinessSegment","relation":"SERVES","object":"IT professionals","object_type":"CustomerType"}
+{"subject":"Intelligent Cloud","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
+{"subject":"Intelligent Cloud","subject_type":"BusinessSegment","relation":"SERVES","object":"healthcare organizations","object_type":"CustomerType"}
+{"subject":"More Personal Computing","subject_type":"BusinessSegment","relation":"SERVES","object":"consumers","object_type":"CustomerType"}
+{"subject":"More Personal Computing","subject_type":"BusinessSegment","relation":"SERVES","object":"small businesses","object_type":"CustomerType"}
+{"subject":"More Personal Computing","subject_type":"BusinessSegment","relation":"SERVES","object":"mid-market companies","object_type":"CustomerType"}
+{"subject":"More Personal Computing","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
+{"subject":"Productivity and Business Processes","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"direct sales","object_type":"Channel"}
+{"subject":"Productivity and Business Processes","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"distributors","object_type":"Channel"}
+{"subject":"Productivity and Business Processes","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"resellers","object_type":"Channel"}
+{"subject":"Productivity and Business Processes","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"OEMs","object_type":"Channel"}
+{"subject":"Productivity and Business Processes","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"online","object_type":"Channel"}
+{"subject":"Productivity and Business Processes","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"system integrators","object_type":"Channel"}
+{"subject":"Intelligent Cloud","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"direct sales","object_type":"Channel"}
+{"subject":"Intelligent Cloud","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"OEMs","object_type":"Channel"}
+{"subject":"Intelligent Cloud","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"retail","object_type":"Channel"}
+{"subject":"Intelligent Cloud","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"online","object_type":"Channel"}
+{"subject":"Intelligent Cloud","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"system integrators","object_type":"Channel"}
+{"subject":"More Personal Computing","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"OEMs","object_type":"Channel"}
+{"subject":"More Personal Computing","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"retail","object_type":"Channel"}
+{"subject":"More Personal Computing","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"online","object_type":"Channel"}
+{"subject":"Microsoft","subject_type":"Company","relation":"PARTNERS_WITH","object":"Dell","object_type":"Company"}
+{"subject":"Microsoft","subject_type":"Company","relation":"PARTNERS_WITH","object":"Hewlett-Packard","object_type":"Company"}
+{"subject":"Microsoft","subject_type":"Company","relation":"PARTNERS_WITH","object":"Lenovo","object_type":"Company"}
+{"subject":"Microsoft 365 Commercial","subject_type":"Offering","relation":"MONETIZES_VIA","object":"licensing","object_type":"RevenueModel"}
+{"subject":"Microsoft 365 Consumer","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"Microsoft 365 Consumer","subject_type":"Offering","relation":"MONETIZES_VIA","object":"licensing","object_type":"RevenueModel"}
+{"subject":"Microsoft 365 Consumer","subject_type":"Offering","relation":"MONETIZES_VIA","object":"advertising","object_type":"RevenueModel"}
+{"subject":"LinkedIn","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"LinkedIn","subject_type":"Offering","relation":"MONETIZES_VIA","object":"advertising","object_type":"RevenueModel"}
+{"subject":"Dynamics","subject_type":"Offering","relation":"MONETIZES_VIA","object":"licensing","object_type":"RevenueModel"}
+{"subject":"Server products and cloud services","subject_type":"Offering","relation":"MONETIZES_VIA","object":"consumption-based","object_type":"RevenueModel"}
+{"subject":"Server products and cloud services","subject_type":"Offering","relation":"MONETIZES_VIA","object":"licensing","object_type":"RevenueModel"}
+{"subject":"Windows and Devices","subject_type":"Offering","relation":"MONETIZES_VIA","object":"licensing","object_type":"RevenueModel"}
+{"subject":"Windows and Devices","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Gaming","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"Gaming","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Gaming","subject_type":"Offering","relation":"MONETIZES_VIA","object":"advertising","object_type":"RevenueModel"}
+{"subject":"Search and News Advertising","subject_type":"Offering","relation":"MONETIZES_VIA","object":"advertising","object_type":"RevenueModel"}

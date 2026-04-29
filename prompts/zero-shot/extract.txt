@@ -1,0 +1,106 @@
+<workflow_step>
+ZERO-SHOT EXTRACTION
+</workflow_step>
+
+<objective>
+Build the full canonical business-model knowledge graph from the filing in one pass.
+Start from zero and use the ontology as the target structure.
+</objective>
+
+<company_name>
+{{company_name}}
+</company_name>
+
+<output_contract>
+Return ONLY one raw JSON object with this exact shape:
+
+{
+  "extraction_notes": "brief note",
+  "triples": [
+    {
+      "subject": "node name",
+      "subject_type": "EXACT_NODE_TYPE",
+      "relation": "EXACT_RELATION",
+      "object": "node name or canonical label",
+      "object_type": "EXACT_NODE_TYPE"
+    }
+  ]
+}
+
+Every triple must be an object with exactly these keys:
+- subject
+- subject_type
+- relation
+- object
+- object_type
+
+Do not use:
+- `predicate` instead of `relation`
+- tuple or array triples
+- omitted node types
+- evidence or citation fields inside triples
+- markdown code fences
+</output_contract>
+
+<ontology_target>
+Node types:
+- Company: the reporting company or named external commercial company
+- BusinessSegment: the most defensible internal segment, line of business, or business-model anchor supported by the filing
+- Offering: a named product, service, platform, solution, application, brand, subscription, or product family
+- CustomerType: canonical label only
+- Channel: canonical label only
+- Place: normalized business-relevant geography
+- RevenueModel: canonical label only
+
+Allowed relations:
+- HAS_SEGMENT: Company -> BusinessSegment
+- OFFERS: Company -> Offering | BusinessSegment -> Offering | Offering -> Offering
+- SERVES: BusinessSegment -> CustomerType
+- OPERATES_IN: Company -> Place
+- SELLS_THROUGH: BusinessSegment -> Channel | Offering -> Channel
+- PARTNERS_WITH: Company -> Company
+- MONETIZES_VIA: Offering -> RevenueModel
+</ontology_target>
+
+<closed_labels>
+CustomerType labels:
+{{canonical_customer_types_json}}
+
+{{customer_type_definitions}}
+
+Channel labels:
+{{canonical_channels_json}}
+
+{{channel_definitions}}
+
+RevenueModel labels:
+{{canonical_revenue_models_json}}
+
+{{revenue_model_definitions}}
+</closed_labels>
+
+<graph_policy>
+- use only the filing text below; do not use outside knowledge
+- build the graph from zero in this single pass rather than assuming any prior skeleton
+- treat the ontology as the target structure, not as a literal paragraph-order extraction checklist
+- BusinessSegment is the primary semantic anchor whenever the filing supports it
+- preserve family-level offerings and parent-child offering structure when the filing clearly presents them as real stable nodes
+- preserve distinct named franchises as standalone offerings when the filing treats them as distinct businesses, platforms, or product families
+- keep channel structure on BusinessSegment by default; use offering-level `SELLS_THROUGH` only when the offering has a differentiated distribution pattern or no segment anchor exists
+- use `Company -> OFFERS` only as a fallback when no stronger segment anchor is supported
+- use only the exact canonical labels above for `CustomerType`, `Channel`, and `RevenueModel`; if a phrase does not map clearly, omit it
+- prefer omission over weak guesses
+- do not duplicate facts upward or downward across scopes just to make the graph denser
+- keep corporate geography clean; if the filing supports a clean global scope such as `Worldwide`, preserve it instead of exploding it into many narrower places
+- approved macro regions for clean corporate rollups when the filing clearly supports them: {{approved_macro_regions_json}}
+- output one complete ontology-valid graph for the filing, not a memo and not a partial draft
+</graph_policy>
+
+<source_filing>
+{{full_text}}
+</source_filing>
+
+<format_reminder>
+Return ONLY a raw JSON object containing "extraction_notes" and the "triples" array.
+The response must start with `{` and end with `}`.
+</format_reminder>

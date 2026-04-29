@@ -1,0 +1,490 @@
+{
+  "foundation_memo": "# ANALYTICAL FRAME\n## Summary:\nPalantir operates a dual-segment enterprise software business targeting complex data integration challenges that government agencies and large commercial institutions cannot solve internally. The company monetizes through four vertically integrated software platforms—Gotham, Foundry, Apollo, and AIP—delivered via direct enterprise sales and cloud partnerships, generating revenue through software licensing and implementation services.\n\n## Explicit Support:\n- \"We have built four principal software platforms, Palantir Gotham (“Gotham”), Palantir Foundry (“Foundry”), Palantir Apollo (“Apollo”), and Palantir Artificial Intelligence Platform (“AIP”)\"\n- \"Of the $2.9 billion in revenue that we generated in 2024, 55% came from customers in the government segment, and 45% came from customers in the commercial segment\"\n- \"Our customer acquisition strategy generally targets large-scale, hard-to-execute opportunities at large government and commercial institutions\"\n\n# SEGMENTS\n## [Segment] Government\n### Role in Business Model:\nPrimary revenue generator (55% of 2024 revenue) serving defense agencies, the intelligence community, and civilian government functions with secure data integration, operational analytics, and AI platforms. Represents the historical foundation of the company and remains the core anchor for the Gotham platform.\n### Explicit Support:\n- \"Of the $2.9 billion in revenue that we generated in 2024, 55% came from customers in the government segment\"\n- \"We were founded in 2003 and started building software for the intelligence community in the United States\"\n- \"Gotham is now used broadly across government functions\"\n### Customer Types:\n- Government agencies | Primary constituency including defense agencies, intelligence community, public health administrators, and military organizations\n### Channels:\n- Direct sales | Account-based sales force targeting specific government contracts and large-scale implementations\n- System integrators | Partnerships with government contractors and integrators for complex deployments\n\n## [Segment] Commercial\n### Role in Business Model:\nGrowth segment (45% of 2024 revenue) targeting large enterprises across approximately 90 industries with data operating systems and AI platforms. Focused on becoming the \"central operating system\" for individual institutions and entire industries through scalable platform adoption.\n### Explicit Support:\n- \"45% came from customers in the commercial segment\"\n- \"All of our commercial customers now use it [Foundry]\"\n- \"software is currently used across approximately 90 industries\"\n### Customer Types:\n- Large enterprises | Explicitly targeted as \"large-scale, hard-to-execute opportunities at large... commercial institutions\" with complex data environments\n- Developers | Targeted via Developer Tier offering for exploration and innovation without enterprise procurement barriers\n### Channels:\n- Direct sales | Account-based sales force for enterprise acquisition\n- Cloud partnerships | Partnerships with public, private, and hybrid cloud providers to leverage existing enterprise relationships and computing infrastructure\n- Resellers | Channel sales relationships with third-party providers and technology vendors\n- Online | Digital self-service access for Developer Tier\n\n# OFFERINGS\n## [Offering] Palantir Gotham\n### Role in Business Model:\nData integration and analytics platform designed for government operations, enabling pattern identification across intelligence datasets and facilitating hand-offs between analysts and operational users for real-world response coordination.\n### Explicit Support:\n- \"Gotham enables users to identify patterns hidden deep within datasets... It also facilitates the hand-off between analysts and operational users\"\n- \"Gotham is now used broadly across government functions\"\n### Segment Anchors:\n- Government | Primary platform for defense and intelligence operations, though applicable to broader government functions\n### Parent Offering:\n- none | First-order platform distinct from other offerings\n### Child Offerings:\n- none | No named child variants or tiers described\n### Channels:\n- none | Distributed through segment-level direct sales and system integrators\n### Revenue Models:\n- Licensing | Software platform rights for government deployment and usage\n- Service fees | Implementation, integration, and strategic deployment services for complex installations\n\n## [Offering] Palantir Foundry\n### Role in Business Model:\nCommercial-focused data operating system that transforms organizational operations by creating a centralized platform for data integration, pipeline management, and cross-functional analytics. Serves as the primary commercial platform and foundation for industry-specific operating systems.\n### Explicit Support:\n- \"Foundry transforms the ways organizations operate by creating a central operating system for their data\"\n- \"All of our commercial customers now use it\"\n### Segment Anchors:\n- Commercial | Primary platform for commercial data operations and enterprise transformation\n### Parent Offering:\n- none | First-order platform distinct from other offerings\n### Child Offerings:\n- Developer Tier | Limited access tier providing restricted Foundry capabilities for developer exploration\n### Channels:\n- none | Distributed through segment-level direct sales and cloud partnerships\n### Revenue Models:\n- Licensing | Enterprise software platform licensing for commercial deployment\n- Service fees | Professional services and implementation for enterprise data integration projects\n\n## [Offering] Palantir AIP\n### Role in Business Model:\nArtificial Intelligence Platform that operationalizes generative AI and large language models within existing Palantir platforms. Functions as a horizontal AI capability layer across both government and commercial segments, enabling responsible AI deployment with security and audit controls.\n### Explicit Support:\n- \"AIP leverages the power of our existing machine learning technologies alongside generative AI models... directly within Gotham and/or Foundry\"\n- \"AIP is seamlessly bundled with existing Palantir offerings such as the Foundry, Gotham, and Apollo platforms\"\n### Segment Anchors:\n- Government | Deployed alongside Gotham for government AI use cases and operational decision-making\n- Commercial | Deployed alongside Foundry for commercial enterprise AI applications\n### Parent Offering:\n- none | First-order platform distinct from but integrated with Gotham and Foundry\n### Child Offerings:\n- Developer Tier | Limited access tier providing restricted AIP capabilities for developer exploration and innovation\n### Channels:\n- none | Distributed through platform bundling via segment-level direct sales\n### Revenue Models:\n- Licensing | AI platform capabilities licensed as part of bundled solutions or standalone\n- Service fees | Implementation services for AI workflow integration and responsible AI deployment\n\n## [Offering] Palantir Apollo\n### Role in Business Model:\nCloud-agnostic infrastructure and continuous delivery platform enabling deployment of Palantir software and customer-owned software across any environment (cloud, on-premises, or rugged). Serves as the operational backbone for continuous updates and multi-environment deployment.\n### Explicit Support:\n- \"Apollo is a cloud-agnostic, single control layer that coordinates ongoing delivery of new features, security updates, and platform configurations\"\n- \"began offering as a commercial solution in 2021\"\n### Segment Anchors:\n- Government | Enables secure Gotham deployment in classified and defense environments\n- Commercial | Enables Foundry deployment and offered as standalone commercial infrastructure solution\n### Parent Offering:\n- none | First-order infrastructure platform distinct from application platforms\n### Child Offerings:\n- none | No named child variants described\n### Channels:\n- none | Distributed through segment-level direct sales and cloud partnerships\n### Revenue Models:\n- Licensing | Infrastructure control layer and deployment management licensing\n- Service fees | Configuration management and continuous delivery services\n\n## [Offering] Developer Tier\n### Role in Business Model:\nLimited access tier designed to lower barriers to entry for developers and small-scale exploration, allowing innovation on Foundry and AIP without significant upfront enterprise costs. Represents a bottom-up adoption strategy distinct from the enterprise sales motion.\n### Explicit Support:\n- \"in 2024, we introduced Developer Tier, offering limited access to Foundry and AIP in the United States and select countries\"\n- \"allows developers to explore, innovate, and develop without significant upfront enterprise costs\"\n### Segment Anchors:\n- Commercial | Explicitly part of commercial segment expansion strategy to broaden the customer base\n### Parent Offering:\n- Palantir Foundry | Provides limited access to Foundry capabilities for development and testing\n- Palantir AIP | Provides limited access to AIP capabilities for AI development and experimentation\n### Child Offerings:\n- none | No further decomposed tiers described\n### Channels:\n- Online | Self-service digital access through the company's online platforms and website\n### Revenue Models:\n- none | Revenue model not explicitly described; positioned as access expansion for exploration\n\n# CORPORATE SCOPE\n## Operating Geographies:\n- Worldwide | Global operations with 66% of 2024 revenue from the United States and 34% from customers abroad; platforms deployed across approximately 90 industries worldwide in diverse geographic markets including explicit operations in Europe, Asia, and North America\n\n## Key Partners:\n- Fujitsu Limited | Strategic global partnership to incorporate Foundry and AIP capabilities as key elements in Fujitsu Uvance data infrastructure solutions\n- Cloud providers | Partnerships with leading public, private, and hybrid cloud service providers to expand distribution capabilities and leverage existing enterprise customer footprints (specific providers unnamed in filing)",
+  "augmented_memo": "# ANALYTICAL FRAME\n## Summary:\nPalantir operates a dual-segment enterprise software business targeting complex data integration and operational intelligence challenges that government agencies and large commercial institutions cannot solve internally. The company monetizes through four vertically integrated software platforms—Gotham, Foundry, Apollo, and AIP—delivered via direct enterprise sales, cloud partnerships, and strategic industry alliances. Revenue is generated through software licensing, implementation services, and continuous delivery management, with Foundry extending into Industry Operating Systems that centralize data operations across entire sectors.\n\n## Explicit Support:\n- \"We have built four principal software platforms, Palantir Gotham (“Gotham”), Palantir Foundry (“Foundry”), Palantir Apollo (“Apollo”), and Palantir Artificial Intelligence Platform (“AIP”)\"\n- \"Of the $2.9 billion in revenue that we generated in 2024, 55% came from customers in the government segment, and 45% came from customers in the commercial segment\"\n- \"Our customer acquisition strategy generally targets large-scale, hard-to-execute opportunities at large government and commercial institutions\"\n- \"In addition to supporting individual institutions, our platforms have become central operating systems for entire industries and sectors\"\n\n# SEGMENTS\n## [Segment] Government\n### Role in Business Model:\nPrimary revenue generator (55% of 2024 revenue) serving defense agencies, the intelligence community, disaster relief organizations, and civilian government functions with secure data integration, operational analytics, and AI platforms. Represents the historical foundation of the company and remains the core anchor for the Gotham platform, with AIP providing integrated AI capabilities for government decision-making and operational workflows.\n### Explicit Support:\n- \"Of the $2.9 billion in revenue that we generated in 2024, 55% came from customers in the government segment\"\n- \"We were founded in 2003 and started building software for the intelligence community in the United States\"\n- \"Gotham is now used broadly across government functions\"\n- \"special forces personnel and military officials in the United States and abroad\"\n### Customer Types:\n- Government agencies | Primary constituency including defense agencies, intelligence community, public health administrators, and military organizations\n### Channels:\n- Direct sales | Account-based sales force targeting specific government contracts and large-scale implementations\n- System integrators | Partnerships with government contractors and integrators for complex deployments\n- Cloud partnerships | Partnerships with public and private cloud providers for secure government cloud deployments\n\n## [Segment] Commercial\n### Role in Business Model:\nGrowth segment (45% of 2024 revenue) targeting large enterprises across approximately 90 industries with data operating systems and AI platforms. Focused on becoming the \"central operating system\" for individual institutions and entire industries through scalable platform adoption, supported by AIP bootcamps for rapid customer onboarding and Developer Tier for bottom-up adoption.\n### Explicit Support:\n- \"45% came from customers in the commercial segment\"\n- \"All of our commercial customers now use it [Foundry]\"\n- \"software is currently used across approximately 90 industries\"\n- \"we introduced AIP bootcamps to the initial stages of our customer acquisition process\"\n- \"we introduced Developer Tier, offering limited access to Foundry and AIP\"\n### Customer Types:\n- Large enterprises | Explicitly targeted as \"large-scale, hard-to-execute opportunities at large... commercial institutions\" with complex data environments\n- Developers | Targeted via Developer Tier offering for exploration and innovation without enterprise procurement barriers\n- Healthcare organizations | Explicitly targeted through industry partnerships and operational deployments\n- Manufacturers | Explicitly targeted through industry partnerships including automotive and oil and gas sectors\n- Financial services firms | Explicitly mentioned in privacy implementations and industry partnerships (insurance)\n### Channels:\n- Direct sales | Account-based sales force for enterprise acquisition\n- Cloud partnerships | Partnerships with public, private, and hybrid cloud providers to leverage existing enterprise relationships and computing infrastructure\n- Resellers | Channel sales relationships with third-party providers and technology vendors\n- System integrators | Partners for combining and customizing solutions for enterprise deployment\n- Online | Self-service digital access for Developer Tier exploration and registration\n\n# OFFERINGS\n## [Offering] Palantir Gotham\n### Role in Business Model:\nData integration and analytics platform designed for government operations, enabling pattern identification across intelligence datasets—from signals intelligence to confidential informant reports—and facilitating hand-offs between analysts and operational users for real-world response coordination and threat mitigation.\n### Explicit Support:\n- \"Gotham enables users to identify patterns hidden deep within datasets... It also facilitates the hand-off between analysts and operational users\"\n- \"Gotham is now used broadly across government functions\"\n### Segment Anchors:\n- Government | Primary platform for defense and intelligence operations\n### Parent Offering:\n- none | First-order platform distinct from other offerings\n### Child Offerings:\n- none | No named child variants or tiers described\n### Channels:\n- none | Distributed through segment-level direct sales and system integrators\n### Revenue Models:\n- Licensing | Software platform rights for government deployment and usage\n- Service fees | Implementation, integration, and strategic deployment services for complex installations\n\n## [Offering] Palantir Foundry\n### Role in Business Model:\nCommercial-focused data operating system that transforms organizational operations by creating a centralized platform for data integration, pipeline management, and cross-functional analytics. Serves as the primary commercial platform and foundation for Industry Operating Systems that extend capabilities across entire sectors.\n### Explicit Support:\n- \"Foundry transforms the ways organizations operate by creating a central operating system for their data\"\n- \"All of our commercial customers now use it\"\n- \"Foundry is becoming a central operating system not only for individual institutions but also for entire industries\"\n### Segment Anchors:\n- Commercial | Primary platform for commercial data operations and enterprise transformation\n### Parent Offering:\n- none | First-order platform distinct from other offerings\n### Child Offerings:\n- Developer Tier | Limited access tier providing restricted Foundry capabilities for developer exploration\n- Industry Operating Systems | Sector-specific deployments that distribute Foundry capabilities at scale across entire industries\n### Channels:\n- none | Distributed through segment-level direct sales, cloud partnerships, and strategic industry alliances\n### Revenue Models:\n- Licensing | Enterprise software platform licensing for commercial deployment\n- Service fees | Professional services and implementation for enterprise data integration projects\n\n## [Offering] Palantir AIP\n### Role in Business Model:\nArtificial Intelligence Platform that operationalizes generative AI and large language models within existing Palantir platforms. Functions as a horizontal AI capability layer across both government and commercial segments, enabling responsible AI deployment with security, audit controls, and human-in-the-loop decision-making safeguards.\n### Explicit Support:\n- \"AIP leverages the power of our existing machine learning technologies alongside generative AI models... directly within Gotham and/or Foundry\"\n- \"AIP is seamlessly bundled with existing Palantir offerings such as the Foundry, Gotham, and Apollo platforms\"\n### Segment Anchors:\n- Government | Deployed alongside Gotham for government AI use cases and operational decision-making\n- Commercial | Deployed alongside Foundry for commercial enterprise AI applications\n### Parent Offering:\n- none | First-order platform distinct from but integrated with Gotham and Foundry\n### Child Offerings:\n- Developer Tier | Limited access tier providing restricted AIP capabilities for developer exploration and innovation\n### Channels:\n- none | Distributed through platform bundling via segment-level direct sales and AIP bootcamp engagements\n### Revenue Models:\n- Licensing | AI platform capabilities licensed as part of bundled solutions or standalone\n- Service fees | Implementation services for AI workflow integration and responsible AI deployment\n\n## [Offering] Palantir Apollo\n### Role in Business Model:\nCloud-agnostic infrastructure and continuous delivery platform enabling deployment of Palantir software and customer-owned software across any environment (cloud, on-premises, or rugged). Serves as the operational backbone for continuous updates, configuration management, and multi-environment deployment, allowing customers to run their own software products in virtually any environment.\n### Explicit Support:\n- \"Apollo is a cloud-agnostic, single control layer that coordinates ongoing delivery of new features, security updates, and platform configurations\"\n- \"began offering as a commercial solution in 2021\"\n- \"also enables our customers to securely deploy their own software in virtually any environment\"\n### Segment Anchors:\n- Government | Enables secure Gotham deployment in classified and defense environments\n- Commercial | Enables Foundry deployment and offered as standalone commercial infrastructure solution\n### Parent Offering:\n- none | First-order infrastructure platform distinct from application platforms\n### Child Offerings:\n- none | No named child variants described\n### Channels:\n- none | Distributed through segment-level direct sales and cloud partnerships\n### Revenue Models:\n- Licensing | Infrastructure control layer and deployment management licensing\n- Service fees | Configuration management and continuous delivery services\n\n## [Offering] Developer Tier\n### Role in Business Model:\nLimited access tier designed to lower barriers to entry for developers and small-scale exploration, allowing innovation on Foundry and AIP without significant upfront enterprise costs. Represents a bottom-up adoption strategy distinct from the enterprise sales motion, enabling developers to explore, innovate, and develop before committing to full enterprise procurement.\n### Explicit Support:\n- \"in 2024, we introduced Developer Tier, offering limited access to Foundry and AIP in the United States and select countries\"\n- \"allows developers to explore, innovate, and develop without significant upfront enterprise costs\"\n### Segment Anchors:\n- Commercial | Explicitly part of commercial segment expansion strategy to broaden the customer base\n### Parent Offering:\n- Palantir Foundry | Provides limited access to Foundry capabilities for development and testing\n- Palantir AIP | Provides limited access to AIP capabilities for AI development and experimentation\n### Child Offerings:\n- none | No further decomposed tiers described\n### Channels:\n- Online | Self-service digital access through the company's online platforms and website\n### Revenue Models:\n- none | Revenue model not explicitly described; positioned as access expansion for exploration\n\n## [Offering] Industry Operating Systems\n### Role in Business Model:\nSector-specific deployments of Foundry that function as central operating systems for entire industries rather than individual institutions. Enables distribution of platform capabilities at scale to multiple institutions within given industries (airline, insurance, healthcare, automotive, security and risk management) through partnerships and consortium arrangements.\n### Explicit Support:\n- \"We are developing industry operating systems to help companies and government agencies manage operations across their entire organizations\"\n- \"These operating systems allow our software to be distributed at scale to institutions within given industries\"\n- \"partnerships in industries such as airline, insurance, healthcare, automotive, security and risk management, and government\"\n### Segment Anchors:\n- Commercial | Primary deployment for industry-wide commercial data infrastructure\n### Parent Offering:\n- Palantir Foundry | Built upon and extends Foundry capabilities to entire industry ecosystems\n### Child Offerings:\n- none | No named sub-sector offerings described\n### Channels:\n- Partners | Distributed through strategic industry partnerships (e.g., Fujitsu for global solutions integration) and sector-specific alliances\n- Direct sales | Enterprise sales targeting industry consortia and sector-wide deployments\n### Revenue Models:\n- Licensing | Industry-scale platform licensing for multi-institution deployment\n- Service fees | Implementation and integration services for sector-wide data infrastructure\n\n# CORPORATE SCOPE\n## Operating Geographies:\n- Worldwide | Global operations with 66% of 2024 revenue from the United States and 34% from customers abroad; platforms deployed across approximately 90 industries worldwide with explicit operations in Europe, Asia (including South Korea and Japan), and North America\n\n## Key Partners:\n- Fujitsu Limited | Strategic global partnership through Palantir Technologies Japan KK to incorporate Foundry and AIP capabilities as key elements in Fujitsu Uvance data infrastructure solutions for global enterprise customers\n- Cloud providers | Partnerships with leading public, private, and hybrid cloud service providers to expand distribution capabilities, leverage existing enterprise customer footprints, and provide cloud-agnostic deployment options (specific providers unnamed in filing)",
+  "compiled_graph_extraction": {
+    "extraction_notes": "Compiled dual-segment structure with four primary software platforms (Gotham, Foundry, AIP, Apollo) and two derivative offerings (Developer Tier, Industry Operating Systems). Preserved parent-child hierarchy where Developer Tier descends from both Foundry and AIP, and Industry Operating Systems descends from Foundry. Omitted 'Cloud partnerships' channel due to absence from canonical label set. Captured cross-segment presence of AIP and Apollo. Revenue models not assigned to Developer Tier as memo explicitly states none described.",
+    "triples": [
+      {
+        "subject": "Palantir",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Government",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Palantir",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Commercial",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Palantir",
+        "subject_type": "Company",
+        "relation": "OPERATES_IN",
+        "object": "Worldwide",
+        "object_type": "Place"
+      },
+      {
+        "subject": "Palantir",
+        "subject_type": "Company",
+        "relation": "PARTNERS_WITH",
+        "object": "Fujitsu Limited",
+        "object_type": "Company"
+      },
+      {
+        "subject": "Government",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Government",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Government",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "system integrators",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "developers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "healthcare organizations",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "manufacturers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "financial services firms",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "system integrators",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Government",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Palantir Gotham",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Government",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Palantir AIP",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Government",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Palantir Apollo",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Palantir Foundry",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Palantir AIP",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Palantir Apollo",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Developer Tier",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Industry Operating Systems",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Palantir Foundry",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Developer Tier",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Palantir Foundry",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Industry Operating Systems",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Palantir Gotham",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Palantir Gotham",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Palantir Foundry",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Palantir Foundry",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Palantir AIP",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Palantir AIP",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Palantir Apollo",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Palantir Apollo",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      }
+    ]
+  },
+  "final_extraction": {
+    "extraction_notes": "Reviewed for overreach against memo. Preserved dual-parent hierarchy for Developer Tier (Foundry + AIP) and parent-child relationship for Industry Operating Systems under Foundry as memo explicitly supports these structures. Added missing revenue model edges for Industry Operating Systems (licensing, service fees) which were explicitly stated in the offering block but omitted in initial compilation. Retained segment-level channel distribution as memo primarily anchors channels to segments. Omitted cloud partnerships channel as non-canonical. No other overreach identified; structure is defensible.",
+    "triples": [
+      {
+        "subject": "Palantir",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Government",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Palantir",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Commercial",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Palantir",
+        "subject_type": "Company",
+        "relation": "OPERATES_IN",
+        "object": "Worldwide",
+        "object_type": "Place"
+      },
+      {
+        "subject": "Palantir",
+        "subject_type": "Company",
+        "relation": "PARTNERS_WITH",
+        "object": "Fujitsu Limited",
+        "object_type": "Company"
+      },
+      {
+        "subject": "Government",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Government",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Government",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "system integrators",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "developers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "healthcare organizations",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "manufacturers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "financial services firms",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "system integrators",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Government",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Palantir Gotham",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Government",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Palantir AIP",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Government",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Palantir Apollo",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Palantir Foundry",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Palantir AIP",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Palantir Apollo",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Developer Tier",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Commercial",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Industry Operating Systems",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Palantir Foundry",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Developer Tier",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Palantir Foundry",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Industry Operating Systems",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Palantir Gotham",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Palantir Gotham",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Palantir Foundry",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Palantir Foundry",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Palantir AIP",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Palantir AIP",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Palantir Apollo",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Palantir Apollo",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      }
+    ]
+  }
+}

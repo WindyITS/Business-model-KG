@@ -1,0 +1,10 @@
+{
+  "company_name": "Amazon",
+  "company_slug": "amazon",
+  "pipeline": "memo_graph_only",
+  "latest_available": true,
+  "latest_run_dir": "outputs/amazon/memo_graph_only/latest",
+  "available_run_tokens": [],
+  "failed_run_tokens": [],
+  "updated_at": "2026-04-27T20:29:45.110479+00:00"
+}

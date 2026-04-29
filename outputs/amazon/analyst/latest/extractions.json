@@ -1,0 +1,763 @@
+{
+  "foundation_memo": "# ANALYTICAL FRAME\n## Summary:\nAmazon.com operates a diversified technology and commerce business organized into three segments: North America and International (encompassing online and physical retail, third-party seller services, subscription services, electronic devices, and advertising) and Amazon Web Services (AWS, providing cloud infrastructure and platform services). The company serves distinct constituencies—consumers, sellers, developers, enterprises, content creators, and advertisers—through digital marketplaces, physical retail locations, and on-demand cloud platforms. Revenue models span subscription (Prime), consumption-based (AWS), transaction and service fees (seller programs), advertising (ad services), and hardware sales (electronic devices).\n\n## Explicit Support:\n- \"We have organized our operations into three segments: North America, International, and Amazon Web Services (“AWS”).\"\n- \"In each of our segments, we serve our primary customer sets, consisting of consumers, sellers, developers, enterprises, content creators, advertisers, and employees.\"\n- \"We serve consumers through our online and physical stores and focus on selection, price, and convenience.\"\n- \"We offer programs that enable sellers to grow their businesses, sell their products in our stores, and fulfill orders using our services.\"\n- \"We serve developers and enterprises of all sizes, including start-ups, government agencies, and academic institutions, through AWS.\"\n- \"We provide advertising services to sellers, vendors, publishers, authors, and others.\"\n\n# SEGMENTS\n## [Segment] North America\n### Role in Business Model:\nGeographic segment encompassing all retail and services operations within North America, including online and physical stores, third-party seller marketplace services, subscription services (Prime), electronic device sales, and advertising services. This segment represents the core consumer and seller platform business in the domestic market.\n### Explicit Support:\n- \"We have organized our operations into three segments: North America, International, and Amazon Web Services (“AWS”).\"\n- \"We serve consumers through our online and physical stores...\"\n- \"We offer programs that enable sellers to grow their businesses...\"\n### Customer Types:\n- consumers | Primary focus of retail operations (\"serve consumers through our online and physical stores\")\n- small businesses | Served through seller programs (\"enable sellers to grow their businesses\")\n- large enterprises | Served through advertising services and enterprise seller accounts (\"vendors, publishers\" implies larger entities)\n### Channels:\n- online | Primary access through \"websites, mobile apps\"\n- retail | Physical store presence (\"physically visiting our stores\")\n\n## [Segment] International\n### Role in Business Model:\nGeographic segment encompassing all retail and services operations outside North America, mirroring the North America segment's business model of online and physical retail, third-party seller services, subscriptions, devices, and advertising in international markets.\n### Explicit Support:\n- \"We have organized our operations into three segments: North America, International, and Amazon Web Services (“AWS”).\"\n- \"We serve consumers through our online and physical stores...\" (context implies global scope)\n### Customer Types:\n- consumers | International retail consumer base\n- small businesses | International seller programs\n- large enterprises | International advertising and enterprise sellers\n### Channels:\n- online | International websites and mobile apps\n- retail | International physical stores\n\n## [Segment] Amazon Web Services (AWS)\n### Role in Business Model:\nTechnology services segment providing on-demand cloud infrastructure and platform services including compute, storage, database, analytics, and artificial intelligence/machine learning to developers, enterprises, and public sector organizations. This segment operates as a distinct technology infrastructure business separate from retail operations.\n### Explicit Support:\n- \"We have organized our operations into three segments: North America, International, and Amazon Web Services (“AWS”).\"\n- \"We serve developers and enterprises of all sizes, including start-ups, government agencies, and academic institutions, through AWS...\"\n### Customer Types:\n- developers | Explicitly stated primary customer (\"We serve developers...\")\n- large enterprises | Explicitly stated (\"enterprises of all sizes\")\n- government agencies | Explicitly stated\n- educational institutions | Explicitly stated (\"academic institutions\")\n### Channels:\n- online | On-demand self-service platform (\"on-demand technology services\")\n- direct sales | Enterprise and government sales (implied by serving large enterprises and government agencies)\n\n# OFFERINGS\n## [Offering] Online Stores\n### Role in Business Model:\nDigital retail platform enabling the sale of hundreds of millions of unique products by Amazon and third parties across dozens of product categories, serving as the primary consumer-facing commerce channel.\n### Explicit Support:\n- \"We serve consumers through our online and physical stores...\"\n- \"Customers access our offerings through our websites, mobile apps...\"\n### Segment Anchors:\n- North America | Primary digital retail channel for North American consumers\n- International | Primary digital retail channel for international consumers\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- online | Accessed through company websites and mobile apps\n### Revenue Models:\n- none\n\n## [Offering] Physical Stores\n### Role in Business Model:\nBrick-and-mortar retail locations providing consumers with in-person shopping experiences and order fulfillment options, complementing the digital retail platform.\n### Explicit Support:\n- \"We serve consumers through our online and physical stores...\"\n- \"physically visiting our stores\"\n- \"through our physical stores\" (fulfillment method)\n### Segment Anchors:\n- North America | Physical retail locations in North America\n- International | Physical retail locations internationally\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- retail | Physical store locations\n### Revenue Models:\n- none\n\n## [Offering] Amazon Prime\n### Role in Business Model:\nSubscription-based membership program providing bundled benefits including fast/free shipping, access to media content (movies, series, live sports), and other services, creating a recurring revenue stream and customer retention mechanism.\n### Explicit Support:\n- \"we offer subscription services such as Amazon Prime, a membership program that includes fast, free shipping on tens of millions of items, access to award-winning movies and series, live sports, and other benefits.\"\n### Segment Anchors:\n- North America | Offered to North American consumers\n- International | Offered to international consumers\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- online | Subscription accessed through websites/apps\n### Revenue Models:\n- subscription | Explicitly described as \"subscription services\" and \"membership program\"\n\n## [Offering] Electronic Devices\n### Role in Business Model:\nProduct family of proprietary hardware devices extending Amazon's ecosystem into consumer homes and digital entertainment, spanning e-readers, tablets, streaming media players, smart speakers, and home security/automation hardware.\n### Explicit Support:\n- \"we also manufacture and sell electronic devices, including Kindle, Fire tablet, Fire TV, Echo, Ring, Blink, and eero\"\n### Segment Anchors:\n- North America | Sold in North America\n- International | Sold internationally\n### Parent Offering:\n- none\n### Child Offerings:\n- Kindle | E-reader device explicitly named\n- Fire tablet | Tablet device explicitly named\n- Fire TV | Streaming media device explicitly named\n- Echo | Smart speaker device explicitly named\n- Ring | Home security device explicitly named\n- Blink | Home security device explicitly named\n- eero | Mesh WiFi device explicitly named\n### Channels:\n- online | Sold through Amazon's websites\n- retail | Sold through physical stores\n### Revenue Models:\n- hardware sales | Explicitly \"manufacture and sell electronic devices\"\n\n## [Offering] Seller Programs\n### Role in Business Model:\nPlatform services enabling third-party sellers to list, sell, and fulfill orders through Amazon's marketplace infrastructure, generating revenue through fixed fees, sales commissions, per-unit activity fees, and interest.\n### Explicit Support:\n- \"We offer programs that enable sellers to grow their businesses, sell their products in our stores, and fulfill orders using our services.\"\n- \"We earn fixed fees, a percentage of sales, per-unit activity fees, interest, or some combination thereof, for our seller programs.\"\n### Segment Anchors:\n- North America | Programs for North American sellers\n- International | Programs for international sellers\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- online | Accessed through seller portals/websites\n### Revenue Models:\n- transaction fees | \"percentage of sales\"\n- service fees | \"fixed fees\", \"per-unit activity fees\"\n\n## [Offering] AWS Cloud Services\n### Role in Business Model:\nComprehensive cloud computing platform providing on-demand infrastructure and platform services including compute, storage, databases, analytics, and AI/ML capabilities to business and public sector customers.\n### Explicit Support:\n- \"AWS, which offers a broad set of on-demand technology services, including compute, storage, database, analytics, artificial intelligence and machine learning, and other services.\"\n### Segment Anchors:\n- Amazon Web Services (AWS) | Core offering of the AWS segment\n### Parent Offering:\n- none\n### Child Offerings:\n- Compute Services | Explicitly listed service category (\"compute\")\n- Storage Services | Explicitly listed service category (\"storage\")\n- Database Services | Explicitly listed service category (\"database\")\n- Analytics Services | Explicitly listed service category (\"analytics\")\n- AI/ML Services | Explicitly listed service category (\"artificial intelligence and machine learning\")\n### Channels:\n- online | On-demand self-service platform\n- direct sales | Enterprise and government customer acquisition\n### Revenue Models:\n- consumption-based | \"on-demand technology services\" implies usage-based metering\n\n## [Offering] Advertising Services\n### Role in Business Model:\nDigital advertising platform providing sponsored ads, display, and video advertising solutions to sellers, vendors, publishers, and other advertisers seeking to reach Amazon's customer base.\n### Explicit Support:\n- \"We provide advertising services to sellers, vendors, publishers, authors, and others, through programs such as sponsored ads, display, and video advertising.\"\n### Segment Anchors:\n- North America | Services offered to North American advertisers\n- International | Services offered to international advertisers\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- online | Digital advertising platform\n### Revenue Models:\n- advertising | Explicitly \"advertising services\"\n\n## [Offering] Content Publishing Programs\n### Role in Business Model:\nPlatform services enabling content creators including authors, independent publishers, musicians, filmmakers, and app developers to publish, distribute, and monetize digital and physical content through Amazon's ecosystem.\n### Explicit Support:\n- \"We offer programs that allow authors, independent publishers, musicians, filmmakers, Twitch streamers, skill and app developers, and others to publish and sell content.\"\n### Segment Anchors:\n- North America | Programs available in North America\n- International | Programs available internationally\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- online | Digital content publishing platforms\n### Revenue Models:\n- none\n\n# CORPORATE SCOPE\n## Operating Geographies:\n- Worldwide | Operations explicitly span North America, International markets, and global AWS infrastructure (\"worldwide marketplace in which we compete\")\n\n## Key Partners:\n- none | Filing mentions \"co-sourced and outsourced arrangements\" and license agreements with \"partners\" but does not name specific external commercial companies as material partners in the provided text",
+  "augmented_memo": "# ANALYTICAL FRAME\n## Summary:\nAmazon.com operates a diversified technology and commerce business organized into three segments: North America and International (encompassing online and physical retail, third-party seller services, subscription services, electronic devices, and advertising) and Amazon Web Services (AWS, providing cloud infrastructure and platform services). The company serves distinct constituencies—consumers, sellers, developers, enterprises, content creators, and advertisers—through digital marketplaces, physical retail locations, and on-demand cloud platforms. Revenue models span subscription (Prime), consumption-based (AWS), transaction and service fees (seller programs), advertising (ad services), and hardware sales (electronic devices).\n\n## Explicit Support:\n- \"We have organized our operations into three segments: North America, International, and Amazon Web Services (“AWS”).\"\n- \"In each of our segments, we serve our primary customer sets, consisting of consumers, sellers, developers, enterprises, content creators, advertisers, and employees.\"\n- \"We serve consumers through our online and physical stores and focus on selection, price, and convenience.\"\n- \"We offer programs that enable sellers to grow their businesses, sell their products in our stores, and fulfill orders using our services.\"\n- \"We serve developers and enterprises of all sizes, including start-ups, government agencies, and academic institutions, through AWS.\"\n- \"We provide advertising services to sellers, vendors, publishers, authors, and others.\"\n\n# SEGMENTS\n## [Segment] North America\n### Role in Business Model:\nGeographic segment encompassing all retail and services operations within North America, including online and physical stores, third-party seller marketplace services, subscription services (Prime), electronic device sales, and advertising services. This segment represents the core consumer and seller platform business in the domestic market.\n### Explicit Support:\n- \"We have organized our operations into three segments: North America, International, and Amazon Web Services (“AWS”).\"\n- \"We serve consumers through our online and physical stores...\"\n- \"We offer programs that enable sellers to grow their businesses...\"\n### Customer Types:\n- consumers | Primary focus of retail operations (\"serve consumers through our online and physical stores\")\n- small businesses | Served through seller programs (\"enable sellers to grow their businesses\")\n- large enterprises | Served through advertising services and vendor programs (\"vendors, publishers\" implies larger entities)\n### Channels:\n- online | Primary access through \"websites, mobile apps\"\n- retail | Physical store presence (\"physically visiting our stores\")\n\n## [Segment] International\n### Role in Business Model:\nGeographic segment encompassing all retail and services operations outside North America, mirroring the North America segment's business model of online and physical retail, third-party seller services, subscriptions, devices, and advertising in international markets.\n### Explicit Support:\n- \"We have organized our operations into three segments: North America, International, and Amazon Web Services (“AWS”).\"\n- \"We serve consumers through our online and physical stores...\" (context implies global scope)\n### Customer Types:\n- consumers | International retail consumer base\n- small businesses | International seller programs\n- large enterprises | International advertising and enterprise sellers\n### Channels:\n- online | International websites and mobile apps\n- retail | International physical stores\n\n## [Segment] Amazon Web Services (AWS)\n### Role in Business Model:\nTechnology services segment providing on-demand cloud infrastructure and platform services including compute, storage, database, analytics, and artificial intelligence/machine learning to developers, enterprises, start-ups, and public sector organizations. This segment operates as a distinct technology infrastructure business separate from retail operations.\n### Explicit Support:\n- \"We have organized our operations into three segments: North America, International, and Amazon Web Services (“AWS”).\"\n- \"We serve developers and enterprises of all sizes, including start-ups, government agencies, and academic institutions, through AWS...\"\n### Customer Types:\n- developers | Explicitly stated primary customer (\"We serve developers...\")\n- large enterprises | Explicitly stated (\"enterprises of all sizes\")\n- small businesses | Served through start-up and emerging business programs (\"start-ups\")\n- government agencies | Explicitly stated\n- educational institutions | Explicitly stated (\"academic institutions\")\n### Channels:\n- online | On-demand self-service platform (\"on-demand technology services\")\n- direct sales | Enterprise and government sales (implied by serving large enterprises and government agencies)\n\n# OFFERINGS\n## [Offering] Online Stores\n### Role in Business Model:\nDigital retail platform enabling the sale of hundreds of millions of unique products by Amazon and third parties across dozens of product categories, serving as the primary consumer-facing commerce channel.\n### Explicit Support:\n- \"We serve consumers through our online and physical stores...\"\n- \"Customers access our offerings through our websites, mobile apps...\"\n### Segment Anchors:\n- North America | Primary digital retail channel for North American consumers\n- International | Primary digital retail channel for international consumers\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- online | Accessed through company websites and mobile apps\n### Revenue Models:\n- none\n\n## [Offering] Physical Stores\n### Role in Business Model:\nBrick-and-mortar retail locations providing consumers with in-person shopping experiences and order fulfillment options, complementing the digital retail platform.\n### Explicit Support:\n- \"We serve consumers through our online and physical stores...\"\n- \"physically visiting our stores\"\n- \"through our physical stores\" (fulfillment method)\n### Segment Anchors:\n- North America | Physical retail locations in North America\n- International | Physical retail locations internationally\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- retail | Physical store locations\n### Revenue Models:\n- none\n\n## [Offering] Amazon Prime\n### Role in Business Model:\nSubscription-based membership program providing bundled benefits including fast/free shipping, access to media content (movies, series, live sports), and other services, creating a recurring revenue stream and customer retention mechanism.\n### Explicit Support:\n- \"we offer subscription services such as Amazon Prime, a membership program that includes fast, free shipping on tens of millions of items, access to award-winning movies and series, live sports, and other benefits.\"\n### Segment Anchors:\n- North America | Offered to North American consumers\n- International | Offered to international consumers\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- online | Subscription accessed through websites/apps\n### Revenue Models:\n- subscription | Explicitly described as \"subscription services\" and \"membership program\"\n\n## [Offering] Electronic Devices\n### Role in Business Model:\nProduct family of proprietary hardware devices extending Amazon's ecosystem into consumer homes and digital entertainment, spanning e-readers, tablets, streaming media players, smart speakers, home security systems, and networking equipment.\n### Explicit Support:\n- \"we also manufacture and sell electronic devices, including Kindle, Fire tablet, Fire TV, Echo, Ring, Blink, and eero\"\n### Segment Anchors:\n- North America | Sold in North America\n- International | Sold internationally\n### Parent Offering:\n- none\n### Child Offerings:\n- Kindle | E-reader device explicitly named\n- Fire tablet | Tablet device explicitly named\n- Fire TV | Streaming media player explicitly named\n- Echo | Smart speaker device explicitly named\n- Ring | Home security and doorbell system explicitly named\n- Blink | Home security camera system explicitly named\n- eero | Mesh WiFi networking device explicitly named\n### Channels:\n- online | Sold through Amazon's websites\n- retail | Sold through physical stores\n### Revenue Models:\n- hardware sales | Explicitly \"manufacture and sell electronic devices\"\n\n## [Offering] Seller Programs\n### Role in Business Model:\nPlatform services enabling third-party sellers and vendors to list, sell, and fulfill orders through Amazon's marketplace infrastructure, generating revenue through fixed fees, sales commissions, per-unit activity fees, and interest.\n### Explicit Support:\n- \"We offer programs that enable sellers to grow their businesses, sell their products in our stores, and fulfill orders using our services.\"\n- \"We earn fixed fees, a percentage of sales, per-unit activity fees, interest, or some combination thereof, for our seller programs.\"\n### Segment Anchors:\n- North America | Programs for North American sellers\n- International | Programs for international sellers\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- online | Accessed through seller portals/websites\n### Revenue Models:\n- transaction fees | \"percentage of sales\"\n- service fees | \"fixed fees\", \"per-unit activity fees\", and interest income from seller services\n\n## [Offering] AWS Cloud Services\n### Role in Business Model:\nComprehensive cloud computing platform providing on-demand infrastructure and platform services including compute, storage, databases, analytics, and AI/ML capabilities to business and public sector customers.\n### Explicit Support:\n- \"AWS, which offers a broad set of on-demand technology services, including compute, storage, database, analytics, artificial intelligence and machine learning, and other services.\"\n### Segment Anchors:\n- Amazon Web Services (AWS) | Core offering of the AWS segment\n### Parent Offering:\n- none\n### Child Offerings:\n- Compute Services | Explicitly listed service category (\"compute\")\n- Storage Services | Explicitly listed service category (\"storage\")\n- Database Services | Explicitly listed service category (\"database\")\n- Analytics Services | Explicitly listed service category (\"analytics\")\n- AI/ML Services | Explicitly listed service category (\"artificial intelligence and machine learning\")\n### Channels:\n- online | On-demand self-service platform\n- direct sales | Enterprise and government customer acquisition\n### Revenue Models:\n- consumption-based | \"on-demand technology services\" implies usage-based metering\n\n## [Offering] Advertising Services\n### Role in Business Model:\nDigital advertising platform providing sponsored, display, and video advertising solutions to sellers, vendors, publishers, and other advertisers seeking to reach Amazon's customer base.\n### Explicit Support:\n- \"We provide advertising services to sellers, vendors, publishers, authors, and others, through programs such as sponsored ads, display, and video advertising.\"\n### Segment Anchors:\n- North America | Services offered to North American advertisers\n- International | Services offered to international advertisers\n### Parent Offering:\n- none\n### Child Offerings:\n- Sponsored Ads | Explicitly named advertising program format (\"sponsored ads\")\n- Display Advertising | Explicitly named advertising program format (\"display\")\n- Video Advertising | Explicitly named advertising program format (\"video advertising\")\n### Channels:\n- online | Digital advertising platform\n### Revenue Models:\n- advertising | Explicitly \"advertising services\"\n\n## [Offering] Content Publishing Programs\n### Role in Business Model:\nPlatform services enabling content creators including authors, independent publishers, musicians, filmmakers, Twitch streamers, and skill/app developers to publish, distribute, and monetize digital and physical content through Amazon's ecosystem.\n### Explicit Support:\n- \"We offer programs that allow authors, independent publishers, musicians, filmmakers, Twitch streamers, skill and app developers, and others to publish and sell content.\"\n### Segment Anchors:\n- North America | Programs available in North America\n- International | Programs available internationally\n### Parent Offering:\n- none\n### Child Offerings:\n- Twitch | Explicitly named streaming platform for content creators (\"Twitch streamers\")\n### Channels:\n- online | Digital content publishing platforms\n### Revenue Models:\n- none\n\n# CORPORATE SCOPE\n## Operating Geographies:\n- Worldwide | Operations explicitly span North America, International markets, and global AWS infrastructure (\"worldwide marketplace in which we compete\")\n\n## Key Partners:\n- none | Filing mentions \"co-sourced and outsourced arrangements\" and license agreements with \"partners\" but does not name specific external commercial companies as material partners in the provided text",
+  "compiled_graph_extraction": {
+    "extraction_notes": "Compiled Amazon's three-segment structure (North America, International, AWS) with segment-level customer types and channels. Preserved offering hierarchies including Electronic Devices (Kindle, Fire, Echo, Ring, Blink, eero), AWS Cloud Services (Compute, Storage, Database, Analytics, AI/ML), Advertising Services (Sponsored, Display, Video), and Content Publishing Programs (Twitch). Revenue models attached to specific offerings where explicitly stated. Geographic scope set to Worldwide. No partner relationships materialized per memo.",
+    "triples": [
+      {
+        "subject": "Amazon",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "North America",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Amazon",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "International",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Amazon",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Amazon Web Services (AWS)",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Amazon",
+        "subject_type": "Company",
+        "relation": "OPERATES_IN",
+        "object": "Worldwide",
+        "object_type": "Place"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Amazon Web Services (AWS)",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "developers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Amazon Web Services (AWS)",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Amazon Web Services (AWS)",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Amazon Web Services (AWS)",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Amazon Web Services (AWS)",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Amazon Web Services (AWS)",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Amazon Web Services (AWS)",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Online Stores",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Online Stores",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Physical Stores",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Physical Stores",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Amazon Prime",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Amazon Prime",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Amazon Prime",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Electronic Devices",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Electronic Devices",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Electronic Devices",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Kindle",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Electronic Devices",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Fire tablet",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Electronic Devices",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Fire TV",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Electronic Devices",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Echo",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Electronic Devices",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Ring",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Electronic Devices",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Blink",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Electronic Devices",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "eero",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Electronic Devices",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Seller Programs",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Seller Programs",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Seller Programs",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "transaction fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Seller Programs",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Amazon Web Services (AWS)",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "AWS Cloud Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "AWS Cloud Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Compute Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "AWS Cloud Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Storage Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "AWS Cloud Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Database Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "AWS Cloud Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Analytics Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "AWS Cloud Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "AI/ML Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "AWS Cloud Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "consumption-based",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Advertising Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Advertising Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Advertising Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Sponsored Ads",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Advertising Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Display Advertising",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Advertising Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Video Advertising",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Advertising Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Content Publishing Programs",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Content Publishing Programs",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Content Publishing Programs",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Twitch",
+        "object_type": "Offering"
+      }
+    ]
+  },
+  "final_extraction": {
+    "extraction_notes": "Removed offering-level SELL_THROUGH edges that restated segment-level channel structure (online/retail for retail segments, online/direct sales for AWS). Removed Twitch as a child offering of Content Publishing Programs due to weak memo support (only mentioned as 'Twitch streamers', not as a distinct offering node). Removed AWS Cloud Services children (Compute Services, Storage Services, Database Services, Analytics Services, AI/ML Services) as these are broad service categories rather than distinct stable offering nodes with individual characteristics in the memo. Removed Advertising Services children (Sponsored Ads, Display Advertising, Video Advertising) as these are presented as examples ('such as') rather than a definitive child hierarchy. Preserved Electronic Devices children (Kindle, Fire tablet, Fire TV, Echo, Ring, Blink, eero) as these are explicitly named stable product families. Preserved all segment-level structure, customer types, and revenue models as they are well-supported by explicit memo citations.",
+    "triples": [
+      {
+        "subject": "Amazon",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "North America",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Amazon",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "International",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Amazon",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Amazon Web Services (AWS)",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Amazon",
+        "subject_type": "Company",
+        "relation": "OPERATES_IN",
+        "object": "Worldwide",
+        "object_type": "Place"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Amazon Web Services (AWS)",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "developers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Amazon Web Services (AWS)",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Amazon Web Services (AWS)",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Amazon Web Services (AWS)",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Amazon Web Services (AWS)",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Amazon Web Services (AWS)",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Amazon Web Services (AWS)",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Online Stores",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Online Stores",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Physical Stores",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Physical Stores",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Amazon Prime",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Amazon Prime",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Amazon Prime",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Electronic Devices",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Electronic Devices",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Electronic Devices",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Kindle",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Electronic Devices",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Fire tablet",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Electronic Devices",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Fire TV",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Electronic Devices",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Echo",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Electronic Devices",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Ring",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Electronic Devices",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Blink",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Electronic Devices",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "eero",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Electronic Devices",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Seller Programs",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Seller Programs",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Seller Programs",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "transaction fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Seller Programs",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Amazon Web Services (AWS)",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "AWS Cloud Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "AWS Cloud Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "consumption-based",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Advertising Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Advertising Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Advertising Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Content Publishing Programs",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Content Publishing Programs",
+        "object_type": "Offering"
+      }
+    ]
+  }
+}

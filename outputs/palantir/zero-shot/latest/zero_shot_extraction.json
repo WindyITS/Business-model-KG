@@ -1,0 +1,147 @@
+{
+  "triples": [
+    {
+      "subject": "Palantir",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Government",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Palantir",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Commercial",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Government",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Gotham",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Government",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "AIP",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Government",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Apollo",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Foundry",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "AIP",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Apollo",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Developer Tier",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Government",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "government agencies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "financial services firms",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "healthcare organizations",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "manufacturers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "developers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Palantir",
+      "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "United States",
+      "object_type": "Place"
+    },
+    {
+      "subject": "Palantir",
+      "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "Worldwide",
+      "object_type": "Place"
+    },
+    {
+      "subject": "Government",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Palantir",
+      "subject_type": "Company",
+      "relation": "PARTNERS_WITH",
+      "object": "Fujitsu Limited",
+      "object_type": "Company"
+    }
+  ],
+  "extraction_notes": "Extracted Palantir's Government and Commercial business segments with four principal platforms (Gotham, Foundry, Apollo, AIP) and Developer Tier. Mapped customer types to segments based on explicit usage examples. Revenue models not explicitly stated and omitted. Geography reflects US headquarters and global operations. Included explicit partnership with Fujitsu.",
+  "attempts_used": 1,
+  "raw_response": "{\n  \"extraction_notes\": \"Extracted Palantir's Government and Commercial business segments with four principal platforms (Gotham, Foundry, Apollo, AIP) and Developer Tier. Mapped customer types to segments based on explicit usage examples. Revenue models not explicitly stated and omitted. Geography reflects US headquarters and global operations. Included explicit partnership with Fujitsu.\",\n  \"triples\": [\n    {\n      \"subject\": \"Palantir\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"HAS_SEGMENT\",\n      \"object\": \"Government\",\n      \"object_type\": \"BusinessSegment\"\n    },\n    {\n      \"subject\": \"Palantir\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"HAS_SEGMENT\",\n      \"object\": \"Commercial\",\n      \"object_type\": \"BusinessSegment\"\n    },\n    {\n      \"subject\": \"Government\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Gotham\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Government\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"AIP\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Government\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Apollo\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Foundry\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"AIP\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Apollo\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Developer Tier\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Government\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"government agencies\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"large enterprises\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"financial services firms\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"healthcare organizations\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"manufacturers\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"developers\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Palantir\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"OPERATES_IN\",\n      \"object\": \"United States\",\n      \"object_type\": \"Place\"\n    },\n    {\n      \"subject\": \"Palantir\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"OPERATES_IN\",\n      \"object\": \"Worldwide\",\n      \"object_type\": \"Place\"\n    },\n    {\n      \"subject\": \"Government\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SELLS_THROUGH\",\n      \"object\": \"direct sales\",\n      \"object_type\": \"Channel\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SELLS_THROUGH\",\n      \"object\": \"direct sales\",\n      \"object_type\": \"Channel\"\n    },\n    {\n      \"subject\": \"Palantir\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"PARTNERS_WITH\",\n      \"object\": \"Fujitsu Limited\",\n      \"object_type\": \"Company\"\n    }\n  ]\n}"
+}

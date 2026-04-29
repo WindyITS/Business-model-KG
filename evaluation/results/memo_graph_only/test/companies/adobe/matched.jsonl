@@ -1,0 +1,31 @@
+{"subject":"Acrobat Solutions","subject_type":"Offering","relation":"OFFERS","object":"Acrobat AI Assistant","object_type":"Offering"}
+{"subject":"Acrobat Solutions","subject_type":"Offering","relation":"OFFERS","object":"Acrobat Studio","object_type":"Offering"}
+{"subject":"Acrobat Solutions","subject_type":"Offering","relation":"OFFERS","object":"Adobe Acrobat Reader","object_type":"Offering"}
+{"subject":"Adobe","subject_type":"Company","relation":"HAS_SEGMENT","object":"Digital Experience","object_type":"BusinessSegment"}
+{"subject":"Adobe","subject_type":"Company","relation":"HAS_SEGMENT","object":"Digital Media","object_type":"BusinessSegment"}
+{"subject":"Adobe","subject_type":"Company","relation":"HAS_SEGMENT","object":"Publishing and Advertising","object_type":"BusinessSegment"}
+{"subject":"Adobe","subject_type":"Company","relation":"OPERATES_IN","object":"Worldwide","object_type":"Place"}
+{"subject":"Adobe Experience Platform","subject_type":"Offering","relation":"OFFERS","object":"Adobe Journey Optimizer","object_type":"Offering"}
+{"subject":"Adobe Experience Platform","subject_type":"Offering","relation":"OFFERS","object":"Adobe Real-Time Customer Data Platform","object_type":"Offering"}
+{"subject":"Adobe Firefly Solutions","subject_type":"Offering","relation":"OFFERS","object":"Adobe Firefly App","object_type":"Offering"}
+{"subject":"Adobe Firefly Solutions","subject_type":"Offering","relation":"OFFERS","object":"Adobe Firefly Custom Models","object_type":"Offering"}
+{"subject":"Adobe Firefly Solutions","subject_type":"Offering","relation":"OFFERS","object":"Adobe Firefly Foundry","object_type":"Offering"}
+{"subject":"Adobe Firefly Solutions","subject_type":"Offering","relation":"OFFERS","object":"Adobe Firefly Services","object_type":"Offering"}
+{"subject":"Adobe GenStudio","subject_type":"Offering","relation":"OFFERS","object":"GenStudio for Performance Marketing","object_type":"Offering"}
+{"subject":"Digital Experience","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe Experience Platform","object_type":"Offering"}
+{"subject":"Digital Experience","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe GenStudio","object_type":"Offering"}
+{"subject":"Digital Experience","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"direct sales","object_type":"Channel"}
+{"subject":"Digital Experience","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"online","object_type":"Channel"}
+{"subject":"Digital Experience","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"system integrators","object_type":"Channel"}
+{"subject":"Digital Media","subject_type":"BusinessSegment","relation":"OFFERS","object":"Acrobat Solutions","object_type":"Offering"}
+{"subject":"Digital Media","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe Express","object_type":"Offering"}
+{"subject":"Digital Media","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe Firefly Solutions","object_type":"Offering"}
+{"subject":"Digital Media","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"OEMs","object_type":"Channel"}
+{"subject":"Digital Media","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"direct sales","object_type":"Channel"}
+{"subject":"Digital Media","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"distributors","object_type":"Channel"}
+{"subject":"Digital Media","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"online","object_type":"Channel"}
+{"subject":"Digital Media","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"resellers","object_type":"Channel"}
+{"subject":"Digital Media","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"system integrators","object_type":"Channel"}
+{"subject":"Publishing and Advertising","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"direct sales","object_type":"Channel"}
+{"subject":"Publishing and Advertising","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"distributors","object_type":"Channel"}
+{"subject":"Publishing and Advertising","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"online","object_type":"Channel"}

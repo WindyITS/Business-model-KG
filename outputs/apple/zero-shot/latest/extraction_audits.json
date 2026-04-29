@@ -1,0 +1,18 @@
+{
+  "zero_shot": {
+    "payload_parse_recovered": false,
+    "payload_triples_is_list": true,
+    "raw_triple_count": 108,
+    "non_dict_triple_count": 0,
+    "missing_key_triple_count": 0,
+    "malformed_triple_count": 0,
+    "ontology_rejected_triple_count": 8,
+    "invalid_triple_count": 8,
+    "duplicate_triple_count": 0,
+    "kept_triple_count": 100,
+    "invalid_issue_counts": {
+      "child_offering_monetizes_via": 8
+    },
+    "ontology_version": "canonical"
+  }
+}

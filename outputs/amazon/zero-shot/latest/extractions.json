@@ -1,0 +1,754 @@
+{
+  "zero_shot_extraction": {
+    "extraction_notes": "Extracted three segments (North America, International, AWS) with offerings mapped to explicit product families and devices, customer types restricted to canonical labels, channels for retail segments, and revenue models tied to specific monetization mechanisms described in the filing.",
+    "triples": [
+      {
+        "subject": "Amazon",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "North America",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Amazon",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "International",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Amazon",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "AWS",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Amazon",
+        "subject_type": "Company",
+        "relation": "OPERATES_IN",
+        "object": "Worldwide",
+        "object_type": "Place"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Online Stores",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Physical Stores",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Kindle",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Fire Tablet",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Fire TV",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Echo",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Ring",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Blink",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "eero",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Amazon Prime",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Seller Programs",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Content Creator Programs",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Advertising Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Online Stores",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Physical Stores",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Kindle",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Fire Tablet",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Fire TV",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Echo",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Ring",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Blink",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "eero",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Amazon Prime",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Seller Programs",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Content Creator Programs",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Advertising Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "AWS",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "AWS Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "AWS",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "developers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "AWS",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "AWS",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "AWS",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Amazon Prime",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Kindle",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Fire Tablet",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Fire TV",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Echo",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Ring",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Blink",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "eero",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Seller Programs",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "transaction fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Seller Programs",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "AWS Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "consumption-based",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Advertising Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      }
+    ]
+  },
+  "final_extraction": {
+    "extraction_notes": "Extracted three segments (North America, International, AWS) with offerings mapped to explicit product families and devices, customer types restricted to canonical labels, channels for retail segments, and revenue models tied to specific monetization mechanisms described in the filing.",
+    "triples": [
+      {
+        "subject": "Amazon",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "North America",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Amazon",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "International",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Amazon",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "AWS",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Amazon",
+        "subject_type": "Company",
+        "relation": "OPERATES_IN",
+        "object": "Worldwide",
+        "object_type": "Place"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Online Stores",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Physical Stores",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Kindle",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Fire Tablet",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Fire TV",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Echo",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Ring",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Blink",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "eero",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Amazon Prime",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Seller Programs",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Content Creator Programs",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Advertising Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Online Stores",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Physical Stores",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Kindle",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Fire Tablet",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Fire TV",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Echo",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Ring",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Blink",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "eero",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Amazon Prime",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Seller Programs",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Content Creator Programs",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Advertising Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "AWS",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "AWS Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "AWS",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "developers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "AWS",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "AWS",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "AWS",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "North America",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "International",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Amazon Prime",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Kindle",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Fire Tablet",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Fire TV",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Echo",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Ring",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Blink",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "eero",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Seller Programs",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "transaction fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Seller Programs",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "AWS Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "consumption-based",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Advertising Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      }
+    ]
+  }
+}

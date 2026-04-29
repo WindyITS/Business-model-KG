@@ -1,0 +1,157 @@
+{
+  "company": "Microsoft",
+  "company_slug": "microsoft",
+  "pipeline": "memo_graph_only",
+  "split": "dev",
+  "status": "hand_matched",
+  "review_csv": "/Users/giuliosighieri/Desktop/kg-v0/evaluation/results/memo_graph_only/dev/companies/microsoft/unmatched_for_review.csv",
+  "strict": {
+    "true_positives": 48,
+    "false_positives": 56,
+    "false_negatives": 72,
+    "precision": 0.46153846153846156,
+    "recall": 0.4,
+    "f1": 0.42857142857142855
+  },
+  "recovered_matches": 10,
+  "hand_matched": {
+    "true_positives": 58,
+    "false_positives": 46,
+    "false_negatives": 62,
+    "precision": 0.5576923076923077,
+    "recall": 0.48333333333333334,
+    "f1": 0.5178571428571428
+  },
+  "match_groups": [
+    {
+      "match_id": "1",
+      "gold_rows": 1,
+      "predicted_rows": 1,
+      "gold_row_ids": [
+        "gold_0018"
+      ],
+      "predicted_row_ids": [
+        "predicted_0049"
+      ],
+      "recovered_matches": 1,
+      "status": "accepted"
+    },
+    {
+      "match_id": "10",
+      "gold_rows": 1,
+      "predicted_rows": 1,
+      "gold_row_ids": [
+        "gold_0058"
+      ],
+      "predicted_row_ids": [
+        "predicted_0048"
+      ],
+      "recovered_matches": 1,
+      "status": "accepted"
+    },
+    {
+      "match_id": "2",
+      "gold_rows": 1,
+      "predicted_rows": 1,
+      "gold_row_ids": [
+        "gold_0019"
+      ],
+      "predicted_row_ids": [
+        "predicted_0050"
+      ],
+      "recovered_matches": 1,
+      "status": "accepted"
+    },
+    {
+      "match_id": "3",
+      "gold_rows": 1,
+      "predicted_rows": 1,
+      "gold_row_ids": [
+        "gold_0020"
+      ],
+      "predicted_row_ids": [
+        "predicted_0051"
+      ],
+      "recovered_matches": 1,
+      "status": "accepted"
+    },
+    {
+      "match_id": "4",
+      "gold_rows": 1,
+      "predicted_rows": 1,
+      "gold_row_ids": [
+        "gold_0022"
+      ],
+      "predicted_row_ids": [
+        "predicted_0056"
+      ],
+      "recovered_matches": 1,
+      "status": "accepted"
+    },
+    {
+      "match_id": "5",
+      "gold_rows": 1,
+      "predicted_rows": 1,
+      "gold_row_ids": [
+        "gold_0045"
+      ],
+      "predicted_row_ids": [
+        "predicted_0025"
+      ],
+      "recovered_matches": 1,
+      "status": "accepted"
+    },
+    {
+      "match_id": "6",
+      "gold_rows": 1,
+      "predicted_rows": 1,
+      "gold_row_ids": [
+        "gold_0054"
+      ],
+      "predicted_row_ids": [
+        "predicted_0044"
+      ],
+      "recovered_matches": 1,
+      "status": "accepted"
+    },
+    {
+      "match_id": "7",
+      "gold_rows": 1,
+      "predicted_rows": 1,
+      "gold_row_ids": [
+        "gold_0055"
+      ],
+      "predicted_row_ids": [
+        "predicted_0045"
+      ],
+      "recovered_matches": 1,
+      "status": "accepted"
+    },
+    {
+      "match_id": "8",
+      "gold_rows": 1,
+      "predicted_rows": 1,
+      "gold_row_ids": [
+        "gold_0056"
+      ],
+      "predicted_row_ids": [
+        "predicted_0046"
+      ],
+      "recovered_matches": 1,
+      "status": "accepted"
+    },
+    {
+      "match_id": "9",
+      "gold_rows": 1,
+      "predicted_rows": 1,
+      "gold_row_ids": [
+        "gold_0057"
+      ],
+      "predicted_row_ids": [
+        "predicted_0047"
+      ],
+      "recovered_matches": 1,
+      "status": "accepted"
+    }
+  ]
+}

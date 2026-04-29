@@ -1,0 +1,40 @@
+{
+  "company": "Microsoft",
+  "company_slug": "microsoft",
+  "pipeline": "analyst",
+  "split": "dev",
+  "status": "hand_matched",
+  "review_csv": "/Users/giuliosighieri/Desktop/kg-v0/evaluation/results/analyst/dev/companies/microsoft/unmatched_for_review.csv",
+  "strict": {
+    "true_positives": 70,
+    "false_positives": 46,
+    "false_negatives": 50,
+    "precision": 0.603448275862069,
+    "recall": 0.5833333333333334,
+    "f1": 0.5932203389830508
+  },
+  "recovered_matches": 1,
+  "hand_matched": {
+    "true_positives": 71,
+    "false_positives": 45,
+    "false_negatives": 49,
+    "precision": 0.6120689655172413,
+    "recall": 0.5916666666666667,
+    "f1": 0.6016949152542374
+  },
+  "match_groups": [
+    {
+      "match_id": "1",
+      "gold_rows": 1,
+      "predicted_rows": 1,
+      "gold_row_ids": [
+        "gold_0005"
+      ],
+      "predicted_row_ids": [
+        "predicted_0004"
+      ],
+      "recovered_matches": 1,
+      "status": "accepted"
+    }
+  ]
+}

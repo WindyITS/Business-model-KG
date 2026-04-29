@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "business-model-kg-eval-handoff"
+version = "0.1.0"
+description = "Evaluation handoff for the Business Model KG project."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8,<9",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = [
+    "runtime",
+    "runtime.*",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests/test_evaluation"]
+pythonpath = [".", "src"]

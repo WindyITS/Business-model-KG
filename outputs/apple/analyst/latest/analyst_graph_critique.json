@@ -1,0 +1,1127 @@
+{
+  "triples": [
+    {
+      "subject": "Apple",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Americas",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Apple",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Europe",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Apple",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Greater China",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Apple",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Japan",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Apple",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Rest of Asia Pacific",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Americas",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Americas",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Americas",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "mid-market companies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Americas",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Americas",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "government agencies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Americas",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "educational institutions",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Europe",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Europe",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Europe",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "mid-market companies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Europe",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Europe",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "government agencies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Europe",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "educational institutions",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Greater China",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Greater China",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Greater China",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "mid-market companies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Greater China",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Greater China",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "government agencies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Greater China",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "educational institutions",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Japan",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Japan",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Japan",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "mid-market companies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Japan",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Japan",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "government agencies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Japan",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "educational institutions",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Rest of Asia Pacific",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Rest of Asia Pacific",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Rest of Asia Pacific",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "mid-market companies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Rest of Asia Pacific",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Rest of Asia Pacific",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "government agencies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Rest of Asia Pacific",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "educational institutions",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Americas",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Americas",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Americas",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Americas",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "resellers",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Europe",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Europe",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Europe",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Europe",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "resellers",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Greater China",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Greater China",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Greater China",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Greater China",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "resellers",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Japan",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Japan",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Japan",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Japan",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "resellers",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Rest of Asia Pacific",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Rest of Asia Pacific",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Rest of Asia Pacific",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Rest of Asia Pacific",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "resellers",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Americas",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "iPhone",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Europe",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "iPhone",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Greater China",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "iPhone",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Japan",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "iPhone",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Rest of Asia Pacific",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "iPhone",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Americas",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Mac",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Europe",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Mac",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Greater China",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Mac",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Japan",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Mac",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Rest of Asia Pacific",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Mac",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Americas",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "iPad",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Europe",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "iPad",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Greater China",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "iPad",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Japan",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "iPad",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Rest of Asia Pacific",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "iPad",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Americas",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Wearables",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Europe",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Wearables",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Greater China",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Wearables",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Japan",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Wearables",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Rest of Asia Pacific",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Wearables",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Americas",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Home Products",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Europe",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Home Products",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Greater China",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Home Products",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Japan",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Home Products",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Rest of Asia Pacific",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Home Products",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Americas",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Accessories",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Europe",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Accessories",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Greater China",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Accessories",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Japan",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Accessories",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Rest of Asia Pacific",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Accessories",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Americas",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "AppleCare",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Europe",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "AppleCare",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Greater China",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "AppleCare",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Japan",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "AppleCare",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Rest of Asia Pacific",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "AppleCare",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Americas",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Cloud Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Europe",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Cloud Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Greater China",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Cloud Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Japan",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Cloud Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Rest of Asia Pacific",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Cloud Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Americas",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Advertising Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Europe",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Advertising Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Greater China",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Advertising Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Japan",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Advertising Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Rest of Asia Pacific",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Advertising Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Americas",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "App Store",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Europe",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "App Store",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Greater China",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "App Store",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Japan",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "App Store",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Rest of Asia Pacific",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "App Store",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Americas",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Subscription Content Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Europe",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Subscription Content Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Greater China",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Subscription Content Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Japan",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Subscription Content Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Rest of Asia Pacific",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Subscription Content Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Americas",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Payment Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Europe",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Payment Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Greater China",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Payment Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Japan",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Payment Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Rest of Asia Pacific",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Payment Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "iPhone",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "iPhone Pro",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "iPhone",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "iPhone Air",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "iPhone",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "iPhone Standard",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "iPhone",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "iPhone Entry",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "MacBook Air",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "MacBook Pro",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "iMac",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Mac mini",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Mac Studio",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Mac Pro",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "iPad",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "iPad Pro",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "iPad",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "iPad Air",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "iPad",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "iPad Standard",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "iPad",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "iPad mini",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Wearables",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Apple Watch Series",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Wearables",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Apple Watch SE",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Wearables",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Apple Watch Ultra",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Wearables",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "AirPods",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Wearables",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "AirPods Pro",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Wearables",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "AirPods Max",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Wearables",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Beats Products",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Wearables",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Apple Vision Pro",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Home Products",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Apple TV Device",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Home Products",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "HomePod",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Home Products",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "HomePod mini",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Subscription Content Services",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Apple Arcade",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Subscription Content Services",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Apple Fitness+",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Subscription Content Services",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Apple Music",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Subscription Content Services",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Apple News+",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Subscription Content Services",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Apple TV Content",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Payment Services",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Apple Card",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Payment Services",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Apple Pay",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "iPhone",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Mac",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Wearables",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Home Products",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Accessories",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "AppleCare",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Cloud Services",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Advertising Services",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Advertising Services",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "App Store",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "transaction fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Subscription Content Services",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Payment Services",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "transaction fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Apple",
+      "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "Worldwide",
+      "object_type": "Place"
+    }
+  ],
+  "extraction_notes": "Corrected naming collisions identified in analyst memo: (1) Renamed child iPad node to 'iPad Standard' to resolve self-reference with parent iPad offering, matching the tier normalization pattern used for iPhone; (2) Distinguished dual-use 'Apple TV' label by renaming hardware child to 'Apple TV Device' and service child to 'Apple TV Content', preserving both material offerings while eliminating ambiguous node identity. Removed no other triples as structure is otherwise defensible from memo.",
+  "attempts_used": 1,
+  "raw_response": "{\"extraction_notes\":\"Corrected naming collisions identified in analyst memo: (1) Renamed child iPad node to 'iPad Standard' to resolve self-reference with parent iPad offering, matching the tier normalization pattern used for iPhone; (2) Distinguished dual-use 'Apple TV' label by renaming hardware child to 'Apple TV Device' and service child to 'Apple TV Content', preserving both material offerings while eliminating ambiguous node identity. Removed no other triples as structure is otherwise defensible from memo.\",\"triples\":[{\"subject\":\"Apple\",\"subject_type\":\"Company\",\"relation\":\"HAS_SEGMENT\",\"object\":\"Americas\",\"object_type\":\"BusinessSegment\"},{\"subject\":\"Apple\",\"subject_type\":\"Company\",\"relation\":\"HAS_SEGMENT\",\"object\":\"Europe\",\"object_type\":\"BusinessSegment\"},{\"subject\":\"Apple\",\"subject_type\":\"Company\",\"relation\":\"HAS_SEGMENT\",\"object\":\"Greater China\",\"object_type\":\"BusinessSegment\"},{\"subject\":\"Apple\",\"subject_type\":\"Company\",\"relation\":\"HAS_SEGMENT\",\"object\":\"Japan\",\"object_type\":\"BusinessSegment\"},{\"subject\":\"Apple\",\"subject_type\":\"Company\",\"relation\":\"HAS_SEGMENT\",\"object\":\"Rest of Asia Pacific\",\"object_type\":\"BusinessSegment\"},{\"subject\":\"Americas\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"consumers\",\"object_type\":\"CustomerType\"},{\"subject\":\"Americas\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"small businesses\",\"object_type\":\"CustomerType\"},{\"subject\":\"Americas\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"mid-market companies\",\"object_type\":\"CustomerType\"},{\"subject\":\"Americas\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"large enterprises\",\"object_type\":\"CustomerType\"},{\"subject\":\"Americas\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"government agencies\",\"object_type\":\"CustomerType\"},{\"subject\":\"Americas\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"educational institutions\",\"object_type\":\"CustomerType\"},{\"subject\":\"Europe\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"consumers\",\"object_type\":\"CustomerType\"},{\"subject\":\"Europe\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"small businesses\",\"object_type\":\"CustomerType\"},{\"subject\":\"Europe\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"mid-market companies\",\"object_type\":\"CustomerType\"},{\"subject\":\"Europe\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"large enterprises\",\"object_type\":\"CustomerType\"},{\"subject\":\"Europe\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"government agencies\",\"object_type\":\"CustomerType\"},{\"subject\":\"Europe\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"educational institutions\",\"object_type\":\"CustomerType\"},{\"subject\":\"Greater China\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"consumers\",\"object_type\":\"CustomerType\"},{\"subject\":\"Greater China\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"small businesses\",\"object_type\":\"CustomerType\"},{\"subject\":\"Greater China\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"mid-market companies\",\"object_type\":\"CustomerType\"},{\"subject\":\"Greater China\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"large enterprises\",\"object_type\":\"CustomerType\"},{\"subject\":\"Greater China\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"government agencies\",\"object_type\":\"CustomerType\"},{\"subject\":\"Greater China\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"educational institutions\",\"object_type\":\"CustomerType\"},{\"subject\":\"Japan\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"consumers\",\"object_type\":\"CustomerType\"},{\"subject\":\"Japan\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"small businesses\",\"object_type\":\"CustomerType\"},{\"subject\":\"Japan\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"mid-market companies\",\"object_type\":\"CustomerType\"},{\"subject\":\"Japan\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"large enterprises\",\"object_type\":\"CustomerType\"},{\"subject\":\"Japan\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"government agencies\",\"object_type\":\"CustomerType\"},{\"subject\":\"Japan\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"educational institutions\",\"object_type\":\"CustomerType\"},{\"subject\":\"Rest of Asia Pacific\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"consumers\",\"object_type\":\"CustomerType\"},{\"subject\":\"Rest of Asia Pacific\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"small businesses\",\"object_type\":\"CustomerType\"},{\"subject\":\"Rest of Asia Pacific\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"mid-market companies\",\"object_type\":\"CustomerType\"},{\"subject\":\"Rest of Asia Pacific\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"large enterprises\",\"object_type\":\"CustomerType\"},{\"subject\":\"Rest of Asia Pacific\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"government agencies\",\"object_type\":\"CustomerType\"},{\"subject\":\"Rest of Asia Pacific\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SERVES\",\"object\":\"educational institutions\",\"object_type\":\"CustomerType\"},{\"subject\":\"Americas\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SELLS_THROUGH\",\"object\":\"direct sales\",\"object_type\":\"Channel\"},{\"subject\":\"Americas\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SELLS_THROUGH\",\"object\":\"online\",\"object_type\":\"Channel\"},{\"subject\":\"Americas\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SELLS_THROUGH\",\"object\":\"retail\",\"object_type\":\"Channel\"},{\"subject\":\"Americas\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SELLS_THROUGH\",\"object\":\"resellers\",\"object_type\":\"Channel\"},{\"subject\":\"Europe\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SELLS_THROUGH\",\"object\":\"direct sales\",\"object_type\":\"Channel\"},{\"subject\":\"Europe\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SELLS_THROUGH\",\"object\":\"online\",\"object_type\":\"Channel\"},{\"subject\":\"Europe\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SELLS_THROUGH\",\"object\":\"retail\",\"object_type\":\"Channel\"},{\"subject\":\"Europe\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SELLS_THROUGH\",\"object\":\"resellers\",\"object_type\":\"Channel\"},{\"subject\":\"Greater China\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SELLS_THROUGH\",\"object\":\"direct sales\",\"object_type\":\"Channel\"},{\"subject\":\"Greater China\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SELLS_THROUGH\",\"object\":\"online\",\"object_type\":\"Channel\"},{\"subject\":\"Greater China\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SELLS_THROUGH\",\"object\":\"retail\",\"object_type\":\"Channel\"},{\"subject\":\"Greater China\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SELLS_THROUGH\",\"object\":\"resellers\",\"object_type\":\"Channel\"},{\"subject\":\"Japan\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SELLS_THROUGH\",\"object\":\"direct sales\",\"object_type\":\"Channel\"},{\"subject\":\"Japan\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SELLS_THROUGH\",\"object\":\"online\",\"object_type\":\"Channel\"},{\"subject\":\"Japan\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SELLS_THROUGH\",\"object\":\"retail\",\"object_type\":\"Channel\"},{\"subject\":\"Japan\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SELLS_THROUGH\",\"object\":\"resellers\",\"object_type\":\"Channel\"},{\"subject\":\"Rest of Asia Pacific\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SELLS_THROUGH\",\"object\":\"direct sales\",\"object_type\":\"Channel\"},{\"subject\":\"Rest of Asia Pacific\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SELLS_THROUGH\",\"object\":\"online\",\"object_type\":\"Channel\"},{\"subject\":\"Rest of Asia Pacific\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SELLS_THROUGH\",\"object\":\"retail\",\"object_type\":\"Channel\"},{\"subject\":\"Rest of Asia Pacific\",\"subject_type\":\"BusinessSegment\",\"relation\":\"SELLS_THROUGH\",\"object\":\"resellers\",\"object_type\":\"Channel\"},{\"subject\":\"Americas\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"iPhone\",\"object_type\":\"Offering\"},{\"subject\":\"Europe\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"iPhone\",\"object_type\":\"Offering\"},{\"subject\":\"Greater China\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"iPhone\",\"object_type\":\"Offering\"},{\"subject\":\"Japan\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"iPhone\",\"object_type\":\"Offering\"},{\"subject\":\"Rest of Asia Pacific\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"iPhone\",\"object_type\":\"Offering\"},{\"subject\":\"Americas\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Mac\",\"object_type\":\"Offering\"},{\"subject\":\"Europe\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Mac\",\"object_type\":\"Offering\"},{\"subject\":\"Greater China\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Mac\",\"object_type\":\"Offering\"},{\"subject\":\"Japan\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Mac\",\"object_type\":\"Offering\"},{\"subject\":\"Rest of Asia Pacific\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Mac\",\"object_type\":\"Offering\"},{\"subject\":\"Americas\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"iPad\",\"object_type\":\"Offering\"},{\"subject\":\"Europe\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"iPad\",\"object_type\":\"Offering\"},{\"subject\":\"Greater China\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"iPad\",\"object_type\":\"Offering\"},{\"subject\":\"Japan\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"iPad\",\"object_type\":\"Offering\"},{\"subject\":\"Rest of Asia Pacific\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"iPad\",\"object_type\":\"Offering\"},{\"subject\":\"Americas\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Wearables\",\"object_type\":\"Offering\"},{\"subject\":\"Europe\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Wearables\",\"object_type\":\"Offering\"},{\"subject\":\"Greater China\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Wearables\",\"object_type\":\"Offering\"},{\"subject\":\"Japan\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Wearables\",\"object_type\":\"Offering\"},{\"subject\":\"Rest of Asia Pacific\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Wearables\",\"object_type\":\"Offering\"},{\"subject\":\"Americas\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Home Products\",\"object_type\":\"Offering\"},{\"subject\":\"Europe\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Home Products\",\"object_type\":\"Offering\"},{\"subject\":\"Greater China\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Home Products\",\"object_type\":\"Offering\"},{\"subject\":\"Japan\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Home Products\",\"object_type\":\"Offering\"},{\"subject\":\"Rest of Asia Pacific\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Home Products\",\"object_type\":\"Offering\"},{\"subject\":\"Americas\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Accessories\",\"object_type\":\"Offering\"},{\"subject\":\"Europe\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Accessories\",\"object_type\":\"Offering\"},{\"subject\":\"Greater China\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Accessories\",\"object_type\":\"Offering\"},{\"subject\":\"Japan\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Accessories\",\"object_type\":\"Offering\"},{\"subject\":\"Rest of Asia Pacific\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Accessories\",\"object_type\":\"Offering\"},{\"subject\":\"Americas\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"AppleCare\",\"object_type\":\"Offering\"},{\"subject\":\"Europe\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"AppleCare\",\"object_type\":\"Offering\"},{\"subject\":\"Greater China\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"AppleCare\",\"object_type\":\"Offering\"},{\"subject\":\"Japan\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"AppleCare\",\"object_type\":\"Offering\"},{\"subject\":\"Rest of Asia Pacific\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"AppleCare\",\"object_type\":\"Offering\"},{\"subject\":\"Americas\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Cloud Services\",\"object_type\":\"Offering\"},{\"subject\":\"Europe\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Cloud Services\",\"object_type\":\"Offering\"},{\"subject\":\"Greater China\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Cloud Services\",\"object_type\":\"Offering\"},{\"subject\":\"Japan\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Cloud Services\",\"object_type\":\"Offering\"},{\"subject\":\"Rest of Asia Pacific\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Cloud Services\",\"object_type\":\"Offering\"},{\"subject\":\"Americas\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Advertising Services\",\"object_type\":\"Offering\"},{\"subject\":\"Europe\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Advertising Services\",\"object_type\":\"Offering\"},{\"subject\":\"Greater China\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Advertising Services\",\"object_type\":\"Offering\"},{\"subject\":\"Japan\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Advertising Services\",\"object_type\":\"Offering\"},{\"subject\":\"Rest of Asia Pacific\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Advertising Services\",\"object_type\":\"Offering\"},{\"subject\":\"Americas\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"App Store\",\"object_type\":\"Offering\"},{\"subject\":\"Europe\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"App Store\",\"object_type\":\"Offering\"},{\"subject\":\"Greater China\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"App Store\",\"object_type\":\"Offering\"},{\"subject\":\"Japan\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"App Store\",\"object_type\":\"Offering\"},{\"subject\":\"Rest of Asia Pacific\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"App Store\",\"object_type\":\"Offering\"},{\"subject\":\"Americas\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Subscription Content Services\",\"object_type\":\"Offering\"},{\"subject\":\"Europe\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Subscription Content Services\",\"object_type\":\"Offering\"},{\"subject\":\"Greater China\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Subscription Content Services\",\"object_type\":\"Offering\"},{\"subject\":\"Japan\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Subscription Content Services\",\"object_type\":\"Offering\"},{\"subject\":\"Rest of Asia Pacific\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Subscription Content Services\",\"object_type\":\"Offering\"},{\"subject\":\"Americas\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Payment Services\",\"object_type\":\"Offering\"},{\"subject\":\"Europe\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Payment Services\",\"object_type\":\"Offering\"},{\"subject\":\"Greater China\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Payment Services\",\"object_type\":\"Offering\"},{\"subject\":\"Japan\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Payment Services\",\"object_type\":\"Offering\"},{\"subject\":\"Rest of Asia Pacific\",\"subject_type\":\"BusinessSegment\",\"relation\":\"OFFERS\",\"object\":\"Payment Services\",\"object_type\":\"Offering\"},{\"subject\":\"iPhone\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"iPhone Pro\",\"object_type\":\"Offering\"},{\"subject\":\"iPhone\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"iPhone Air\",\"object_type\":\"Offering\"},{\"subject\":\"iPhone\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"iPhone Standard\",\"object_type\":\"Offering\"},{\"subject\":\"iPhone\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"iPhone Entry\",\"object_type\":\"Offering\"},{\"subject\":\"Mac\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"MacBook Air\",\"object_type\":\"Offering\"},{\"subject\":\"Mac\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"MacBook Pro\",\"object_type\":\"Offering\"},{\"subject\":\"Mac\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"iMac\",\"object_type\":\"Offering\"},{\"subject\":\"Mac\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"Mac mini\",\"object_type\":\"Offering\"},{\"subject\":\"Mac\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"Mac Studio\",\"object_type\":\"Offering\"},{\"subject\":\"Mac\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"Mac Pro\",\"object_type\":\"Offering\"},{\"subject\":\"iPad\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"iPad Pro\",\"object_type\":\"Offering\"},{\"subject\":\"iPad\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"iPad Air\",\"object_type\":\"Offering\"},{\"subject\":\"iPad\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"iPad Standard\",\"object_type\":\"Offering\"},{\"subject\":\"iPad\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"iPad mini\",\"object_type\":\"Offering\"},{\"subject\":\"Wearables\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"Apple Watch Series\",\"object_type\":\"Offering\"},{\"subject\":\"Wearables\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"Apple Watch SE\",\"object_type\":\"Offering\"},{\"subject\":\"Wearables\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"Apple Watch Ultra\",\"object_type\":\"Offering\"},{\"subject\":\"Wearables\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"AirPods\",\"object_type\":\"Offering\"},{\"subject\":\"Wearables\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"AirPods Pro\",\"object_type\":\"Offering\"},{\"subject\":\"Wearables\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"AirPods Max\",\"object_type\":\"Offering\"},{\"subject\":\"Wearables\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"Beats Products\",\"object_type\":\"Offering\"},{\"subject\":\"Wearables\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"Apple Vision Pro\",\"object_type\":\"Offering\"},{\"subject\":\"Home Products\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"Apple TV Device\",\"object_type\":\"Offering\"},{\"subject\":\"Home Products\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"HomePod\",\"object_type\":\"Offering\"},{\"subject\":\"Home Products\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"HomePod mini\",\"object_type\":\"Offering\"},{\"subject\":\"Subscription Content Services\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"Apple Arcade\",\"object_type\":\"Offering\"},{\"subject\":\"Subscription Content Services\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"Apple Fitness+\",\"object_type\":\"Offering\"},{\"subject\":\"Subscription Content Services\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"Apple Music\",\"object_type\":\"Offering\"},{\"subject\":\"Subscription Content Services\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"Apple News+\",\"object_type\":\"Offering\"},{\"subject\":\"Subscription Content Services\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"Apple TV Content\",\"object_type\":\"Offering\"},{\"subject\":\"Payment Services\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"Apple Card\",\"object_type\":\"Offering\"},{\"subject\":\"Payment Services\",\"subject_type\":\"Offering\",\"relation\":\"OFFERS\",\"object\":\"Apple Pay\",\"object_type\":\"Offering\"},{\"subject\":\"iPhone\",\"subject_type\":\"Offering\",\"relation\":\"MONETIZES_VIA\",\"object\":\"hardware sales\",\"object_type\":\"RevenueModel\"},{\"subject\":\"Mac\",\"subject_type\":\"Offering\",\"relation\":\"MONETIZES_VIA\",\"object\":\"hardware sales\",\"object_type\":\"RevenueModel\"},{\"subject\":\"Wearables\",\"subject_type\":\"Offering\",\"relation\":\"MONETIZES_VIA\",\"object\":\"hardware sales\",\"object_type\":\"RevenueModel\"},{\"subject\":\"Home Products\",\"subject_type\":\"Offering\",\"relation\":\"MONETIZES_VIA\",\"object\":\"hardware sales\",\"object_type\":\"RevenueModel\"},{\"subject\":\"Accessories\",\"subject_type\":\"Offering\",\"relation\":\"MONETIZES_VIA\",\"object\":\"hardware sales\",\"object_type\":\"RevenueModel\"},{\"subject\":\"AppleCare\",\"subject_type\":\"Offering\",\"relation\":\"MONETIZES_VIA\",\"object\":\"service fees\",\"object_type\":\"RevenueModel\"},{\"subject\":\"Cloud Services\",\"subject_type\":\"Offering\",\"relation\":\"MONETIZES_VIA\",\"object\":\"subscription\",\"object_type\":\"RevenueModel\"},{\"subject\":\"Advertising Services\",\"subject_type\":\"Offering\",\"relation\":\"MONETIZES_VIA\",\"object\":\"advertising\",\"object_type\":\"RevenueModel\"},{\"subject\":\"Advertising Services\",\"subject_type\":\"Offering\",\"relation\":\"MONETIZES_VIA\",\"object\":\"licensing\",\"object_type\":\"RevenueModel\"},{\"subject\":\"App Store\",\"subject_type\":\"Offering\",\"relation\":\"MONETIZES_VIA\",\"object\":\"transaction fees\",\"object_type\":\"RevenueModel\"},{\"subject\":\"Subscription Content Services\",\"subject_type\":\"Offering\",\"relation\":\"MONETIZES_VIA\",\"object\":\"subscription\",\"object_type\":\"RevenueModel\"},{\"subject\":\"Payment Services\",\"subject_type\":\"Offering\",\"relation\":\"MONETIZES_VIA\",\"object\":\"transaction fees\",\"object_type\":\"RevenueModel\"},{\"subject\":\"Apple\",\"subject_type\":\"Company\",\"relation\":\"OPERATES_IN\",\"object\":\"Worldwide\",\"object_type\":\"Place\"}]}"
+}

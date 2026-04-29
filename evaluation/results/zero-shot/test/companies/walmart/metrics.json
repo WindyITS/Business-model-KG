@@ -1,0 +1,19 @@
+{
+  "company": "Walmart",
+  "company_slug": "walmart",
+  "pipeline": "zero-shot",
+  "split": "test",
+  "status": "evaluated",
+  "gold_path": "/Users/giuliosighieri/Desktop/kg-v0/evaluation/benchmarks/test/clean/walmart.jsonl",
+  "prediction_path": "/Users/giuliosighieri/Desktop/kg-v0/outputs/walmart/zero-shot/latest/resolved_triples.json",
+  "gold_triples": 41,
+  "gold_unique_triples": 41,
+  "predicted_triples": 41,
+  "predicted_unique_triples": 41,
+  "true_positives": 14,
+  "false_positives": 27,
+  "false_negatives": 27,
+  "precision": 0.34146341463414637,
+  "recall": 0.34146341463414637,
+  "f1": 0.34146341463414637
+}

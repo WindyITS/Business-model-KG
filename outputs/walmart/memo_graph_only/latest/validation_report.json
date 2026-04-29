@@ -1,0 +1,323 @@
+{
+  "summary": {
+    "input_triple_count": 44,
+    "valid_triple_count": 44,
+    "invalid_triple_count": 0,
+    "duplicate_triple_count": 0,
+    "output_triple_count": 44,
+    "require_text_grounding": false,
+    "ontology_version": "canonical"
+  },
+  "valid_triples": [
+    {
+      "subject": "Walmart",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Walmart U.S.",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Walmart",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Walmart International",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Walmart",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Sam's Club U.S.",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Walmart",
+      "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "Worldwide",
+      "object_type": "Place"
+    },
+    {
+      "subject": "Walmart U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Walmart+",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Walmart U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Walmart Advertising Solutions",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Walmart U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Walmart Marketplace and Fulfillment Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Walmart U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Walmart Financial Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Walmart U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Walmart U.S. Retail Operations",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Walmart International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Flipkart",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Walmart International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "PhonePe",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Walmart International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Walmart Advertising Solutions",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Walmart International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Walmart Marketplace and Fulfillment Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Walmart International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Walmart Financial Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Sam's Club U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Sam's Club Membership",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Sam's Club U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Walmart Advertising Solutions",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Sam's Club U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Walmart Financial Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Sam's Club U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Sam's Club Retail Operations",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Sam's Club Membership",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Club Membership",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Sam's Club Membership",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Plus Membership",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Walmart U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Walmart U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Walmart International",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Walmart International",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Sam's Club U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Sam's Club U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Walmart U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Walmart U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Walmart International",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Walmart International",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Sam's Club U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Sam's Club U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Walmart+",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Sam's Club Membership",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Flipkart",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Flipkart",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Flipkart",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "PhonePe",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "transaction fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Walmart Advertising Solutions",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Walmart Marketplace and Fulfillment Services",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Walmart Financial Services",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Walmart Financial Services",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "transaction fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Walmart U.S. Retail Operations",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Sam's Club Retail Operations",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    }
+  ],
+  "invalid_triples": [],
+  "duplicate_triples": []
+}
