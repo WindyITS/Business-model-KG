@@ -8,7 +8,7 @@ It contains an isolated fine-tuning pipeline for:
 - a `Qwen3-4B-Instruct-2507` 4-bit MLX QLoRA planner
 
 The main repo does not import anything from this island.
-The only handoff back to the main runtime is a published deployment bundle under `runtime_assets/query_stack/current/`.
+The only handoff back to the main runtime is a published deployment bundle under `runtime_assets/query_stack/`.
 
 ## Locations
 
@@ -72,7 +72,7 @@ finetuning/artifacts/kg-query-planner/
 Publishing writes the runtime bundle that the main query stack consumes by default:
 
 ```text
-runtime_assets/query_stack/current/
+runtime_assets/query_stack/
   manifest.json
   router/
     model/

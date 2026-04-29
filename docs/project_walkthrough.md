@@ -143,7 +143,7 @@ If you want to navigate the codebase, these are the most important areas:
 
 For a more detailed layout map, see [`repo_structure.md`](./repo_structure.md).
 
-The main runtime does not import from the finetuning island directly. The handoff back into production is the published local query bundle under `runtime_assets/query_stack/current/`.
+The main runtime does not import from the finetuning island directly. The handoff back into production is the published local query bundle under `runtime_assets/query_stack/`.
 
 ## A Good Mental Model
 

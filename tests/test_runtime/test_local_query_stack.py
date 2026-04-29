@@ -9,7 +9,7 @@ from runtime.local_query_stack import run_local_query_stack
 
 class LocalQueryStackTests(unittest.TestCase):
     def _write_bundle(self, root_dir: Path, *, planner_gate_open: bool = True) -> Path:
-        bundle_dir = root_dir / "runtime_assets" / "query_stack" / "current"
+        bundle_dir = root_dir / "runtime_assets" / "query_stack"
         (bundle_dir / "router" / "model").mkdir(parents=True, exist_ok=True)
         (bundle_dir / "planner" / "adapter").mkdir(parents=True, exist_ok=True)
         (bundle_dir / "router" / "thresholds.json").write_text(

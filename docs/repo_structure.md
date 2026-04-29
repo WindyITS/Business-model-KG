@@ -108,7 +108,9 @@ Runtime query-stack bundle:
 ```text
 runtime_assets/
   query_stack/
-    current/
+    manifest.json
+    router/
+    planner/
 ```
 
 Saved extraction outputs:
@@ -202,7 +204,7 @@ The main repo does not import from the fine-tuning island. The only handoff back
 to the main runtime is the published query-stack bundle under:
 
 ```text
-runtime_assets/query_stack/current/
+runtime_assets/query_stack/
 ```
 
 See [`../finetuning/README.md`](../finetuning/README.md).

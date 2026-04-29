@@ -50,7 +50,15 @@ def repo_root() -> Path:
 
 def default_query_stack_bundle_dir(root_dir: Path | None = None) -> Path:
     resolved_root = root_dir or repo_root()
-    return resolved_root / "runtime_assets" / "query_stack" / "current"
+    bundle_dir = resolved_root / "runtime_assets" / "query_stack"
+    if manifest_path(bundle_dir).is_file():
+        return bundle_dir
+
+    legacy_bundle_dir = bundle_dir / "current"
+    if manifest_path(legacy_bundle_dir).is_file():
+        return legacy_bundle_dir
+
+    return bundle_dir
 
 
 def resolve_query_stack_bundle_dir(explicit_path: str | Path | None = None, *, root_dir: Path | None = None) -> Path:

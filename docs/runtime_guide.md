@@ -146,7 +146,7 @@ Override the local query-stack bundle:
 
 ```bash
 ./scripts/kg-query-cypher "Which company segments sell through marketplaces?" \
-  --local-stack-bundle-dir /path/to/runtime_assets/query_stack/current
+  --local-stack-bundle-dir /path/to/runtime_assets/query_stack
 ```
 
 Query command notes:

@@ -14,7 +14,7 @@ from .json_utils import compact_json
 from .paths import planner_adapter_dir, router_eval_dir, router_model_dir
 
 
-DEFAULT_PUBLISH_DIR = repo_root() / "runtime_assets" / "query_stack" / "current"
+DEFAULT_PUBLISH_DIR = repo_root() / "runtime_assets" / "query_stack"
 MANIFEST_FILENAME = "manifest.json"
 
 

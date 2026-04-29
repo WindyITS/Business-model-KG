@@ -12,7 +12,7 @@ from runtime import health_check
 class HealthCheckTests(unittest.TestCase):
     @staticmethod
     def _write_query_stack_bundle(root_dir: Path) -> Path:
-        bundle_dir = root_dir / "runtime_assets" / "query_stack" / "current"
+        bundle_dir = root_dir / "runtime_assets" / "query_stack"
         (bundle_dir / "router" / "model").mkdir(parents=True, exist_ok=True)
         (bundle_dir / "planner" / "adapter").mkdir(parents=True, exist_ok=True)
         (bundle_dir / "router" / "thresholds.json").write_text(
