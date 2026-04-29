@@ -1,45 +1,51 @@
 # Business Model KG
 
-A local pipeline for turning SEC 10-K business sections into standardized
-business-model knowledge graphs.
+Business Model KG is a local pipeline for turning SEC 10-K business sections
+into standardized business-model knowledge graphs.
+
+The project is built around a practical research question: can a language model
+extract a useful, comparable view of how companies make money, while still
+respecting a fixed graph schema and leaving enough artifacts behind for
+evaluation and debugging? The repo answers that question with three extraction
+pipelines, a shared ontology, saved output artifacts, an evaluation benchmark,
+and an optional Neo4j query layer.
 
 The maintained surface is the extraction and runtime stack for building,
-validating, loading, and querying business-model graphs.
+validating, evaluating, loading, and querying business-model graphs.
 
-## What It Does
+## Project Story
 
-The project reads a filing, runs one of the supported extraction pipelines,
-validates the result against a fixed ontology, saves run artifacts, and can
-load the graph into Neo4j for querying.
+Public filings describe businesses in rich prose, but that prose is hard to
+compare across companies. This project takes the business section of a 10-K and
+turns it into a graph centered on companies, business segments, offerings,
+customer types, channels, revenue models, places, and named partners.
 
-At a high level:
+The extraction is intentionally not just "ask a model for triples." The repo
+keeps a fixed ontology, validates every output against that ontology, stores
+intermediate artifacts for inspection, and evaluates the final resolved graph
+against manually curated gold triples. That makes the project useful both as a
+working local tool and as an experiment about extraction quality.
 
-1. read a 10-K business section
-2. extract a business-model graph
-3. resolve and validate entities and triples
-4. save outputs under `outputs/`
-5. optionally load the result into Neo4j
-6. query the live graph with natural language or Cypher
+The full workflow is:
 
-For the plain-language architecture walkthrough, see
+1. read a 10-K business section from `data/`
+2. run one of the extraction pipelines
+3. resolve surface forms and validate triples against the ontology
+4. save the run under `outputs/<company>/<pipeline>/`
+5. compare outputs against the benchmark under `evaluation/`
+6. optionally load saved graphs into Neo4j
+7. optionally query the live graph with natural language or rendered Cypher
+
+For a plain-language walkthrough of how these pieces fit together, start with
 [`docs/project_walkthrough.md`](./docs/project_walkthrough.md).
 
 ## Graph Model
 
-The graph is centered on:
+The graph is segment-centered. `Company` is the corporate shell,
+`BusinessSegment` is the main business-model anchor, and `Offering` is the
+product or service inventory layer.
 
-- `Company`
-- `BusinessSegment`
-- `Offering`
-
-It also uses canonical labels for:
-
-- `CustomerType`
-- `Channel`
-- `RevenueModel`
-- `Place`
-
-The ontology is segment-centered:
+The main relation pattern is:
 
 - `Company -> HAS_SEGMENT -> BusinessSegment`
 - `BusinessSegment -> OFFERS -> Offering`
@@ -49,26 +55,77 @@ The ontology is segment-centered:
 - `Company -> OPERATES_IN -> Place`
 - `Company -> PARTNERS_WITH -> Company`
 
-Full ontology details live in [`docs/ontology.md`](./docs/ontology.md).
+`CustomerType`, `Channel`, and `RevenueModel` use closed canonical labels so
+different companies can be compared consistently. Geography is kept canonical
+at `Company -> OPERATES_IN -> Place`, with downstream helper metadata for
+broader or narrower place matching in Neo4j.
+
+The complete schema, design principles, canonical labels, validation behavior,
+and geography rules are documented in [`docs/ontology.md`](./docs/ontology.md).
 
 ## Extraction Pipelines
 
-The repo ships three supported extraction pipelines:
+The repo includes three supported extraction pipelines:
 
-- `analyst`: memo-first extraction, graph compilation, then critique
-- `memo_graph_only`: first analyst memo plus graph compilation, without later memo augmentation or critique
-- `zero-shot`: direct single-pass graph extraction baseline
+- `analyst`: builds a structured analyst memo, augments it, compiles it into a graph, then runs a critique pass
+- `memo_graph_only`: builds the first analyst memo and compiles it into a graph, skipping later memo augmentation and critique
+- `zero-shot`: directly asks for the graph in a single pass
 
-Prompt assets are edited under [`prompts/`](./prompts/). Packaged fallback
-copies live under [`src/llm_extraction/_bundled_prompts/`](./src/llm_extraction/_bundled_prompts/).
+These pipelines share the same downstream resolver, validator, output layout,
+and evaluation target. That keeps the comparison focused on extraction strategy
+rather than different post-processing rules.
+
+Editable prompt assets live under [`prompts/`](./prompts/). Packaged fallback
+copies live under `src/llm_extraction/_bundled_prompts/`, so the project can
+still run after installation.
+
+## Evaluation
+
+Evaluation compares post-resolution, post-validation triples from:
+
+```text
+outputs/<company>/<pipeline>/latest/resolved_triples.json
+```
+
+against manually curated benchmark triples under:
+
+```text
+evaluation/benchmarks/<split>/clean/
+```
+
+The primary score is strict normalized typed-triple precision, recall, and F1.
+The secondary score is hand-matched precision, recall, and F1, where a reviewer
+can explicitly pair otherwise unmatched gold and predicted rows in a review CSV.
+
+Use [`evaluation/README.md`](./evaluation/README.md) for the evaluation
+commands and output files. Use
+[`docs/evaluation_contract.md`](./docs/evaluation_contract.md) for the scoring
+contract, normalization rules, and interpretation notes.
+
+## Query Runtime
+
+The runtime can load saved outputs into Neo4j and answer read-only questions
+against the live graph.
+
+There are two query paths behind the same CLI surface:
+
+- a routed local stack that uses a published router/planner bundle when a query is locally supported
+- a hosted fallback path that generates guarded read-only Cypher when the local stack is unavailable or declines the query
+
+The query layer is optional. You can run extraction and evaluation without the
+Neo4j/query-stack pieces.
+
+For command details, provider options, Neo4j behavior, output layout, prompt
+loading, and maintenance commands, see
+[`docs/runtime_guide.md`](./docs/runtime_guide.md).
 
 ## Quickstart
 
 Requirements:
 
 - Python 3.10+
-- an OpenAI-compatible local endpoint such as LM Studio
-- optionally Neo4j
+- an OpenAI-compatible local endpoint such as LM Studio, unless you only run evaluation
+- optionally Neo4j for graph loading and querying
 - optionally an OpenCode Go API key for hosted model runs
 
 Bootstrap the source checkout:
@@ -85,14 +142,14 @@ source venv/bin/activate
 pip install -e ".[dev]"
 ```
 
-The `dev` extra installs test tooling. If you also want the runtime to execute
-the published local query stack, install:
+If you want the runtime to execute the local query stack, install the optional
+query extras:
 
 ```bash
 pip install -e ".[query-stack]"
 ```
 
-Copy `.env.example` if you want a template for local environment variables.
+Copy `.env.example` if you want a local environment template.
 
 ## Common Commands
 
@@ -102,7 +159,7 @@ Run an extraction without touching Neo4j:
 ./scripts/kg-pipeline data/microsoft_10k.txt --skip-neo4j
 ```
 
-Choose a specific pipeline:
+Choose a specific extraction pipeline:
 
 ```bash
 ./scripts/kg-pipeline data/microsoft_10k.txt --pipeline zero-shot --skip-neo4j
@@ -127,49 +184,57 @@ Run a natural-language query against Neo4j:
 ./scripts/kg-query "Which company segments sell through marketplaces?"
 ```
 
-Check local readiness:
+Evaluate a pipeline on one benchmark split:
 
 ```bash
-./scripts/kg-health-check
+./venv/bin/python -m evaluation.scripts.evaluate --pipeline analyst --split dev
 ```
 
-Run maintainer checks:
+Run the main checks:
 
 ```bash
 bash ./scripts/check_repo.sh
 ```
 
-For the full command and runtime guide, see
-[`docs/runtime_guide.md`](./docs/runtime_guide.md).
+## Documentation Map
+
+The docs are split by purpose:
+
+- [`docs/project_walkthrough.md`](./docs/project_walkthrough.md): the best first read after this README; explains the project flow in plain language
+- [`docs/ontology.md`](./docs/ontology.md): the graph schema, design principles, canonical labels, validation behavior, and place rules
+- [`docs/runtime_guide.md`](./docs/runtime_guide.md): CLI commands, provider settings, Neo4j load/unload/status behavior, query runtime, output artifacts, and prompt workflow
+- [`docs/repo_structure.md`](./docs/repo_structure.md): a detailed map of the repository and what each major directory is for
+- [`evaluation/README.md`](./evaluation/README.md): benchmark layout, evaluation commands, result files, and hand-match workflow
+- [`docs/evaluation_contract.md`](./docs/evaluation_contract.md): the exact evaluation target, matching rules, metric definitions, and interpretation notes
+- [`finetuning/README.md`](./finetuning/README.md): the isolated fine-tuning island for the local query router/planner
+- [`docs/final_project_completion_plan.md`](./docs/final_project_completion_plan.md): historical project tracker and remaining presentation-oriented notes
 
 ## Repo Map
 
-The most important folders are:
+The main areas are:
 
-- [`src/runtime/`](./src/runtime/): CLI behavior, output layout, query stack, Neo4j helpers
-- [`src/llm_extraction/pipelines/`](./src/llm_extraction/pipelines/): pipeline orchestration
-- [`src/llm/`](./src/llm/): model transport, retries, parsing, and auditing
-- [`src/ontology/`](./src/ontology/): ontology config, place hierarchy, and validation
-- [`src/graph/`](./src/graph/): Neo4j loading and maintenance logic
-- [`prompts/`](./prompts/): editable extraction prompts
-- [`evaluation/`](./evaluation/): benchmark data, evaluation scripts, and results
-- [`finetuning/`](./finetuning/): isolated local query-router/planner fine-tuning workflow
-- [`data/query_planner_curated/`](./data/query_planner_curated/): preserved curated query-planner datasets
+- `src/runtime/`: extraction CLI, query CLI, output layout, provider resolution, and Neo4j helper commands
+- `src/llm_extraction/pipelines/`: pipeline-specific extraction orchestration
+- `src/llm/`: model calls, retries, JSON recovery, parsing, and auditing
+- `src/ontology/`: machine-readable ontology, canonical labels, place hierarchy, and validation
+- `src/graph/`: Neo4j load, replace, and unload logic
+- `prompts/`: editable prompt assets
+- `evaluation/`: benchmark files, evaluator scripts, and result artifacts
+- `finetuning/`: isolated router/planner training workflow
+- `data/`: 10-K text files and curated query-planner datasets
 
-For a fuller layout, see [`docs/repo_structure.md`](./docs/repo_structure.md).
+For a more detailed layout, see [`docs/repo_structure.md`](./docs/repo_structure.md).
 
-## Evaluation And Fine-Tuning
+## Evaluation Handoff Branch
 
-Evaluation compares post-resolution, post-validation output triples against
-manually curated gold triples.
+There is also an orphan branch named `codex/eval-handoff` for collaborators who
+only need evaluation-facing assets. It includes the evaluation scripts,
+benchmarks, 10-K text files, prompts, docs, saved outputs, and the tiny runtime
+helper required by the evaluator. It intentionally excludes fine-tuning,
+query-stack model artifacts, and most runtime source code.
 
-Start with:
-
-- [`evaluation/README.md`](./evaluation/README.md) for benchmark and evaluation commands
-- [`docs/evaluation_contract.md`](./docs/evaluation_contract.md) for the scoring contract
-
-The fine-tuning workflow is intentionally isolated from the main runtime.
-Start with [`finetuning/README.md`](./finetuning/README.md).
+That branch is useful when someone needs to work on metrics or benchmark review
+without cloning the full project surface.
 
 ## Tests
 
@@ -179,8 +244,8 @@ Run the main test suite:
 ./venv/bin/python -m unittest discover -s tests
 ```
 
-Run the broader maintainer check:
+Run only the evaluation tests:
 
 ```bash
-bash ./scripts/check_repo.sh
+./venv/bin/python -m pytest -q tests/test_evaluation
 ```
