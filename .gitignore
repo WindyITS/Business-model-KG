@@ -25,6 +25,7 @@ venv/
 
 # Outputs / scratch
 outputs/
+query_stack_behavior_examples.md
 dist/
 build/
 packaging/

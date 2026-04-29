@@ -85,6 +85,51 @@ The important design split is:
 - the local planner only speaks in supported local plan space
 - the hosted fallback is the broader query-authoring path
 
+## Query Stack Results
+
+The local query stack is useful, but it should be understood as a first
+deployable routing/planning layer rather than a finished general query system.
+The strongest result is that many graph-shaped questions can run fully local:
+company, segment, offering, customer type, channel, revenue-model, geography,
+partner, count, ranking, and offering-hierarchy lookups all have deterministic
+Cypher compilers behind them.
+
+The dataset is good in the sense that it has clear route labels, balanced top
+level classes, reproducible splits, and local-safe examples that compile to
+known Cypher and expected rows. It also deliberately separates three behaviors:
+local graph plans, hosted-fallback candidates, and terminal refusals. That makes
+the runtime architecture easy to reason about.
+
+The dataset weakness is that the balance is mostly numerical, not semantic.
+Some phrases become shortcuts. For example, `how many` appears only as supported
+local graph counts, so the router can over-trust ordinary count questions that
+are not about the graph. Refusals are also mostly business-domain refusals that
+mention known graph entities, such as unsupported employees, suppliers, revenue,
+or time-series facts. There are very few truly out-of-domain refusals, and some
+valid paraphrases are thin or missing in validation and release-eval splits.
+
+The router is the highest-leverage piece to improve next. When it routes a valid
+local question to `api_fallback`, the local planner never gets a chance; when it
+routes an unsupported question to `local`, the planner may fail noisily before
+hosted fallback takes over. The most important observed router gaps are natural
+paraphrases such as `sell to developers through direct sales` and hard negatives
+such as ordinary-world count or inventory questions.
+
+The planner problems are narrower. When the router sends a question local, the
+planner usually only needs to choose one supported family and fill a compact
+payload. It can still miss natural phrasings, especially possessive hierarchy
+wording such as `offerings under Apple's iPhone`, where it should choose
+`descendant_offerings_by_root`. It can also expose schema gaps, such as users
+asking for companies that match both geography and segment filters when the
+current local family returns company-plus-segment rows instead.
+
+Practically, router fixes should come first. The hosted fallback can absorb many
+planner misses, but it cannot help when the router incorrectly withholds a valid
+local query from the planner or confidently sends a bad request into local mode.
+The next query-stack iteration should therefore focus on a router dataset v2
+with more hard local paraphrases, more hard refusals, and validation/release
+coverage for the same patterns before spending much more time on planner tuning.
+
 ## Recommended Commands From A Source Checkout
 
 When you are working directly from this repo, the most reliable commands are the wrapper scripts under `scripts/`.
