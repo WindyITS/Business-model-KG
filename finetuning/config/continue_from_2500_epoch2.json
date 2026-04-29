@@ -11,8 +11,7 @@
     "weight_decay": 0.01,
     "early_stopping_patience": 2,
     "seed": 7,
-    "local_precision_min": 0.97,
-    "refuse_precision_min": 0.95
+    "local_precision_min": 0.97
   },
   "planner": {
     "base_model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",

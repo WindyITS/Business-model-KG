@@ -97,7 +97,7 @@ def _check_query_stack(root_dir: Path) -> HealthCheckResult:
     if not bundle.router_model_dir.is_dir():
         missing_paths.append(f"router model dir missing at {bundle.router_model_dir}")
     if not bundle.router_thresholds_path.is_file():
-        missing_paths.append(f"router thresholds missing at {bundle.router_thresholds_path}")
+        missing_paths.append(f"router policy metadata missing at {bundle.router_thresholds_path}")
     if not bundle.planner_adapter_dir.is_dir():
         missing_paths.append(f"planner adapter dir missing at {bundle.planner_adapter_dir}")
     if bundle.planner_system_prompt_path is not None and not bundle.planner_system_prompt_path.is_file():

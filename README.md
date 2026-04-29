@@ -120,8 +120,13 @@ against the live graph.
 
 There are two query paths behind the same CLI surface:
 
-- a routed local stack that uses a published router/planner bundle when a query is locally supported
-- a hosted fallback path that generates guarded read-only Cypher when the local stack is unavailable or declines the query
+- a routed local stack that uses a published router/planner bundle only when
+  the router assigns `local` with at least `0.95` confidence
+- a hosted fallback path that generates guarded read-only Cypher when the local
+  stack is unavailable, errors, or the router selects `api_fallback`
+
+If the router selects `refuse`, the command returns an unsupported-request
+result instead of calling the hosted fallback.
 
 The query layer is optional. You can run extraction and evaluation without the
 Neo4j/query-stack pieces.

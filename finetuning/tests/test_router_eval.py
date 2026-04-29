@@ -10,21 +10,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from kg_query_planner_ft.router_eval import decide_router_outcome, planner_gate_is_open, predict_router_probabilities
 from kg_query_planner_ft.router_metrics import (
+    LOCAL_DECISION_THRESHOLD,
     apply_router_policy,
-    choose_binary_threshold,
     metrics_for_label,
     summarize_predictions,
 )
 
 
 class RouterMetricTests(unittest.TestCase):
-    def test_choose_binary_threshold_respects_precision_floor(self):
-        scores = np.array([0.99, 0.95, 0.91, 0.65, 0.20])
-        truth = np.array([True, True, False, False, False])
-        threshold = choose_binary_threshold(scores, truth, 0.95)
-        self.assertGreaterEqual(threshold["precision"], 0.95)
-        self.assertAlmostEqual(threshold["threshold"], 0.95)
-
     def test_metrics_for_label_zero_predictions_have_zero_precision(self):
         metrics = metrics_for_label(
             ["local", "api_fallback"],
@@ -34,26 +27,27 @@ class RouterMetricTests(unittest.TestCase):
         self.assertEqual(metrics["precision"], 0.0)
         self.assertEqual(metrics["recall"], 0.0)
 
-    def test_apply_router_policy_uses_local_then_refuse_then_fallback(self):
+    def test_apply_router_policy_requires_confident_local_then_chooses_best_nonlocal_label(self):
         probs = np.array(
             [
                 [0.01, 0.98, 0.01],
                 [0.05, 0.20, 0.80],
                 [0.70, 0.20, 0.10],
+                [0.10, LOCAL_DECISION_THRESHOLD - 0.01, 0.12],
+                [0.01, 0.00009, 0.98],
             ]
         )
-        decisions = apply_router_policy(probs, local_threshold=0.97, refuse_threshold=0.75)
-        self.assertEqual(decisions, ["local", "refuse", "api_fallback"])
-        summary = summarize_predictions(["local", "refuse", "api_fallback"], decisions)
+        decisions = apply_router_policy(probs)
+        self.assertEqual(decisions, ["local", "refuse", "api_fallback", "refuse", "refuse"])
+        summary = summarize_predictions(["local", "refuse", "api_fallback", "refuse", "refuse"], decisions)
         self.assertAlmostEqual(summary["accuracy"], 1.0)
 
-    def test_decide_router_outcome_matches_threshold_policy(self):
+    def test_decide_router_outcome_uses_fixed_local_gate_then_best_nonlocal_label(self):
         thresholds = {
-            "local_threshold": {"threshold": 0.97},
-            "refuse_threshold": {"threshold": 0.90},
+            "local_threshold": {"threshold": 0.00005},
         }
         self.assertEqual(
-            decide_router_outcome({"local": 0.98, "refuse": 0.91, "api_fallback": 0.01}, thresholds),
+            decide_router_outcome({"local": 0.96, "refuse": 0.91, "api_fallback": 0.01}, thresholds),
             "local",
         )
         self.assertEqual(
@@ -61,8 +55,12 @@ class RouterMetricTests(unittest.TestCase):
             "refuse",
         )
         self.assertEqual(
-            decide_router_outcome({"local": 0.50, "refuse": 0.30, "api_fallback": 0.20}, thresholds),
+            decide_router_outcome({"local": 0.94, "refuse": 0.30, "api_fallback": 0.40}, thresholds),
             "api_fallback",
+        )
+        self.assertEqual(
+            decide_router_outcome({"local": 0.00009, "refuse": 0.98, "api_fallback": 0.01}, thresholds),
+            "refuse",
         )
 
     def test_predict_router_probabilities_passes_progress_desc(self):

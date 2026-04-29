@@ -17,7 +17,6 @@ class RouterConfig(BaseModel):
     early_stopping_patience: int = 2
     seed: int = 7
     local_precision_min: float = 0.97
-    refuse_precision_min: float = 0.95
 
 
 class PlannerConfig(BaseModel):

@@ -65,29 +65,23 @@ def render_router_training_summary(summary: dict[str, Any]) -> str:
 def render_router_eval_summary(summary: dict[str, Any]) -> str:
     thresholds = summary["thresholds"]
     local_threshold = thresholds["local_threshold"]
-    refuse_threshold = thresholds["refuse_threshold"]
+    policy_name = thresholds.get("policy", "local_if_probability_at_least_0.95_else_best_nonlocal")
     validation = summary["validation"]
     release_eval = summary["release_eval"]
     lines = [
         "Router Evaluation Summary",
         f"Thresholds dir: {summary['eval_dir']}",
         f"Router model dir: {summary['model_dir']}",
-        "Threshold policy:",
+        "Router policy:",
         f"  planner_gate_open={'yes' if thresholds['planner_gate_open'] else 'no'}",
         f"  temperature={_fmt_float(thresholds['temperature'])}",
+        f"  policy={policy_name}",
         (
             "  local: "
             f"threshold={_fmt_float(local_threshold['threshold'])}, "
             f"precision={_fmt_pct(local_threshold['precision'])}, "
             f"recall={_fmt_pct(local_threshold['recall'])}, "
             f"support={_fmt_int(local_threshold['support'])}"
-        ),
-        (
-            "  refuse: "
-            f"threshold={_fmt_float(refuse_threshold['threshold'])}, "
-            f"precision={_fmt_pct(refuse_threshold['precision'])}, "
-            f"recall={_fmt_pct(refuse_threshold['recall'])}, "
-            f"support={_fmt_int(refuse_threshold['support'])}"
         ),
         "Validation split:",
         f"  {_metric_line('argmax', validation['argmax_metrics'])}",

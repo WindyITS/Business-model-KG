@@ -15,8 +15,8 @@ class LocalQueryStackTests(unittest.TestCase):
         (bundle_dir / "router" / "thresholds.json").write_text(
             json.dumps(
                 {
-                    "local_threshold": {"threshold": 0.97},
-                    "refuse_threshold": {"threshold": 0.95},
+                    "local_threshold": {"threshold": 0.95},
+                    "policy": "local_if_probability_at_least_0.95_else_best_nonlocal",
                     "planner_gate_open": planner_gate_open,
                     "temperature": 1.0,
                 }
@@ -129,6 +129,39 @@ class LocalQueryStackTests(unittest.TestCase):
                 result = run_local_query_stack("Delete Aurora.", bundle_dir=bundle_dir)
 
         self.assertEqual(result["decision"], "refuse")
+        self.assertIsNone(result["planner"])
+        mock_planner_factory.assert_not_called()
+
+    def test_run_local_query_stack_refuses_when_refuse_probability_dominates_low_local_noise(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            bundle_dir = self._write_bundle(Path(tmp_dir))
+            router = Mock()
+            router.predict.return_value = {"local": 0.00009, "refuse": 0.98, "api_fallback": 0.01}
+
+            with patch("runtime.local_query_stack._router_predictor_for", return_value=router), patch(
+                "runtime.local_query_stack._planner_generator_for"
+            ) as mock_planner_factory:
+                result = run_local_query_stack(
+                    "How did Apple's iPhone revenue change year over year from 2024 to 2025?",
+                    bundle_dir=bundle_dir,
+                )
+
+        self.assertEqual(result["decision"], "refuse")
+        self.assertIsNone(result["planner"])
+        mock_planner_factory.assert_not_called()
+
+    def test_run_local_query_stack_requires_fixed_high_local_confidence(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            bundle_dir = self._write_bundle(Path(tmp_dir))
+            router = Mock()
+            router.predict.return_value = {"local": 0.94, "refuse": 0.20, "api_fallback": 0.30}
+
+            with patch("runtime.local_query_stack._router_predictor_for", return_value=router), patch(
+                "runtime.local_query_stack._planner_generator_for"
+            ) as mock_planner_factory:
+                result = run_local_query_stack("Which companies partner with Dell?", bundle_dir=bundle_dir)
+
+        self.assertEqual(result["decision"], "api_fallback")
         self.assertIsNone(result["planner"])
         mock_planner_factory.assert_not_called()
 

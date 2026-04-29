@@ -18,8 +18,8 @@ class HealthCheckTests(unittest.TestCase):
         (bundle_dir / "router" / "thresholds.json").write_text(
             json.dumps(
                 {
-                    "local_threshold": {"threshold": 0.97},
-                    "refuse_threshold": {"threshold": 0.95},
+                    "local_threshold": {"threshold": 0.95},
+                    "policy": "local_if_probability_at_least_0.95_else_best_nonlocal",
                     "planner_gate_open": True,
                     "temperature": 1.0,
                 }

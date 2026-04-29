@@ -12,6 +12,7 @@ from .query_stack import ResolvedQueryStackBundle, load_query_stack_bundle
 
 
 ROUTER_LABELS = ("api_fallback", "local", "refuse")
+LOCAL_DECISION_THRESHOLD = 0.95
 
 
 class LocalQueryStackError(RuntimeError):
@@ -63,14 +64,10 @@ def _load_thresholds(path: Path) -> dict[str, Any]:
     return payload
 
 
-def _decide_router_outcome(probabilities: dict[str, float], thresholds: dict[str, Any]) -> str:
-    local_threshold = float(thresholds["local_threshold"]["threshold"])
-    refuse_threshold = float(thresholds["refuse_threshold"]["threshold"])
-    if probabilities["local"] >= local_threshold:
+def _decide_router_outcome(probabilities: dict[str, float], _thresholds: dict[str, Any]) -> str:
+    if probabilities["local"] >= LOCAL_DECISION_THRESHOLD:
         return "local"
-    if probabilities["refuse"] >= refuse_threshold:
-        return "refuse"
-    return "api_fallback"
+    return "refuse" if probabilities["refuse"] >= probabilities["api_fallback"] else "api_fallback"
 
 
 def _system_prompt(bundle: ResolvedQueryStackBundle) -> str:

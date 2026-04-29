@@ -13,12 +13,11 @@ from .json_utils import compact_json, read_jsonl, write_json, write_jsonl
 from .paths import prepared_router_dir, router_eval_dir, router_model_dir
 from .progress import StepProgress, track
 from .router_metrics import (
+    LOCAL_DECISION_THRESHOLD,
     apply_router_policy,
     apply_temperature,
-    choose_binary_threshold,
     id_to_label,
     label_to_id,
-    softmax,
     summarize_predictions,
 )
 
@@ -114,38 +113,24 @@ def _argmax_labels(logits: np.ndarray) -> list[str]:
     return [id_to_label(int(index)) for index in logits.argmax(axis=1)]
 
 
-def calibrate_router(validation_rows: list[dict[str, Any]], validation_logits: np.ndarray, *, local_precision_min: float, refuse_precision_min: float) -> dict[str, Any]:
+def build_router_policy(validation_rows: list[dict[str, Any]], validation_logits: np.ndarray) -> dict[str, Any]:
     validation_truth = [row["label"] for row in validation_rows]
     label_ids = [label_to_id(label) for label in validation_truth]
     temperature = _fit_temperature(validation_logits, label_ids)
     calibrated = apply_temperature(validation_logits, temperature)
-
-    local_index = label_to_id("local")
-    local_threshold = choose_binary_threshold(
-        calibrated[:, local_index],
-        np.array([label == "local" for label in validation_truth], dtype=bool),
-        local_precision_min,
-    )
-    local_decisions = apply_router_policy(calibrated, local_threshold["threshold"], 1.0)
-    remaining_mask = np.array([decision != "local" for decision in local_decisions], dtype=bool)
-
-    refuse_index = label_to_id("refuse")
-    refuse_threshold = choose_binary_threshold(
-        calibrated[remaining_mask, refuse_index],
-        np.array([label == "refuse" for label, keep in zip(validation_truth, remaining_mask) if keep], dtype=bool),
-        refuse_precision_min,
-    )
-
-    thresholded = apply_router_policy(
-        calibrated,
-        local_threshold["threshold"],
-        refuse_threshold["threshold"],
-    )
+    thresholded = apply_router_policy(calibrated)
+    policy_metrics = summarize_predictions(validation_truth, thresholded)
+    local_metrics = policy_metrics["per_label"]["local"]
     return {
         "temperature": temperature,
-        "local_threshold": local_threshold,
-        "refuse_threshold": refuse_threshold,
-        "validation_policy_metrics": summarize_predictions(validation_truth, thresholded),
+        "local_threshold": {
+            "threshold": LOCAL_DECISION_THRESHOLD,
+            "precision": local_metrics["precision"],
+            "recall": local_metrics["recall"],
+            "support": int(policy_metrics["counts"].get("local", 0)),
+        },
+        "policy": "local_if_probability_at_least_0.95_else_best_nonlocal",
+        "validation_policy_metrics": policy_metrics,
     }
 
 
@@ -177,13 +162,8 @@ def evaluate_router(config_path: str | None = None) -> dict[str, Any]:
         )
         progress.advance("scored router logits")
 
-        calibration = calibrate_router(
-            validation_rows,
-            validation_logits,
-            local_precision_min=config.router.local_precision_min,
-            refuse_precision_min=config.router.refuse_precision_min,
-        )
-        progress.advance("fit calibration and thresholds")
+        calibration = build_router_policy(validation_rows, validation_logits)
+        progress.advance("fit calibration and fixed router policy")
 
         validation_truth = [row["label"] for row in validation_rows]
         test_truth = [row["label"] for row in test_rows]
@@ -193,16 +173,8 @@ def evaluate_router(config_path: str | None = None) -> dict[str, Any]:
         validation_probs = apply_temperature(validation_logits, calibration["temperature"])
         test_probs = apply_temperature(test_logits, calibration["temperature"])
 
-        validation_policy = apply_router_policy(
-            validation_probs,
-            calibration["local_threshold"]["threshold"],
-            calibration["refuse_threshold"]["threshold"],
-        )
-        test_policy = apply_router_policy(
-            test_probs,
-            calibration["local_threshold"]["threshold"],
-            calibration["refuse_threshold"]["threshold"],
-        )
+        validation_policy = apply_router_policy(validation_probs)
+        test_policy = apply_router_policy(test_probs)
 
         validation_payload = {
             "argmax_metrics": summarize_predictions(validation_truth, validation_argmax),
@@ -240,7 +212,7 @@ def evaluate_router(config_path: str | None = None) -> dict[str, Any]:
         thresholds = {
             "temperature": calibration["temperature"],
             "local_threshold": calibration["local_threshold"],
-            "refuse_threshold": calibration["refuse_threshold"],
+            "policy": calibration["policy"],
             "planner_gate_open": planner_gate_is_open(
                 validation_payload["policy_metrics"],
                 min_local_precision=config.router.local_precision_min,
@@ -288,12 +260,10 @@ def predict_router_probabilities(
     return {label: float(probabilities[label_to_id(label)]) for label in ROUTER_LABELS}
 
 
-def decide_router_outcome(probabilities: dict[str, float], thresholds: dict[str, Any]) -> str:
-    if probabilities["local"] >= float(thresholds["local_threshold"]["threshold"]):
+def decide_router_outcome(probabilities: dict[str, float], _thresholds: dict[str, Any]) -> str:
+    if probabilities["local"] >= LOCAL_DECISION_THRESHOLD:
         return "local"
-    if probabilities["refuse"] >= float(thresholds["refuse_threshold"]["threshold"]):
-        return "refuse"
-    return "api_fallback"
+    return "refuse" if probabilities["refuse"] >= probabilities["api_fallback"] else "api_fallback"
 
 
 def planner_gate_is_open(policy_metrics: dict[str, Any], *, min_local_precision: float) -> bool:
@@ -303,7 +273,7 @@ def planner_gate_is_open(policy_metrics: dict[str, Any], *, min_local_precision:
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Evaluate and calibrate the router classifier.")
+    parser = argparse.ArgumentParser(description="Evaluate the router classifier and export fixed routing policy metadata.")
     parser.add_argument("--config", type=str, default=None, help="Path to the fine-tuning JSON config.")
     parser.add_argument("--json", action="store_true", help="Print the final summary as compact JSON.")
     return parser

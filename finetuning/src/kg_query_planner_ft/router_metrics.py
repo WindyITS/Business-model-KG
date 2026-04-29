@@ -7,6 +7,8 @@ import numpy as np
 
 from .constants import ROUTER_LABELS
 
+LOCAL_DECISION_THRESHOLD = 0.95
+
 
 def softmax(logits: np.ndarray) -> np.ndarray:
     shifted = logits - logits.max(axis=1, keepdims=True)
@@ -70,59 +72,14 @@ def summarize_predictions(y_true: list[str], y_pred: list[str]) -> dict[str, obj
     }
 
 
-def choose_binary_threshold(
-    scores: np.ndarray,
-    truth_is_positive: np.ndarray,
-    min_precision: float,
-) -> dict[str, float]:
-    best: dict[str, float] | None = None
-    for threshold in sorted(set(float(score) for score in scores), reverse=True):
-        predicted_positive = scores >= threshold
-        tp = int(np.sum(predicted_positive & truth_is_positive))
-        fp = int(np.sum(predicted_positive & ~truth_is_positive))
-        fn = int(np.sum(~predicted_positive & truth_is_positive))
-        precision = tp / (tp + fp) if tp + fp else 1.0
-        recall = tp / (tp + fn) if tp + fn else 0.0
-        support = int(np.sum(predicted_positive))
-        candidate = {
-            "threshold": threshold,
-            "precision": precision,
-            "recall": recall,
-            "support": support,
-        }
-        if precision < min_precision:
-            continue
-        if best is None:
-            best = candidate
-            continue
-        if recall > best["recall"]:
-            best = candidate
-            continue
-        if recall == best["recall"] and threshold < best["threshold"]:
-            best = candidate
-    if best is not None:
-        return best
-    return {
-        "threshold": 1.0,
-        "precision": 1.0,
-        "recall": 0.0,
-        "support": 0,
-    }
-
-
-def apply_router_policy(
-    probabilities: np.ndarray,
-    local_threshold: float,
-    refuse_threshold: float,
-) -> list[str]:
+def apply_router_policy(probabilities: np.ndarray) -> list[str]:
     local_index = label_to_id("local")
+    fallback_index = label_to_id("api_fallback")
     refuse_index = label_to_id("refuse")
     decisions: list[str] = []
     for row in probabilities:
-        if float(row[local_index]) >= local_threshold:
+        if float(row[local_index]) >= LOCAL_DECISION_THRESHOLD:
             decisions.append("local")
-        elif float(row[refuse_index]) >= refuse_threshold:
-            decisions.append("refuse")
         else:
-            decisions.append("api_fallback")
+            decisions.append("refuse" if float(row[refuse_index]) >= float(row[fallback_index]) else "api_fallback")
     return decisions
