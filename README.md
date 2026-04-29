@@ -102,6 +102,17 @@ commands and output files. Use
 [`docs/evaluation_contract.md`](./docs/evaluation_contract.md) for the scoring
 contract, normalization rules, and interpretation notes.
 
+## Published Artifacts
+
+The public datasets and model bundle are published on the Hugging Face profile
+[`WindyITS`](https://huggingface.co/WindyITS).
+
+The uploaded artifacts are:
+
+- [`WindyITS/business-model-kg-benchmark-outputs`](https://huggingface.co/datasets/WindyITS/business-model-kg-benchmark-outputs): benchmark triples, generated extraction outputs, and evaluation documentation
+- [`WindyITS/business-model-kg-query-planner-data`](https://huggingface.co/datasets/WindyITS/business-model-kg-query-planner-data): curated query-router/planner fine-tuning data
+- [`WindyITS/business-model-kg-query-stack`](https://huggingface.co/WindyITS/business-model-kg-query-stack): deployable local query stack with the fine-tuned DeBERTa router and MLX planner adapter
+
 ## Query Runtime
 
 The runtime can load saved outputs into Neo4j and answer read-only questions

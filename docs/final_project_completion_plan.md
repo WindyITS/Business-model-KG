@@ -3,7 +3,8 @@
 This document tracks the remaining work needed before the NLP course presentation.
 
 The goal is to finish the project as an experiment, not only as a working demo.
-Steps 1-7 are implemented. The current work is to add qualitative, hierarchy-aware evaluation and then polish the project story for the presentation.
+Steps 1-7 and Step 10 are implemented. Step 8 is paused for now. The remaining
+work is to review the project story and prepare the final presentation polish.
 
 Original goals:
 
@@ -331,6 +332,14 @@ Acceptance criteria:
 - External readers can understand what each artifact contains.
 - The benchmark can be reused or inspected.
 - Published artifacts match the final local experiment.
+
+Status:
+
+- Implemented.
+- Public Hugging Face profile: [`WindyITS`](https://huggingface.co/WindyITS).
+- Benchmark and output dataset: [`WindyITS/business-model-kg-benchmark-outputs`](https://huggingface.co/datasets/WindyITS/business-model-kg-benchmark-outputs).
+- Query planner fine-tuning dataset: [`WindyITS/business-model-kg-query-planner-data`](https://huggingface.co/datasets/WindyITS/business-model-kg-query-planner-data).
+- Query stack model bundle: [`WindyITS/business-model-kg-query-stack`](https://huggingface.co/WindyITS/business-model-kg-query-stack).
 
 ## 11. Final Documentation And Presentation Polish
 
