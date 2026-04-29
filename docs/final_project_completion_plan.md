@@ -3,8 +3,8 @@
 This document tracks the remaining work needed before the NLP course presentation.
 
 The goal is to finish the project as an experiment, not only as a working demo.
-Steps 1-7 and Step 10 are implemented. Step 8 is paused for now. The remaining
-work is to review the project story and prepare the final presentation polish.
+Steps 1-8 are implemented. The remaining work is to review the project story and
+prepare the final presentation polish.
 
 Original goals:
 
@@ -244,49 +244,7 @@ Status:
 - The main metric limitation has been identified: exact and hand-matched triple F1 are highly sensitive to hierarchy alignment.
 - Berkshire Hathaway is the clearest example: the benchmark uses a fine-grained 17-segment structure, while all predictions use broader 5-segment structures. This makes otherwise related facts mismatch at the triple level.
 
-## 8. Add Qualitative Hierarchy-Aware Evaluation
-
-The quantitative evaluation is reproducible, but it is not sufficient for judging graph usefulness.
-
-The next evaluation layer should compare the gold benchmark and predictions as hierarchical business-model graphs, not only as flat triples.
-
-Actions:
-
-- Build a compact hierarchical profile for each gold benchmark.
-- Build a compact hierarchical profile for each company and pipeline prediction.
-- Preserve parent-child structure:
-  - company to segments
-  - segments to offerings
-  - offerings to child offerings
-  - offerings to revenue models
-  - segments or offerings to channels
-  - segments to customer types
-- Create a fixed qualitative rubric with scores for:
-  - segment coverage
-  - offering coverage
-  - hierarchy alignment
-  - roll-up reasonableness
-  - revenue logic
-  - customer/channel coverage
-  - geography handling
-  - noise or hallucination
-  - overall usefulness
-- Run one qualitative review per company and pipeline output.
-- Aggregate the qualitative scores by pipeline and company.
-
-Output:
-
-- Hierarchical gold and prediction profiles.
-- One qualitative review per company/pipeline pair.
-- Aggregate qualitative comparison table.
-
-Acceptance criteria:
-
-- We can explain whether a pipeline is wrong, too broad, too detailed, or simply using a different but defensible hierarchy.
-- The presentation does not rely only on F1.
-- Berkshire-like hierarchy mismatches are evaluated explicitly instead of hidden inside false positives and false negatives.
-
-## 9. Review Code Behavior Against The Project Story
+## 8. Review Code Behavior Against The Project Story
 
 Review whether the implementation does what the presentation says it does.
 
@@ -309,7 +267,7 @@ Acceptance criteria:
 - We understand the project well enough to defend it in Q&A.
 - The docs, code, and presentation describe the same system.
 
-## 10. Publish Artifacts To Hugging Face
+## 9. Publish Artifacts To Hugging Face
 
 Publish after the benchmark and final outputs are stable.
 
@@ -341,7 +299,7 @@ Status:
 - Query planner fine-tuning dataset: [`WindyITS/business-model-kg-query-planner-data`](https://huggingface.co/datasets/WindyITS/business-model-kg-query-planner-data).
 - Query stack model bundle: [`WindyITS/business-model-kg-query-stack`](https://huggingface.co/WindyITS/business-model-kg-query-stack).
 
-## 11. Final Documentation And Presentation Polish
+## 10. Final Documentation And Presentation Polish
 
 Do this after the experiment is frozen and evaluated.
 
@@ -374,4 +332,4 @@ Acceptance criteria:
 
 ## Current Next Step
 
-Run Step 8: create hierarchy-preserving qualitative profiles and use them for qualitative company/pipeline reviews.
+Run Step 8: review code behavior against the project story, then complete Step 10 with final documentation and presentation polish.
