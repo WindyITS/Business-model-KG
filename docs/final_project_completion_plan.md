@@ -49,26 +49,21 @@ subject; subject_type; relation; object; object_type
 
 Actions:
 
-- Store raw gold CSV files under:
-  - `evaluation/benchmarks/dev/raw/`
-  - `evaluation/benchmarks/test/raw/`
-- Use one raw CSV file per company.
-- Parse the CSV format into structured triples:
+- Store one clean JSONL file per company under:
+  - `evaluation/benchmarks/dev/clean/`
+  - `evaluation/benchmarks/test/clean/`
+- Use company-slug file names, for example `microsoft.jsonl`.
+- Preserve the five typed triple fields:
   - `subject`
   - `subject_type`
   - `relation`
   - `object`
   - `object_type`
-- Write clean JSONL files under:
-  - `evaluation/benchmarks/dev/clean/`
-  - `evaluation/benchmarks/test/clean/`
-- Write a manifest for each split with file and triple counts.
 
 Output:
 
 - Gold benchmark files in a stable repo location.
-- Parsed JSON or JSONL gold triples.
-- Split manifests.
+- Clean JSONL gold triples.
 
 Acceptance criteria:
 

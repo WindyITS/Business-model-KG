@@ -1,0 +1,50 @@
+{"subject":"Alphabet Inc.","subject_type":"Company","relation":"HAS_SEGMENT","object":"Google Cloud","object_type":"BusinessSegment"}
+{"subject":"Alphabet Inc.","subject_type":"Company","relation":"HAS_SEGMENT","object":"Google Services","object_type":"BusinessSegment"}
+{"subject":"Alphabet Inc.","subject_type":"Company","relation":"HAS_SEGMENT","object":"Other Bets","object_type":"BusinessSegment"}
+{"subject":"Agents","subject_type":"Offering","relation":"OFFERS","object":"Gemini Enterprise","object_type":"Offering"}
+{"subject":"Agents","subject_type":"Offering","relation":"OFFERS","object":"Gemini for Google Workspace","object_type":"Offering"}
+{"subject":"Developer Platform","subject_type":"Offering","relation":"OFFERS","object":"Vertex AI","object_type":"Offering"}
+{"subject":"Devices","subject_type":"Offering","relation":"OFFERS","object":"Pixel 10 series","object_type":"Offering"}
+{"subject":"Devices","subject_type":"Offering","relation":"OFFERS","object":"Pixel Watch 4","object_type":"Offering"}
+{"subject":"Google Cloud","subject_type":"BusinessSegment","relation":"OFFERS","object":"AI-optimized Infrastructure","object_type":"Offering"}
+{"subject":"Google Cloud","subject_type":"BusinessSegment","relation":"OFFERS","object":"Agents","object_type":"Offering"}
+{"subject":"Google Cloud","subject_type":"BusinessSegment","relation":"OFFERS","object":"Cybersecurity","object_type":"Offering"}
+{"subject":"Google Cloud","subject_type":"BusinessSegment","relation":"OFFERS","object":"Data and Analytics","object_type":"Offering"}
+{"subject":"Google Cloud","subject_type":"BusinessSegment","relation":"OFFERS","object":"Developer Platform","object_type":"Offering"}
+{"subject":"Google Cloud","subject_type":"BusinessSegment","relation":"OFFERS","object":"Google Cloud Platform","object_type":"Offering"}
+{"subject":"Google Cloud","subject_type":"BusinessSegment","relation":"OFFERS","object":"Google Workspace","object_type":"Offering"}
+{"subject":"Google Services","subject_type":"BusinessSegment","relation":"OFFERS","object":"Advertising","object_type":"Offering"}
+{"subject":"Google Services","subject_type":"BusinessSegment","relation":"OFFERS","object":"Android","object_type":"Offering"}
+{"subject":"Google Services","subject_type":"BusinessSegment","relation":"OFFERS","object":"Chrome","object_type":"Offering"}
+{"subject":"Google Services","subject_type":"BusinessSegment","relation":"OFFERS","object":"Devices","object_type":"Offering"}
+{"subject":"Google Services","subject_type":"BusinessSegment","relation":"OFFERS","object":"Gmail","object_type":"Offering"}
+{"subject":"Google Services","subject_type":"BusinessSegment","relation":"OFFERS","object":"Google Drive","object_type":"Offering"}
+{"subject":"Google Services","subject_type":"BusinessSegment","relation":"OFFERS","object":"Google Gemini","object_type":"Offering"}
+{"subject":"Google Services","subject_type":"BusinessSegment","relation":"OFFERS","object":"Google Maps","object_type":"Offering"}
+{"subject":"Google Services","subject_type":"BusinessSegment","relation":"OFFERS","object":"Google One","object_type":"Offering"}
+{"subject":"Google Services","subject_type":"BusinessSegment","relation":"OFFERS","object":"Google Photos","object_type":"Offering"}
+{"subject":"Google Services","subject_type":"BusinessSegment","relation":"OFFERS","object":"Google Play","object_type":"Offering"}
+{"subject":"Google Services","subject_type":"BusinessSegment","relation":"OFFERS","object":"Search","object_type":"Offering"}
+{"subject":"Google Services","subject_type":"BusinessSegment","relation":"OFFERS","object":"YouTube","object_type":"Offering"}
+{"subject":"Other Bets","subject_type":"BusinessSegment","relation":"OFFERS","object":"Isomorphic Labs","object_type":"Offering"}
+{"subject":"Other Bets","subject_type":"BusinessSegment","relation":"OFFERS","object":"Waymo","object_type":"Offering"}
+{"subject":"Other Bets","subject_type":"BusinessSegment","relation":"OFFERS","object":"X","object_type":"Offering"}
+{"subject":"Waymo","subject_type":"Offering","relation":"OFFERS","object":"paid ride-hailing services","object_type":"Offering"}
+{"subject":"YouTube","subject_type":"Offering","relation":"OFFERS","object":"NFL Sunday Ticket","object_type":"Offering"}
+{"subject":"YouTube","subject_type":"Offering","relation":"OFFERS","object":"YouTube Music","object_type":"Offering"}
+{"subject":"YouTube","subject_type":"Offering","relation":"OFFERS","object":"YouTube Partner Program","object_type":"Offering"}
+{"subject":"YouTube","subject_type":"Offering","relation":"OFFERS","object":"YouTube Premium","object_type":"Offering"}
+{"subject":"YouTube","subject_type":"Offering","relation":"OFFERS","object":"YouTube TV","object_type":"Offering"}
+{"subject":"Alphabet Inc.","subject_type":"Company","relation":"OPERATES_IN","object":"United States","object_type":"Place"}
+{"subject":"Google Cloud","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"online","object_type":"Channel"}
+{"subject":"Google Services","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"online","object_type":"Channel"}
+{"subject":"Other Bets","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"online","object_type":"Channel"}
+{"subject":"Devices","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Google Cloud Platform","subject_type":"Offering","relation":"MONETIZES_VIA","object":"consumption-based","object_type":"RevenueModel"}
+{"subject":"Google Cloud Platform","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"Google Play","subject_type":"Offering","relation":"MONETIZES_VIA","object":"transaction fees","object_type":"RevenueModel"}
+{"subject":"Google Workspace","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"Search","subject_type":"Offering","relation":"MONETIZES_VIA","object":"advertising","object_type":"RevenueModel"}
+{"subject":"Waymo","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"YouTube","subject_type":"Offering","relation":"MONETIZES_VIA","object":"advertising","object_type":"RevenueModel"}
+{"subject":"YouTube","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}

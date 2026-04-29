@@ -30,7 +30,7 @@ Structured form:
 }
 ```
 
-The gold benchmark may be authored in the semicolon format:
+The gold benchmark may be authored outside the repo in the semicolon format:
 
 ```text
 entity; entity_type; link; entity; entity_type
@@ -42,41 +42,15 @@ During parsing, these columns map to:
 subject; subject_type; relation; object; object_type
 ```
 
-In the repo, raw gold benchmark CSVs should use this header:
-
-```csv
-subject,subject_type,relation,object,object_type
-```
-
-Raw CSV files live under:
-
-```text
-evaluation/benchmarks/dev/raw/
-evaluation/benchmarks/test/raw/
-```
-
-Clean benchmark files are generated from the raw CSV files and live under:
+In the repo, the benchmark is stored only in clean JSONL files:
 
 ```text
 evaluation/benchmarks/dev/clean/
 evaluation/benchmarks/test/clean/
 ```
 
-The clean format should be JSONL, with one typed triple per line.
-
-The raw-to-clean conversion script is:
-
-```text
-evaluation/scripts/prepare_gold.py
-```
-
-Run it with:
-
-```bash
-./venv/bin/python -m evaluation.scripts.prepare_gold --split all
-```
-
-The converter writes one clean `.jsonl` file per raw `.csv` file and a `manifest.json` for each converted split.
+The clean format is JSONL, with one typed triple per line.
+Each file is named with the company slug used in `outputs/`, for example `microsoft.jsonl`, `adobe.jsonl`, or `berkshire.jsonl`.
 
 ## Final Node Types
 
@@ -139,7 +113,7 @@ Examples:
 
 Gold triples are authoritative.
 
-The evaluator should not attempt to correct, reject, or reinterpret gold triples. The raw benchmark is manually reviewed before evaluation, and the clean benchmark should preserve those triples with only mechanical format conversion.
+The evaluator should not attempt to correct, reject, or reinterpret gold triples. The clean benchmark is manually reviewed before evaluation and is treated as the authoritative source.
 
 ## Predicted Triples
 

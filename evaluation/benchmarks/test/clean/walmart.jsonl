@@ -1,0 +1,48 @@
+{"subject":"Walmart Inc.","subject_type":"Company","relation":"HAS_SEGMENT","object":"Walmart U.S.","object_type":"BusinessSegment"}
+{"subject":"Walmart Inc.","subject_type":"Company","relation":"HAS_SEGMENT","object":"Walmart International","object_type":"BusinessSegment"}
+{"subject":"Walmart Inc.","subject_type":"Company","relation":"HAS_SEGMENT","object":"Sam's Club U.S.","object_type":"BusinessSegment"}
+{"subject":"Walmart Inc.","subject_type":"Company","relation":"OPERATES_IN","object":"United States","object_type":"Place"}
+{"subject":"Walmart Inc.","subject_type":"Company","relation":"OPERATES_IN","object":"Africa","object_type":"Place"}
+{"subject":"Walmart Inc.","subject_type":"Company","relation":"OPERATES_IN","object":"Canada","object_type":"Place"}
+{"subject":"Walmart Inc.","subject_type":"Company","relation":"OPERATES_IN","object":"Central America","object_type":"Place"}
+{"subject":"Walmart Inc.","subject_type":"Company","relation":"OPERATES_IN","object":"Chile","object_type":"Place"}
+{"subject":"Walmart Inc.","subject_type":"Company","relation":"OPERATES_IN","object":"China","object_type":"Place"}
+{"subject":"Walmart Inc.","subject_type":"Company","relation":"OPERATES_IN","object":"India","object_type":"Place"}
+{"subject":"Walmart Inc.","subject_type":"Company","relation":"OPERATES_IN","object":"Mexico","object_type":"Place"}
+{"subject":"Walmart U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"Grocery","object_type":"Offering"}
+{"subject":"Walmart U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"General merchandise","object_type":"Offering"}
+{"subject":"Walmart U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"Health and wellness","object_type":"Offering"}
+{"subject":"Walmart U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"advertising solutions","object_type":"Offering"}
+{"subject":"Walmart U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"supply chain and fulfillment capabilities","object_type":"Offering"}
+{"subject":"Walmart U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"data analytics","object_type":"Offering"}
+{"subject":"Walmart U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"fuel","object_type":"Offering"}
+{"subject":"Walmart U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"financial services","object_type":"Offering"}
+{"subject":"Walmart U.S.","subject_type":"BusinessSegment","relation":"SERVES","object":"Consumers","object_type":"CustomerType"}
+{"subject":"Walmart U.S.","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"Retail","object_type":"Channel"}
+{"subject":"Walmart U.S.","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"Online","object_type":"Channel"}
+{"subject":"Walmart International","subject_type":"BusinessSegment","relation":"OFFERS","object":"Marketplace","object_type":"Offering"}
+{"subject":"Walmart International","subject_type":"BusinessSegment","relation":"OFFERS","object":"delivery services","object_type":"Offering"}
+{"subject":"Walmart International","subject_type":"BusinessSegment","relation":"OFFERS","object":"fulfillment services","object_type":"Offering"}
+{"subject":"Walmart International","subject_type":"BusinessSegment","relation":"OFFERS","object":"advertising services","object_type":"Offering"}
+{"subject":"Walmart International","subject_type":"BusinessSegment","relation":"OFFERS","object":"financial services","object_type":"Offering"}
+{"subject":"Walmart International","subject_type":"BusinessSegment","relation":"OFFERS","object":"healthcare","object_type":"Offering"}
+{"subject":"Walmart International","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"Retail","object_type":"Channel"}
+{"subject":"Walmart International","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"Online","object_type":"Channel"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"Club membership","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"Plus membership","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"Grocery","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"General merchandise","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"Health and wellness","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"Fuel and other","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"advertising services","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"data analytics","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"operational insights","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"tire and battery installation services","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"photo and tech assistance","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"home and auto solutions","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"financial services","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"Online","object_type":"Channel"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"Retail","object_type":"Channel"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"SERVES","object":"Consumers","object_type":"CustomerType"}
+{"subject":"Club membership","subject_type":"Offering","relation":"MONETIZES_VIA","object":"Subscription","object_type":"RevenueModel"}
+{"subject":"Plus membership","subject_type":"Offering","relation":"MONETIZES_VIA","object":"Subscription","object_type":"RevenueModel"}
