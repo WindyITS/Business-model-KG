@@ -223,7 +223,6 @@ The docs are split by purpose:
 - [`evaluation/README.md`](./evaluation/README.md): benchmark layout, evaluation commands, result files, and hand-match workflow
 - [`docs/evaluation_contract.md`](./docs/evaluation_contract.md): the exact evaluation target, matching rules, metric definitions, and interpretation notes
 - [`finetuning/README.md`](./finetuning/README.md): the isolated fine-tuning island for the local query router/planner
-- [`docs/final_project_completion_plan.md`](./docs/final_project_completion_plan.md): historical project tracker and remaining presentation-oriented notes
 
 ## Repo Map
 
