@@ -1,0 +1,101 @@
+row_id,match_id,source,subject,subject_type,relation,object,object_type
+gold_0001,,gold,Acrobat Solutions,Offering,OFFERS,Acrobat Pro,Offering
+gold_0002,,gold,Acrobat Solutions,Offering,OFFERS,Acrobat Sign,Offering
+gold_0003,,gold,Acrobat Solutions,Offering,OFFERS,Acrobat Standard,Offering
+gold_0004,1,gold,Adobe Creative Cloud,Offering,OFFERS,Adobe After Effects,Offering
+gold_0005,2,gold,Adobe Creative Cloud,Offering,OFFERS,Adobe Illustrator,Offering
+gold_0006,3,gold,Adobe Creative Cloud,Offering,OFFERS,Adobe Lightroom,Offering
+gold_0007,4,gold,Adobe Creative Cloud,Offering,OFFERS,Adobe Photoshop,Offering
+gold_0008,5,gold,Adobe Creative Cloud,Offering,OFFERS,Adobe Premiere Pro,Offering
+gold_0009,,gold,Adobe Creative Cloud,Offering,OFFERS,Adobe Stock,Offering
+gold_0010,6,gold,Adobe Creative Cloud,Offering,OFFERS,Adobe Substance 3D Collection,Offering
+gold_0011,,gold,Adobe Experience Manager,Offering,OFFERS,Adobe Experience Manager Assets,Offering
+gold_0012,,gold,Adobe Experience Manager,Offering,OFFERS,Adobe Experience Manager Forms,Offering
+gold_0013,,gold,Adobe Experience Manager,Offering,OFFERS,Adobe Experience Manager Sites,Offering
+gold_0014,,gold,Adobe Experience Platform,Offering,OFFERS,Adobe Customer Journey Analytics,Offering
+gold_0015,,gold,Adobe Experience Platform,Offering,OFFERS,Adobe Experience Platform AI Assistant,Offering
+gold_0016,,gold,Adobe Firefly Solutions,Offering,OFFERS,Firefly Premium,Offering
+gold_0017,,gold,Adobe Firefly Solutions,Offering,OFFERS,Firefly Pro,Offering
+gold_0018,,gold,Adobe Firefly Solutions,Offering,OFFERS,Firefly Standard,Offering
+gold_0019,,gold,Adobe GenStudio,Offering,OFFERS,Adobe Experience Manager Assets,Offering
+gold_0020,,gold,Adobe GenStudio,Offering,OFFERS,Adobe Firefly Services,Offering
+gold_0021,,gold,Adobe GenStudio,Offering,OFFERS,Adobe Workfront,Offering
+gold_0022,,gold,Adobe Photoshop,Offering,OFFERS,Photography Plan,Offering
+gold_0023,,gold,Adobe Substance 3D Collection,Offering,OFFERS,Substance 3D Assets,Offering
+gold_0024,,gold,Adobe Substance 3D Collection,Offering,OFFERS,Substance 3D Modeler,Offering
+gold_0025,,gold,Adobe Substance 3D Collection,Offering,OFFERS,Substance 3D Painter,Offering
+gold_0026,,gold,Adobe Substance 3D Collection,Offering,OFFERS,Substance 3D Sampler,Offering
+gold_0027,,gold,Adobe Substance 3D Collection,Offering,OFFERS,Substance 3D Stager,Offering
+gold_0028,,gold,Adobe Workfront,Offering,OFFERS,Adobe Workfront Planning,Offering
+gold_0029,,gold,Digital Experience,BusinessSegment,OFFERS,Adobe Agent Orchestrator,Offering
+gold_0030,,gold,Digital Experience,BusinessSegment,OFFERS,Adobe Analytics,Offering
+gold_0031,,gold,Digital Experience,BusinessSegment,OFFERS,Adobe Brand Concierge,Offering
+gold_0032,,gold,Digital Experience,BusinessSegment,OFFERS,Adobe Commerce,Offering
+gold_0033,,gold,Digital Experience,BusinessSegment,OFFERS,Adobe Experience Manager,Offering
+gold_0034,,gold,Digital Experience,BusinessSegment,OFFERS,Adobe LLM Optimizer,Offering
+gold_0035,,gold,Digital Experience,BusinessSegment,OFFERS,Adobe Marketo Engage,Offering
+gold_0036,,gold,Digital Experience,BusinessSegment,OFFERS,Adobe Mix Modeler,Offering
+gold_0037,,gold,Digital Experience,BusinessSegment,SELLS_THROUGH,OEMs,Channel
+gold_0038,,gold,Digital Experience,BusinessSegment,SELLS_THROUGH,distributors,Channel
+gold_0039,,gold,Digital Experience,BusinessSegment,SELLS_THROUGH,resellers,Channel
+gold_0040,,gold,Digital Experience,BusinessSegment,SELLS_THROUGH,retail,Channel
+gold_0041,7,gold,Digital Media,BusinessSegment,OFFERS,Adobe Creative Cloud,Offering
+gold_0042,,gold,Digital Media,BusinessSegment,SELLS_THROUGH,retail,Channel
+gold_0043,,gold,Publishing and Advertising,BusinessSegment,OFFERS,Adobe Advertising,Offering
+gold_0044,,gold,Publishing and Advertising,BusinessSegment,OFFERS,Adobe PDF standards,Offering
+gold_0045,,gold,Publishing and Advertising,BusinessSegment,OFFERS,Adobe PostScript,Offering
+gold_0046,,gold,Publishing and Advertising,BusinessSegment,OFFERS,document and forms platform,Offering
+gold_0047,,gold,Publishing and Advertising,BusinessSegment,OFFERS,eLearning solutions,Offering
+gold_0048,,gold,Publishing and Advertising,BusinessSegment,OFFERS,technical document publishing,Offering
+gold_0049,,gold,Publishing and Advertising,BusinessSegment,OFFERS,web App development,Offering
+gold_0050,,gold,Publishing and Advertising,BusinessSegment,OFFERS,web conferencing,Offering
+gold_0051,,gold,Publishing and Advertising,BusinessSegment,SELLS_THROUGH,OEMs,Channel
+gold_0052,,gold,Publishing and Advertising,BusinessSegment,SELLS_THROUGH,resellers,Channel
+gold_0053,,gold,Publishing and Advertising,BusinessSegment,SELLS_THROUGH,retail,Channel
+gold_0054,,gold,Publishing and Advertising,BusinessSegment,SELLS_THROUGH,system integrators,Channel
+predicted_0001,,predicted,Acrobat Solutions,Offering,MONETIZES_VIA,consumption-based,RevenueModel
+predicted_0002,,predicted,Acrobat Solutions,Offering,MONETIZES_VIA,licensing,RevenueModel
+predicted_0003,,predicted,Acrobat Solutions,Offering,MONETIZES_VIA,subscription,RevenueModel
+predicted_0004,,predicted,Acrobat Solutions,Offering,OFFERS,Adobe Acrobat,Offering
+predicted_0005,,predicted,Adobe Experience Platform,Offering,MONETIZES_VIA,consumption-based,RevenueModel
+predicted_0006,,predicted,Adobe Experience Platform,Offering,MONETIZES_VIA,service fees,RevenueModel
+predicted_0007,,predicted,Adobe Experience Platform,Offering,MONETIZES_VIA,subscription,RevenueModel
+predicted_0008,,predicted,Adobe Experience Platform,Offering,OFFERS,Adobe Agent Orchestrator,Offering
+predicted_0009,,predicted,Adobe Experience Platform,Offering,OFFERS,Adobe Analytics,Offering
+predicted_0010,,predicted,Adobe Experience Platform,Offering,OFFERS,Adobe Brand Concierge,Offering
+predicted_0011,,predicted,Adobe Experience Platform,Offering,OFFERS,Adobe Commerce,Offering
+predicted_0012,,predicted,Adobe Experience Platform,Offering,OFFERS,Adobe Experience Manager,Offering
+predicted_0013,,predicted,Adobe Experience Platform,Offering,OFFERS,Adobe LLM Optimizer,Offering
+predicted_0014,,predicted,Adobe Experience Platform,Offering,OFFERS,Adobe Marketo Engage,Offering
+predicted_0015,,predicted,Adobe Experience Platform,Offering,OFFERS,Adobe Mix Modeler,Offering
+predicted_0016,,predicted,Adobe Experience Platform,Offering,OFFERS,Adobe Workfront,Offering
+predicted_0017,,predicted,Adobe Express,Offering,MONETIZES_VIA,subscription,RevenueModel
+predicted_0018,,predicted,Adobe Firefly Solutions,Offering,MONETIZES_VIA,consumption-based,RevenueModel
+predicted_0019,,predicted,Adobe Firefly Solutions,Offering,MONETIZES_VIA,service fees,RevenueModel
+predicted_0020,,predicted,Adobe Firefly Solutions,Offering,MONETIZES_VIA,subscription,RevenueModel
+predicted_0021,,predicted,Adobe GenStudio,Offering,MONETIZES_VIA,service fees,RevenueModel
+predicted_0022,,predicted,Adobe GenStudio,Offering,MONETIZES_VIA,subscription,RevenueModel
+predicted_0023,,predicted,Adobe Stock,Offering,MONETIZES_VIA,licensing,RevenueModel
+predicted_0024,,predicted,Adobe Stock,Offering,MONETIZES_VIA,subscription,RevenueModel
+predicted_0025,,predicted,Creative Cloud Pro,Offering,MONETIZES_VIA,consumption-based,RevenueModel
+predicted_0026,,predicted,Creative Cloud Pro,Offering,MONETIZES_VIA,subscription,RevenueModel
+predicted_0027,1,predicted,Creative Cloud Pro,Offering,OFFERS,Adobe After Effects,Offering
+predicted_0028,2,predicted,Creative Cloud Pro,Offering,OFFERS,Adobe Illustrator,Offering
+predicted_0029,3,predicted,Creative Cloud Pro,Offering,OFFERS,Adobe Lightroom,Offering
+predicted_0030,4,predicted,Creative Cloud Pro,Offering,OFFERS,Adobe Photoshop,Offering
+predicted_0031,5,predicted,Creative Cloud Pro,Offering,OFFERS,Adobe Premiere Pro,Offering
+predicted_0032,6,predicted,Creative Cloud Pro,Offering,OFFERS,Adobe Substance 3D Collection,Offering
+predicted_0033,,predicted,Digital Experience,BusinessSegment,OFFERS,Adobe Firefly Solutions,Offering
+predicted_0034,,predicted,Digital Experience,BusinessSegment,SELLS_THROUGH,managed service providers,Channel
+predicted_0035,,predicted,Digital Experience,BusinessSegment,SERVES,IT professionals,CustomerType
+predicted_0036,,predicted,Digital Experience,BusinessSegment,SERVES,developers,CustomerType
+predicted_0037,,predicted,Digital Experience,BusinessSegment,SERVES,large enterprises,CustomerType
+predicted_0038,,predicted,Digital Media,BusinessSegment,OFFERS,Adobe Stock,Offering
+predicted_0039,7,predicted,Digital Media,BusinessSegment,OFFERS,Creative Cloud Pro,Offering
+predicted_0040,,predicted,Digital Media,BusinessSegment,SERVES,consumers,CustomerType
+predicted_0041,,predicted,Digital Media,BusinessSegment,SERVES,developers,CustomerType
+predicted_0042,,predicted,Digital Media,BusinessSegment,SERVES,large enterprises,CustomerType
+predicted_0043,,predicted,Digital Media,BusinessSegment,SERVES,small businesses,CustomerType
+predicted_0044,,predicted,Publishing and Advertising,BusinessSegment,SERVES,educational institutions,CustomerType
+predicted_0045,,predicted,Publishing and Advertising,BusinessSegment,SERVES,government agencies,CustomerType
+predicted_0046,,predicted,Publishing and Advertising,BusinessSegment,SERVES,large enterprises,CustomerType

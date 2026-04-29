@@ -1,0 +1,19 @@
+{
+  "company": "Google",
+  "company_slug": "google",
+  "pipeline": "analyst",
+  "split": "dev",
+  "status": "evaluated",
+  "gold_path": "/Users/giuliosighieri/Desktop/kg-v0/evaluation/benchmarks/dev/clean/google.jsonl",
+  "prediction_path": "/Users/giuliosighieri/Desktop/kg-v0/outputs/google/analyst/latest/resolved_triples.json",
+  "gold_triples": 50,
+  "gold_unique_triples": 50,
+  "predicted_triples": 72,
+  "predicted_unique_triples": 72,
+  "true_positives": 30,
+  "false_positives": 42,
+  "false_negatives": 20,
+  "precision": 0.4166666666666667,
+  "recall": 0.6,
+  "f1": 0.49180327868852464
+}

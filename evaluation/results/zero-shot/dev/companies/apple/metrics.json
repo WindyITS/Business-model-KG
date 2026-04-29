@@ -1,0 +1,19 @@
+{
+  "company": "Apple",
+  "company_slug": "apple",
+  "pipeline": "zero-shot",
+  "split": "dev",
+  "status": "evaluated",
+  "gold_path": "/Users/giuliosighieri/Desktop/kg-v0/evaluation/benchmarks/dev/clean/apple.jsonl",
+  "prediction_path": "/Users/giuliosighieri/Desktop/kg-v0/outputs/apple/zero-shot/latest/resolved_triples.json",
+  "gold_triples": 86,
+  "gold_unique_triples": 86,
+  "predicted_triples": 100,
+  "predicted_unique_triples": 100,
+  "true_positives": 45,
+  "false_positives": 55,
+  "false_negatives": 41,
+  "precision": 0.45,
+  "recall": 0.5232558139534884,
+  "f1": 0.48387096774193555
+}

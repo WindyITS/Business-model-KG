@@ -1,0 +1,35 @@
+row_id,match_id,source,subject,subject_type,relation,object,object_type
+gold_0001,,gold,Commercial,BusinessSegment,SELLS_THROUGH,resellers,Channel
+gold_0002,,gold,Government,BusinessSegment,SELLS_THROUGH,resellers,Channel
+gold_0003,,gold,Palantir,Company,OFFERS,AIP bootcamps,Offering
+gold_0004,,gold,Palantir,Company,OFFERS,Developer Tier,Offering
+gold_0005,,gold,Palantir,Company,OFFERS,Industry Operating Systems,Offering
+gold_0006,,gold,Palantir,Company,OFFERS,data provenance,Offering
+gold_0007,,gold,Palantir,Company,OFFERS,data retention and deletion,Offering
+gold_0008,,gold,Palantir,Company,OFFERS,granular access controls,Offering
+gold_0009,,gold,Palantir,Company,OFFERS,oversight and auditability,Offering
+gold_0010,,gold,Palantir,Company,OFFERS,privacy-enhancing technologies,Offering
+gold_0011,,gold,Palantir,Company,OFFERS,sensitive data discovery and management,Offering
+gold_0012,,gold,Palantir AIP,Offering,OFFERS,LLM-driven agents,Offering
+gold_0013,,gold,Palantir AIP,Offering,OFFERS,commercially available LLM access,Offering
+gold_0014,,gold,Palantir AIP,Offering,OFFERS,human review checkpoints,Offering
+gold_0015,,gold,Palantir AIP,Offering,OFFERS,open-source LLM access,Offering
+gold_0016,,gold,Palantir AIP,Offering,OFFERS,self-hosted LLM access,Offering
+gold_0017,,gold,Palantir Apollo,Offering,OFFERS,central software operations management,Offering
+gold_0018,,gold,Palantir Apollo,Offering,OFFERS,configuration management,Offering
+gold_0019,,gold,Palantir Apollo,Offering,OFFERS,continuous deployment,Offering
+gold_0020,,gold,Palantir Apollo,Offering,OFFERS,security updates delivery,Offering
+gold_0021,,gold,Palantir Foundry,Offering,OFFERS,data pipeline traceability,Offering
+gold_0022,,gold,Palantir Foundry,Offering,OFFERS,obfuscation tool,Offering
+gold_0023,,gold,Palantir Gotham,Offering,OFFERS,analyst-to-operator hand-off,Offering
+gold_0024,,gold,Palantir Gotham,Offering,OFFERS,threat response planning,Offering
+predicted_0001,,predicted,Commercial,BusinessSegment,OFFERS,Developer Tier,Offering
+predicted_0002,,predicted,Commercial,BusinessSegment,SERVES,developers,CustomerType
+predicted_0003,,predicted,Commercial,BusinessSegment,SERVES,financial services firms,CustomerType
+predicted_0004,,predicted,Commercial,BusinessSegment,SERVES,healthcare organizations,CustomerType
+predicted_0005,,predicted,Commercial,BusinessSegment,SERVES,large enterprises,CustomerType
+predicted_0006,,predicted,Commercial,BusinessSegment,SERVES,manufacturers,CustomerType
+predicted_0007,,predicted,Government,BusinessSegment,OFFERS,Palantir Apollo,Offering
+predicted_0008,,predicted,Government,BusinessSegment,SERVES,government agencies,CustomerType
+predicted_0009,,predicted,Palantir,Company,OPERATES_IN,United States,Place
+predicted_0010,,predicted,Palantir Foundry,Offering,OFFERS,Developer Tier,Offering

@@ -1,0 +1,6 @@
+{"subject":"Berkshire Hathaway Energy","subject_type":"BusinessSegment","relation":"OFFERS","object":"Electric Utility Services","object_type":"Offering"}
+{"subject":"Berkshire Hathaway Energy","subject_type":"BusinessSegment","relation":"OFFERS","object":"Natural Gas Pipeline Services","object_type":"Offering"}
+{"subject":"Burlington Northern Santa Fe","subject_type":"BusinessSegment","relation":"OFFERS","object":"Freight Rail Transportation","object_type":"Offering"}
+{"subject":"Burlington Northern Santa Fe","subject_type":"BusinessSegment","relation":"SERVES","object":"manufacturers","object_type":"CustomerType"}
+{"subject":"Electric Utility Services","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"Freight Rail Transportation","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}

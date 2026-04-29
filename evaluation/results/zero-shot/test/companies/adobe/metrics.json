@@ -1,0 +1,19 @@
+{
+  "company": "Adobe",
+  "company_slug": "adobe",
+  "pipeline": "zero-shot",
+  "split": "test",
+  "status": "evaluated",
+  "gold_path": "/Users/giuliosighieri/Desktop/kg-v0/evaluation/benchmarks/test/clean/adobe.jsonl",
+  "prediction_path": "/Users/giuliosighieri/Desktop/kg-v0/outputs/adobe/zero-shot/latest/resolved_triples.json",
+  "gold_triples": 85,
+  "gold_unique_triples": 85,
+  "predicted_triples": 76,
+  "predicted_unique_triples": 76,
+  "true_positives": 40,
+  "false_positives": 36,
+  "false_negatives": 45,
+  "precision": 0.5263157894736842,
+  "recall": 0.47058823529411764,
+  "f1": 0.49689440993788814
+}

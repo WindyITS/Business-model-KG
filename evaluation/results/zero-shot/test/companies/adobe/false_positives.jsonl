@@ -1,0 +1,36 @@
+{"subject":"Acrobat Solutions","subject_type":"Offering","relation":"OFFERS","object":"Adobe Acrobat","object_type":"Offering"}
+{"subject":"Acrobat Studio","subject_type":"Offering","relation":"OFFERS","object":"Adobe Express","object_type":"Offering"}
+{"subject":"Adobe Advertising","subject_type":"Offering","relation":"MONETIZES_VIA","object":"advertising","object_type":"RevenueModel"}
+{"subject":"Adobe Commerce","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"Adobe Consulting Services","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"Adobe Creative Cloud Pro","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"Adobe Creative Cloud Pro","subject_type":"Offering","relation":"OFFERS","object":"Adobe After Effects","object_type":"Offering"}
+{"subject":"Adobe Creative Cloud Pro","subject_type":"Offering","relation":"OFFERS","object":"Adobe Firefly","object_type":"Offering"}
+{"subject":"Adobe Creative Cloud Pro","subject_type":"Offering","relation":"OFFERS","object":"Adobe Illustrator","object_type":"Offering"}
+{"subject":"Adobe Creative Cloud Pro","subject_type":"Offering","relation":"OFFERS","object":"Adobe Lightroom","object_type":"Offering"}
+{"subject":"Adobe Creative Cloud Pro","subject_type":"Offering","relation":"OFFERS","object":"Adobe Photoshop","object_type":"Offering"}
+{"subject":"Adobe Creative Cloud Pro","subject_type":"Offering","relation":"OFFERS","object":"Adobe Premiere Pro","object_type":"Offering"}
+{"subject":"Adobe Experience Platform","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"Adobe Experience Platform","subject_type":"Offering","relation":"OFFERS","object":"Adobe Agent Orchestrator","object_type":"Offering"}
+{"subject":"Adobe Experience Platform","subject_type":"Offering","relation":"OFFERS","object":"Adobe Experience Manager","object_type":"Offering"}
+{"subject":"Adobe Firefly Solutions","subject_type":"Offering","relation":"MONETIZES_VIA","object":"consumption-based","object_type":"RevenueModel"}
+{"subject":"Adobe Firefly Solutions","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"Adobe GenStudio","subject_type":"Offering","relation":"OFFERS","object":"Adobe GenStudio for Performance Marketing","object_type":"Offering"}
+{"subject":"Adobe Stock","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"Adobe Technical Support","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"Digital Experience","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe Customer Journey Analytics","object_type":"Offering"}
+{"subject":"Digital Experience","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe Journey Optimizer","object_type":"Offering"}
+{"subject":"Digital Experience","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe Real-Time Customer Data Platform","object_type":"Offering"}
+{"subject":"Digital Experience","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe Workfront","object_type":"Offering"}
+{"subject":"Digital Experience","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
+{"subject":"Digital Media","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe After Effects","object_type":"Offering"}
+{"subject":"Digital Media","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe Creative Cloud Pro","object_type":"Offering"}
+{"subject":"Digital Media","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe Illustrator","object_type":"Offering"}
+{"subject":"Digital Media","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe Lightroom","object_type":"Offering"}
+{"subject":"Digital Media","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe Photoshop","object_type":"Offering"}
+{"subject":"Digital Media","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe Premiere Pro","object_type":"Offering"}
+{"subject":"Digital Media","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe Stock","object_type":"Offering"}
+{"subject":"Digital Media","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe Substance 3D Collection","object_type":"Offering"}
+{"subject":"Digital Media","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"marketplaces","object_type":"Channel"}
+{"subject":"Digital Media","subject_type":"BusinessSegment","relation":"SERVES","object":"consumers","object_type":"CustomerType"}
+{"subject":"Digital Media","subject_type":"BusinessSegment","relation":"SERVES","object":"developers","object_type":"CustomerType"}
