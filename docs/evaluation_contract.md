@@ -1,6 +1,6 @@
 # Extraction Evaluation Contract
 
-Status: draft for review.
+Status: implemented.
 
 This document defines the target used to evaluate extraction outputs against the manually created gold benchmark.
 

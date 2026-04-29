@@ -31,7 +31,7 @@ fi
 "${PYTHON_BIN}" -m pytest -q
 
 echo "[3/6] Checking Python compilation"
-"${PYTHON_BIN}" -m compileall -q src tests
+"${PYTHON_BIN}" -m compileall -q src tests evaluation
 
 echo "[4/6] Exercising source-checkout wrappers"
 for command in \

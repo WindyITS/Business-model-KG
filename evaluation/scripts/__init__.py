@@ -1,2 +1,1 @@
-"""Command-line helpers for evaluation data preparation."""
-
+"""Command-line helpers for extraction evaluation."""

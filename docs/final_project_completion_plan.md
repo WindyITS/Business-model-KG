@@ -2,7 +2,10 @@
 
 This document tracks the remaining work needed before the NLP course presentation.
 
-The goal is to finish the project as an experiment, not only as a working demo:
+The goal is to finish the project as an experiment, not only as a working demo.
+Steps 1-6 are implemented; the current work is Step 7, evaluating and analyzing the final outputs.
+
+Original goals:
 
 - extract ontology-valid knowledge graphs for multiple companies
 - compare model outputs against a manually annotated gold benchmark
@@ -102,9 +105,9 @@ Actions:
 
 Output:
 
-- Evaluation CLI or script under `evaluation/scripts/evaluate.py`.
+- Evaluation CLI under `evaluation/scripts/evaluate.py`.
 - Machine-readable metrics files.
-- Human-readable summary table.
+- Machine-readable aggregate `summary.json` files.
 - Unmatched triple reports for error analysis.
 
 Acceptance criteria:
@@ -313,6 +316,4 @@ Acceptance criteria:
 
 ## Current Next Step
 
-Start with step 1: freeze the ontology and evaluation target.
-
-The first concrete task is to inspect the ontology document, ontology JSON, validator behavior, and current output format, then write the final evaluation contract.
+Run Step 7: strict evaluation for all three pipelines on both `dev` and `test`, then review unmatched triples for hand-matched second-tier metrics.

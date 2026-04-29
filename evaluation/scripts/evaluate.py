@@ -128,14 +128,6 @@ def write_jsonl(path: Path, rows: list[Triple]) -> None:
             handle.write("\n")
 
 
-def write_jsonl_records(path: Path, rows: list[dict[str, Any]]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")))
-            handle.write("\n")
-
-
 def write_unmatched_review_csv(path: Path, *, false_positives: list[Triple], false_negatives: list[Triple]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     fieldnames = ("row_id", "match_id", "source", *TRIPLE_FIELDS)

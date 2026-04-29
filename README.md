@@ -116,6 +116,12 @@ kg-v0/
     query_planner_curated/                   - curated dataset for local query-stack finetuning
       v1_baseline/                           - earlier curated dataset release
       v1_final/                              - final curated dataset used by finetuning configs
+  evaluation/
+    README.md                                - benchmark and evaluation workflow notes
+    benchmarks/
+      dev/clean/                             - clean JSONL gold benchmarks for development companies
+      test/clean/                            - clean JSONL gold benchmarks for held-out companies
+    scripts/                                 - strict and hand-matched evaluation CLIs
   prompts/
     analyst/                                 - prompt assets for the memo-first extraction pipeline
     memo_graph_only/                         - prompt assets for the memo graph-only ablation pipeline
@@ -179,6 +185,7 @@ kg-v0/
       neo4j_admin.py                         - CLI for company/full Neo4j unload operations
       health_check.py                        - repo/query-stack/Neo4j readiness checks
   tests/
+    test_evaluation/                         - tests for strict and hand-matched evaluation
     test_graph/                              - tests for graph and Neo4j utilities
     test_llm/                                - tests for LLM transport and parsing logic
     test_ontology/                           - tests for ontology and validation behavior
