@@ -41,27 +41,7 @@ If a run fails, the current `latest/` output stays untouched and the failed atte
 
 ## Output Layout
 
-Outputs are organized by company and pipeline:
-
-```text
-outputs/
-  microsoft/
-    analyst/
-      latest/
-      runs/
-      failed/
-      manifest.json
-    memo_graph_only/
-      latest/
-      runs/
-      failed/
-      manifest.json
-    zero-shot/
-      latest/
-      runs/
-      failed/
-      manifest.json
-```
+Outputs are organized by company and pipeline under `outputs/`.
 
 The key folders mean:
 
@@ -69,6 +49,8 @@ The key folders mean:
 - `runs/`: successful runs that were kept without replacing `latest/`
 - `failed/`: failed attempts kept for debugging
 - `manifest.json`: a small summary that tells the helper commands what exists
+
+For the full output tree and artifact list, see [`runtime_guide.md`](./runtime_guide.md#output-layout).
 
 ## Neo4j Lifecycle
 
@@ -116,6 +98,8 @@ Use:
 
 These wrappers run the repo source directly with the repo virtual environment and do not depend on refreshed `venv/bin/` entry points.
 
+For the full command reference, see [`runtime_guide.md`](./runtime_guide.md).
+
 ## Bootstrap And Cleanup
 
 To create or refresh the local development environment:
@@ -156,6 +140,8 @@ If you want to navigate the codebase, these are the most important areas:
 - `prompts/`: editable prompt assets used during development
 - `finetuning/`: the isolated training/export island for the local query router/planner
 - `data/query_planner_curated/`: preserved curated datasets for that finetuning workflow, not a live runtime input path
+
+For a more detailed layout map, see [`repo_structure.md`](./repo_structure.md).
 
 The main runtime does not import from the finetuning island directly. The handoff back into production is the published local query bundle under `runtime_assets/query_stack/current/`.
 

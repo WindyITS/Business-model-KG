@@ -333,32 +333,12 @@ Examples:
 - `Europe` may carry `includes_places = ["Western Europe", "Eastern Europe", "Italy", "Germany", ...]`
 - `United States` may carry `includes_places = ["Alabama", "Alaska", ..., "Wyoming"]`
 
-Recommended Cypher pattern:
-
-```cypher
-MATCH (company:Company)-[:OPERATES_IN]->(place:Place)
-WITH company, place.name AS matched_place,
-     CASE
-       WHEN matched_place = $place THEN 0
-       WHEN $place IN coalesce(place.includes_places, []) THEN 1
-       WHEN $place IN coalesce(place.within_places, []) THEN 2
-       ELSE NULL
-     END AS match_rank
-WHERE match_rank IS NOT NULL
-WITH company, MIN(match_rank) AS best_rank, collect(DISTINCT matched_place) AS matched_places
-RETURN company.name AS company,
-       CASE best_rank
-         WHEN 0 THEN 'exact'
-         WHEN 1 THEN 'narrower_place'
-         ELSE 'broader_region'
-       END AS geography_match,
-       matched_places
-ORDER BY best_rank, company
-```
-
 A company can match through more than one direct place tag. Aggregate by company and use
 `MIN(match_rank)` so the final result keeps one row per company with the strongest match
 class.
+
+For the recommended Cypher query pattern, see
+[`runtime_guide.md`](./runtime_guide.md#geography-in-neo4j).
 
 ### Downstream Company-Scoped Inventory Queries
 

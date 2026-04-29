@@ -133,36 +133,7 @@ The evaluation script is:
 evaluation/scripts/evaluate.py
 ```
 
-Run all companies in a split for one selected pipeline with:
-
-```bash
-./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --split dev
-```
-
-Typical full-split runs:
-
-```bash
-./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --split dev
-./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --split test
-./venv/bin/python -m evaluation.scripts.evaluate --pipeline memo_graph_only --split dev
-./venv/bin/python -m evaluation.scripts.evaluate --pipeline memo_graph_only --split test
-./venv/bin/python -m evaluation.scripts.evaluate --pipeline analyst --split dev
-./venv/bin/python -m evaluation.scripts.evaluate --pipeline analyst --split test
-```
-
-Run one selected company and one selected pipeline with:
-
-```bash
-./venv/bin/python -m evaluation.scripts.evaluate --pipeline analyst --company microsoft
-```
-
-Example cherry-picked runs:
-
-```bash
-./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --company microsoft
-./venv/bin/python -m evaluation.scripts.evaluate --pipeline memo_graph_only --company microsoft
-./venv/bin/python -m evaluation.scripts.evaluate --pipeline analyst --company microsoft
-```
+Usage examples live in [`../evaluation/README.md`](../evaluation/README.md).
 
 Split results should be written under:
 
@@ -186,11 +157,7 @@ If the answer is `n` or `no`, no evaluation should be performed and the existing
 
 If overwrite is approved, existing results should be replaced only after the new evaluation run succeeds.
 
-For intentional reruns that should overwrite existing results without an interactive prompt, use:
-
-```bash
-./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --split dev --yes
-```
+The evaluator supports non-interactive overwrites for deliberate reruns.
 
 ## Strict Normalization
 
@@ -283,11 +250,8 @@ The human reviewer assigns the same `match_id` to gold and predicted rows that c
 
 Each non-empty `match_id` must be used on exactly one `source=gold` row and exactly one `source=predicted` row. Reusing the same `match_id` for multiple pairs is treated as invalid and does not affect second-tier metrics.
 
-After the review CSV is edited, run:
-
-```bash
-./venv/bin/python -m evaluation.scripts.apply_hand_matches --results-dir evaluation/results/zero-shot/dev
-```
+After the review CSV is edited, run the hand-match script described in
+[`../evaluation/README.md`](../evaluation/README.md#hand-match-review).
 
 The hand-match script should compute second-tier metrics by starting from strict TP/FP/FN and converting each accepted human match into one additional true positive, one fewer false positive, and one fewer false negative.
 
@@ -302,11 +266,7 @@ If `hand_matched/` already contains files, the hand-match script should ask befo
 
 If overwrite is approved, existing hand-matched results should be replaced only after the new hand-matched computation succeeds.
 
-For intentional reruns that should overwrite existing hand-matched metrics without an interactive prompt, use:
-
-```bash
-./venv/bin/python -m evaluation.scripts.apply_hand_matches --results-dir evaluation/results/zero-shot/dev --yes
-```
+The script supports non-interactive overwrites for deliberate reruns.
 
 ## Hand-Matched Metric Definition
 
