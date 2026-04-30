@@ -240,17 +240,6 @@ The main areas are:
 
 For a more detailed layout, see [`docs/repo_structure.md`](./docs/repo_structure.md).
 
-## Evaluation Handoff Branch
-
-There is also an orphan branch named `codex/eval-handoff` for collaborators who
-only need evaluation-facing assets. It includes the evaluation scripts,
-benchmarks, 10-K text files, prompts, docs, saved outputs, and the tiny runtime
-helper required by the evaluator. It intentionally excludes fine-tuning,
-query-stack model artifacts, and most runtime source code.
-
-That branch is useful when someone needs to work on metrics or benchmark review
-without cloning the full project surface.
-
 ## Tests
 
 Run the main test suite:
