@@ -326,17 +326,19 @@ In the published runtime bundle, the router threshold file records:
 - local threshold: 0.97
 - planner gate open: true
 
-On release evaluation, the router policy achieves:
+Using the published 0.97 local threshold and the saved release-evaluation predictions, the router policy achieves:
 
 | Metric | Result |
 |---|---:|
-| Overall policy accuracy | 96.4 percent |
-| Local precision | 97.8 percent |
-| Local recall | 100.0 percent |
-| API fallback precision | 100.0 percent |
-| API fallback recall | 86.2 percent |
-| Refuse precision | 90.9 percent |
-| Refuse recall | 99.3 percent |
+| Overall policy accuracy | 99.7 percent |
+| Local precision | 100.0 percent |
+| Local recall | 99.3 percent |
+| API fallback precision | 99.8 percent |
+| API fallback recall | 100.0 percent |
+| Refuse precision | 98.9 percent |
+| Refuse recall | 100.0 percent |
+
+In concrete terms, on the release evaluation set the router makes 1,794 correct routing decisions out of 1,800. The six mistakes are all local questions that were routed away from local execution: one to API fallback and five to refuse. That is conservative behavior. It reduces local coverage slightly, but it avoids sending unsupported questions into the local planner.
 
 The key defense point is that the router is optimized for safe local routing, not just raw label accuracy. The policy is designed so the local planner only receives questions the router is confident it can handle.
 
