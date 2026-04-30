@@ -439,7 +439,7 @@ This is one of the central reasons for fine-tuning the planner: generic models a
 
 The planner is evaluated on local-safe validation and release-evaluation rows. It is not evaluated on fallback or refusal rows because the router should prevent those from reaching the planner.
 
-The planner evaluation checks four things:
+The planner evaluation checks five things:
 
 | Metric | Meaning |
 |---|---|
@@ -447,15 +447,16 @@ The planner evaluation checks four things:
 | Contract valid rate | Does the JSON match the expected plan shape? |
 | Family accuracy | Did it choose the right query family? |
 | Exact plan match rate | Did it match the full gold plan exactly? |
+| Correct output rate | If the predicted plan is executed against the synthetic graph, does it return the same final rows as the gold answer? |
 
-The published fresh-adapter planner scores:
+The latest saved planner evaluation for the published 2,500-iteration adapter scores:
 
-| Split | JSON parse | Contract valid | Family accuracy | Exact plan match |
-|---|---:|---:|---:|---:|
-| Validation | 100.0 percent | 95.5 percent | 95.3 percent | 52.0 percent |
-| Release eval | 100.0 percent | 100.0 percent | 100.0 percent | 70.0 percent |
+| Split | JSON parse | Contract valid | Family accuracy | Exact plan match | Correct output |
+|---|---:|---:|---:|---:|---:|
+| Validation | 100.0 percent | 100.0 percent | 99.9 percent | 90.7 percent | 91.5 percent |
+| Release eval | 100.0 percent | 100.0 percent | 99.4 percent | 76.6 percent | 78.1 percent |
 
-The exact match metric is intentionally strict. It is useful for finding remaining issues, but it is harder than choosing the correct family. The more operationally important signs are that the planner emits valid JSON, follows the expected contract, and selects the correct family.
+The exact match metric is intentionally strict. It is useful for finding remaining issues, but it can undercount useful behavior because a plan may differ from the gold JSON while still returning the same graph rows. The correct output rate is therefore the best presentation metric for final planner usefulness: validation returns the correct graph rows in 686 of 750 cases, and release evaluation returns the correct graph rows in 703 of 900 cases.
 
 ## Publishing And Runtime Handoff
 
