@@ -7,7 +7,7 @@ import numpy as np
 
 from .constants import ROUTER_LABELS
 
-LOCAL_DECISION_THRESHOLD = 0.95
+LOCAL_DECISION_THRESHOLD = 0.97
 
 
 def softmax(logits: np.ndarray) -> np.ndarray:

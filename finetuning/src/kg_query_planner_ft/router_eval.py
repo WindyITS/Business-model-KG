@@ -129,7 +129,7 @@ def build_router_policy(validation_rows: list[dict[str, Any]], validation_logits
             "recall": local_metrics["recall"],
             "support": int(policy_metrics["counts"].get("local", 0)),
         },
-        "policy": "local_if_probability_at_least_0.95_else_best_nonlocal",
+        "policy": "local_if_probability_at_least_0.97_else_best_nonlocal",
         "validation_policy_metrics": policy_metrics,
     }
 

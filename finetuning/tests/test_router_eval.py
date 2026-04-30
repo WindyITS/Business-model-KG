@@ -47,7 +47,7 @@ class RouterMetricTests(unittest.TestCase):
             "local_threshold": {"threshold": 0.00005},
         }
         self.assertEqual(
-            decide_router_outcome({"local": 0.96, "refuse": 0.91, "api_fallback": 0.01}, thresholds),
+            decide_router_outcome({"local": 0.98, "refuse": 0.91, "api_fallback": 0.01}, thresholds),
             "local",
         )
         self.assertEqual(

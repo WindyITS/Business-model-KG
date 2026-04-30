@@ -12,7 +12,7 @@ from .query_stack import ResolvedQueryStackBundle, load_query_stack_bundle
 
 
 ROUTER_LABELS = ("api_fallback", "local", "refuse")
-LOCAL_DECISION_THRESHOLD = 0.95
+LOCAL_DECISION_THRESHOLD = 0.97
 
 
 class LocalQueryStackError(RuntimeError):

@@ -121,7 +121,7 @@ against the live graph.
 There are two query paths behind the same CLI surface:
 
 - a routed local stack that uses a published router/planner bundle only when
-  the router assigns `local` with at least `0.95` confidence
+  the router assigns `local` with at least `0.97` confidence
 - a hosted fallback path that generates guarded read-only Cypher when the local
   stack is unavailable, errors, or the router selects `api_fallback`
 

@@ -74,7 +74,7 @@ The important behavior is:
 For natural-language querying, the repo now uses two query modes behind the same CLI surface:
 
 - the router first decides `local`, `api_fallback`, or `refuse`
-- `local` is allowed only when the router assigns at least `0.95` local confidence;
+- `local` is allowed only when the router assigns at least `0.97` local confidence;
   otherwise the runtime chooses between the two non-local labels
 - if the route is `local`, the published local planner returns an answerable-only compact plan that Python compiles into Cypher
 - the hosted fallback returns full read-only Cypher JSON directly and retries once with error context if generation, validation, or Neo4j execution fails

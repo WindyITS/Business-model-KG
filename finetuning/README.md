@@ -95,7 +95,7 @@ runtime_assets/query_stack/
 - `eval-planner --backend lmstudio --lmstudio-model "<name>"` evaluates an LM Studio-served model with the same frozen planner system prompt and writes artifacts under `planner/eval/lmstudio/<model>/`.
 - The router maps full-dataset route labels into `local`, `api_fallback`, and `refuse`.
 - `eval-router` fits temperature scaling but does not search for routing thresholds.
-  Runtime policy is fixed: use the local planner only when `P(local) >= 0.95`;
+  Runtime policy is fixed: use the local planner only when `P(local) >= 0.97`;
   otherwise choose the larger of `P(api_fallback)` and `P(refuse)`.
 - `publish-query-stack` copies the trained router, router policy metadata, planner adapter, and frozen system prompt into the main-runtime deployment bundle.
 - The CLIs emit progress bars for dataset prep, router scoring, planner evaluation, and the fine-tuning stages themselves.

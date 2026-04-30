@@ -65,7 +65,7 @@ def render_router_training_summary(summary: dict[str, Any]) -> str:
 def render_router_eval_summary(summary: dict[str, Any]) -> str:
     thresholds = summary["thresholds"]
     local_threshold = thresholds["local_threshold"]
-    policy_name = thresholds.get("policy", "local_if_probability_at_least_0.95_else_best_nonlocal")
+    policy_name = thresholds.get("policy", "local_if_probability_at_least_0.97_else_best_nonlocal")
     validation = summary["validation"]
     release_eval = summary["release_eval"]
     lines = [

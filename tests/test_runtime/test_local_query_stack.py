@@ -15,8 +15,8 @@ class LocalQueryStackTests(unittest.TestCase):
         (bundle_dir / "router" / "thresholds.json").write_text(
             json.dumps(
                 {
-                    "local_threshold": {"threshold": 0.95},
-                    "policy": "local_if_probability_at_least_0.95_else_best_nonlocal",
+                    "local_threshold": {"threshold": 0.97},
+                    "policy": "local_if_probability_at_least_0.97_else_best_nonlocal",
                     "planner_gate_open": planner_gate_open,
                     "temperature": 1.0,
                 }
