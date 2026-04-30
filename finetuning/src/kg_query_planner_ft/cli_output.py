@@ -152,12 +152,19 @@ def render_prepare_data_summary(summary: dict[str, Any]) -> str:
 
 
 def _planner_metric_line(label: str, metrics: dict[str, Any]) -> str:
-    return (
+    line = (
         f"{label}: json_parse={_fmt_pct(metrics['json_parse_rate'])}, "
         f"contract_valid={_fmt_pct(metrics['contract_valid_rate'])}, "
         f"family_accuracy={_fmt_pct(metrics['family_accuracy'])}, "
         f"exact_match={_fmt_pct(metrics['exact_plan_match_rate'])}"
     )
+    if "correct_output_rate" in metrics:
+        line += (
+            f", correct_output={_fmt_pct(metrics['correct_output_rate'])} "
+            f"({_fmt_int(metrics.get('correct_outputs', 0))}/"
+            f"{_fmt_int(metrics.get('output_evaluable_count', 0))})"
+        )
+    return line
 
 
 def _worst_family_lines(metrics: dict[str, Any], *, limit: int = 5) -> list[str]:

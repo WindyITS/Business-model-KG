@@ -46,6 +46,8 @@ class PrepareDataTests(unittest.TestCase):
                         "route_label": "local_safe",
                         "family": "companies_by_partner",
                         "supervision_target": {"plan": base_plan},
+                        "gold_rows": [{"company": "Nimbus Health"}],
+                        "metadata": {"source_graph_ids": ["nimbus"]},
                     },
                     {
                         "question": "List partner companies with Dell.",
@@ -185,6 +187,8 @@ class PrepareDataTests(unittest.TestCase):
                 for line in (artifact_root / "prepared" / "planner" / "raw" / "train.jsonl").read_text(encoding="utf-8").splitlines()
             ]
             self.assertEqual(planner_train_rows[0]["messages"][0]["content"], FROZEN_QUERY_SYSTEM_PROMPT)
+            self.assertEqual(planner_train_rows[0]["gold_rows"], [{"company": "Nimbus Health"}])
+            self.assertEqual(planner_train_rows[0]["metadata"]["source_graph_ids"], ["nimbus"])
 
             self.assertTrue(validate_query_plan_contract(planner_train_rows[0]["gold_plan"]))
 
@@ -319,6 +323,8 @@ class PrepareDataTests(unittest.TestCase):
                 for line in (artifact_root / "prepared" / "planner" / "raw" / "train.jsonl").read_text(encoding="utf-8").splitlines()
             ]
             self.assertEqual(planner_train_rows[-1]["gold_plan"]["payload"]["companies"], ["Harbor Health"])
+            self.assertEqual(planner_train_rows[-1]["gold_rows"], [])
+            self.assertEqual(planner_train_rows[-1]["metadata"]["source"], "augmentation")
 
 
 if __name__ == "__main__":

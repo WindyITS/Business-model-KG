@@ -47,7 +47,7 @@ def _load_optional_rows(path: Path) -> list[dict[str, Any]]:
 def _planner_row(row: dict[str, Any], split_name: str) -> dict[str, Any]:
     plan = row["supervision_target"]["plan"]
     target_json = compact_json(plan)
-    return {
+    planner_row = {
         "question": row["question"],
         "split": split_name,
         "family": row["family"],
@@ -59,6 +59,11 @@ def _planner_row(row: dict[str, Any], split_name: str) -> dict[str, Any]:
             {"role": "assistant", "content": target_json},
         ],
     }
+    if "gold_rows" in row:
+        planner_row["gold_rows"] = row["gold_rows"]
+    if "metadata" in row:
+        planner_row["metadata"] = row["metadata"]
+    return planner_row
 
 
 def _router_row(row: dict[str, Any], split_name: str) -> dict[str, Any]:

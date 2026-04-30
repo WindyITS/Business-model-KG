@@ -191,6 +191,26 @@ The local-safe training distribution before balancing is:
 
 Some families are naturally rarer than others. That is why the planner training set is balanced after preparation.
 
+Concrete examples make the family names easier to defend in a presentation:
+
+| Family | Example user question |
+|---|---|
+| `companies_list` | "From what we have here, list up to 1 company represented in the knowledge graph." |
+| `segments_by_company` | "List up to 4 business segments for Redwood Retail." |
+| `offerings_by_company` | "Based on this graph, name as many as 4 offerings owned by Aurora Systems, Lattice Finance, and Redwood Retail." |
+| `offerings_by_segment` | "From what we have here, list up to 4 offerings in the Compliance Services segment of Lattice Finance." |
+| `companies_by_segment_filters` | "List the companies that have a business segment that serves small businesses and sells through marketplaces." |
+| `segments_by_segment_filters` | "Which business segments monetize via subscription?" |
+| `companies_by_cross_segment_filters` | "From what we have here, list the companies that can serve industrial companies and merchant businesses across their segments." |
+| `descendant_offerings_by_root` | "From what we have here, name as many as 2 offerings in the Loyalty Cloud family at Redwood Retail." |
+| `companies_by_descendant_revenue` | "In this graph, within Aurora Systems and Redwood Retail, which companies use consumption-based for offerings under Cloud Platform, up to 2 results?" |
+| `companies_by_place` | "From what we have here, name as many as 5 companies with presence in Mexico." |
+| `segments_by_place_and_segment_filters` | "In this graph, list the business segments for companies operating in the United Kingdom that serve government agencies." |
+| `companies_by_partner` | "Based on this graph, which of Aurora Systems and Redwood Retail partner with Fujitsu Limited?" |
+| `boolean_exists` | "Could Lattice Finance qualify through a business segment that sells through OEMs?" |
+| `count_aggregate` | "Based on this graph, how many offerings does Aurora Systems have?" |
+| `ranking_topk` | "In this graph, top 3 channels by segment count within segments at Aurora Systems." |
+
 ## Non-Local Question Types
 
 The dataset also teaches the system when not to use the local planner.

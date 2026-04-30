@@ -7,10 +7,102 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from kg_query_planner_ft.planner_eval import evaluate_planner
+from kg_query_planner_ft.planner_eval import _evaluate_split, evaluate_planner
+
+
+class StaticPlannerGenerator:
+    def __init__(self, outputs):
+        self.outputs = list(outputs)
+
+    def generate(self, question, *, max_tokens):
+        return self.outputs.pop(0)
 
 
 class PlannerEvalTests(unittest.TestCase):
+    def test_correct_output_allows_exact_plan_mismatch_when_rows_match(self):
+        gold_plan = {
+            "answerable": True,
+            "family": "companies_by_partner",
+            "payload": {
+                "companies": [],
+                "segments": [],
+                "offerings": [],
+                "customer_types": [],
+                "channels": [],
+                "revenue_models": [],
+                "places": [],
+                "partners": ["Dell"],
+            },
+        }
+        row = {
+            "question": "Which companies partner with Dell?",
+            "family": "companies_by_partner",
+            "gold_plan": gold_plan,
+            "gold_rows": [{"company": "Nimbus Health"}],
+            "metadata": {"source_graph_ids": ["nimbus"]},
+        }
+        graph = {
+            "graph_id": "nimbus",
+            "name": "Nimbus Health",
+            "segments": [],
+            "places": ["United States"],
+            "partners": ["Dell"],
+        }
+        generated_plan = {
+            "answerable": True,
+            "family": "companies_by_partner",
+            "payload": {"partners": ["Dell"]},
+        }
+
+        metrics, predictions = _evaluate_split(
+            [row],
+            StaticPlannerGenerator([json.dumps(generated_plan)]),
+            max_tokens=128,
+            graphs_by_id={"nimbus": graph},
+        )
+
+        self.assertEqual(metrics["count"], 1)
+        self.assertEqual(metrics["output_evaluable_count"], 1)
+        self.assertEqual(metrics["correct_outputs"], 1)
+        self.assertEqual(metrics["correct_output_rate"], 1.0)
+        self.assertEqual(metrics["exact_plan_match_rate"], 0.0)
+        self.assertTrue(predictions[0]["correct_output"])
+        self.assertEqual(predictions[0]["predicted_rows"], [{"company": "Nimbus Health"}])
+
+    def test_invalid_output_counts_against_correct_output_rate(self):
+        row = {
+            "question": "Which companies partner with Dell?",
+            "family": "companies_by_partner",
+            "gold_plan": {
+                "answerable": True,
+                "family": "companies_by_partner",
+                "payload": {"partners": ["Dell"]},
+            },
+            "gold_rows": [{"company": "Nimbus Health"}],
+            "metadata": {"source_graph_ids": ["nimbus"]},
+        }
+        graph = {
+            "graph_id": "nimbus",
+            "name": "Nimbus Health",
+            "segments": [],
+            "places": ["United States"],
+            "partners": ["Dell"],
+        }
+
+        metrics, predictions = _evaluate_split(
+            [row],
+            StaticPlannerGenerator(["not json"]),
+            max_tokens=128,
+            graphs_by_id={"nimbus": graph},
+        )
+
+        self.assertEqual(metrics["output_evaluable_count"], 1)
+        self.assertEqual(metrics["correct_outputs"], 0)
+        self.assertEqual(metrics["correct_output_rate"], 0.0)
+        self.assertFalse(predictions[0]["json_parse_ok"])
+        self.assertFalse(predictions[0]["correct_output"])
+        self.assertIsNotNone(predictions[0]["output_error"])
+
     def test_base_only_eval_uses_no_adapter_and_writes_separate_artifacts(self):
         with TemporaryDirectory() as tmpdir:
             tmp = Path(tmpdir)

@@ -25,6 +25,9 @@ class CliOutputTests(unittest.TestCase):
                 "contract_valid_rate": 0.6,
                 "family_accuracy": 0.5,
                 "exact_plan_match_rate": 0.4,
+                "correct_output_rate": 0.7,
+                "correct_outputs": 7,
+                "output_evaluable_count": 10,
                 "per_family": {
                     "companies_by_partner": {
                         "count": 4,
@@ -46,6 +49,9 @@ class CliOutputTests(unittest.TestCase):
                 "contract_valid_rate": 0.5,
                 "family_accuracy": 0.4,
                 "exact_plan_match_rate": 0.3,
+                "correct_output_rate": 0.25,
+                "correct_outputs": 3,
+                "output_evaluable_count": 12,
                 "per_family": {
                     "companies_by_partner": {
                         "count": 5,
@@ -68,6 +74,7 @@ class CliOutputTests(unittest.TestCase):
         self.assertIn("Planner Evaluation Summary", rendered)
         self.assertIn("Validation split:", rendered)
         self.assertIn("Release eval split:", rendered)
+        self.assertIn("correct_output=70.00% (7/10)", rendered)
         self.assertIn("weakest families by contract validity", rendered)
         self.assertIn("count_aggregate", rendered)
 
