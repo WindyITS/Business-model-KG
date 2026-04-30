@@ -14,7 +14,6 @@ APPROVED_MACRO_REGIONS = [
     "Americas",
     "Asia",
     "Asia Pacific",
-    "Caribbean",
     "Central America",
     "EMEA",
     "Eastern Europe",

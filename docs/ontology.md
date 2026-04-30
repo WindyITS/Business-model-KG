@@ -289,7 +289,6 @@ Approved macro-regions:
 - `Americas`
 - `Asia`
 - `Asia Pacific`
-- `Caribbean`
 - `Central America`
 - `EMEA`
 - `Eastern Europe`

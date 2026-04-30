@@ -21,7 +21,6 @@ _MACRO_REGION_PARENTS: dict[str, tuple[str, ...]] = {
     "Americas": ("Worldwide",),
     "Asia": ("Worldwide",),
     "Asia Pacific": ("APAC",),
-    "Caribbean": ("Americas",),
     "Central America": ("Latin America", "Americas"),
     "EMEA": ("Worldwide",),
     "Eastern Europe": ("Europe", "EMEA"),
@@ -191,7 +190,7 @@ CENTRAL_AMERICA_COUNTRIES = (
     "Panama",
 )
 
-CARIBBEAN_COUNTRIES = (
+AMERICAS_ISLAND_COUNTRIES = (
     "Antigua and Barbuda",
     "Bahamas",
     "Barbados",
@@ -411,7 +410,7 @@ def _build_raw_place_parents() -> dict[str, tuple[str, ...]]:
     assign_many(OCEANIA_COUNTRIES, "Asia Pacific", "APAC")
     assign_many(NORTH_AMERICA_COUNTRIES, "North America", "Americas")
     assign_many(CENTRAL_AMERICA_COUNTRIES, "Central America", "Latin America", "Americas")
-    assign_many(CARIBBEAN_COUNTRIES, "Caribbean", "Americas")
+    assign_many(AMERICAS_ISLAND_COUNTRIES, "Americas")
     assign_many(SOUTH_AMERICA_COUNTRIES, "South America", "Americas")
     assign_many(LATIN_AMERICA_COUNTRIES, "Latin America")
     assign_many(WESTERN_EUROPE_COUNTRIES, "Europe", "Western Europe", "EMEA")
