@@ -14,6 +14,22 @@ This island is meant to be reproducible on its own: create the dedicated
 environment, download the public query-planner dataset, run the preparation and
 training commands, then publish the resulting bundle back into the main runtime.
 
+## Practical Requirements
+
+Fine-tuning is heavier than using the main extraction/runtime project.
+
+The router uses standard Hugging Face/PyTorch tooling around
+`DeBERTa-v3-small`. The planner uses MLX with a 4-bit Qwen model and is intended
+for Apple Silicon. Running the full planner training path requires network
+access for model downloads, several gigabytes of disk space for models and
+artifacts, and enough local memory for MLX LoRA training.
+
+As a rough expectation, dataset preparation and router evaluation are short
+local jobs, router training is a moderate training job, and planner training is
+the long step. A reviewer who only wants to use the local query runtime does not
+need to rerun this island; they can download the published query-stack bundle
+instead.
+
 ## Locations
 
 - Environment root: `finetuning/.venv`
@@ -58,7 +74,7 @@ source finetuning/.venv/bin/activate
 
 ## Commands
 
-All commands read the single config file at `finetuning/config/default.json` unless `--config` is passed.
+All commands read `finetuning/config/default.json` unless `--config` is passed.
 
 ```bash
 prepare-data
@@ -73,12 +89,12 @@ publish-query-stack
 
 ## High-Level Flow
 
-1. `prepare-data`
-2. `train-router`
-3. `eval-router`
-4. `train-planner`
-5. `eval-planner`
-6. `publish-query-stack`
+1. `prepare-data` converts the curated query dataset into router and planner training files.
+2. `train-router` trains the local/fallback/refusal classifier.
+3. `eval-router` evaluates the router and writes threshold metadata.
+4. `train-planner` trains the compact local graph-query planner.
+5. `eval-planner` evaluates planner outputs.
+6. `publish-query-stack` copies the trained router and planner adapter into the main runtime bundle.
 
 After `publish-query-stack`, the main runtime can use the generated bundle from
 `runtime_assets/query_stack/`.

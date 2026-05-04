@@ -36,7 +36,7 @@ memo_graph_only
 analyst
 ```
 
-## Metrics
+## Reported Metrics
 
 Extraction evaluation reports only these metrics:
 
@@ -48,6 +48,17 @@ Extraction evaluation reports only these metrics:
 
 Exact metrics use normalized 3-field edge equality. Relaxed F1 uses the
 graph-aware relaxed matcher implemented in `evaluation/scripts/evaluate.py`.
+
+The relaxed matcher uses weighted partial credit to capture graph-near matches
+that are not exact string-identical triples:
+
+- exact typed-triple match: `1.00`
+- company alias or lexical normalization match: `0.90`
+- subject/object parent-child hierarchy relation: `0.75`
+- segment roll-up relation: `0.50`
+
+Those weights are part of the relaxed matcher. They are not additional reported
+metrics.
 
 Bootstrap confidence intervals are generated separately from the same benchmark
 and output files. Annotation reliability is also generated separately from the
@@ -102,7 +113,7 @@ already available:
 Download the public dataset:
 
 ```bash
-huggingface-cli download WindyITS/business-model-kg-benchmark-outputs \
+./venv/bin/huggingface-cli download WindyITS/business-model-kg-benchmark-outputs \
   --repo-type dataset \
   --local-dir hf_evaluation_artifacts
 ```
@@ -117,7 +128,7 @@ rsync -a hf_evaluation_artifacts/benchmarks/ evaluation/benchmarks/
 Install the output files into the layout expected by the evaluator:
 
 ```bash
-python - <<'PY'
+./venv/bin/python - <<'PY'
 from pathlib import Path
 import shutil
 

@@ -1,122 +1,35 @@
-# Evaluation
+# Evaluation Folder
 
-This folder contains the benchmark data, generated reports, and evaluator for
-the extraction pipelines.
+This folder contains the benchmark files, evaluator code, and generated result
+reports for extraction evaluation.
 
-## Data Sources
+For the canonical evaluation guide, use
+[`../docs/evaluation.md`](../docs/evaluation.md). For the reviewer reproduction
+path, use [`../docs/reproducibility.md`](../docs/reproducibility.md).
 
-The evaluator reads clean JSONL benchmark files from:
+## Folder Layout
 
 ```text
-evaluation/benchmarks/dev/clean/
-evaluation/benchmarks/test/clean/
+evaluation/
+  benchmarks/
+    dev/clean/
+    test/clean/
+    annotation_reliability/
+  scripts/
+    evaluate.py
+  results/
 ```
 
-The clean JSONL files are the canonical benchmark inputs. Source spreadsheets
-belong outside the evaluation package after conversion.
+`benchmarks/` holds curated gold triples and annotation-reliability inputs.
+`scripts/evaluate.py` runs the evaluator. `results/` stores generated reports
+such as summaries, matched triples, false positives, false negatives, relaxed
+matches, bootstrap outputs, and annotation-reliability outputs.
 
-The evaluator compares each clean benchmark against post-resolution pipeline
-outputs from:
+The evaluator compares gold triples against saved extraction outputs at:
 
 ```text
 outputs/<company>/<pipeline>/latest/resolved_triples.json
 ```
 
-## Metrics
-
-Metrics:
-
-- exact precision over normalized 3-field edges
-- exact recall over normalized 3-field edges
-- exact F1 over normalized 3-field edges
-- exact macro-F1 by company
-- relaxed graph-aware F1 with one-to-one greedy matching
-- exact typed-triple match: `1.00`
-- company alias / lexical normalization: `0.90`
-- subject/object parent-child hierarchy relation: `0.75`
-- segment roll-up relation: `0.50`
-
-Bootstrap confidence intervals live in:
-
-```text
-evaluation/results/bootstrap/
-```
-
-Regenerate them with:
-
-```bash
-./venv/bin/python -m evaluation.scripts.evaluate --bootstrap --split test --yes
-```
-
-Annotation reliability metrics live in:
-
-```text
-evaluation/results/annotation_reliability/
-```
-
-Their JSONL inputs live in:
-
-```text
-evaluation/benchmarks/annotation_reliability/
-```
-
-Regenerate them with:
-
-```bash
-./venv/bin/python -m evaluation.scripts.evaluate --annotation-reliability --yes
-```
-
-These reliability artifacts are JSON/JSONL reporting outputs. They are separate
-from the extraction evaluator's five-score metric contract.
-
-## Run Evaluation
-
-Evaluate all companies in one split for one pipeline:
-
-```bash
-./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --split dev
-./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --split test
-```
-
-Evaluate one selected company for one selected pipeline:
-
-```bash
-./venv/bin/python -m evaluation.scripts.evaluate --pipeline analyst --company microsoft
-```
-
-For deliberate reruns, add `--yes`:
-
-```bash
-./venv/bin/python -m evaluation.scripts.evaluate --pipeline analyst --split test --yes
-```
-
-## Output Files
-
-Split results are written under:
-
-```text
-evaluation/results/<pipeline>/<split>/
-```
-
-Cherry-picked company results are written under:
-
-```text
-evaluation/results/cherry_picked/<pipeline>/<company>/
-```
-
-Each evaluated company writes:
-
-- `metrics.json`
-- `matched.jsonl`
-- `false_positives.jsonl`
-- `false_negatives.jsonl`
-- `relaxed_matches.jsonl`
-
-Each run also writes `summary.json`.
-
-JSON/JSONL files are the canonical generated reporting artifacts and are the
-right format for publication.
-
-If the target result folder already contains files, the evaluator asks before
-overwriting. If overwrite is approved, existing results are replaced only after
-the new evaluation run succeeds.
+For deliberate reruns, pass `--yes` to overwrite existing result folders after
+the new run succeeds.

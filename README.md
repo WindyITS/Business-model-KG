@@ -1,254 +1,129 @@
 # Business Model KG
 
-Business Model KG is a local pipeline for turning SEC 10-K business sections
-into standardized business-model knowledge graphs.
+Business Model KG turns SEC 10-K business sections into standardized
+business-model knowledge graphs.
 
-The project is built around a practical research question: can a language model
-extract a useful, comparable view of how companies make money, while still
-respecting a fixed graph schema and leaving enough artifacts behind for
-evaluation and debugging? The repo answers that question with three extraction
-pipelines, a shared ontology, saved output artifacts, an evaluation benchmark,
-and an optional Neo4j query layer.
+The project asks a practical research question: can a language model extract a
+useful and comparable view of how companies make money while staying inside a
+fixed graph schema and leaving enough artifacts behind for evaluation,
+debugging, and reproduction?
 
-The maintained surface is the extraction and runtime stack for building,
-validating, evaluating, loading, and querying business-model graphs.
+The repository contains the maintained extraction stack, the ontology, the
+evaluation benchmark interface, an optional Neo4j query runtime, and an isolated
+fine-tuning workflow for the local query router/planner.
 
-## Project Story
+## How The Project Fits Together
 
-Public filings describe businesses in rich prose, but that prose is hard to
-compare across companies. This project takes the business section of a 10-K and
-turns it into a graph centered on companies, business segments, offerings,
-customer types, channels, revenue models, places, and named partners.
-
-The extraction is intentionally not just "ask a model for triples." The repo
-keeps a fixed ontology, validates every output against that ontology, stores
-intermediate artifacts for inspection, and evaluates the final resolved graph
-against manually curated gold triples. That makes the project useful both as a
-working local tool and as an experiment about extraction quality.
-
-The full workflow is:
+At a high level, the workflow is:
 
 1. read a 10-K business section from `data/`
 2. run one of the extraction pipelines
 3. resolve surface forms and validate triples against the ontology
 4. save the run under `outputs/<company>/<pipeline>/`
-5. compare outputs against the benchmark under `evaluation/`
+5. evaluate saved outputs against curated benchmark triples
 6. optionally load saved graphs into Neo4j
-7. optionally query the live graph with natural language or rendered Cypher
+7. optionally query the live graph in natural language or rendered Cypher
 
-For a plain-language walkthrough of how these pieces fit together, start with
-[`docs/project_walkthrough.md`](./docs/project_walkthrough.md).
+The graph is segment-centered. A `Company` has `BusinessSegment` nodes, segments
+offer `Offering` nodes, and the graph also records customer types, channels,
+revenue models, operating geographies, and named partners.
 
-## Graph Model
+The three extraction pipelines compare different prompting strategies while
+sharing the same ontology, validation, output layout, and evaluator:
 
-The graph is segment-centered. `Company` is the corporate shell,
-`BusinessSegment` is the main business-model anchor, and `Offering` is the
-product or service inventory layer.
+- `analyst`: memo-first extraction with augmentation, graph compilation, and critique
+- `memo_graph_only`: memo-first extraction without later augmentation or critique
+- `zero-shot`: direct one-pass graph extraction
 
-The main relation pattern is:
+For the conceptual tour, start with
+[`docs/project_walkthrough.md`](./docs/project_walkthrough.md). For the schema,
+see [`docs/ontology.md`](./docs/ontology.md).
 
-- `Company -> HAS_SEGMENT -> BusinessSegment`
-- `BusinessSegment -> OFFERS -> Offering`
-- `BusinessSegment -> SERVES -> CustomerType`
-- `BusinessSegment -> SELLS_THROUGH -> Channel`
-- `Offering -> MONETIZES_VIA -> RevenueModel`
-- `Company -> OPERATES_IN -> Place`
-- `Company -> PARTNERS_WITH -> Company`
-
-`CustomerType`, `Channel`, and `RevenueModel` use closed canonical labels so
-different companies can be compared consistently. Geography is kept canonical
-at `Company -> OPERATES_IN -> Place`, with downstream helper metadata for
-broader or narrower place matching in Neo4j.
-
-The complete schema, design principles, canonical labels, validation behavior,
-and geography rules are documented in [`docs/ontology.md`](./docs/ontology.md).
-
-## Extraction Pipelines
-
-The repo includes three supported extraction pipelines:
-
-- `analyst`: builds a structured analyst memo, augments it, compiles it into a graph, then runs a critique pass
-- `memo_graph_only`: builds the first analyst memo and compiles it into a graph, skipping later memo augmentation and critique
-- `zero-shot`: directly asks for the graph in a single pass
-
-These pipelines share the same downstream resolver, validator, output layout,
-and evaluation target. That keeps the comparison focused on extraction strategy
-rather than different post-processing rules.
-
-Editable prompt assets live under [`prompts/`](./prompts/). Packaged fallback
-copies live under `src/llm_extraction/_bundled_prompts/`, so the project can
-still run after installation.
-
-## Evaluation
-
-Evaluation compares post-resolution, post-validation triples from:
-
-```text
-outputs/<company>/<pipeline>/latest/resolved_triples.json
-```
-
-against manually curated benchmark triples under:
-
-```text
-evaluation/benchmarks/<split>/clean/
-```
-
-The evaluator reports only five scores: exact precision, exact recall, exact
-F1, exact macro-F1 by company, and relaxed graph-aware F1. Exact scores use
-normalized 3-field edge agreement over `subject`, `relation`, and `object`.
-
-Use [`docs/evaluation.md`](./docs/evaluation.md) for the evaluation workflow,
-public artifact layout, reproduction commands, scoring rules, and output files.
-
-## Published Artifacts
-
-The public datasets and model bundle are published on the Hugging Face profile
-[`WindyITS`](https://huggingface.co/WindyITS).
-
-The uploaded artifacts are:
-
-- [`WindyITS/business-model-kg-benchmark-outputs`](https://huggingface.co/datasets/WindyITS/business-model-kg-benchmark-outputs): benchmark triples, generated extraction outputs, and evaluation documentation
-- [`WindyITS/business-model-kg-query-planner-data`](https://huggingface.co/datasets/WindyITS/business-model-kg-query-planner-data): curated query-router/planner fine-tuning data
-- [`WindyITS/business-model-kg-query-stack`](https://huggingface.co/WindyITS/business-model-kg-query-stack): deployable local query stack with the fine-tuned DeBERTa router and MLX planner adapter
-
-## Query Runtime
-
-The runtime can load saved outputs into Neo4j and answer read-only questions
-against the live graph.
-
-There are two query paths behind the same CLI surface:
-
-- a routed local stack that uses a published router/planner bundle only when
-  the router assigns `local` with at least `0.97` confidence
-- a hosted fallback path that generates guarded read-only Cypher when the local
-  stack is unavailable, errors, or the router selects `api_fallback`
-
-If the router selects `refuse`, the command returns an unsupported-request
-result instead of calling the hosted fallback.
-
-The query layer is optional. You can run extraction and evaluation without the
-Neo4j/query-stack pieces.
-
-For command details, provider options, Neo4j behavior, output layout, prompt
-loading, and maintenance commands, see
-[`docs/runtime_guide.md`](./docs/runtime_guide.md).
-
-## Quickstart
+## Quick Start
 
 Requirements:
 
 - Python 3.10+
-- an OpenAI-compatible local endpoint such as LM Studio, unless you only run evaluation
-- optionally Neo4j for graph loading and querying
-- optionally an OpenCode Go API key for hosted model runs
+- an OpenAI-compatible local endpoint such as LM Studio if you want to run new extraction calls
+- optionally Docker and Neo4j for graph loading and querying
+- optionally an OpenCode Go API key for hosted extraction or hosted query fallback
 
-Bootstrap the source checkout:
+Bootstrap a source checkout:
 
 ```bash
 ./scripts/bootstrap_dev.sh
 ```
 
-Manual equivalent:
+Run a light local readiness check:
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -e ".[dev]"
+./scripts/kg-health-check --skip-neo4j
 ```
 
-If you want the runtime to execute the local query stack, install the optional
-query extras:
-
-```bash
-pip install -e ".[query-stack]"
-```
-
-Copy `.env.example` if you want a local environment template.
-
-## Common Commands
-
-Run an extraction without touching Neo4j:
+Run an extraction without loading Neo4j:
 
 ```bash
 ./scripts/kg-pipeline data/microsoft_10k.txt --skip-neo4j
 ```
 
-Choose a specific extraction pipeline:
-
-```bash
-./scripts/kg-pipeline data/microsoft_10k.txt --pipeline zero-shot --skip-neo4j
-```
-
-Start Neo4j and run an extraction that loads the result:
+Start Neo4j and load saved outputs when you want the graph query layer:
 
 ```bash
 docker compose up -d
-./scripts/kg-pipeline data/microsoft_10k.txt
+./scripts/kg-neo4j-load
+./scripts/kg-neo4j-status
 ```
 
-Render a read-only Cypher query:
-
-```bash
-./scripts/kg-query-cypher "Which company segments sell through marketplaces?"
-```
-
-Run a natural-language query against Neo4j:
-
-```bash
-./scripts/kg-query "Which company segments sell through marketplaces?"
-```
-
-Evaluate a pipeline on one benchmark split:
-
-```bash
-./venv/bin/python -m evaluation.scripts.evaluate --pipeline analyst --split dev
-```
-
-Run the main checks:
+The full maintainer check is broader: it runs tests, fine-tuning tests,
+compilation checks, wrapper checks, and package smoke installs.
 
 ```bash
 bash ./scripts/check_repo.sh
 ```
 
-## Documentation Map
+## Public Artifacts
 
-The docs are split by purpose:
+Generated outputs, fine-tuning data, and the local query-stack bundle are not
+tracked in Git. They are either generated locally or downloaded from Hugging
+Face.
 
-- [`docs/project_walkthrough.md`](./docs/project_walkthrough.md): the best first read after this README; explains the project flow in plain language
-- [`docs/ontology.md`](./docs/ontology.md): the graph schema, design principles, canonical labels, validation behavior, and place rules
-- [`docs/runtime_guide.md`](./docs/runtime_guide.md): CLI commands, provider settings, Neo4j load/unload/status behavior, query runtime, output artifacts, and prompt workflow
-- [`docs/repo_structure.md`](./docs/repo_structure.md): a detailed map of the repository and what each major directory is for
-- [`docs/reproducibility.md`](./docs/reproducibility.md): per-island reproducibility guide for using the project, reproducing evaluation, and rerunning fine-tuning
-- [`docs/evaluation.md`](./docs/evaluation.md): evaluation workflow, public artifact layout, reproduction commands, scoring rules, and output files
-- [`evaluation/README.md`](./evaluation/README.md): benchmark layout, evaluation commands, metrics, result files, and reference datasets
-- [`finetuning/README.md`](./finetuning/README.md): the isolated fine-tuning island for the local query router/planner
+The public artifacts are:
 
-## Repo Map
+- [`WindyITS/business-model-kg-benchmark-outputs`](https://huggingface.co/datasets/WindyITS/business-model-kg-benchmark-outputs): benchmark triples and generated extraction outputs
+- [`WindyITS/business-model-kg-query-planner-data`](https://huggingface.co/datasets/WindyITS/business-model-kg-query-planner-data): query-router/planner fine-tuning data
+- [`WindyITS/business-model-kg-query-stack`](https://huggingface.co/WindyITS/business-model-kg-query-stack): deployable local query-stack bundle
 
-The main areas are:
+Use [`docs/reproducibility.md`](./docs/reproducibility.md) as the canonical
+reviewer guide for artifact setup and reproduction paths.
 
-- `src/runtime/`: extraction CLI, query CLI, output layout, provider resolution, and Neo4j helper commands
-- `src/llm_extraction/pipelines/`: pipeline-specific extraction orchestration
-- `src/llm/`: model calls, retries, JSON recovery, parsing, and auditing
-- `src/ontology/`: machine-readable ontology, canonical labels, place hierarchy, and validation
-- `src/graph/`: Neo4j load, replace, and unload logic
-- `prompts/`: editable prompt assets
-- `evaluation/`: benchmark files, evaluator scripts, and result artifacts
-- `finetuning/`: isolated router/planner training workflow
-- `data/`: 10-K text files and curated query-planner datasets
+## Choose Your Path
 
-For a more detailed layout, see [`docs/repo_structure.md`](./docs/repo_structure.md).
+If you want to understand the project, read
+[`docs/project_walkthrough.md`](./docs/project_walkthrough.md).
 
-## Tests
+If you want to reproduce results, read
+[`docs/reproducibility.md`](./docs/reproducibility.md).
 
-Run the main test suite:
+If you want command details for extraction, Neo4j, providers, query runtime,
+and output layout, read [`docs/runtime_guide.md`](./docs/runtime_guide.md).
 
-```bash
-./venv/bin/python -m unittest discover -s tests
-```
+If you want evaluation details, read [`docs/evaluation.md`](./docs/evaluation.md).
 
-Run only the evaluation tests:
+If you want fine-tuning details, read [`finetuning/README.md`](./finetuning/README.md).
 
-```bash
-./venv/bin/python -m pytest -q tests/test_evaluation
-```
+If you want to orient yourself in the repository, read
+[`docs/project_map.md`](./docs/project_map.md).
+
+## Maintained Surface
+
+The maintained source packages are:
+
+- `runtime`: extraction, query, Neo4j, output, and health-check CLIs
+- `llm_extraction`: pipeline orchestration and prompt rendering
+- `llm`: model calls, retries, JSON parsing, and audit helpers
+- `ontology`: schema loading, canonical labels, validation, and place handling
+- `graph`: Neo4j loading and graph maintenance helpers
+
+The fine-tuning package under `finetuning/` is intentionally separate. It
+produces the query-stack bundle used by the main runtime, but the main runtime
+does not import fine-tuning code.

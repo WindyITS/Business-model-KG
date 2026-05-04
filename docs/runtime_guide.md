@@ -140,6 +140,31 @@ free-form Cypher generation when the local stack is unavailable, errors, or the
 router selects `api_fallback`. If the router selects `refuse`, the command
 returns an unsupported-request result instead of using the hosted fallback.
 
+### Local Query-Stack Bundle
+
+The local router/planner bundle is not tracked in Git. A fresh clone will not
+have `runtime_assets/query_stack/` until you download the published bundle or
+rebuild it from the fine-tuning island.
+
+Download the published bundle:
+
+```bash
+./venv/bin/python -m pip install "huggingface_hub[cli]"
+./venv/bin/huggingface-cli download WindyITS/business-model-kg-query-stack \
+  --local-dir runtime_assets/query_stack
+```
+
+Install the optional query dependencies when you want the runtime to execute the
+local bundle:
+
+```bash
+./venv/bin/python -m pip install -e ".[query-stack]"
+```
+
+Without this bundle, routed query commands can still use hosted fallback when a
+fallback provider and API key are configured, but the local planner path will
+not be available.
+
 Force hosted fallback only:
 
 ```bash
@@ -398,7 +423,7 @@ Remove local caches and scratch artifacts without touching saved outputs:
 ./scripts/clean_local_artifacts.sh
 ```
 
-Run a local readiness check:
+Run a light local readiness check:
 
 ```bash
 ./scripts/kg-health-check
@@ -410,11 +435,15 @@ Skip Neo4j probing:
 ./scripts/kg-health-check --skip-neo4j
 ```
 
-Run the fuller maintainer check:
+Run the full maintainer check:
 
 ```bash
 bash ./scripts/check_repo.sh
 ```
+
+The full maintainer check runs tests, fine-tuning tests, compilation checks,
+wrapper checks, and package smoke installs. It is intentionally broader than a
+quick reviewer smoke check.
 
 `.github/workflows/checks.yml` runs the same repo-check script on pushes and
 pull requests.
