@@ -60,7 +60,9 @@ Run a light local readiness check:
 ./scripts/kg-health-check --skip-neo4j
 ```
 
-Run an extraction without loading Neo4j:
+Run an extraction without loading Neo4j. Start LM Studio or another
+OpenAI-compatible local endpoint first, or use a hosted provider such as
+OpenCode Go with an API key.
 
 ```bash
 ./scripts/kg-pipeline data/microsoft_10k.txt --skip-neo4j

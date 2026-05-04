@@ -120,17 +120,11 @@ Notes:
 
 ## Querying
 
-Generate a read-only Cypher query from a natural-language question:
+The query commands can render read-only Cypher or run a natural-language
+question against the current Neo4j graph.
 
-```bash
-./scripts/kg-query-cypher "Which companies sell to developers through direct sales?"
-```
-
-Generate the query and run it against the current Neo4j database:
-
-```bash
-./scripts/kg-query "Which companies sell to developers through direct sales?"
-```
+`kg-query-cypher` can render a query without Neo4j. `kg-query` also needs Neo4j
+running and loaded with saved graph outputs.
 
 The routed query commands try the published local query-stack bundle first.
 The router sends a query to the local planner only when its `local` probability
@@ -146,24 +140,31 @@ The local router/planner bundle is not tracked in Git. A fresh clone will not
 have `runtime_assets/query_stack/` until you download the published bundle or
 rebuild it from the fine-tuning island.
 
-Download the published bundle:
+For local routed querying, download the published bundle and install the query
+extras:
 
 ```bash
 ./venv/bin/python -m pip install "huggingface_hub[cli]"
 ./venv/bin/huggingface-cli download WindyITS/business-model-kg-query-stack \
   --local-dir runtime_assets/query_stack
-```
-
-Install the optional query dependencies when you want the runtime to execute the
-local bundle:
-
-```bash
 ./venv/bin/python -m pip install -e ".[query-stack]"
 ```
 
 Without this bundle, routed query commands can still use hosted fallback when a
 fallback provider and API key are configured, but the local planner path will
 not be available.
+
+For hosted fallback, configure an OpenCode Go API key:
+
+```bash
+export OPENCODE_GO_API_KEY=your_key_here
+```
+
+Render a read-only Cypher query with the routed stack:
+
+```bash
+./scripts/kg-query-cypher "Which companies sell to developers through direct sales?"
+```
 
 Force hosted fallback only:
 
@@ -176,6 +177,13 @@ Override the local query-stack bundle:
 ```bash
 ./scripts/kg-query-cypher "Which company segments sell through marketplaces?" \
   --local-stack-bundle-dir /path/to/runtime_assets/query_stack
+```
+
+After Neo4j is running and saved outputs have been loaded, run a
+natural-language query against the graph:
+
+```bash
+./scripts/kg-query "Which companies sell to developers through direct sales?"
 ```
 
 Query command notes:

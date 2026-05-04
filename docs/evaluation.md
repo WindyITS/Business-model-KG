@@ -103,59 +103,16 @@ corresponding `latest/` folder.
 
 ## Reproduce From Hugging Face
 
-From the repository root, install the Hugging Face download CLI if it is not
-already available:
+The canonical step-by-step reproduction recipe lives in
+[`reproducibility.md`](./reproducibility.md#island-2-reproduce-extraction-evaluation).
+Use that recipe for the exact download, copy, and evaluator commands.
 
-```bash
-./venv/bin/python -m pip install "huggingface_hub[cli]"
-```
+For evaluation-focused readers, the important contract is:
 
-Download the public dataset:
-
-```bash
-./venv/bin/huggingface-cli download WindyITS/business-model-kg-benchmark-outputs \
-  --repo-type dataset \
-  --local-dir hf_evaluation_artifacts
-```
-
-Install the benchmark files:
-
-```bash
-mkdir -p evaluation/benchmarks
-rsync -a hf_evaluation_artifacts/benchmarks/ evaluation/benchmarks/
-```
-
-Install the output files into the layout expected by the evaluator:
-
-```bash
-./venv/bin/python - <<'PY'
-from pathlib import Path
-import shutil
-
-source_root = Path("hf_evaluation_artifacts/outputs")
-target_root = Path("outputs")
-
-for source_path in source_root.glob("*/*/resolved_triples.json"):
-    company = source_path.parts[-3]
-    pipeline = source_path.parts[-2]
-    target_path = target_root / company / pipeline / "latest" / "resolved_triples.json"
-    target_path.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(source_path, target_path)
-PY
-```
-
-Run the extraction evaluation for every pipeline and split:
-
-```bash
-for pipeline in zero-shot memo_graph_only analyst; do
-  for split in dev test; do
-    ./venv/bin/python -m evaluation.scripts.evaluate \
-      --pipeline "$pipeline" \
-      --split "$split" \
-      --yes
-  done
-done
-```
+- bootstrap the main environment before using `./venv/bin/...`
+- install benchmark files under `evaluation/benchmarks/`
+- install generated predictions under `outputs/<company>/<pipeline>/latest/`
+- run `evaluation.scripts.evaluate` for each pipeline and split
 
 Run bootstrap confidence intervals:
 

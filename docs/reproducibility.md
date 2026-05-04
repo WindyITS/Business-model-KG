@@ -68,7 +68,9 @@ Run a light readiness check:
 ./scripts/kg-health-check --skip-neo4j
 ```
 
-Run an extraction without touching Neo4j:
+Run an extraction without touching Neo4j. This requires a local
+OpenAI-compatible endpoint such as LM Studio running at the default URL, or a
+hosted provider/API key passed through the runtime options.
 
 ```bash
 ./scripts/kg-pipeline data/microsoft_10k.txt --skip-neo4j
@@ -106,6 +108,13 @@ bundle, but the local router/planner path needs `runtime_assets/query_stack/`.
 This path verifies the reported extraction metrics. It does not require
 rerunning LLM extraction calls because the generated extraction outputs are
 published.
+
+From a fresh clone, bootstrap the main environment first:
+
+```bash
+./scripts/bootstrap_dev.sh
+./venv/bin/python -m pip install "huggingface_hub[cli]"
+```
 
 Download the public evaluation artifact:
 
@@ -163,6 +172,50 @@ evaluation/results/<pipeline>/<split>/
 For scoring definitions and output-file details, see
 [`evaluation.md`](./evaluation.md).
 
+## Runtime Check: Query Public Artifacts
+
+This path verifies the interactive graph layer using public generated outputs
+instead of rerunning extraction.
+
+First complete the artifact setup from Island 2 so public generated
+`resolved_triples.json` files are installed under:
+
+```text
+outputs/<company>/<pipeline>/latest/
+```
+
+Then start Neo4j and load those saved outputs:
+
+```bash
+docker compose up -d
+./scripts/kg-neo4j-load
+./scripts/kg-neo4j-status
+```
+
+Download the published local query-stack bundle and install the optional query
+dependencies:
+
+```bash
+./venv/bin/huggingface-cli download WindyITS/business-model-kg-query-stack \
+  --local-dir runtime_assets/query_stack
+./venv/bin/python -m pip install -e ".[query-stack]"
+```
+
+Render a Cypher query:
+
+```bash
+./scripts/kg-query-cypher "Which companies sell to developers through direct sales?"
+```
+
+Run the query against Neo4j:
+
+```bash
+./scripts/kg-query "Which companies sell to developers through direct sales?"
+```
+
+This path connects the public extraction artifacts, local Neo4j load, and local
+query-stack bundle into one end-to-end runtime check.
+
 ## Island 3: Reproduce Query-Stack Fine-Tuning
 
 This path verifies that the local query router/planner bundle can be rebuilt
@@ -170,6 +223,12 @@ from the published fine-tuning dataset.
 
 The fine-tuning island has its own environment and package under `finetuning/`.
 It is intentionally separate from the main extraction/runtime package.
+
+This is the heaviest reproduction path. It assumes Apple Silicon for the MLX
+planner path, network access for model downloads, several gigabytes of disk
+space, and enough memory for local LoRA training. If you only want to use the
+query runtime, download the published query-stack bundle instead of rerunning
+fine-tuning.
 
 Bootstrap only the fine-tuning environment:
 
