@@ -1,0 +1,10 @@
+{
+  "company_name": "Apple",
+  "company_slug": "apple",
+  "pipeline": "analyst",
+  "latest_available": true,
+  "latest_run_dir": "outputs/apple/analyst/latest",
+  "available_run_tokens": [],
+  "failed_run_tokens": [],
+  "updated_at": "2026-04-30T15:19:45.194016+00:00"
+}

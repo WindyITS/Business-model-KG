@@ -452,6 +452,3 @@ bash ./scripts/check_repo.sh
 The full maintainer check runs tests, fine-tuning tests, compilation checks,
 wrapper checks, and package smoke installs. It is intentionally broader than a
 quick reviewer smoke check.
-
-`.github/workflows/checks.yml` runs the same repo-check script on pushes and
-pull requests.

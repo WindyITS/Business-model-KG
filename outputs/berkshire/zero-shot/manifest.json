@@ -1,0 +1,10 @@
+{
+  "company_name": "Berkshire",
+  "company_slug": "berkshire",
+  "pipeline": "zero-shot",
+  "latest_available": true,
+  "latest_run_dir": "outputs/berkshire/zero-shot/latest",
+  "available_run_tokens": [],
+  "failed_run_tokens": [],
+  "updated_at": "2026-04-30T13:48:04.994699+00:00"
+}

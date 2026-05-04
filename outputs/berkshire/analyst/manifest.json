@@ -1,0 +1,12 @@
+{
+  "company_name": "Berkshire",
+  "company_slug": "berkshire",
+  "pipeline": "analyst",
+  "latest_available": true,
+  "latest_run_dir": "outputs/berkshire/analyst/latest",
+  "available_run_tokens": [],
+  "failed_run_tokens": [
+    "20260427T200644Z"
+  ],
+  "updated_at": "2026-04-30T15:19:45.194628+00:00"
+}

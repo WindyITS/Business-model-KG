@@ -1,0 +1,2247 @@
+{
+  "foundation_memo": "# ANALYTICAL FRAME\n## Summary:\nApple operates an integrated ecosystem business model centered on proprietary hardware devices (iPhone, Mac, iPad, Wearables, and Home products) tightly coupled with a portfolio of high-margin services (App Store, subscription content, payments, cloud, and advertising). The company designs and develops nearly entire solutions including hardware, operating systems, and software applications. While products are managed through five geographic segments that align with regional distribution dynamics, the business model depends on device replacement cycles, ecosystem lock-in, and growing services revenue to diversify beyond hardware sales.\n\n## Explicit Support:\n- \"designs, manufactures and markets smartphones, personal computers, tablets, wearables and accessories, and sells a variety of related services\"\n- \"designs and develops nearly the entire solution for its products, including the hardware, operating system, numerous software applications and related services\"\n- \"manages its business primarily on a geographic basis\"\n- \"reportable segments consist of the Americas, Europe, Greater China, Japan and Rest of Asia Pacific\"\n\n# SEGMENTS\n## [Segment] Americas\n### Role in Business Model:\nPrimary geographic segment covering North and South America, serving as a major revenue contribution and distinct regional management unit for the integrated hardware and services ecosystem.\n\n### Explicit Support:\n- \"Americas includes both North and South America\"\n\n### Customer Types:\n- consumers | Primary market for smartphones and personal electronics\n- small businesses | Explicitly listed in markets served (\"small... business\")\n- mid-market companies | Explicitly listed in markets served (\"mid-sized business\")\n- large enterprises | Explicitly listed in markets served (\"enterprise\")\n- government agencies | Explicitly listed in markets served (\"government\")\n- educational institutions | Explicitly listed in markets served (\"education\")\n\n### Channels:\n- direct sales | \"directly to customers through its retail and online stores and its direct sales force\" accounting for 40% of net sales\n- online | Company's own digital storefronts and self-service purchasing\n- retail | Physical retail stores operated by the Company\n- resellers | \"third-party cellular network carriers and other resellers\" accounting for 60% of net sales\n\n## [Segment] Europe\n### Role in Business Model:\nGeographic segment covering European countries plus India, Middle East and Africa, managed separately to align with regional distribution partners and unique market dynamics.\n\n### Explicit Support:\n- \"Europe includes European countries, as well as India, the Middle East and Africa\"\n\n### Customer Types:\n- consumers | Standard customer base across all regional segments\n- small businesses | Listed in overall company markets\n- mid-market companies | Listed in overall company markets\n- large enterprises | Listed in overall company markets\n- government agencies | Listed in overall company markets\n- educational institutions | Listed in overall company markets\n\n### Channels:\n- direct sales | Direct retail, online, and sales force presence in major markets\n- online | Digital direct-to-consumer channels\n- retail | Company-operated retail locations\n- resellers | Indirect distribution through carriers and third-party resellers\n\n## [Segment] Greater China\n### Role in Business Model:\nGeographic segment encompassing China mainland, Hong Kong and Taiwan, representing a distinct region with specific market dynamics and customer behaviors.\n\n### Explicit Support:\n- \"Greater China includes China mainland, Hong Kong and Taiwan\"\n\n### Customer Types:\n- consumers | Primary smartphone and device purchasers\n- small businesses | Served markets in the region\n- mid-market companies | Served markets in the region\n- large enterprises | Served markets in the region\n- government agencies | Served markets in the region\n- educational institutions | Served markets in the region\n\n### Channels:\n- direct sales | Direct channels in the region\n- online | Digital storefronts\n- retail | Physical retail presence\n- resellers | Third-party cellular carriers and resellers\n\n## [Segment] Japan\n### Role in Business Model:\nDistinct geographic segment for the Japanese market, managed separately to address specific regional dynamics.\n\n### Explicit Support:\n- \"Japan\" listed as separate reportable segment\n\n### Customer Types:\n- consumers | Device and services market\n- small businesses | Commercial market segment\n- mid-market companies | Commercial market segment\n- large enterprises | Commercial market segment\n- government agencies | Public sector market\n- educational institutions | Institutional market\n\n### Channels:\n- direct sales | Direct sales channels\n- online | Online store\n- retail | Retail stores\n- resellers | Indirect carrier and reseller channels\n\n## [Segment] Rest of Asia Pacific\n### Role in Business Model:\nGeographic segment covering Australia, New Zealand and remaining Asian countries not included in other reportable segments.\n\n### Explicit Support:\n- \"Rest of Asia Pacific includes Australia, New Zealand and those Asian countries not included in the Company's other reportable segments\"\n\n### Customer Types:\n- consumers | End-user market\n- small businesses | Commercial segment\n- mid-market companies | Commercial segment\n- large enterprises | Enterprise segment\n- government agencies | Government market\n- educational institutions | Education market\n\n### Channels:\n- direct sales | Direct distribution\n- online | Online channels\n- retail | Retail locations\n- resellers | Indirect reseller and carrier network\n\n# OFFERINGS\n## [Offering] iPhone\n### Role in Business Model:\nCore smartphone franchise and primary revenue engine, serving as the central ecosystem hub with recurring replacement cycles and tight integration with complementary services and accessories.\n\n### Explicit Support:\n- \"iPhone® is the Company's line of smartphones based on its iOS operating system\"\n- \"iPhone line includes iPhone 17 Pro, iPhone Air™, iPhone 17, iPhone 16 and iPhone 16e\"\n\n### Segment Anchors:\n- Americas | Sold through all geographic segments as flagship product\n- Europe | Sold through all geographic segments\n- Greater China | Sold through all geographic segments\n- Japan | Sold through all geographic segments\n- Rest of Asia Pacific | Sold through all geographic segments\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- iPhone Pro | Premium professional tier normalized from \"iPhone 17 Pro\" and similar Pro variants representing high-end market segment\n- iPhone Standard | Mainstream tier normalized from \"iPhone 17\" and \"iPhone 16\" representing standard flagship models\n- iPhone Entry | Entry-level tier normalized from \"iPhone 16e\" representing accessible price point variants\n\n### Channels:\n- none | Uses segment-level distribution channels (direct and indirect)\n\n### Revenue Models:\n- hardware sales | Primary monetization through device sales transactions\n\n## [Offering] Mac\n### Role in Business Model:\nPersonal computer franchise serving productivity and creative professional markets, differentiated by proprietary integration of hardware and macOS operating system.\n\n### Explicit Support:\n- \"Mac® is the Company's line of personal computers based on its macOS® operating system\"\n- \"Mac line includes laptops MacBook Air® and MacBook Pro®, as well as desktops iMac®, Mac mini®, Mac Studio® and Mac Pro®\"\n\n### Segment Anchors:\n- Americas | Available across all geographic segments\n- Europe | Available across all geographic segments\n- Greater China | Available across all geographic segments\n- Japan | Available across all geographic segments\n- Rest of Asia Pacific | Available across all geographic segments\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- MacBook | Laptop form factor family including MacBook Air and MacBook Pro variants\n- Mac Desktop | Desktop form factor family including iMac, Mac mini, Mac Studio, and Mac Pro\n\n### Channels:\n- none | Uses segment-level distribution channels\n\n### Revenue Models:\n- hardware sales | Revenue from computer device sales\n\n## [Offering] iPad\n### Role in Business Model:\nMultipurpose tablet franchise bridging smartphone and PC use cases, serving education, enterprise, and consumer markets with distinct form factors and price tiers.\n\n### Explicit Support:\n- \"iPad® is the Company's line of multipurpose tablets based on its iPadOS® operating system\"\n- \"iPad line includes iPad Pro®, iPad Air®, iPad and iPad mini®\"\n\n### Segment Anchors:\n- Americas | Distributed through all segments\n- Europe | Distributed through all segments\n- Greater China | Distributed through all segments\n- Japan | Distributed through all segments\n- Rest of Asia Pacific | Distributed through all segments\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- iPad Pro | Professional tablet tier with advanced capabilities\n- iPad Air | Mid-tier tablet offering\n- iPad | Standard tablet offering\n- iPad mini | Compact form factor tablet\n\n### Channels:\n- none | Uses segment-level distribution channels\n\n### Revenue Models:\n- hardware sales | Revenue from tablet device sales\n\n## [Offering] Wearables\n### Role in Business Model:\nGrowing device franchise extending the ecosystem beyond traditional computing to health, audio, and spatial computing, creating additional touchpoints for services and accessories.\n\n### Explicit Support:\n- \"Wearables includes smartwatches, wireless headphones and spatial computers\"\n- \"line of smartwatches... includes Apple Watch® Series 11, Apple Watch SE® 3 and Apple Watch Ultra® 3\"\n- \"line of wireless headphones includes AirPods®, AirPods Pro®, AirPods Max® and Beats® products\"\n- \"Apple Vision Pro™ is the Company's spatial computer\"\n\n### Segment Anchors:\n- Americas | Available across all geographic segments\n- Europe | Available across all geographic segments\n- Greater China | Available across all geographic segments\n- Japan | Available across all geographic segments\n- Rest of Asia Pacific | Available across all geographic segments\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- Apple Watch | Smartwatch family based on watchOS including Series, SE, and Ultra variants\n- AirPods and Beats | Wireless headphone family including AirPods, AirPods Pro, AirPods Max, and Beats products\n- Apple Vision Pro | Spatial computer based on visionOS\n\n### Channels:\n- none | Uses segment-level distribution channels\n\n### Revenue Models:\n- hardware sales | Revenue from wearable device sales\n\n## [Offering] Home Products\n### Role in Business Model:\nSmart home and media streaming devices extending ecosystem presence into living rooms and home automation environments.\n\n### Explicit Support:\n- \"Home includes Apple TV 4K®... and HomePod® and HomePod mini®\"\n\n### Segment Anchors:\n- Americas | Sold through all geographic segments\n- Europe | Sold through all geographic segments\n- Greater China | Sold through all geographic segments\n- Japan | Sold through all geographic segments\n- Rest of Asia Pacific | Sold through all geographic segments\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- Apple TV | Media streaming and gaming device based on tvOS\n- HomePod | High-fidelity wireless smart speaker family including HomePod mini\n\n### Channels:\n- none | Uses segment-level distribution channels\n\n### Revenue Models:\n- hardware sales | Revenue from home device sales\n\n## [Offering] Accessories\n### Role in Business Model:\nComplementary hardware products including both Apple-branded and third-party accessories that enhance core device functionality and generate additional revenue per user.\n\n### Explicit Support:\n- \"Accessories includes Apple-branded and third-party accessories\"\n\n### Segment Anchors:\n- Americas | Available across all segments\n- Europe | Available across all segments\n- Greater China | Available across all segments\n- Japan | Available across all segments\n- Rest of Asia Pacific | Available across all segments\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- none\n\n### Channels:\n- none | Uses segment-level distribution channels\n\n### Revenue Models:\n- hardware sales | Revenue from accessory product sales\n\n## [Offering] AppleCare\n### Role in Business Model:\nFee-based service and support portfolio providing technical support, repair coverage, and extended protection, generating recurring service revenue and enhancing customer retention.\n\n### Explicit Support:\n- \"portfolio of fee-based service and support products under the AppleCare® brand\"\n- \"provide priority access to Apple technical support, access to the global Apple authorized service network for repair and replacement services\"\n\n### Segment Anchors:\n- Americas | Available across all geographic segments\n- Europe | Available across all geographic segments\n- Greater China | Available across all geographic segments\n- Japan | Available across all geographic segments\n- Rest of Asia Pacific | Available across all geographic segments\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- none\n\n### Channels:\n- none | Sold through same channels as hardware and services platforms\n\n### Revenue Models:\n- service fees | \"fee-based service and support products\"\n\n## [Offering] Cloud Services\n### Role in Business Model:\nData synchronization and storage infrastructure that binds multiple Apple devices together, creating switching costs and recurring revenue through ongoing content storage and availability.\n\n### Explicit Support:\n- \"cloud services store and keep customers' content up-to-date and available across multiple Apple devices and Windows personal computers\"\n\n### Segment Anchors:\n- Americas | Available globally across all segments\n- Europe | Available globally across all segments\n- Greater China | Available globally across all segments\n- Japan | Available globally across all segments\n- Rest of Asia Pacific | Available globally across all segments\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- none\n\n### Channels:\n- none | Integrated with device sales and online platforms\n\n### Revenue Models:\n- subscription | Ongoing service for storage and synchronization (implied by cloud services nature and integration with ecosystem)\n\n## [Offering] Advertising Services\n### Role in Business Model:\nPlatform business generating revenue through third-party licensing and proprietary advertising platforms, monetizing the installed base of devices and user engagement.\n\n### Explicit Support:\n- \"advertising services include third-party licensing arrangements and the Company's own advertising platforms\"\n\n### Segment Anchors:\n- Americas | Delivered across all geographic markets\n- Europe | Delivered across all geographic markets\n- Greater China | Delivered across all geographic markets\n- Japan | Delivered across all geographic markets\n- Rest of Asia Pacific | Delivered across all geographic markets\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- none\n\n### Channels:\n- none | Delivered through platforms and device integration\n\n### Revenue Models:\n- advertising | \"Company's own advertising platforms\"\n- licensing | \"third-party licensing arrangements\"\n\n## [Offering] App Store\n### Role in Business Model:\nDigital distribution platform serving as a critical control point for software distribution, enabling discovery and download of applications while generating platform revenue.\n\n### Explicit Support:\n- \"platforms, including the App Store®, that allow customers to discover and download applications and digital content\"\n\n### Segment Anchors:\n- Americas | Global platform available in all segments\n- Europe | Global platform available in all segments\n- Greater China | Global platform available in all segments\n- Japan | Global platform available in all segments\n- Rest of Asia Pacific | Global platform available in all segments\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- none\n\n### Channels:\n- none | Digital platform accessible through devices\n\n### Revenue Models:\n- transaction fees | Fees generated from app purchases, in-app transactions, and digital content sales (implied by platform nature as marketplace for digital goods)\n\n## [Offering] Subscription Content Services\n### Role in Business Model:\nPortfolio of subscription-based entertainment and media services providing recurring revenue, increasing services mix, and deepening ecosystem engagement.\n\n### Explicit Support:\n- \"subscription-based services, including Apple Arcade®, a game service; Apple Fitness+®, a personalized fitness service; Apple Music®, which offers users a curated listening experience with on-demand radio stations; Apple News+®, a news and magazine service; and Apple TV®, which offers exclusive original content and live sports\"\n\n### Segment Anchors:\n- Americas | Available across all geographic segments\n- Europe | Available across all geographic segments\n- Greater China | Available across all geographic segments\n- Japan | Available across all geographic segments\n- Rest of Asia Pacific | Available across all geographic segments\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- Apple Arcade | Game subscription service\n- Apple Fitness+ | Personalized fitness subscription service\n- Apple Music | Music streaming and radio subscription service\n- Apple News+ | News and magazine subscription service\n- Apple TV | Video content subscription service with original content and live sports\n\n### Channels:\n- none | Distributed through App Store and device platforms\n\n### Revenue Models:\n- subscription | Explicitly stated as \"subscription-based services\"\n\n## [Offering] Payment Services\n### Role in Business Model:\nFinancial services extending the ecosystem into payments and credit, generating transaction-based revenue and increasing daily utility of devices.\n\n### Explicit Support:\n- \"payment services, including Apple Card®, a co-branded credit card, and Apple Pay®, a cashless payment service\"\n\n### Segment Anchors:\n- Americas | Available in applicable markets across segments\n- Europe | Available in applicable markets across segments\n- Greater China | Available in applicable markets across segments\n- Japan | Available in applicable markets across segments\n- Rest of Asia Pacific | Available in applicable markets across segments\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- Apple Card | Co-branded credit card product\n- Apple Pay | Cashless payment service\n\n### Channels:\n- none | Integrated into device operating systems and Wallet app\n\n### Revenue Models:\n- transaction fees | Payment processing and credit card services generate fees per transaction (implied by \"payment services\" and \"cashless payment service\" nature)\n\n# CORPORATE SCOPE\n## Operating Geographies:\n- Worldwide | Company operates through five geographic reportable segments (Americas, Europe, Greater China, Japan, and Rest of Asia Pacific) covering global markets, with products and services available in major markets worldwide\n\n## Key Partners:\n- none | No specific partner companies identified as strategic partners in the filing; distribution occurs through unnamed third-party cellular network carriers and resellers",
+  "augmented_memo": "# ANALYTICAL FRAME\n## Summary:\nApple operates an integrated ecosystem business model centered on proprietary hardware devices (iPhone, Mac, iPad, Wearables, Home, and Accessories) tightly coupled with a portfolio of high-margin services (App Store, subscription content, payments, cloud, advertising, and AppleCare). The company designs and develops nearly entire solutions including hardware, operating systems, and software applications. While products are managed through five geographic segments that align with regional distribution dynamics, the business model depends on device replacement cycles, ecosystem lock-in across an installed base of active devices, and growing services revenue to diversify beyond hardware sales.\n\n## Explicit Support:\n- \"designs, manufactures and markets smartphones, personal computers, tablets, wearables and accessories, and sells a variety of related services\"\n- \"designs and develops nearly the entire solution for its products, including the hardware, operating system, numerous software applications and related services\"\n- \"manages its business primarily on a geographic basis\"\n- \"reportable segments consist of the Americas, Europe, Greater China, Japan and Rest of Asia Pacific\"\n\n# SEGMENTS\n## [Segment] Americas\n### Role in Business Model:\nPrimary geographic segment covering North and South America, serving as a major revenue contribution and distinct regional management unit for the integrated hardware and services ecosystem.\n\n### Explicit Support:\n- \"Americas includes both North and South America\"\n\n### Customer Types:\n- consumers | Primary market for smartphones and personal electronics\n- small businesses | Explicitly listed in markets served (\"small... business\")\n- mid-market companies | Explicitly listed in markets served (\"mid-sized business\")\n- large enterprises | Explicitly listed in markets served (\"enterprise\")\n- government agencies | Explicitly listed in markets served (\"government\")\n- educational institutions | Explicitly listed in markets served (\"education\")\n\n### Channels:\n- direct sales | \"directly to customers through its retail and online stores and its direct sales force\" accounting for 40% of net sales\n- online | Company's own digital storefronts and self-service purchasing\n- retail | Physical retail stores operated by the Company\n- resellers | \"third-party cellular network carriers and other resellers\" accounting for 60% of net sales\n\n## [Segment] Europe\n### Role in Business Model:\nGeographic segment covering European countries plus India, Middle East and Africa, managed separately to align with regional distribution partners and unique market dynamics.\n\n### Explicit Support:\n- \"Europe includes European countries, as well as India, the Middle East and Africa\"\n\n### Customer Types:\n- consumers | Standard customer base across all regional segments\n- small businesses | Listed in overall company markets\n- mid-market companies | Listed in overall company markets\n- large enterprises | Listed in overall company markets\n- government agencies | Listed in overall company markets\n- educational institutions | Listed in overall company markets\n\n### Channels:\n- direct sales | Direct retail, online, and sales force presence in major markets\n- online | Digital direct-to-consumer channels\n- retail | Company-operated retail locations\n- resellers | Indirect distribution through carriers and third-party resellers\n\n## [Segment] Greater China\n### Role in Business Model:\nGeographic segment encompassing China mainland, Hong Kong and Taiwan, representing a distinct region with specific market dynamics and customer behaviors.\n\n### Explicit Support:\n- \"Greater China includes China mainland, Hong Kong and Taiwan\"\n\n### Customer Types:\n- consumers | Primary smartphone and device purchasers\n- small businesses | Served markets in the region\n- mid-market companies | Served markets in the region\n- large enterprises | Served markets in the region\n- government agencies | Served markets in the region\n- educational institutions | Served markets in the region\n\n### Channels:\n- direct sales | Direct channels in the region\n- online | Digital storefronts\n- retail | Physical retail presence\n- resellers | Third-party cellular carriers and resellers\n\n## [Segment] Japan\n### Role in Business Model:\nDistinct geographic segment for the Japanese market, managed separately to address specific regional dynamics.\n\n### Explicit Support:\n- \"Japan\" listed as separate reportable segment\n\n### Customer Types:\n- consumers | Device and services market\n- small businesses | Commercial market segment\n- mid-market companies | Commercial market segment\n- large enterprises | Commercial market segment\n- government agencies | Public sector market\n- educational institutions | Institutional market\n\n### Channels:\n- direct sales | Direct sales channels\n- online | Online store\n- retail | Retail stores\n- resellers | Indirect carrier and reseller channels\n\n## [Segment] Rest of Asia Pacific\n### Role in Business Model:\nGeographic segment covering Australia, New Zealand and remaining Asian countries not included in other reportable segments.\n\n### Explicit Support:\n- \"Rest of Asia Pacific includes Australia, New Zealand and those Asian countries not included in the Company's other reportable segments\"\n\n### Customer Types:\n- consumers | End-user market\n- small businesses | Commercial segment\n- mid-market companies | Commercial segment\n- large enterprises | Enterprise segment\n- government agencies | Government market\n- educational institutions | Education market\n\n### Channels:\n- direct sales | Direct distribution\n- online | Online channels\n- retail | Retail locations\n- resellers | Indirect reseller and carrier network\n\n# OFFERINGS\n## [Offering] iPhone\n### Role in Business Model:\nCore smartphone franchise and primary revenue engine, serving as the central ecosystem hub with recurring replacement cycles and tight integration with complementary services and accessories. The line spans premium professional tiers, thin-and-light designs, standard flagships, and accessible entry points.\n\n### Explicit Support:\n- \"iPhone® is the Company's line of smartphones based on its iOS operating system\"\n- \"iPhone line includes iPhone 17 Pro, iPhone Air™, iPhone 17, iPhone 16 and iPhone 16e\"\n\n### Segment Anchors:\n- Americas | Sold through all geographic segments as flagship product\n- Europe | Sold through all geographic segments\n- Greater China | Sold through all geographic segments\n- Japan | Sold through all geographic segments\n- Rest of Asia Pacific | Sold through all geographic segments\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- iPhone Pro | Premium professional tier normalized from \"iPhone 17 Pro\" and similar Pro variants representing the high-end market segment with advanced imaging and processing capabilities\n- iPhone Air | Distinct thin-and-light form factor tier normalized from \"iPhone Air\" representing a mid-premium positioning focused on portability and design\n- iPhone Standard | Mainstream flagship tier normalized from \"iPhone 17\" and \"iPhone 16\" representing the standard annual flagship models\n- iPhone Entry | Entry-level tier normalized from \"iPhone 16e\" representing accessible price point variants for broader market reach\n\n### Channels:\n- none | Uses segment-level distribution channels (direct and indirect)\n\n### Revenue Models:\n- hardware sales | Primary monetization through device sales transactions\n\n## [Offering] Mac\n### Role in Business Model:\nPersonal computer franchise serving productivity and creative professional markets, differentiated by proprietary integration of hardware and macOS operating system. The lineup spans portable laptops and stationary desktops with distinct performance tiers.\n\n### Explicit Support:\n- \"Mac® is the Company's line of personal computers based on its macOS® operating system\"\n- \"Mac line includes laptops MacBook Air® and MacBook Pro®, as well as desktops iMac®, Mac mini®, Mac Studio® and Mac Pro®\"\n\n### Segment Anchors:\n- Americas | Available across all geographic segments\n- Europe | Available across all geographic segments\n- Greater China | Available across all geographic segments\n- Japan | Available across all geographic segments\n- Rest of Asia Pacific | Available across all geographic segments\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- MacBook Air | Thin-and-light laptop line for mainstream portability and battery life\n- MacBook Pro | Professional laptop line for high-performance computing and creative workflows\n- iMac | All-in-one desktop computer with integrated display\n- Mac mini | Compact desktop computer without integrated display\n- Mac Studio | High-performance modular desktop for professional workflows\n- Mac Pro | Workstation-class desktop for maximum expandability and professional applications\n\n### Channels:\n- none | Uses segment-level distribution channels\n\n### Revenue Models:\n- hardware sales | Revenue from computer device sales\n\n## [Offering] iPad\n### Role in Business Model:\nMultipurpose tablet franchise bridging smartphone and PC use cases, serving education, enterprise, and consumer markets with distinct form factors and price tiers ranging from professional productivity to portable media consumption.\n\n### Explicit Support:\n- \"iPad® is the Company's line of multipurpose tablets based on its iPadOS® operating system\"\n- \"iPad line includes iPad Pro®, iPad Air®, iPad and iPad mini®\"\n\n### Segment Anchors:\n- Americas | Distributed through all segments\n- Europe | Distributed through all segments\n- Greater China | Distributed through all segments\n- Japan | Distributed through all segments\n- Rest of Asia Pacific | Distributed through all segments\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- iPad Pro | Professional tablet tier with advanced display technology and processing for creative and business workflows\n- iPad Air | Mid-tier tablet offering balancing performance and portability\n- iPad | Standard tablet offering for mainstream use cases\n- iPad mini | Compact form factor tablet emphasizing portability\n\n### Channels:\n- none | Uses segment-level distribution channels\n\n### Revenue Models:\n- hardware sales | Revenue from tablet device sales\n\n## [Offering] Wearables\n### Role in Business Model:\nGrowing device franchise extending the ecosystem beyond traditional computing to health monitoring, audio entertainment, and spatial computing, creating additional touchpoints for services and accessories with distinct monetization through premium tiers and specialized use cases.\n\n### Explicit Support:\n- \"Wearables includes smartwatches, wireless headphones and spatial computers\"\n- \"line of smartwatches... includes Apple Watch® Series 11, Apple Watch SE® 3 and Apple Watch Ultra® 3\"\n- \"line of wireless headphones includes AirPods®, AirPods Pro®, AirPods Max® and Beats® products\"\n- \"Apple Vision Pro™ is the Company's spatial computer\"\n\n### Segment Anchors:\n- Americas | Available across all geographic segments\n- Europe | Available across all geographic segments\n- Greater China | Available across all geographic segments\n- Japan | Available across all geographic segments\n- Rest of Asia Pacific | Available across all geographic segments\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- Apple Watch Series | Mainstream smartwatch tier normalized from \"Series 11\" and similar annual releases, representing the standard feature set and design\n- Apple Watch SE | Entry-level smartwatch tier normalized from \"SE 3\" offering core health and connectivity features at accessible pricing\n- Apple Watch Ultra | Premium professional smartwatch tier normalized from \"Ultra 3\" designed for extreme environments, sports, and professional use cases\n- AirPods | Standard wireless earbuds for mainstream audio consumption\n- AirPods Pro | Premium wireless earbuds with active noise cancellation and advanced audio features\n- AirPods Max | Over-ear premium wireless headphones for high-fidelity audio\n- Beats Products | Distinct audio brand offering wireless headphones and earbuds with separate industrial design and marketing positioning\n- Apple Vision Pro | Spatial computer based on visionOS for immersive computing and media consumption\n\n### Channels:\n- none | Uses segment-level distribution channels\n\n### Revenue Models:\n- hardware sales | Revenue from wearable device sales\n\n## [Offering] Home Products\n### Role in Business Model:\nSmart home and media streaming devices extending ecosystem presence into living rooms and home automation environments, serving as persistent nodes for services consumption and home automation control.\n\n### Explicit Support:\n- \"Home includes Apple TV 4K®... and HomePod® and HomePod mini®\"\n\n### Segment Anchors:\n- Americas | Sold through all geographic segments\n- Europe | Sold through all geographic segments\n- Greater China | Sold through all geographic segments\n- Japan | Sold through all geographic segments\n- Rest of Asia Pacific | Sold through all geographic segments\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- Apple TV | Media streaming and gaming device based on tvOS for television-based content consumption and interactive entertainment\n- HomePod | High-fidelity wireless smart speaker for premium audio and home automation hub functionality\n- HomePod mini | Compact wireless smart speaker offering spatial audio and smart home control at accessible pricing\n\n### Channels:\n- none | Uses segment-level distribution channels\n\n### Revenue Models:\n- hardware sales | Revenue from home device sales\n\n## [Offering] Accessories\n### Role in Business Model:\nComplementary hardware products including both Apple-branded and third-party accessories that enhance core device functionality, expand use cases, and generate additional revenue per user through attach and replacement cycles.\n\n### Explicit Support:\n- \"Accessories includes Apple-branded and third-party accessories\"\n\n### Segment Anchors:\n- Americas | Available across all segments\n- Europe | Available across all segments\n- Greater China | Available across all segments\n- Japan | Available across all segments\n- Rest of Asia Pacific | Available across all segments\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- none\n\n### Channels:\n- none | Uses segment-level distribution channels\n\n### Revenue Models:\n- hardware sales | Revenue from accessory product sales\n\n## [Offering] AppleCare\n### Role in Business Model:\nFee-based service and support portfolio providing technical support, repair coverage, and extended protection plans, generating recurring service revenue and enhancing customer retention through priority access to support networks and coverage for accidental damage or theft.\n\n### Explicit Support:\n- \"portfolio of fee-based service and support products under the AppleCare® brand\"\n- \"provide priority access to Apple technical support, access to the global Apple authorized service network for repair and replacement services, and in many cases additional coverage for instances of accidental damage or theft and loss\"\n\n### Segment Anchors:\n- Americas | Available across all geographic segments\n- Europe | Available across all geographic segments\n- Greater China | Available across all geographic segments\n- Japan | Available across all geographic segments\n- Rest of Asia Pacific | Available across all geographic segments\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- none\n\n### Channels:\n- none | Sold through same channels as hardware and services platforms\n\n### Revenue Models:\n- service fees | \"fee-based service and support products\"\n\n## [Offering] Cloud Services\n### Role in Business Model:\nData synchronization and storage infrastructure that binds multiple Apple devices together, creating switching costs and recurring revenue through ongoing content storage, backup, and availability across device ecosystems including Windows personal computers.\n\n### Explicit Support:\n- \"cloud services store and keep customers' content up-to-date and available across multiple Apple devices and Windows personal computers\"\n\n### Segment Anchors:\n- Americas | Available globally across all segments\n- Europe | Available globally across all segments\n- Greater China | Available globally across all segments\n- Japan | Available globally across all segments\n- Rest of Asia Pacific | Available globally across all segments\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- none\n\n### Channels:\n- none | Integrated with device sales and online platforms\n\n### Revenue Models:\n- subscription | Ongoing service for storage and synchronization (implied by cloud services nature and integration with ecosystem)\n\n## [Offering] Advertising Services\n### Role in Business Model:\nPlatform business generating revenue through proprietary advertising platforms and third-party licensing arrangements, monetizing the installed base of devices and user engagement through search and display advertising inventory.\n\n### Explicit Support:\n- \"advertising services include third-party licensing arrangements and the Company's own advertising platforms\"\n\n### Segment Anchors:\n- Americas | Delivered across all geographic markets\n- Europe | Delivered across all geographic markets\n- Greater China | Delivered across all geographic markets\n- Japan | Delivered across all geographic markets\n- Rest of Asia Pacific | Delivered across all geographic markets\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- none\n\n### Channels:\n- none | Delivered through platforms and device integration\n\n### Revenue Models:\n- advertising | \"Company's own advertising platforms\"\n- licensing | \"third-party licensing arrangements\"\n\n## [Offering] App Store\n### Role in Business Model:\nDigital distribution platform serving as a critical control point for software distribution, enabling discovery and download of applications and digital content such as books, music, video, games and podcasts while generating platform revenue from transactions.\n\n### Explicit Support:\n- \"platforms, including the App Store®, that allow customers to discover and download applications and digital content, such as books, music, video, games and podcasts\"\n\n### Segment Anchors:\n- Americas | Global platform available in all segments\n- Europe | Global platform available in all segments\n- Greater China | Global platform available in all segments\n- Japan | Global platform available in all segments\n- Rest of Asia Pacific | Global platform available in all segments\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- none\n\n### Channels:\n- none | Digital platform accessible through devices\n\n### Revenue Models:\n- transaction fees | Fees generated from app purchases, in-app transactions, and digital content sales (implied by platform nature as marketplace for digital goods)\n\n## [Offering] Subscription Content Services\n### Role in Business Model:\nPortfolio of subscription-based entertainment, media, and lifestyle services providing recurring revenue, increasing services mix, and deepening ecosystem engagement through exclusive content and specialized experiences.\n\n### Explicit Support:\n- \"subscription-based services, including Apple Arcade®, a game service; Apple Fitness+®, a personalized fitness service; Apple Music®, which offers users a curated listening experience with on-demand radio stations; Apple News+®, a news and magazine service; and Apple TV®, which offers exclusive original content and live sports\"\n\n### Segment Anchors:\n- Americas | Available across all geographic segments\n- Europe | Available across all geographic segments\n- Greater China | Available across all geographic segments\n- Japan | Available across all geographic segments\n- Rest of Asia Pacific | Available across all geographic segments\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- Apple Arcade | Game subscription service offering access to a curated library of games\n- Apple Fitness+ | Personalized fitness subscription service with guided workouts and metrics integration\n- Apple Music | Music streaming and radio subscription service offering curated listening experiences and on-demand radio stations\n- Apple News+ | News and magazine subscription service providing access to publications and premium journalism\n- Apple TV | Video content subscription service offering exclusive original content and live sports programming\n\n### Channels:\n- none | Distributed through App Store and device platforms\n\n### Revenue Models:\n- subscription | Explicitly stated as \"subscription-based services\"\n\n## [Offering] Payment Services\n### Role in Business Model:\nFinancial services extending the ecosystem into payments and credit, generating transaction-based revenue and increasing daily utility of devices through cashless payment infrastructure and co-branded credit products.\n\n### Explicit Support:\n- \"payment services, including Apple Card®, a co-branded credit card, and Apple Pay®, a cashless payment service\"\n\n### Segment Anchors:\n- Americas | Available in applicable markets across segments\n- Europe | Available in applicable markets across segments\n- Greater China | Available in applicable markets across segments\n- Japan | Available in applicable markets across segments\n- Rest of Asia Pacific | Available in applicable markets across segments\n\n### Parent Offering:\n- none\n\n### Child Offerings:\n- Apple Card | Co-branded credit card product offering integrated financial services\n- Apple Pay | Cashless payment service for secure transaction processing across devices\n\n### Channels:\n- none | Integrated into device operating systems and Wallet app\n\n### Revenue Models:\n- transaction fees | Payment processing and credit card services generate fees per transaction (implied by \"payment services\" and \"cashless payment service\" nature)\n\n# CORPORATE SCOPE\n## Operating Geographies:\n- Worldwide | Company operates through five geographic reportable segments (Americas, Europe, Greater China, Japan, and Rest of Asia Pacific) covering global markets, with products and services available in major markets worldwide\n\n## Key Partners:\n- none | No specific partner companies identified as strategic partners in the filing; distribution occurs through unnamed third-party cellular network carriers and resellers",
+  "compiled_graph_extraction": {
+    "extraction_notes": "Compiled from Apple analyst memo covering 5 geographic segments and 12 primary offering families with nested child offerings. Revenue models mapped to parent offerings where explicitly specified. Child offerings inherit segment presence through parent hierarchy without direct segment edges per compilation rules. Note: 'Apple TV' appears as both hardware (under Home Products) and service (under Subscription Content Services); 'iPad' appears as both parent family and child standard tier.",
+    "triples": [
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Americas",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Europe",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Greater China",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Japan",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Rest of Asia Pacific",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "mid-market companies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "mid-market companies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "mid-market companies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "mid-market companies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "mid-market companies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPhone",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPhone",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPhone",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPhone",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPhone",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Mac",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Mac",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Mac",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Mac",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Mac",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPad",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPad",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPad",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPad",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPad",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Wearables",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Wearables",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Wearables",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Wearables",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Wearables",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Home Products",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Home Products",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Home Products",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Home Products",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Home Products",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Accessories",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Accessories",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Accessories",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Accessories",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Accessories",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "AppleCare",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "AppleCare",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "AppleCare",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "AppleCare",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "AppleCare",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Cloud Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Cloud Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Cloud Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Cloud Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Cloud Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Advertising Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Advertising Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Advertising Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Advertising Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Advertising Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "App Store",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "App Store",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "App Store",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "App Store",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "App Store",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Subscription Content Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Subscription Content Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Subscription Content Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Subscription Content Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Subscription Content Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Payment Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Payment Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Payment Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Payment Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Payment Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPhone Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPhone Air",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPhone Standard",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPhone Entry",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "MacBook Air",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "MacBook Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iMac",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Mac mini",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Mac Studio",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Mac Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPad Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPad Air",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPad",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPad mini",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Watch Series",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Watch SE",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Watch Ultra",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "AirPods",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "AirPods Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "AirPods Max",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Beats Products",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Vision Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Home Products",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple TV",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Home Products",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "HomePod",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Home Products",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "HomePod mini",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Subscription Content Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Arcade",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Subscription Content Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Fitness+",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Subscription Content Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Music",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Subscription Content Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple News+",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Payment Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Card",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Payment Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Pay",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Wearables",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Home Products",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Accessories",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "AppleCare",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Cloud Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Advertising Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Advertising Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "App Store",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "transaction fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Subscription Content Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Payment Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "transaction fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "OPERATES_IN",
+        "object": "Worldwide",
+        "object_type": "Place"
+      }
+    ]
+  },
+  "final_extraction": {
+    "extraction_notes": "Corrected naming collisions identified in analyst memo: (1) Renamed child iPad node to 'iPad Standard' to resolve self-reference with parent iPad offering, matching the tier normalization pattern used for iPhone; (2) Distinguished dual-use 'Apple TV' label by renaming hardware child to 'Apple TV Device' and service child to 'Apple TV Content', preserving both material offerings while eliminating ambiguous node identity. Removed no other triples as structure is otherwise defensible from memo.",
+    "triples": [
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Americas",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Europe",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Greater China",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Japan",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Rest of Asia Pacific",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "mid-market companies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "mid-market companies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "mid-market companies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "mid-market companies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "mid-market companies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "educational institutions",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "resellers",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPhone",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPhone",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPhone",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPhone",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPhone",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Mac",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Mac",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Mac",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Mac",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Mac",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPad",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPad",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPad",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPad",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "iPad",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Wearables",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Wearables",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Wearables",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Wearables",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Wearables",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Home Products",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Home Products",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Home Products",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Home Products",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Home Products",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Accessories",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Accessories",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Accessories",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Accessories",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Accessories",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "AppleCare",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "AppleCare",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "AppleCare",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "AppleCare",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "AppleCare",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Cloud Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Cloud Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Cloud Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Cloud Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Cloud Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Advertising Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Advertising Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Advertising Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Advertising Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Advertising Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "App Store",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "App Store",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "App Store",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "App Store",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "App Store",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Subscription Content Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Subscription Content Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Subscription Content Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Subscription Content Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Subscription Content Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Americas",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Payment Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Europe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Payment Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Greater China",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Payment Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Japan",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Payment Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Rest of Asia Pacific",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Payment Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPhone Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPhone Air",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPhone Standard",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPhone Entry",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "MacBook Air",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "MacBook Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iMac",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Mac mini",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Mac Studio",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Mac Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPad Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPad Air",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPad Standard",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPad",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "iPad mini",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Watch Series",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Watch SE",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Watch Ultra",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "AirPods",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "AirPods Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "AirPods Max",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Beats Products",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Wearables",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Vision Pro",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Home Products",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple TV Device",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Home Products",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "HomePod",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Home Products",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "HomePod mini",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Subscription Content Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Arcade",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Subscription Content Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Fitness+",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Subscription Content Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Music",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Subscription Content Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple News+",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Subscription Content Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple TV Content",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Payment Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Card",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Payment Services",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Apple Pay",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "iPhone",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Mac",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Wearables",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Home Products",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Accessories",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "AppleCare",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Cloud Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Advertising Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Advertising Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "App Store",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "transaction fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Subscription Content Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Payment Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "transaction fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Apple",
+        "subject_type": "Company",
+        "relation": "OPERATES_IN",
+        "object": "Worldwide",
+        "object_type": "Place"
+      }
+    ]
+  }
+}

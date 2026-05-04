@@ -1,0 +1,159 @@
+{
+  "triple_count": 22,
+  "triples": [
+    {
+      "subject": "Palantir",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Government",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Palantir",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Commercial",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Government",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Palantir Gotham",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Government",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Palantir Foundry",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Government",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Palantir Apollo",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Government",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Palantir AIP",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Palantir Foundry",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Palantir Apollo",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Palantir AIP",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Developer Tier",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Palantir Foundry",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Developer Tier",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Government",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "government agencies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "developers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "financial services firms",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "healthcare organizations",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "manufacturers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Government",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Palantir",
+      "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "Worldwide",
+      "object_type": "Place"
+    },
+    {
+      "subject": "Palantir",
+      "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "United States",
+      "object_type": "Place"
+    },
+    {
+      "subject": "Palantir",
+      "subject_type": "Company",
+      "relation": "PARTNERS_WITH",
+      "object": "Fujitsu Limited",
+      "object_type": "Company"
+    }
+  ]
+}

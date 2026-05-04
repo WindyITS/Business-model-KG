@@ -1,0 +1,378 @@
+{
+  "triples": [
+    {
+      "subject": "Alphabet",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Other Bets",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Google",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Google Services",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Google",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Google Cloud",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Alphabet",
+      "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "Worldwide",
+      "object_type": "Place"
+    },
+    {
+      "subject": "Google",
+      "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "Worldwide",
+      "object_type": "Place"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Google Search",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "YouTube",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Android",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Chrome",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Chrome OS",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Pixel devices",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Gmail",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Google Drive",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Google Gemini",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Google Maps",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Google Photos",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Google Play",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Google One",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Demand Gen",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Performance Max",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Product Studio",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "YouTube",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "YouTube TV",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "YouTube",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "YouTube Music",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "YouTube",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "YouTube Premium",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "YouTube",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "NFL Sunday Ticket",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Pixel devices",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Pixel 10 series",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Pixel devices",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Pixel Watch 4",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Google Cloud Platform",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Google Workspace",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "AI-optimized Infrastructure",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Vertex AI",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Cybersecurity solutions",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Data and Analytics platform",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Gemini Enterprise",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Gemini for Google Workspace",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Other Bets",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Waymo",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Other Bets",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Isomorphic Labs",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Other Bets",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "X",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Google Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "developers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Google Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Other Bets",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Google Search",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "YouTube",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "YouTube",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Google Play",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "transaction fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Pixel devices",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Google One",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Google Cloud Platform",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "consumption-based",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Google Workspace",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "AI-optimized Infrastructure",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "consumption-based",
+      "object_type": "RevenueModel"
+    }
+  ],
+  "extraction_notes": "Extracted from Alphabet 2025 10-K filing. Google comprises two reporting segments (Google Services, Google Cloud) under Alphabet, plus Other Bets for non-Google businesses. Revenue models explicitly tied to segment descriptions. Customer types inferred from explicit targeting (consumers, developers, enterprises, healthcare). Geography rolled up to Worldwide based on global operations described. Parent-child offering structure preserved for YouTube services, Pixel devices, and Gemini products where explicitly nested in the filing.",
+  "attempts_used": 1,
+  "raw_response": "{\n  \"extraction_notes\": \"Extracted from Alphabet 2025 10-K filing. Google comprises two reporting segments (Google Services, Google Cloud) under Alphabet, plus Other Bets for non-Google businesses. Revenue models explicitly tied to segment descriptions. Customer types inferred from explicit targeting (consumers, developers, enterprises, healthcare). Geography rolled up to Worldwide based on global operations described. Parent-child offering structure preserved for YouTube services, Pixel devices, and Gemini products where explicitly nested in the filing.\",\n  \"triples\": [\n    {\n      \"subject\": \"Alphabet\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"HAS_SEGMENT\",\n      \"object\": \"Other Bets\",\n      \"object_type\": \"BusinessSegment\"\n    },\n    {\n      \"subject\": \"Google\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"HAS_SEGMENT\",\n      \"object\": \"Google Services\",\n      \"object_type\": \"BusinessSegment\"\n    },\n    {\n      \"subject\": \"Google\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"HAS_SEGMENT\",\n      \"object\": \"Google Cloud\",\n      \"object_type\": \"BusinessSegment\"\n    },\n    {\n      \"subject\": \"Alphabet\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"OPERATES_IN\",\n      \"object\": \"Worldwide\",\n      \"object_type\": \"Place\"\n    },\n    {\n      \"subject\": \"Google\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"OPERATES_IN\",\n      \"object\": \"Worldwide\",\n      \"object_type\": \"Place\"\n    },\n    {\n      \"subject\": \"Google Services\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Google Search\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Services\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"YouTube\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Services\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Android\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Services\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Chrome\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Services\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Chrome OS\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Services\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Pixel devices\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Services\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Gmail\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Services\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Google Drive\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Services\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Google Gemini\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Services\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Google Maps\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Services\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Google Photos\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Services\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Google Play\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Services\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Google One\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Services\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Demand Gen\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Services\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Performance Max\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Services\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Product Studio\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"YouTube\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"YouTube TV\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"YouTube\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"YouTube Music\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"YouTube\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"YouTube Premium\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"YouTube\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"NFL Sunday Ticket\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Pixel devices\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Pixel 10 series\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Pixel devices\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Pixel Watch 4\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Cloud\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Google Cloud Platform\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Cloud\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Google Workspace\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Cloud\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"AI-optimized Infrastructure\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Cloud\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Vertex AI\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Cloud\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Cybersecurity solutions\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Cloud\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Data and Analytics platform\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Cloud\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Gemini Enterprise\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Cloud\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Gemini for Google Workspace\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Other Bets\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Waymo\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Other Bets\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Isomorphic Labs\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Other Bets\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"X\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Google Services\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"consumers\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Google Services\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"small businesses\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Google Services\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"large enterprises\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Google Cloud\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"developers\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Google Cloud\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"large enterprises\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Other Bets\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"consumers\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Isomorphic Labs\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"SERVES\",\n      \"object\": \"healthcare organizations\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Google Search\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"advertising\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"YouTube\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"advertising\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"YouTube\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"subscription\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"Google Play\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"transaction fees\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"Pixel devices\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"hardware sales\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"Google One\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"subscription\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"Google Cloud Platform\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"consumption-based\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"Google Workspace\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"subscription\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"AI-optimized Infrastructure\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"consumption-based\",\n      \"object_type\": \"RevenueModel\"\n    }\n  ]\n}"
+}

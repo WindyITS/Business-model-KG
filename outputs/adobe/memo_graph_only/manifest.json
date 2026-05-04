@@ -1,0 +1,10 @@
+{
+  "company_name": "Adobe",
+  "company_slug": "adobe",
+  "pipeline": "memo_graph_only",
+  "latest_available": true,
+  "latest_run_dir": "outputs/adobe/memo_graph_only/latest",
+  "available_run_tokens": [],
+  "failed_run_tokens": [],
+  "updated_at": "2026-04-30T13:47:25.406631+00:00"
+}

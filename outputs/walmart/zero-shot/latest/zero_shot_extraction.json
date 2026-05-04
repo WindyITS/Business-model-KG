@@ -1,0 +1,294 @@
+{
+  "triples": [
+    {
+      "subject": "Walmart Inc.",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Walmart U.S.",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Walmart Inc.",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Walmart International",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Walmart Inc.",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Sam's Club U.S.",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Walmart Inc.",
+      "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "North America",
+      "object_type": "Place"
+    },
+    {
+      "subject": "Walmart Inc.",
+      "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "Latin America",
+      "object_type": "Place"
+    },
+    {
+      "subject": "Walmart Inc.",
+      "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "Asia",
+      "object_type": "Place"
+    },
+    {
+      "subject": "Walmart Inc.",
+      "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "Africa",
+      "object_type": "Place"
+    },
+    {
+      "subject": "Walmart U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Walmart U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Walmart U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Walmart U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Walmart+",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Walmart U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "walmart.com",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Walmart U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "advertising solutions",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Walmart U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "marketplace",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Walmart U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "fuel",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Walmart U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "financial services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Walmart International",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Walmart International",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Walmart International",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Walmart International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "flipkart.com",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Walmart International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "PhonePe",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Walmart International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "advertising",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Walmart International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "marketplace",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Walmart International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "financial services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Walmart International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "healthcare",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Sam's Club U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Sam's Club U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Sam's Club U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Sam's Club U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Club membership",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Sam's Club U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Plus membership",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Sam's Club U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "samsclub.com",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Sam's Club U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Member's Mark",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Sam's Club U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "advertising solutions",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Sam's Club U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "tire and battery installation services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Sam's Club U.S.",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "financial services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Walmart+",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Club membership",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Plus membership",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "advertising solutions",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "advertising",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "financial services",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    }
+  ],
+  "extraction_notes": "Extracted from Walmart fiscal 2026 10-K. Identified three reportable segments (Walmart U.S., Walmart International, Sam's Club U.S.) with omnichannel operations across retail and online channels. Mapped offerings including membership programs, digital platforms (walmart.com, samsclub.com, Flipkart, PhonePe), advertising solutions, financial services, and private brands. Revenue models identified as subscription (memberships), advertising (ad solutions), and service fees (financial services). Geographic scope consolidated to macro regions: North America, Latin America, Asia, and Africa.",
+  "attempts_used": 1,
+  "raw_response": "{\n  \"extraction_notes\": \"Extracted from Walmart fiscal 2026 10-K. Identified three reportable segments (Walmart U.S., Walmart International, Sam's Club U.S.) with omnichannel operations across retail and online channels. Mapped offerings including membership programs, digital platforms (walmart.com, samsclub.com, Flipkart, PhonePe), advertising solutions, financial services, and private brands. Revenue models identified as subscription (memberships), advertising (ad solutions), and service fees (financial services). Geographic scope consolidated to macro regions: North America, Latin America, Asia, and Africa.\",\n  \"triples\": [\n    {\n      \"subject\": \"Walmart Inc.\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"HAS_SEGMENT\",\n      \"object\": \"Walmart U.S.\",\n      \"object_type\": \"BusinessSegment\"\n    },\n    {\n      \"subject\": \"Walmart Inc.\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"HAS_SEGMENT\",\n      \"object\": \"Walmart International\",\n      \"object_type\": \"BusinessSegment\"\n    },\n    {\n      \"subject\": \"Walmart Inc.\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"HAS_SEGMENT\",\n      \"object\": \"Sam's Club U.S.\",\n      \"object_type\": \"BusinessSegment\"\n    },\n    {\n      \"subject\": \"Walmart Inc.\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"OPERATES_IN\",\n      \"object\": \"North America\",\n      \"object_type\": \"Place\"\n    },\n    {\n      \"subject\": \"Walmart Inc.\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"OPERATES_IN\",\n      \"object\": \"Latin America\",\n      \"object_type\": \"Place\"\n    },\n    {\n      \"subject\": \"Walmart Inc.\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"OPERATES_IN\",\n      \"object\": \"Asia\",\n      \"object_type\": \"Place\"\n    },\n    {\n      \"subject\": \"Walmart Inc.\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"OPERATES_IN\",\n      \"object\": \"Africa\",\n      \"object_type\": \"Place\"\n    },\n    {\n      \"subject\": \"Walmart U.S.\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"consumers\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Walmart U.S.\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SELLS_THROUGH\",\n      \"object\": \"retail\",\n      \"object_type\": \"Channel\"\n    },\n    {\n      \"subject\": \"Walmart U.S.\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SELLS_THROUGH\",\n      \"object\": \"online\",\n      \"object_type\": \"Channel\"\n    },\n    {\n      \"subject\": \"Walmart U.S.\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Walmart+\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Walmart U.S.\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"walmart.com\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Walmart U.S.\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"advertising solutions\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Walmart U.S.\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"marketplace\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Walmart U.S.\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"fuel\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Walmart U.S.\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"financial services\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Walmart International\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"consumers\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Walmart International\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SELLS_THROUGH\",\n      \"object\": \"retail\",\n      \"object_type\": \"Channel\"\n    },\n    {\n      \"subject\": \"Walmart International\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SELLS_THROUGH\",\n      \"object\": \"online\",\n      \"object_type\": \"Channel\"\n    },\n    {\n      \"subject\": \"Walmart International\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"flipkart.com\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Walmart International\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"PhonePe\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Walmart International\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"advertising\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Walmart International\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"marketplace\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Walmart International\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"financial services\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Walmart International\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"healthcare\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Sam's Club U.S.\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"consumers\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Sam's Club U.S.\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SELLS_THROUGH\",\n      \"object\": \"retail\",\n      \"object_type\": \"Channel\"\n    },\n    {\n      \"subject\": \"Sam's Club U.S.\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SELLS_THROUGH\",\n      \"object\": \"online\",\n      \"object_type\": \"Channel\"\n    },\n    {\n      \"subject\": \"Sam's Club U.S.\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Club membership\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Sam's Club U.S.\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Plus membership\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Sam's Club U.S.\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"samsclub.com\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Sam's Club U.S.\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Member's Mark\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Sam's Club U.S.\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"advertising solutions\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Sam's Club U.S.\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"tire and battery installation services\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Sam's Club U.S.\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"financial services\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Walmart+\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"subscription\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"Club membership\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"subscription\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"Plus membership\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"subscription\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"advertising solutions\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"advertising\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"advertising\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"advertising\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"financial services\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"service fees\",\n      \"object_type\": \"RevenueModel\"\n    }\n  ]\n}"
+}

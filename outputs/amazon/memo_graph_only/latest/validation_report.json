@@ -1,0 +1,351 @@
+{
+  "summary": {
+    "input_triple_count": 48,
+    "valid_triple_count": 48,
+    "invalid_triple_count": 0,
+    "duplicate_triple_count": 0,
+    "output_triple_count": 48,
+    "require_text_grounding": false,
+    "ontology_version": "canonical"
+  },
+  "valid_triples": [
+    {
+      "subject": "Amazon",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "North America",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Amazon",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "International",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Amazon",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Amazon Web Services (AWS)",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Amazon",
+      "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "Worldwide",
+      "object_type": "Place"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "retailers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Online and Physical Stores",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Amazon Prime",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Consumer Devices",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Seller Programs",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Advertising Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "North America",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Content Creation Programs",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "retailers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Online and Physical Stores",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Amazon Prime",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Consumer Devices",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Seller Programs",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Advertising Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "International",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Content Creation Programs",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Amazon Web Services (AWS)",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "developers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Amazon Web Services (AWS)",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Amazon Web Services (AWS)",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "government agencies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Amazon Web Services (AWS)",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "educational institutions",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Amazon Web Services (AWS)",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Amazon Web Services (AWS)",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Amazon Web Services (AWS)",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "AWS Cloud Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Amazon Prime",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Consumer Devices",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Kindle",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Consumer Devices",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Fire Tablet",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Consumer Devices",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Fire TV",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Consumer Devices",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Echo",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Consumer Devices",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Ring",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Consumer Devices",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Blink",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Consumer Devices",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "eero",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Consumer Devices",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "AWS Cloud Services",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "consumption-based",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Seller Programs",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Seller Programs",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "transaction fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Advertising Services",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    }
+  ],
+  "invalid_triples": [],
+  "duplicate_triples": []
+}

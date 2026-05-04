@@ -1,0 +1,614 @@
+{
+  "zero_shot_extraction": {
+    "extraction_notes": "Extracted Berkshire Hathaway's business model from the 2025 filing, identifying five major segments (Insurance, Burlington Northern Santa Fe, Berkshire Hathaway Energy, Manufacturing, Service and Retailing) with their principal offerings, customer types, distribution channels, and revenue models. Key subsidiaries modeled as offerings include GEICO, BNSF Railway, PacifiCorp, Clayton, Shaw, NetJets, and Pilot Travel Centers. Partnerships with Textron, General Motors, and Ace Hardware captured where explicitly noted.",
+    "triples": [
+      {
+        "subject": "Berkshire Hathaway Inc.",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Insurance",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Berkshire Hathaway Inc.",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Burlington Northern Santa Fe",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Berkshire Hathaway Inc.",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Berkshire Hathaway Energy",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Berkshire Hathaway Inc.",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Manufacturing",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Berkshire Hathaway Inc.",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Service and Retailing",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Berkshire Hathaway Inc.",
+        "subject_type": "Company",
+        "relation": "OPERATES_IN",
+        "object": "Worldwide",
+        "object_type": "Place"
+      },
+      {
+        "subject": "Insurance",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "GEICO",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Insurance",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Berkshire Hathaway Primary Group",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Insurance",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Berkshire Hathaway Reinsurance Group",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Burlington Northern Santa Fe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Freight Rail Transportation",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Burlington Northern Santa Fe",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "manufacturers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Burlington Northern Santa Fe",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "retailers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Burlington Northern Santa Fe",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Freight Rail Transportation",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Berkshire Hathaway Energy",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Electric Utility Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Berkshire Hathaway Energy",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Natural Gas Pipeline Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Berkshire Hathaway Energy",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "HomeServices",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Electric Utility Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "HomeServices",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "transaction fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Manufacturing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Clayton",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Manufacturing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Shaw Industries",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Manufacturing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Benjamin Moore",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Manufacturing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Forest River",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Manufacturing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Precision Castparts",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Clayton",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Shaw Industries",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Benjamin Moore",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Forest River",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Precision Castparts",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Service and Retailing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "NetJets",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Service and Retailing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "FlightSafety",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Service and Retailing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "TTI",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Service and Retailing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "McLane",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Service and Retailing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Berkshire Hathaway Automotive",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Service and Retailing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Pilot Travel Centers",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Service and Retailing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "See's Candy",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Service and Retailing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Pampered Chef",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Service and Retailing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Oriental Trading",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "NetJets",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "FlightSafety",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Berkshire Hathaway Automotive",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Pilot Travel Centers",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "See's Candy",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      }
+    ]
+  },
+  "final_extraction": {
+    "extraction_notes": "Extracted Berkshire Hathaway's business model from the 2025 filing, identifying five major segments (Insurance, Burlington Northern Santa Fe, Berkshire Hathaway Energy, Manufacturing, Service and Retailing) with their principal offerings, customer types, distribution channels, and revenue models. Key subsidiaries modeled as offerings include GEICO, BNSF Railway, PacifiCorp, Clayton, Shaw, NetJets, and Pilot Travel Centers. Partnerships with Textron, General Motors, and Ace Hardware captured where explicitly noted.",
+    "triples": [
+      {
+        "subject": "Berkshire Hathaway Inc.",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Insurance",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Berkshire Hathaway Inc.",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Burlington Northern Santa Fe",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Berkshire Hathaway Inc.",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Berkshire Hathaway Energy",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Berkshire Hathaway Inc.",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Manufacturing",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Berkshire Hathaway Inc.",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Service and Retailing",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Berkshire Hathaway Inc.",
+        "subject_type": "Company",
+        "relation": "OPERATES_IN",
+        "object": "Worldwide",
+        "object_type": "Place"
+      },
+      {
+        "subject": "Insurance",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "GEICO",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Insurance",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Berkshire Hathaway Primary Group",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Insurance",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Berkshire Hathaway Reinsurance Group",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Burlington Northern Santa Fe",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Freight Rail Transportation",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Burlington Northern Santa Fe",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "manufacturers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Burlington Northern Santa Fe",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "retailers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Burlington Northern Santa Fe",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Freight Rail Transportation",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Berkshire Hathaway Energy",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Electric Utility Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Berkshire Hathaway Energy",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Natural Gas Pipeline Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Berkshire Hathaway Energy",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "HomeServices",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Electric Utility Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "HomeServices",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "transaction fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Manufacturing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Clayton",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Manufacturing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Shaw Industries",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Manufacturing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Benjamin Moore",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Manufacturing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Forest River",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Manufacturing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Precision Castparts",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Clayton",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Shaw Industries",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Benjamin Moore",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Forest River",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Precision Castparts",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Service and Retailing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "NetJets",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Service and Retailing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "FlightSafety",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Service and Retailing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "TTI",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Service and Retailing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "McLane",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Service and Retailing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Berkshire Hathaway Automotive",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Service and Retailing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Pilot Travel Centers",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Service and Retailing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "See's Candy",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Service and Retailing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Pampered Chef",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Service and Retailing",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Oriental Trading",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "NetJets",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "FlightSafety",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Berkshire Hathaway Automotive",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Pilot Travel Centers",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "See's Candy",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      }
+    ]
+  }
+}

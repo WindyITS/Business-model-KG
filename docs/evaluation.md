@@ -28,6 +28,9 @@ Predictions live under:
 outputs/<company>/<pipeline>/latest/resolved_triples.json
 ```
 
+The repository ships compact reference outputs in that layout, including the
+run metadata needed by evaluation and Neo4j loading.
+
 The three evaluated pipelines are:
 
 ```text
@@ -110,8 +113,8 @@ Use that recipe for the exact download, copy, and evaluator commands.
 For evaluation-focused readers, the important contract is:
 
 - bootstrap the main environment before using `./venv/bin/...`
-- install benchmark files under `evaluation/benchmarks/`
-- install generated predictions under `outputs/<company>/<pipeline>/latest/`
+- use benchmark files under `evaluation/benchmarks/`
+- use generated predictions under `outputs/<company>/<pipeline>/latest/`
 - run `evaluation.scripts.evaluate` for each pipeline and split
 
 Run bootstrap confidence intervals:

@@ -1,0 +1,560 @@
+{
+  "triples": [
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Productivity and Business Processes",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Intelligent Cloud",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "More Personal Computing",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Microsoft 365 Commercial",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Microsoft 365 Consumer",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "LinkedIn",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Dynamics 365",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Dynamics on-premises",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Azure",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "GitHub",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Nuance Healthcare",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "SQL Server",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Windows Server",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Visual Studio",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "System Center",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Enterprise Support Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Industry Solutions",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Windows",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Surface",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Xbox hardware",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Xbox Game Pass",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Xbox content and services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Search and news advertising",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "mid-market companies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "developers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "developers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "IT professionals",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "healthcare organizations",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "educational institutions",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "distributors",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "resellers",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Productivity and Business Processes",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "system integrators",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "distributors",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "resellers",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "OEMs",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "system integrators",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Intelligent Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "managed service providers",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "OEMs",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "More Personal Computing",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Microsoft 365 Commercial",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Microsoft 365 Commercial",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Microsoft 365 Consumer",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Microsoft 365 Consumer",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "LinkedIn",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "LinkedIn",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Dynamics 365",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Dynamics on-premises",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Azure",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "consumption-based",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "GitHub",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "SQL Server",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Windows Server",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Visual Studio",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "System Center",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Enterprise Support Services",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Industry Solutions",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Windows",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Surface",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Xbox hardware",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Xbox Game Pass",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Search and news advertising",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "Americas",
+      "object_type": "Place"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "Asia Pacific",
+      "object_type": "Place"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "Europe",
+      "object_type": "Place"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "Middle East",
+      "object_type": "Place"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "PARTNERS_WITH",
+      "object": "Dell",
+      "object_type": "Company"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "PARTNERS_WITH",
+      "object": "Hewlett-Packard",
+      "object_type": "Company"
+    },
+    {
+      "subject": "Microsoft",
+      "subject_type": "Company",
+      "relation": "PARTNERS_WITH",
+      "object": "Lenovo",
+      "object_type": "Company"
+    }
+  ],
+  "extraction_notes": "Extracted from Microsoft FY2025 10-K filing. Three operating segments serve as business anchors. Customer types mapped from explicit segment descriptions (e.g., Microsoft 365 Commercial serves small businesses to large enterprises; Azure serves developers and IT professionals). Channels derived from Distribution section. Revenue models explicitly stated in business descriptions (e.g., Azure consumption-based, Microsoft 365 subscription, Windows licensing, Surface hardware sales).",
+  "attempts_used": 1,
+  "raw_response": "{\n  \"extraction_notes\": \"Extracted from Microsoft FY2025 10-K filing. Three operating segments serve as business anchors. Customer types mapped from explicit segment descriptions (e.g., Microsoft 365 Commercial serves small businesses to large enterprises; Azure serves developers and IT professionals). Channels derived from Distribution section. Revenue models explicitly stated in business descriptions (e.g., Azure consumption-based, Microsoft 365 subscription, Windows licensing, Surface hardware sales).\",\n  \"triples\": [\n    {\"subject\": \"Microsoft\", \"subject_type\": \"Company\", \"relation\": \"HAS_SEGMENT\", \"object\": \"Productivity and Business Processes\", \"object_type\": \"BusinessSegment\"},\n    {\"subject\": \"Microsoft\", \"subject_type\": \"Company\", \"relation\": \"HAS_SEGMENT\", \"object\": \"Intelligent Cloud\", \"object_type\": \"BusinessSegment\"},\n    {\"subject\": \"Microsoft\", \"subject_type\": \"Company\", \"relation\": \"HAS_SEGMENT\", \"object\": \"More Personal Computing\", \"object_type\": \"BusinessSegment\"},\n    {\"subject\": \"Productivity and Business Processes\", \"subject_type\": \"BusinessSegment\", \"relation\": \"OFFERS\", \"object\": \"Microsoft 365 Commercial\", \"object_type\": \"Offering\"},\n    {\"subject\": \"Productivity and Business Processes\", \"subject_type\": \"BusinessSegment\", \"relation\": \"OFFERS\", \"object\": \"Microsoft 365 Consumer\", \"object_type\": \"Offering\"},\n    {\"subject\": \"Productivity and Business Processes\", \"subject_type\": \"BusinessSegment\", \"relation\": \"OFFERS\", \"object\": \"LinkedIn\", \"object_type\": \"Offering\"},\n    {\"subject\": \"Productivity and Business Processes\", \"subject_type\": \"BusinessSegment\", \"relation\": \"OFFERS\", \"object\": \"Dynamics 365\", \"object_type\": \"Offering\"},\n    {\"subject\": \"Productivity and Business Processes\", \"subject_type\": \"BusinessSegment\", \"relation\": \"OFFERS\", \"object\": \"Dynamics on-premises\", \"object_type\": \"Offering\"},\n    {\"subject\": \"Intelligent Cloud\", \"subject_type\": \"BusinessSegment\", \"relation\": \"OFFERS\", \"object\": \"Azure\", \"object_type\": \"Offering\"},\n    {\"subject\": \"Intelligent Cloud\", \"subject_type\": \"BusinessSegment\", \"relation\": \"OFFERS\", \"object\": \"GitHub\", \"object_type\": \"Offering\"},\n    {\"subject\": \"Intelligent Cloud\", \"subject_type\": \"BusinessSegment\", \"relation\": \"OFFERS\", \"object\": \"Nuance Healthcare\", \"object_type\": \"Offering\"},\n    {\"subject\": \"Intelligent Cloud\", \"subject_type\": \"BusinessSegment\", \"relation\": \"OFFERS\", \"object\": \"SQL Server\", \"object_type\": \"Offering\"},\n    {\"subject\": \"Intelligent Cloud\", \"subject_type\": \"BusinessSegment\", \"relation\": \"OFFERS\", \"object\": \"Windows Server\", \"object_type\": \"Offering\"},\n    {\"subject\": \"Intelligent Cloud\", \"subject_type\": \"BusinessSegment\", \"relation\": \"OFFERS\", \"object\": \"Visual Studio\", \"object_type\": \"Offering\"},\n    {\"subject\": \"Intelligent Cloud\", \"subject_type\": \"BusinessSegment\", \"relation\": \"OFFERS\", \"object\": \"System Center\", \"object_type\": \"Offering\"},\n    {\"subject\": \"Intelligent Cloud\", \"subject_type\": \"BusinessSegment\", \"relation\": \"OFFERS\", \"object\": \"Enterprise Support Services\", \"object_type\": \"Offering\"},\n    {\"subject\": \"Intelligent Cloud\", \"subject_type\": \"BusinessSegment\", \"relation\": \"OFFERS\", \"object\": \"Industry Solutions\", \"object_type\": \"Offering\"},\n    {\"subject\": \"More Personal Computing\", \"subject_type\": \"BusinessSegment\", \"relation\": \"OFFERS\", \"object\": \"Windows\", \"object_type\": \"Offering\"},\n    {\"subject\": \"More Personal Computing\", \"subject_type\": \"BusinessSegment\", \"relation\": \"OFFERS\", \"object\": \"Surface\", \"object_type\": \"Offering\"},\n    {\"subject\": \"More Personal Computing\", \"subject_type\": \"BusinessSegment\", \"relation\": \"OFFERS\", \"object\": \"Xbox hardware\", \"object_type\": \"Offering\"},\n    {\"subject\": \"More Personal Computing\", \"subject_type\": \"BusinessSegment\", \"relation\": \"OFFERS\", \"object\": \"Xbox Game Pass\", \"object_type\": \"Offering\"},\n    {\"subject\": \"More Personal Computing\", \"subject_type\": \"BusinessSegment\", \"relation\": \"OFFERS\", \"object\": \"Xbox content and services\", \"object_type\": \"Offering\"},\n    {\"subject\": \"More Personal Computing\", \"subject_type\": \"BusinessSegment\", \"relation\": \"OFFERS\", \"object\": \"Search and news advertising\", \"object_type\": \"Offering\"},\n    {\"subject\": \"Productivity and Business Processes\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SERVES\", \"object\": \"large enterprises\", \"object_type\": \"CustomerType\"},\n    {\"subject\": \"Productivity and Business Processes\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SERVES\", \"object\": \"small businesses\", \"object_type\": \"CustomerType\"},\n    {\"subject\": \"Productivity and Business Processes\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SERVES\", \"object\": \"mid-market companies\", \"object_type\": \"CustomerType\"},\n    {\"subject\": \"Productivity and Business Processes\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SERVES\", \"object\": \"consumers\", \"object_type\": \"CustomerType\"},\n    {\"subject\": \"Productivity and Business Processes\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SERVES\", \"object\": \"developers\", \"object_type\": \"CustomerType\"},\n    {\"subject\": \"Intelligent Cloud\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SERVES\", \"object\": \"developers\", \"object_type\": \"CustomerType\"},\n    {\"subject\": \"Intelligent Cloud\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SERVES\", \"object\": \"IT professionals\", \"object_type\": \"CustomerType\"},\n    {\"subject\": \"Intelligent Cloud\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SERVES\", \"object\": \"large enterprises\", \"object_type\": \"CustomerType\"},\n    {\"subject\": \"Intelligent Cloud\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SERVES\", \"object\": \"healthcare organizations\", \"object_type\": \"CustomerType\"},\n    {\"subject\": \"More Personal Computing\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SERVES\", \"object\": \"consumers\", \"object_type\": \"CustomerType\"},\n    {\"subject\": \"More Personal Computing\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SERVES\", \"object\": \"small businesses\", \"object_type\": \"CustomerType\"},\n    {\"subject\": \"More Personal Computing\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SERVES\", \"object\": \"large enterprises\", \"object_type\": \"CustomerType\"},\n    {\"subject\": \"More Personal Computing\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SERVES\", \"object\": \"educational institutions\", \"object_type\": \"CustomerType\"},\n    {\"subject\": \"Productivity and Business Processes\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SELLS_THROUGH\", \"object\": \"direct sales\", \"object_type\": \"Channel\"},\n    {\"subject\": \"Productivity and Business Processes\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SELLS_THROUGH\", \"object\": \"distributors\", \"object_type\": \"Channel\"},\n    {\"subject\": \"Productivity and Business Processes\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SELLS_THROUGH\", \"object\": \"resellers\", \"object_type\": \"Channel\"},\n    {\"subject\": \"Productivity and Business Processes\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SELLS_THROUGH\", \"object\": \"online\", \"object_type\": \"Channel\"},\n    {\"subject\": \"Productivity and Business Processes\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SELLS_THROUGH\", \"object\": \"retail\", \"object_type\": \"Channel\"},\n    {\"subject\": \"Productivity and Business Processes\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SELLS_THROUGH\", \"object\": \"system integrators\", \"object_type\": \"Channel\"},\n    {\"subject\": \"Intelligent Cloud\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SELLS_THROUGH\", \"object\": \"direct sales\", \"object_type\": \"Channel\"},\n    {\"subject\": \"Intelligent Cloud\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SELLS_THROUGH\", \"object\": \"distributors\", \"object_type\": \"Channel\"},\n    {\"subject\": \"Intelligent Cloud\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SELLS_THROUGH\", \"object\": \"resellers\", \"object_type\": \"Channel\"},\n    {\"subject\": \"Intelligent Cloud\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SELLS_THROUGH\", \"object\": \"OEMs\", \"object_type\": \"Channel\"},\n    {\"subject\": \"Intelligent Cloud\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SELLS_THROUGH\", \"object\": \"system integrators\", \"object_type\": \"Channel\"},\n    {\"subject\": \"Intelligent Cloud\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SELLS_THROUGH\", \"object\": \"managed service providers\", \"object_type\": \"Channel\"},\n    {\"subject\": \"More Personal Computing\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SELLS_THROUGH\", \"object\": \"OEMs\", \"object_type\": \"Channel\"},\n    {\"subject\": \"More Personal Computing\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SELLS_THROUGH\", \"object\": \"retail\", \"object_type\": \"Channel\"},\n    {\"subject\": \"More Personal Computing\", \"subject_type\": \"BusinessSegment\", \"relation\": \"SELLS_THROUGH\", \"object\": \"online\", \"object_type\": \"Channel\"},\n    {\"subject\": \"Microsoft 365 Commercial\", \"subject_type\": \"Offering\", \"relation\": \"MONETIZES_VIA\", \"object\": \"subscription\", \"object_type\": \"RevenueModel\"},\n    {\"subject\": \"Microsoft 365 Commercial\", \"subject_type\": \"Offering\", \"relation\": \"MONETIZES_VIA\", \"object\": \"licensing\", \"object_type\": \"RevenueModel\"},\n    {\"subject\": \"Microsoft 365 Consumer\", \"subject_type\": \"Offering\", \"relation\": \"MONETIZES_VIA\", \"object\": \"subscription\", \"object_type\": \"RevenueModel\"},\n    {\"subject\": \"Microsoft 365 Consumer\", \"subject_type\": \"Offering\", \"relation\": \"MONETIZES_VIA\", \"object\": \"advertising\", \"object_type\": \"RevenueModel\"},\n    {\"subject\": \"LinkedIn\", \"subject_type\": \"Offering\", \"relation\": \"MONETIZES_VIA\", \"object\": \"subscription\", \"object_type\": \"RevenueModel\"},\n    {\"subject\": \"LinkedIn\", \"subject_type\": \"Offering\", \"relation\": \"MONETIZES_VIA\", \"object\": \"advertising\", \"object_type\": \"RevenueModel\"},\n    {\"subject\": \"Dynamics 365\", \"subject_type\": \"Offering\", \"relation\": \"MONETIZES_VIA\", \"object\": \"subscription\", \"object_type\": \"RevenueModel\"},\n    {\"subject\": \"Dynamics on-premises\", \"subject_type\": \"Offering\", \"relation\": \"MONETIZES_VIA\", \"object\": \"licensing\", \"object_type\": \"RevenueModel\"},\n    {\"subject\": \"Azure\", \"subject_type\": \"Offering\", \"relation\": \"MONETIZES_VIA\", \"object\": \"consumption-based\", \"object_type\": \"RevenueModel\"},\n    {\"subject\": \"GitHub\", \"subject_type\": \"Offering\", \"relation\": \"MONETIZES_VIA\", \"object\": \"subscription\", \"object_type\": \"RevenueModel\"},\n    {\"subject\": \"SQL Server\", \"subject_type\": \"Offering\", \"relation\": \"MONETIZES_VIA\", \"object\": \"licensing\", \"object_type\": \"RevenueModel\"},\n    {\"subject\": \"Windows Server\", \"subject_type\": \"Offering\", \"relation\": \"MONETIZES_VIA\", \"object\": \"licensing\", \"object_type\": \"RevenueModel\"},\n    {\"subject\": \"Visual Studio\", \"subject_type\": \"Offering\", \"relation\": \"MONETIZES_VIA\", \"object\": \"licensing\", \"object_type\": \"RevenueModel\"},\n    {\"subject\": \"System Center\", \"subject_type\": \"Offering\", \"relation\": \"MONETIZES_VIA\", \"object\": \"licensing\", \"object_type\": \"RevenueModel\"},\n    {\"subject\": \"Enterprise Support Services\", \"subject_type\": \"Offering\", \"relation\": \"MONETIZES_VIA\", \"object\": \"service fees\", \"object_type\": \"RevenueModel\"},\n    {\"subject\": \"Industry Solutions\", \"subject_type\": \"Offering\", \"relation\": \"MONETIZES_VIA\", \"object\": \"service fees\", \"object_type\": \"RevenueModel\"},\n    {\"subject\": \"Windows\", \"subject_type\": \"Offering\", \"relation\": \"MONETIZES_VIA\", \"object\": \"licensing\", \"object_type\": \"RevenueModel\"},\n    {\"subject\": \"Surface\", \"subject_type\": \"Offering\", \"relation\": \"MONETIZES_VIA\", \"object\": \"hardware sales\", \"object_type\": \"RevenueModel\"},\n    {\"subject\": \"Xbox hardware\", \"subject_type\": \"Offering\", \"relation\": \"MONETIZES_VIA\", \"object\": \"hardware sales\", \"object_type\": \"RevenueModel\"},\n    {\"subject\": \"Xbox Game Pass\", \"subject_type\": \"Offering\", \"relation\": \"MONETIZES_VIA\", \"object\": \"subscription\", \"object_type\": \"RevenueModel\"},\n    {\"subject\": \"Search and news advertising\", \"subject_type\": \"Offering\", \"relation\": \"MONETIZES_VIA\", \"object\": \"advertising\", \"object_type\": \"RevenueModel\"},\n    {\"subject\": \"Microsoft\", \"subject_type\": \"Company\", \"relation\": \"OPERATES_IN\", \"object\": \"Americas\", \"object_type\": \"Place\"},\n    {\"subject\": \"Microsoft\", \"subject_type\": \"Company\", \"relation\": \"OPERATES_IN\", \"object\": \"Asia Pacific\", \"object_type\": \"Place\"},\n    {\"subject\": \"Microsoft\", \"subject_type\": \"Company\", \"relation\": \"OPERATES_IN\", \"object\": \"Europe\", \"object_type\": \"Place\"},\n    {\"subject\": \"Microsoft\", \"subject_type\": \"Company\", \"relation\": \"OPERATES_IN\", \"object\": \"Middle East\", \"object_type\": \"Place\"},\n    {\"subject\": \"Microsoft\", \"subject_type\": \"Company\", \"relation\": \"PARTNERS_WITH\", \"object\": \"Dell\", \"object_type\": \"Company\"},\n    {\"subject\": \"Microsoft\", \"subject_type\": \"Company\", \"relation\": \"PARTNERS_WITH\", \"object\": \"Hewlett-Packard\", \"object_type\": \"Company\"},\n    {\"subject\": \"Microsoft\", \"subject_type\": \"Company\", \"relation\": \"PARTNERS_WITH\", \"object\": \"Lenovo\", \"object_type\": \"Company\"}\n  ]\n}"
+}

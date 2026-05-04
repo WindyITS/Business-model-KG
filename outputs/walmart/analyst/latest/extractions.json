@@ -1,0 +1,833 @@
+{
+  "foundation_memo": "# ANALYTICAL FRAME\n## Summary:\nWalmart Inc. operates a global omnichannel retail ecosystem centered on three reportable segments: Walmart U.S., Walmart International, and Sam's Club U.S. The business model generates revenue through retail merchandise sales, membership subscriptions (Walmart+, Sam's Club), advertising platforms, marketplace services, and financial products. The company leverages physical stores and digital platforms (eCommerce websites and mobile applications) to serve consumers and small businesses across 19 countries, supported by proprietary private brands and third-party seller marketplaces.\n\n## Explicit Support:\n- \"Walmart Inc. ... is a people-led, technology-powered omnichannel retailer\"\n- \"Our operations comprise three reportable segments: Walmart U.S., Walmart International and Sam's Club U.S.\"\n- \"we continue to heavily invest in omnichannel and eCommerce innovation\"\n- \"membership, advertising, marketplace and fulfillment services, and financial services\"\n\n# SEGMENTS\n## [Segment] Walmart U.S.\n### Role in Business Model:\nLargest segment operating mass merchandising formats including supercenters and Neighborhood Markets, integrated with eCommerce through walmart.com and mobile applications. Serves as the anchor for omnichannel innovation and membership programs (Walmart+).\n### Explicit Support:\n- \"Walmart U.S. is our largest segment... operates 4,611 stores in the U.S.\"\n- \"Walmart U.S. is a mass merchandiser of consumer products\"\n- \"Walmart U.S. had net sales of $483.0 billion for fiscal 2026, representing 68% of our fiscal 2026 consolidated net sales\"\n### Customer Types:\n- consumers | primary shopper base for mass merchandise and grocery\n- small businesses | marketplace sellers and advertising clients\n### Channels:\n- retail | 4,611 physical stores including supercenters and Neighborhood Markets\n- online | walmart.com and Walmart mobile application\n\n## [Segment] Walmart International\n### Role in Business Model:\nSecond largest segment operating diverse retail and wholesale formats (supercenters, supermarkets, warehouse clubs, cash and carry) across 18 countries outside the U.S., including majority-owned digital platforms Flipkart and PhonePe in India. Adapts merchandising to local markets while leveraging global ecosystem capabilities.\n### Explicit Support:\n- \"Walmart International is our second largest segment and operates 5,743 stores across 18 countries\"\n- \"operates through our wholly-owned subsidiaries... and our majority-owned subsidiaries in India\"\n- \"Walmart International had net sales of $130.4 billion for fiscal 2026, representing 19% of our fiscal 2026 consolidated net sales\"\n### Customer Types:\n- consumers | primary shopper base across international markets\n- small businesses | cash and carry customers and marketplace sellers\n### Channels:\n- retail | physical stores (supercenters, supermarkets, warehouse clubs, cash and carry)\n- online | country-specific websites and mobile applications including flipkart.com and PhonePe\n\n## [Segment] Sam's Club U.S.\n### Role in Business Model:\nMembership-only warehouse club segment generating significant income from membership fees. Provides bulk merchandise and services to members through physical clubs and eCommerce, with tiered membership structure (Club and Plus).\n### Explicit Support:\n- \"Sam's Club U.S. is a membership-only warehouse club... operates 601 clubs\"\n- \"membership income is a significant component of the segment's operating income\"\n- \"Sam's Club U.S. had net sales of $93.0 billion for fiscal 2026, representing 13% of our consolidated fiscal 2026 net sales\"\n### Customer Types:\n- consumers | individual members purchasing for personal/household use\n- small businesses | members purchasing for business operations (implied by warehouse club model and bulk offerings)\n### Channels:\n- retail | 601 physical clubs\n- online | samsclub.com and Sam's Club mobile application\n\n# OFFERINGS\n## [Offering] Walmart+ Membership Program\n### Role in Business Model:\nSubscription membership providing enhanced omnichannel shopping benefits including unlimited free shipping, delivery from store, fuel discounts, and mobile Scan & Go. Drives customer loyalty and recurring revenue within the Walmart U.S. ecosystem.\n### Explicit Support:\n- \"Our Walmart+ membership offering provides enhanced omnichannel shopping benefits including unlimited free shipping on eligible items with no order minimum, unlimited delivery from store, fuel discounts, mobile Scan & Go and access to additional member benefits\"\n### Segment Anchors:\n- Walmart U.S. | described as part of Walmart U.S. omnichannel strategy\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- online | subscription acquired and managed through digital platforms\n### Revenue Models:\n- subscription | recurring membership fees\n\n## [Offering] Sam's Club Membership Program\n### Role in Business Model:\nTiered membership program required for access to Sam's Club locations and services. Generates significant operating income through annual fees and creates member lock-in for bulk purchasing and ancillary services.\n### Explicit Support:\n- \"The following two membership tiers are available: Club membership for a $50 annual fee and Plus membership for a $110 annual fee\"\n- \"membership income is a significant component of the segment's operating income\"\n### Segment Anchors:\n- Sam's Club U.S. | core offering of the segment, required for access\n### Parent Offering:\n- none\n### Child Offerings:\n- Club Membership Tier | entry-level tier at $50 annual fee providing basic club access and curbside pickup\n- Plus Membership Tier | premium tier at $110 annual fee providing free delivery-from-club, free shipping on orders $50+, and early shopping hours\n### Channels:\n- none\n### Revenue Models:\n- subscription | annual membership fees\n\n## [Offering] Walmart Marketplace Platform\n### Role in Business Model:\nDigital platform enabling third-party sellers to reach customers through Walmart's eCommerce ecosystem, expanding product assortment beyond first-party inventory. Supported by fulfillment services and integrated with advertising solutions.\n### Explicit Support:\n- \"expand our assortment and service offerings... through offerings such as... marketplace\"\n- \"supply chain and fulfillment capabilities to online marketplace sellers\"\n### Segment Anchors:\n- Walmart U.S. | marketplace services listed under U.S. offerings\n- Walmart International | \"expand our marketplace offerings\" in international markets\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- online | digital platform for third-party sellers\n### Revenue Models:\n- service fees | fulfillment and marketplace services fees\n- transaction fees | fees on third-party transactions (implied by marketplace model)\n\n## [Offering] Walmart Advertising Solutions\n### Role in Business Model:\nAdvertising platform providing brands and marketplace sellers with access to Walmart's customer base across physical and digital touchpoints, supplemented by data analytics and consumer insights for suppliers.\n### Explicit Support:\n- \"advertising solutions for brands and online marketplace sellers\"\n- \"data analytics and insights for suppliers and brands\"\n- \"mutually reinforcing businesses in areas such as advertising\" (International)\n### Segment Anchors:\n- Walmart U.S. | explicitly listed under U.S. offerings\n- Sam's Club U.S. | \"advertising solutions for brands\" listed under Sam's Club\n- Walmart International | advertising listed as reinforcing business area\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- direct sales | enterprise sales to brands and sellers (implied by \"solutions for brands\")\n- online | self-service advertising platform\n### Revenue Models:\n- advertising | sale of advertising inventory and sponsored placement\n\n## [Offering] Walmart Financial Services\n### Role in Business Model:\nConsumer financial products and services including money transfers, check cashing, bill payment, prepaid access, and installment lending. Provides ancillary revenue and increases customer convenience and retention.\n### Explicit Support:\n- \"financial services and related products such as money orders, prepaid access, money transfers, check cashing, bill payment and certain types of installment lending\"\n- \"financial services and related products\" (Sam's Club)\n- \"financial services\" as reinforcing business (International)\n### Segment Anchors:\n- Walmart U.S. | listed under U.S. offerings\n- Sam's Club U.S. | listed under Sam's Club offerings\n- Walmart International | listed as international reinforcing business\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- retail | in-store money centers and customer service desks\n### Revenue Models:\n- service fees | fees for financial services (check cashing, money orders)\n- transaction fees | per-transaction fees for money transfers and payments\n\n## [Offering] Flipkart Platform\n### Role in Business Model:\nMajority-owned Indian eCommerce marketplace providing digital retail access across India. Represents Walmart's primary international digital platform investment alongside PhonePe, operating independently with local expertise.\n### Explicit Support:\n- \"our majority stakes in Flipkart... in India\"\n- \"walmart.com.mx, walmart.ca, flipkart.com, PhonePe... and other sites\" (listed under International eCommerce)\n### Segment Anchors:\n- Walmart International | operated through majority-owned subsidiary in India\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- online | flipkart.com and mobile applications\n### Revenue Models:\n- transaction fees | marketplace transaction fees (inferred from eCommerce marketplace model)\n- advertising | advertising revenue (inferred from \"mutually reinforcing businesses in areas such as... advertising\")\n\n## [Offering] PhonePe Platform\n### Role in Business Model:\nMajority-owned Indian digital payments platform facilitating mobile payments and financial transactions. Complements Flipkart as part of Walmart's digital ecosystem in India.\n### Explicit Support:\n- \"majority stakes in... PhonePe in India\"\n- listed alongside flipkart.com as International eCommerce site\n### Segment Anchors:\n- Walmart International | operated through majority-owned subsidiary in India\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- online | mobile application and digital interfaces\n### Revenue Models:\n- transaction fees | fees for payment processing and digital transactions\n\n## [Offering] Sam's Club Ancillary Services\n### Role in Business Model:\nInstallation and technical services provided to members including tire and battery installation, photo and tech assistance, and home and auto solutions. Drives incremental revenue and member value beyond merchandise sales.\n### Explicit Support:\n- \"tire and battery installation services, photo and tech assistance, home and auto solutions\"\n### Segment Anchors:\n- Sam's Club U.S. | listed under Sam's Club offerings\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- retail | in-club service centers and installation bays\n### Revenue Models:\n- service fees | fees for installation and technical services\n\n# CORPORATE SCOPE\n## Operating Geographies:\n- Worldwide | operations across 19 countries including U.S., Canada, Mexico, China, India, Chile, and markets in Africa and Central America (filing supports global omnichannel retail ecosystem)\n\n## Key Partners:\n- none",
+  "augmented_memo": "# ANALYTICAL FRAME\n## Summary:\nWalmart Inc. operates a global omnichannel retail ecosystem centered on three reportable segments—Walmart U.S., Walmart International, and Sam's Club U.S.—that integrate physical retail formats (supercenters, neighborhood markets, warehouse clubs) with digital platforms (eCommerce websites, mobile applications) and a growing portfolio of high-margin service businesses. The business model generates revenue through retail merchandise sales (powered by proprietary private brands and third-party marketplaces), membership subscriptions (Walmart+, Sam's Club tiers), advertising platforms, fulfillment and data services for sellers, and consumer financial products. The company leverages an EDLP/EDLC operating philosophy, a global supply chain infrastructure, and AI-powered technologies to serve consumers and small businesses across 19 countries, with distinct but mutually reinforcing digital platforms (Flipkart, PhonePe) anchoring the India market.\n\n## Explicit Support:\n- \"Walmart Inc. ... is a people-led, technology-powered omnichannel retailer\"\n- \"Our operations comprise three reportable segments: Walmart U.S., Walmart International and Sam's Club U.S.\"\n- \"we continue to heavily invest in omnichannel and eCommerce innovation\"\n- \"membership, advertising, marketplace and fulfillment services, and financial services\"\n- \"EDLP is our pricing philosophy under which we price items at a low price every day\"\n- \"EDLC is our commitment to control expenses so our cost savings can be passed along to our customers\"\n\n# SEGMENTS\n## [Segment] Walmart U.S.\n### Role in Business Model:\nLargest segment operating mass merchandising formats including supercenters, discount stores, and Neighborhood Markets, integrated with eCommerce through walmart.com and mobile applications. Serves as the anchor for omnichannel innovation, membership programs (Walmart+), and the development of high-margin service offerings (advertising, marketplace, fulfillment, financial services) that leverage the physical store footprint for pickup, delivery, and last-mile logistics.\n### Explicit Support:\n- \"Walmart U.S. is our largest segment... operates 4,611 stores in the U.S.\"\n- \"Walmart U.S. is a mass merchandiser of consumer products, operating under the 'Walmart' and 'Walmart Neighborhood Market' brands\"\n- \"Walmart U.S. had net sales of $483.0 billion for fiscal 2026, representing 68% of our fiscal 2026 consolidated net sales\"\n### Customer Types:\n- consumers | primary shopper base for mass merchandise and grocery\n- small businesses | marketplace sellers, advertising clients, and recipients of data analytics services\n### Channels:\n- retail | 4,611 physical stores including supercenters and Neighborhood Markets\n- online | walmart.com and Walmart mobile application\n\n## [Segment] Walmart International\n### Role in Business Model:\nSecond largest segment operating diverse retail and wholesale formats (supercenters, supermarkets, warehouse clubs, cash and carry) across 18 countries outside the U.S., including wholly-owned operations in Canada, Chile, China, and Africa, and majority-owned digital platforms Flipkart and PhonePe in India. Adapts merchandising to local markets while leveraging global ecosystem capabilities including shared private brands, advertising technology, and fulfillment infrastructure.\n### Explicit Support:\n- \"Walmart International is our second largest segment and operates 5,743 stores across 18 countries\"\n- \"operates through our wholly-owned subsidiaries... and our majority-owned subsidiaries in India\"\n- \"Walmart International had net sales of $130.4 billion for fiscal 2026, representing 19% of our fiscal 2026 consolidated net sales\"\n### Customer Types:\n- consumers | primary shopper base across international markets\n- small businesses | cash and carry customers, marketplace sellers, and advertising clients\n### Channels:\n- retail | physical stores (supercenters, supermarkets, warehouse clubs, cash and carry)\n- online | country-specific websites and mobile applications including flipkart.com, walmart.ca, walmart.com.mx, and PhonePe\n\n## [Segment] Sam's Club U.S.\n### Role in Business Model:\nMembership-only warehouse club segment generating significant income from membership fees through a tiered structure (Club and Plus). Provides bulk merchandise and ancillary services to members through 601 physical clubs and eCommerce, with a proprietary private label (Member's Mark) and loyalty rewards program (Sam's Cash) reinforcing member retention and lifetime value.\n### Explicit Support:\n- \"Sam's Club U.S. is a membership-only warehouse club... operates 601 clubs\"\n- \"membership income is a significant component of the segment's operating income\"\n- \"Sam's Club U.S. had net sales of $93.0 billion for fiscal 2026, representing 13% of our consolidated fiscal 2026 net sales\"\n### Customer Types:\n- consumers | individual members purchasing for personal/household use\n- small businesses | members purchasing for business operations and resale\n### Channels:\n- retail | 601 physical clubs\n- online | samsclub.com and Sam's Club mobile application\n\n# OFFERINGS\n## [Offering] Walmart+ Membership Program\n### Role in Business Model:\nSubscription membership providing enhanced omnichannel shopping benefits including unlimited free shipping, delivery from store, fuel discounts, and mobile Scan & Go. Drives customer loyalty, increases purchase frequency, and generates recurring subscription revenue while integrating digital and physical shopping experiences.\n### Explicit Support:\n- \"Our Walmart+ membership offering provides enhanced omnichannel shopping benefits including unlimited free shipping on eligible items with no order minimum, unlimited delivery from store, fuel discounts, mobile Scan & Go and access to additional member benefits\"\n### Segment Anchors:\n- Walmart U.S. | described as part of Walmart U.S. omnichannel strategy\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- online | subscription acquired and managed through digital platforms\n### Revenue Models:\n- subscription | recurring membership fees\n\n## [Offering] Sam's Club Membership Program\n### Role in Business Model:\nTiered membership program required for access to Sam's Club locations and services. Generates significant operating income through annual fees and creates member lock-in for bulk purchasing, ancillary services, and loyalty rewards.\n### Explicit Support:\n- \"The following two membership tiers are available: Club membership for a $50 annual fee and Plus membership for a $110 annual fee\"\n- \"membership income is a significant component of the segment's operating income\"\n### Segment Anchors:\n- Sam's Club U.S. | core offering of the segment, required for access\n### Parent Offering:\n- none\n### Child Offerings:\n- Club Membership Tier | entry-level tier at $50 annual fee providing basic club access and curbside pickup\n- Plus Membership Tier | premium tier at $110 annual fee providing free delivery-from-club, free shipping on orders $50+, exclusive discounts, and early shopping hours\n- Sam's Cash Rewards Program | loyalty rewards program allowing members to earn cash rewards on qualifying purchases redeemable for cash, purchases, or membership fees\n### Channels:\n- none\n### Revenue Models:\n- subscription | annual membership fees\n\n## [Offering] Walmart Marketplace Platform\n### Role in Business Model:\nDigital platform enabling third-party sellers to reach customers through Walmart's eCommerce ecosystem, expanding product assortment beyond first-party inventory. Integrated with advertising and fulfillment services to create a comprehensive seller ecosystem.\n### Explicit Support:\n- \"expand our assortment and service offerings... through offerings such as... marketplace\"\n- \"supply chain and fulfillment capabilities to online marketplace sellers\"\n### Segment Anchors:\n- Walmart U.S. | marketplace services listed under U.S. offerings\n- Walmart International | \"expand our marketplace offerings\" in international markets\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- online | digital platform for third-party sellers\n### Revenue Models:\n- transaction fees | fees on third-party transactions facilitated through the platform\n\n## [Offering] Walmart Fulfillment Services\n### Role in Business Model:\nSupply chain and logistics offering providing storage, picking, packing, and delivery capabilities to online marketplace sellers. Enables third-party sellers to leverage Walmart's distribution infrastructure while generating service revenue separate from marketplace transaction fees.\n### Explicit Support:\n- \"supply chain and fulfillment capabilities to online marketplace sellers\"\n- \"mutually reinforcing businesses in areas such as... fulfillment services\"\n### Segment Anchors:\n- Walmart U.S. | fulfillment capabilities provided to U.S. marketplace sellers\n- Walmart International | fulfillment services referenced as international reinforcing business\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- direct sales | B2B contracting with marketplace sellers and suppliers\n### Revenue Models:\n- service fees | fees for warehousing, logistics, and delivery services\n\n## [Offering] Walmart Advertising Solutions\n### Role in Business Model:\nAdvertising platform providing brands and marketplace sellers with sponsored placement, search advertising, and display advertising access to Walmart's customer base across physical and digital touchpoints, supplemented by closed-loop measurement capabilities.\n### Explicit Support:\n- \"advertising solutions for brands and online marketplace sellers\"\n- \"data analytics and insights for suppliers and brands\"\n- \"mutually reinforcing businesses in areas such as advertising\"\n### Segment Anchors:\n- Walmart U.S. | explicitly listed under U.S. offerings\n- Sam's Club U.S. | \"advertising solutions for brands\" listed under Sam's Club\n- Walmart International | advertising listed as reinforcing business area across international markets\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- direct sales | enterprise sales to brands and sellers\n- online | self-service advertising platform\n### Revenue Models:\n- advertising | sale of advertising inventory and sponsored placement\n\n## [Offering] Walmart Data and Analytics Platform\n### Role in Business Model:\nData monetization offering providing suppliers and brands with consumer insights, demand forecasting, and performance analytics derived from Walmart's omnichannel transaction data. Distinct from advertising solutions, this offering focuses on data-as-a-service for supplier decision-making.\n### Explicit Support:\n- \"data analytics and insights for suppliers and brands\"\n- \"operational insights and analytics for suppliers\" (Sam's Club)\n### Segment Anchors:\n- Walmart U.S. | listed under U.S. supplier services\n- Sam's Club U.S. | listed under Sam's Club supplier offerings\n- Walmart International | implied by global ecosystem capability sharing\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- direct sales | enterprise sales to suppliers and brand partners\n### Revenue Models:\n- service fees | fees for data access, analytics reports, and insights subscriptions\n\n## [Offering] Walmart Financial Services\n### Role in Business Model:\nConsumer financial products and services suite including money transfers, check cashing, bill payment, prepaid access (money orders), and certain types of installment lending. Provides ancillary revenue streams and increases customer convenience, retention, and store visit frequency.\n### Explicit Support:\n- \"financial services and related products such as money orders, prepaid access, money transfers, check cashing, bill payment and certain types of installment lending\"\n- \"financial services and related products\" (Sam's Club)\n- \"financial services\" as reinforcing business (International)\n### Segment Anchors:\n- Walmart U.S. | listed under U.S. offerings\n- Sam's Club U.S. | listed under Sam's Club offerings\n- Walmart International | listed as international reinforcing business\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- retail | in-store money centers and customer service desks\n### Revenue Models:\n- service fees | fees for check cashing, money orders, and account services\n- transaction fees | per-transaction fees for money transfers and payments\n\n## [Offering] Walmart Health and Wellness Services\n### Role in Business Model:\nHealthcare service offering including pharmacy dispensing, over-the-counter drug sales, optical services (vision centers), and hearing services (Sam's Club). Provides essential health services that drive traffic, improve customer retention, and generate service fee revenue alongside product sales.\n### Explicit Support:\n- \"Health and wellness includes pharmacy, over-the-counter drugs and other medical products, and optical services\" (Walmart U.S.)\n- \"pharmacy, optical and hearing services, and over-the-counter drugs\" (Sam's Club)\n- \"healthcare\" listed as international reinforcing business\n### Segment Anchors:\n- Walmart U.S. | pharmacy and optical services\n- Sam's Club U.S. | pharmacy, optical, and hearing services\n- Walmart International | healthcare referenced as reinforcing service offering\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- retail | in-store pharmacies, optical centers, and hearing aid centers\n### Revenue Models:\n- service fees | professional fees for pharmacy, optical, and hearing services\n\n## [Offering] Great Value Product Family\n### Role in Business Model:\nFlagship private label brand offering quality grocery and consumable products at value prices. Represents a durable, global brand asset used across U.S. and international markets to drive margin expansion and price leadership.\n### Explicit Support:\n- \"Great Value\" listed among private brands under Walmart U.S.\n- \"Great Value\" listed as global private brand used in Walmart International\n### Segment Anchors:\n- Walmart U.S. | core private brand for grocery and consumables\n- Walmart International | leveraged as global private brand across international markets\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- none\n### Revenue Models:\n- none\n\n## [Offering] Equate Product Family\n### Role in Business Model:\nPrivate label brand specializing in health, beauty, and personal care products. Globally leveraged brand providing pharmacy-adjacent and wellness products at value prices.\n### Explicit Support:\n- \"Equate\" listed among private brands under Walmart U.S.\n- \"Equate\" listed as global private brand used in Walmart International\n### Segment Anchors:\n- Walmart U.S. | health and beauty private brand\n- Walmart International | leveraged as global private brand\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- none\n### Revenue Models:\n- none\n\n## [Offering] Member's Mark Product Family\n### Role in Business Model:\nPremium private label brand anchored in Sam's Club, offering \"Made Without\" premium-quality products across grocery, general merchandise, and consumable categories. Designed specifically for warehouse club members seeking quality and value, while also distributed in international markets.\n### Explicit Support:\n- \"the Sam's Club Member's Mark private label brand offers premium-quality, 'Made Without' products across a wide range of categories\" (Sam's Club U.S.)\n- \"Member's Mark\" listed as global private brand used in Walmart International\n### Segment Anchors:\n- Sam's Club U.S. | anchor private brand for the membership club\n- Walmart International | marketed as global private brand\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- none\n### Revenue Models:\n- none\n\n## [Offering] Flipkart Platform\n### Role in Business Model:\nMajority-owned Indian eCommerce marketplace providing digital retail access across India, including marketplace, advertising, and fulfillment services. Represents Walmart's primary international digital platform investment, operating with local autonomy while leveraging global technology and supply chain expertise.\n### Explicit Support:\n- \"our majority stakes in Flipkart... in India\"\n- \"walmart.com.mx, walmart.ca, flipkart.com, PhonePe... and other sites\" (listed under International eCommerce)\n### Segment Anchors:\n- Walmart International | operated through majority-owned subsidiary in India\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- online | flipkart.com and mobile applications\n### Revenue Models:\n- transaction fees | marketplace transaction fees\n- advertising | advertising revenue from brands and sellers\n\n## [Offering] PhonePe Platform\n### Role in Business Model:\nMajority-owned Indian digital payments and financial services platform facilitating mobile payments, money transfers, and financial transactions. Complements Flipkart as part of Walmart's digital ecosystem in India, generating transaction-based revenue.\n### Explicit Support:\n- \"majority stakes in... PhonePe in India\"\n- listed alongside flipkart.com as International eCommerce site\n### Segment Anchors:\n- Walmart International | operated through majority-owned subsidiary in India\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- online | mobile application and digital interfaces\n### Revenue Models:\n- transaction fees | fees for payment processing and digital transactions\n\n## [Offering] Sam's Club Ancillary Services\n### Role in Business Model:\nInstallation and technical services provided to members including tire and battery installation, photo and tech assistance, and home and auto solutions. Drives incremental service revenue and member value beyond merchandise sales.\n### Explicit Support:\n- \"tire and battery installation services, photo and tech assistance, home and auto solutions\"\n### Segment Anchors:\n- Sam's Club U.S. | listed under Sam's Club offerings\n### Parent Offering:\n- none\n### Child Offerings:\n- none\n### Channels:\n- retail | in-club service centers and installation bays\n### Revenue Models:\n- service fees | fees for installation and technical services\n\n# CORPORATE SCOPE\n## Operating Geographies:\n- Worldwide | operations across 19 countries including U.S., Canada, Mexico, China, India, Chile, and markets in Africa and Central America, supported by global supply chain and technology infrastructure\n\n## Key Partners:\n- none",
+  "compiled_graph_extraction": {
+    "extraction_notes": "Compiled from analyst memo detailing Walmart's three reportable segments and their omnichannel offerings. Preserved Sam's Club Membership Program parent-child hierarchy for tiered subscriptions, captured differentiated B2B direct sales channels for fulfillment and data services, and mapped multi-segment anchoring for global private brands and platform services.",
+    "triples": [
+      {
+        "subject": "Walmart",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Walmart U.S.",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Walmart",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Walmart International",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Walmart",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Sam's Club U.S.",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Walmart",
+        "subject_type": "Company",
+        "relation": "OPERATES_IN",
+        "object": "Worldwide",
+        "object_type": "Place"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Sam's Club U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Sam's Club U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Sam's Club U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Sam's Club U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart+ Membership Program",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Marketplace Platform",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Fulfillment Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Advertising Solutions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Data and Analytics Platform",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Financial Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Health and Wellness Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Great Value Product Family",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Equate Product Family",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Marketplace Platform",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Fulfillment Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Advertising Solutions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Data and Analytics Platform",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Financial Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Health and Wellness Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Great Value Product Family",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Equate Product Family",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Member's Mark Product Family",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Flipkart Platform",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "PhonePe Platform",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Sam's Club U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Sam's Club Membership Program",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Sam's Club U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Advertising Solutions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Sam's Club U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Data and Analytics Platform",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Sam's Club U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Financial Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Sam's Club U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Health and Wellness Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Sam's Club U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Member's Mark Product Family",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Sam's Club U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Sam's Club Ancillary Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Sam's Club Membership Program",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Club Membership Tier",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Sam's Club Membership Program",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Plus Membership Tier",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Sam's Club Membership Program",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Sam's Cash Rewards Program",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart+ Membership Program",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Sam's Club Membership Program",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Walmart Marketplace Platform",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "transaction fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Walmart Fulfillment Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Walmart Advertising Solutions",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Walmart Data and Analytics Platform",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Walmart Financial Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Walmart Financial Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "transaction fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Walmart Health and Wellness Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Flipkart Platform",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "transaction fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Flipkart Platform",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "PhonePe Platform",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "transaction fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Sam's Club Ancillary Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      }
+    ]
+  },
+  "final_extraction": {
+    "extraction_notes": "Critiqued for overreach: Removed Walmart International attribution for Walmart Data and Analytics Platform due to weak 'implied by global ecosystem capability sharing' support in memo. Preserved all other segment-offering relationships explicitly supported by filing evidence, including tiered membership hierarchy for Sam's Club and global private brand distribution. Retained reinforcing business service attributions (marketplace, fulfillment, advertising, financial services, healthcare) where memo explicitly lists them for International segment.",
+    "triples": [
+      {
+        "subject": "Walmart",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Walmart U.S.",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Walmart",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Walmart International",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Walmart",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Sam's Club U.S.",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Walmart",
+        "subject_type": "Company",
+        "relation": "OPERATES_IN",
+        "object": "Worldwide",
+        "object_type": "Place"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Sam's Club U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Sam's Club U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Sam's Club U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Sam's Club U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart+ Membership Program",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Marketplace Platform",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Fulfillment Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Advertising Solutions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Data and Analytics Platform",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Financial Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Health and Wellness Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Great Value Product Family",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Equate Product Family",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Marketplace Platform",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Fulfillment Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Advertising Solutions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Financial Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Health and Wellness Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Great Value Product Family",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Equate Product Family",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Member's Mark Product Family",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Flipkart Platform",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart International",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "PhonePe Platform",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Sam's Club U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Sam's Club Membership Program",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Sam's Club U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Advertising Solutions",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Sam's Club U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Data and Analytics Platform",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Sam's Club U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Financial Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Sam's Club U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Walmart Health and Wellness Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Sam's Club U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Member's Mark Product Family",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Sam's Club U.S.",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Sam's Club Ancillary Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Sam's Club Membership Program",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Club Membership Tier",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Sam's Club Membership Program",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Plus Membership Tier",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Sam's Club Membership Program",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Sam's Cash Rewards Program",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Walmart+ Membership Program",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Sam's Club Membership Program",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Walmart Marketplace Platform",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "transaction fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Walmart Fulfillment Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Walmart Advertising Solutions",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Walmart Data and Analytics Platform",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Walmart Financial Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Walmart Financial Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "transaction fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Walmart Health and Wellness Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Flipkart Platform",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "transaction fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Flipkart Platform",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "PhonePe Platform",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "transaction fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Sam's Club Ancillary Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      }
+    ]
+  }
+}

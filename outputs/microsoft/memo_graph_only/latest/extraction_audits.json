@@ -1,0 +1,23 @@
+{
+  "foundation_memo": {
+    "content_length": 24565,
+    "line_count": 423,
+    "format": "text"
+  },
+  "graph_compilation": {
+    "payload_parse_recovered": false,
+    "payload_triples_is_list": true,
+    "raw_triple_count": 129,
+    "non_dict_triple_count": 0,
+    "missing_key_triple_count": 0,
+    "malformed_triple_count": 0,
+    "ontology_rejected_triple_count": 25,
+    "invalid_triple_count": 25,
+    "duplicate_triple_count": 0,
+    "kept_triple_count": 104,
+    "invalid_issue_counts": {
+      "segment_anchored_offering_sells_through": 25
+    },
+    "ontology_version": "canonical"
+  }
+}

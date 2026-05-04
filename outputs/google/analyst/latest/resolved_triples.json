@@ -1,0 +1,509 @@
+{
+  "triple_count": 72,
+  "triples": [
+    {
+      "subject": "Google",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Google Services",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Google",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Google Cloud",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Google",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Other Bets",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Google",
+      "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "Worldwide",
+      "object_type": "Place"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "small businesses",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "developers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "retail",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "OEMs",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Google Search",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Search",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "YouTube",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "YouTube",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "YouTube",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "YouTube",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "YouTube TV",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "YouTube",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "YouTube Music and Premium",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "YouTube",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "NFL Sunday Ticket",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Google Network",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Network",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Google Play",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Play",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "transaction fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Android",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Android",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Chrome",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Google Maps",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Maps",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Gmail",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Gmail",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "advertising",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Gmail",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Google Drive",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Drive",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Google Photos",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Photos",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Pixel Devices",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Pixel Devices",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "hardware sales",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Pixel Devices",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Pixel smartphones",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Pixel Devices",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Pixel wearables",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Google One",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google One",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Google Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Google Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "developers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Google Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "IT professionals",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Google Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Google Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Google Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Google Cloud Platform",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Cloud Platform",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "consumption-based",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Google Cloud Platform",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Google Cloud Platform",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Vertex AI",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Google Workspace",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Workspace",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Google",
+      "subject_type": "Company",
+      "relation": "OFFERS",
+      "object": "Gemini Family",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Gemini Family",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Google Gemini",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Gemini Family",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Gemini Enterprise",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Gemini Family",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Gemini for Google Workspace",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Services",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Google Gemini",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Gemini Enterprise",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Google Cloud",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Gemini for Google Workspace",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Other Bets",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "consumers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Other Bets",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "government agencies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Other Bets",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "healthcare organizations",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Other Bets",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Other Bets",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Other Bets",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Other Bets",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Waymo",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Waymo",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Other Bets",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Isomorphic Labs",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Isomorphic Labs",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Isomorphic Labs",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Other Bets",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Internet Services",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Internet Services",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "subscription",
+      "object_type": "RevenueModel"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "company_name": "Microsoft",
+  "company_slug": "microsoft",
+  "pipeline": "memo_graph_only",
+  "latest_available": true,
+  "latest_run_dir": "outputs/microsoft/memo_graph_only/latest",
+  "available_run_tokens": [],
+  "failed_run_tokens": [],
+  "updated_at": "2026-04-30T13:47:25.408807+00:00"
+}

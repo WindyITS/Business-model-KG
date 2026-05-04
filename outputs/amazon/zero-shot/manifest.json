@@ -1,0 +1,10 @@
+{
+  "company_name": "Amazon",
+  "company_slug": "amazon",
+  "pipeline": "zero-shot",
+  "latest_available": true,
+  "latest_run_dir": "outputs/amazon/zero-shot/latest",
+  "available_run_tokens": [],
+  "failed_run_tokens": [],
+  "updated_at": "2026-04-30T13:48:04.993809+00:00"
+}

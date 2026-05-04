@@ -35,8 +35,9 @@ for, without going deep into implementation details.
 - `data/`: checked-in example 10-K business-section text files. The ignored
   `data/query_planner_curated/` subfolder is used only by fine-tuning and can be
   downloaded from Hugging Face.
-- `outputs/`: ignored local extraction outputs. A run writes resolved triples,
-  validation reports, summaries, and intermediate pipeline artifacts here.
+- `outputs/`: checked-in reference extraction outputs plus any new local
+  extraction outputs. The shipped `latest/` runs include resolved triples,
+  validation reports, summaries, and intermediate pipeline artifacts.
 - `runtime_assets/`: local runtime bundles that are too large or specific to
   track in Git. The main expected bundle is `runtime_assets/query_stack/`.
 - `evaluation/results/`: checked-in and regenerated evaluation reports.

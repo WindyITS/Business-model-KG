@@ -1,0 +1,245 @@
+{
+  "triples": [
+    {
+      "subject": "Palantir",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Government",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Palantir",
+      "subject_type": "Company",
+      "relation": "HAS_SEGMENT",
+      "object": "Commercial",
+      "object_type": "BusinessSegment"
+    },
+    {
+      "subject": "Palantir",
+      "subject_type": "Company",
+      "relation": "OPERATES_IN",
+      "object": "Worldwide",
+      "object_type": "Place"
+    },
+    {
+      "subject": "Palantir",
+      "subject_type": "Company",
+      "relation": "PARTNERS_WITH",
+      "object": "Fujitsu Limited",
+      "object_type": "Company"
+    },
+    {
+      "subject": "Government",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "government agencies",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Government",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Government",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "system integrators",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "large enterprises",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "developers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "healthcare organizations",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "manufacturers",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "SERVES",
+      "object": "financial services firms",
+      "object_type": "CustomerType"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "direct sales",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "resellers",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "system integrators",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "SELLS_THROUGH",
+      "object": "online",
+      "object_type": "Channel"
+    },
+    {
+      "subject": "Government",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Palantir Gotham",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Government",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Palantir AIP",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Government",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Palantir Apollo",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Palantir Foundry",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Palantir AIP",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Palantir Apollo",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Developer Tier",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Commercial",
+      "subject_type": "BusinessSegment",
+      "relation": "OFFERS",
+      "object": "Industry Operating Systems",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Palantir Foundry",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Developer Tier",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Palantir Foundry",
+      "subject_type": "Offering",
+      "relation": "OFFERS",
+      "object": "Industry Operating Systems",
+      "object_type": "Offering"
+    },
+    {
+      "subject": "Palantir Gotham",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Palantir Gotham",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Palantir Foundry",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Palantir Foundry",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Palantir AIP",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Palantir AIP",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Palantir Apollo",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "licensing",
+      "object_type": "RevenueModel"
+    },
+    {
+      "subject": "Palantir Apollo",
+      "subject_type": "Offering",
+      "relation": "MONETIZES_VIA",
+      "object": "service fees",
+      "object_type": "RevenueModel"
+    }
+  ],
+  "extraction_notes": "Compiled dual-segment structure with four primary software platforms (Gotham, Foundry, AIP, Apollo) and two derivative offerings (Developer Tier, Industry Operating Systems). Preserved parent-child hierarchy where Developer Tier descends from both Foundry and AIP, and Industry Operating Systems descends from Foundry. Omitted 'Cloud partnerships' channel due to absence from canonical label set. Captured cross-segment presence of AIP and Apollo. Revenue models not assigned to Developer Tier as memo explicitly states none described.",
+  "attempts_used": 1,
+  "raw_response": "{\n  \"extraction_notes\": \"Compiled dual-segment structure with four primary software platforms (Gotham, Foundry, AIP, Apollo) and two derivative offerings (Developer Tier, Industry Operating Systems). Preserved parent-child hierarchy where Developer Tier descends from both Foundry and AIP, and Industry Operating Systems descends from Foundry. Omitted 'Cloud partnerships' channel due to absence from canonical label set. Captured cross-segment presence of AIP and Apollo. Revenue models not assigned to Developer Tier as memo explicitly states none described.\",\n  \"triples\": [\n    {\n      \"subject\": \"Palantir\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"HAS_SEGMENT\",\n      \"object\": \"Government\",\n      \"object_type\": \"BusinessSegment\"\n    },\n    {\n      \"subject\": \"Palantir\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"HAS_SEGMENT\",\n      \"object\": \"Commercial\",\n      \"object_type\": \"BusinessSegment\"\n    },\n    {\n      \"subject\": \"Palantir\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"OPERATES_IN\",\n      \"object\": \"Worldwide\",\n      \"object_type\": \"Place\"\n    },\n    {\n      \"subject\": \"Palantir\",\n      \"subject_type\": \"Company\",\n      \"relation\": \"PARTNERS_WITH\",\n      \"object\": \"Fujitsu Limited\",\n      \"object_type\": \"Company\"\n    },\n    {\n      \"subject\": \"Government\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"government agencies\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Government\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SELLS_THROUGH\",\n      \"object\": \"direct sales\",\n      \"object_type\": \"Channel\"\n    },\n    {\n      \"subject\": \"Government\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SELLS_THROUGH\",\n      \"object\": \"system integrators\",\n      \"object_type\": \"Channel\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"large enterprises\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"developers\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"healthcare organizations\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"manufacturers\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SERVES\",\n      \"object\": \"financial services firms\",\n      \"object_type\": \"CustomerType\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SELLS_THROUGH\",\n      \"object\": \"direct sales\",\n      \"object_type\": \"Channel\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SELLS_THROUGH\",\n      \"object\": \"resellers\",\n      \"object_type\": \"Channel\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SELLS_THROUGH\",\n      \"object\": \"system integrators\",\n      \"object_type\": \"Channel\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"SELLS_THROUGH\",\n      \"object\": \"online\",\n      \"object_type\": \"Channel\"\n    },\n    {\n      \"subject\": \"Government\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Palantir Gotham\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Government\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Palantir AIP\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Government\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Palantir Apollo\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Palantir Foundry\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Palantir AIP\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Palantir Apollo\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Developer Tier\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Commercial\",\n      \"subject_type\": \"BusinessSegment\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Industry Operating Systems\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Palantir Foundry\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Developer Tier\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Palantir Foundry\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Industry Operating Systems\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Palantir AIP\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"OFFERS\",\n      \"object\": \"Developer Tier\",\n      \"object_type\": \"Offering\"\n    },\n    {\n      \"subject\": \"Palantir Gotham\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"licensing\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"Palantir Gotham\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"service fees\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"Palantir Foundry\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"licensing\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"Palantir Foundry\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"service fees\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"Palantir AIP\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"licensing\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"Palantir AIP\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"service fees\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"Palantir Apollo\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"licensing\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"Palantir Apollo\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"service fees\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"Industry Operating Systems\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"licensing\",\n      \"object_type\": \"RevenueModel\"\n    },\n    {\n      \"subject\": \"Industry Operating Systems\",\n      \"subject_type\": \"Offering\",\n      \"relation\": \"MONETIZES_VIA\",\n      \"object\": \"service fees\",\n      \"object_type\": \"RevenueModel\"\n    }\n  ]\n}"
+}

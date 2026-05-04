@@ -83,11 +83,14 @@ compilation checks, wrapper checks, and package smoke installs.
 bash ./scripts/check_repo.sh
 ```
 
-## Public Artifacts
+## Reference Outputs And Public Artifacts
 
-Generated outputs, fine-tuning data, and the local query-stack bundle are not
-tracked in Git. They are either generated locally or downloaded from Hugging
-Face.
+The repository ships compact reference extraction outputs under `outputs/`.
+Those `latest/` runs include the metadata needed for evaluation and Neo4j
+loading, so reviewers can test the project without rerunning LLM extraction.
+
+Larger artifacts, such as the fine-tuning dataset and the local query-stack
+bundle, are downloaded from Hugging Face or generated locally.
 
 The public artifacts are:
 

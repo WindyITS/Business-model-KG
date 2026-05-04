@@ -1,0 +1,1050 @@
+{
+  "foundation_memo": "# ANALYTICAL FRAME\n## Summary:\nAlphabet operates as a holding company collection with Google as the dominant business. Google is organized into two primary business-model anchors: Google Services (consumer-facing platforms monetized chiefly through advertising and supported by subscriptions, platform fees, and hardware) and Google Cloud (enterprise infrastructure and productivity platforms monetized via consumption fees and subscriptions). A third segment, Other Bets, houses emerging frontier-technology businesses, with Waymo representing the primary commercialized entity. The business model depends on aggregating consumer attention through high-scale digital platforms, converting that attention into advertising inventory, while diversifying into enterprise cloud services and experimental long-term bets.\n\n## Explicit Support:\n- \"Alphabet is a collection of businesses — the largest of which is Google. We report Google in two segments, Google Services and Google Cloud, and all non-Google businesses collectively as Other Bets.\"\n- \"Google Services generates revenues primarily by delivering both performance and brand advertising...\"\n- \"Through our Google Cloud Platform and Google Workspace offerings, Google Cloud generates revenues primarily from consumption-based fees and subscriptions...\"\n- \"Revenues from Other Bets are generated primarily from the sale of autonomous transportation and internet services.\"\n\n# SEGMENTS\n## [Segment] Google Services\n### Role in Business Model:\nThe consumer-scale digital platform segment that aggregates global user attention through search, video content, mobile operating systems, and application stores. It monetizes this attention primarily via advertising inventory sales to businesses, with secondary revenue streams from consumer subscriptions, digital content platform fees, and proprietary hardware sales. This segment functions as the cash-generating core that funds broader Alphabet investments.\n### Explicit Support:\n- \"For reporting purposes Google comprises two segments: Google Services and Google Cloud.\"\n- \"Google Services' core products and platforms include ads, Android, Chrome, devices, Gmail, Google Drive, Google Gemini, Google Maps, Google Photos, Google Play, Search, and YouTube...\"\n- \"Google Services generates revenues primarily by delivering both performance and brand advertising that appears on Google Search & other properties, YouTube, and Google Network partners' properties...\"\n### Customer Types:\n- consumers | Primary end users of Search, YouTube, Android, and devices, generating data and engagement\n- large enterprises | Advertisers purchasing brand advertising and performance advertising campaigns at scale\n- small businesses | \"Millions of companies\" referenced as using advertising solutions to grow businesses\n- developers | Builders creating apps distributed via Google Play and participating in the Android ecosystem\n### Channels:\n- online | Primary distribution for advertising delivery, application downloads, and subscription services\n- retail | Physical storefront distribution for Pixel hardware devices\n- OEMs | Pre-installation and bundling of Android and Chrome on third-party manufacturer devices\n\n## [Segment] Google Cloud\n### Role in Business Model:\nThe enterprise-facing business unit providing infrastructure-as-a-service, platform-as-a-service, and software-as-a-service to organizations modernizing IT systems, developing AI applications, and securing digital operations. Monetization relies on usage-based pricing for compute and storage resources combined with seat-based subscriptions for productivity software, serving business and technical buyers.\n### Explicit Support:\n- \"Through our Google Cloud Platform and Google Workspace offerings, Google Cloud generates revenues primarily from consumption-based fees and subscriptions for infrastructure, platform, applications, and other cloud services.\"\n- \"Customers use Google Cloud in multiple ways such as: AI-optimized Infrastructure, Developer Platform, Cybersecurity, Data and Analytics, Agents...\"\n### Customer Types:\n- large enterprises | Organizations migrating IT infrastructure and deploying AI models at enterprise scale\n- developers | Technical users of Vertex AI and development platforms building custom applications\n- IT professionals | Administrators managing cloud infrastructure, cybersecurity, and data analytics platforms\n### Channels:\n- direct sales | Enterprise sales force contracting for cloud infrastructure and Workspace deployments\n- online | Self-service digital procurement for cloud resources and software subscriptions\n\n## [Segment] Other Bets\n### Role in Business Model:\nThe portfolio of independent early-stage and scaling businesses focused on frontier technologies outside Google's core operations. These entities range from research-phase moonshots to commercially scaling operations, generating revenue through direct service provision while maintaining separate governance structures and external investment.\n### Explicit Support:\n- \"all non-Google businesses collectively as Other Bets\"\n- \"Alphabet's investment in the portfolio of Other Bets includes businesses that are at various stages of development, ranging from those in the research and development phase... to those that are scaling commercialization, such as Waymo...\"\n- \"Revenues from Other Bets are generated primarily from the sale of autonomous transportation and internet services.\"\n### Customer Types:\n- consumers | End users purchasing autonomous ride-hailing transportation services\n- government agencies | Potential public-sector customers for autonomous transportation and infrastructure technology\n### Channels:\n- direct sales | Direct contracting for transportation services with end customers\n- online | Digital platforms for service discovery, booking, and payment\n\n# OFFERINGS\n## [Offering] Google Search\n### Role in Business Model:\nThe foundational information retrieval franchise organizing the world's information through text, multimodal queries, and AI-enhanced experiences (AI Overviews, AI Mode). It serves as the primary inventory source for high-intent advertising and the central traffic hub for the company's consumer ecosystem.\n### Explicit Support:\n- \"Google Search helps people find information and make sense of the world in more natural and intuitive ways...\"\n- \"Google Services' core products and platforms include... Search...\"\n- \"Google Services generates revenues primarily by delivering both performance and brand advertising that appears on Google Search & other properties...\"\n### Segment Anchors:\n- Google Services | Core product platform within the consumer segment\n### Parent Offering:\n- none | First-order franchise offering\n### Child Offerings:\n- none | Features (AI Overviews, AI Mode) described but no distinct sub-product families defined\n### Channels:\n- none | Distributed through segment-level online channels\n### Revenue Models:\n- advertising | Performance and brand advertising served against search queries\n\n## [Offering] YouTube\n### Role in Business Model:\nThe video content platform franchise combining user-generated and professional content across long-form, short-form, and live streaming formats. It operates a dual-revenue model supporting the creator economy through the Partner Program while monetizing viewer engagement through advertising and premium subscriptions.\n### Explicit Support:\n- \"YouTube provides people with entertainment, information, and opportunities to learn something new and helps support the creator economy through the YouTube Partner Program.\"\n- \"Google Services' core products and platforms include... YouTube...\"\n- \"consumer subscriptions, which primarily include revenues from YouTube services, such as YouTube TV, YouTube Music and Premium, and NFL Sunday Ticket...\"\n### Segment Anchors:\n- Google Services | Core platform within the consumer segment\n### Parent Offering:\n- none | First-order franchise platform\n### Child Offerings:\n- YouTube TV | Subscription television service offering live TV and NFL Sunday Ticket\n- YouTube Music and Premium | Music streaming and ad-free subscription tier\n- NFL Sunday Ticket | Premium sports content package distributed through YouTube\n### Channels:\n- none | Distributed through segment-level online channels\n### Revenue Models:\n- advertising | Brand and performance advertising served across video content\n- subscription | Recurring fees for TV, Music/Premium, and sports content packages\n\n## [Offering] Google Play\n### Role in Business Model:\nThe digital content distribution and commerce platform for the Android ecosystem, enabling transactions between developers and consumers through application sales and in-app purchases while supporting digital content discovery.\n### Explicit Support:\n- \"platforms, which primarily include revenues from Google Play sales of apps and in-app purchases\"\n- \"Google Services' core products and platforms include... Google Play...\"\n### Segment Anchors:\n- Google Services | Platform offering within the consumer segment\n### Parent Offering:\n- none | Standalone platform franchise\n### Child Offerings:\n- none | No distinct named child product families specified\n### Channels:\n- online | Digital storefront accessed via Android devices and web interfaces\n### Revenue Models:\n- transaction fees | Revenue generated from digital commerce transactions and in-app purchases\n\n## [Offering] Android\n### Role in Business Model:\nThe open mobile operating system platform powering the global smartphone ecosystem beyond first-party hardware. It serves as a strategic distribution channel for Google services, Play Store commerce, and advertising inventory while enabling OEM partnerships.\n### Explicit Support:\n- \"Google Services' core products and platforms include... Android...\"\n- \"we continue to invest in platforms like our Android mobile operating system...\"\n### Segment Anchors:\n- Google Services | Core platform within the consumer segment\n### Parent Offering:\n- none | Standalone operating system platform\n### Child Offerings:\n- none | No named variants or editions specified as distinct child families\n### Channels:\n- OEMs | Distribution through original equipment manufacturers pre-installing the operating system\n### Revenue Models:\n- licensing | Platform distribution rights and service bundling agreements with hardware partners\n\n## [Offering] Pixel Devices\n### Role in Business Model:\nThe proprietary hardware device family integrating Google's AI, software, and hardware capabilities, serving as a physical endpoint for service adoption and a showcase for AI-first computing experiences.\n### Explicit Support:\n- \"Google Services' core products and platforms include... devices...\"\n- \"our family of devices... such as the new Pixel 10 series and the Pixel Watch 4\"\n- \"devices, which primarily include sales of the Pixel family of devices\"\n### Segment Anchors:\n- Google Services | Hardware offering within the consumer segment\n### Parent Offering:\n- none | Hardware product family\n### Child Offerings:\n- Pixel smartphones | Mobile phone device line represented by Pixel 10 series\n- Pixel wearables | Smartwatch device line represented by Pixel Watch 4\n### Channels:\n- retail | Physical retail distribution for hardware sales\n- online | Direct digital sales through company storefronts\n### Revenue Models:\n- hardware sales | Revenue from selling physical devices and equipment\n\n## [Offering] Google One\n### Role in Business Model:\nConsumer subscription service providing expanded cloud storage and premium AI model access, representing the direct-to-consumer monetization of cloud infrastructure and AI capabilities outside the advertising model.\n### Explicit Support:\n- \"consumer subscriptions, which primarily include revenues from YouTube services... as well as Google One, which offers access to our most capable Gemini models\"\n### Segment Anchors:\n- Google Services | Consumer subscription offering distinct from advertising\n### Parent Offering:\n- none | Standalone subscription service\n### Child Offerings:\n- none | No distinct tier names specified as separate child offerings\n### Channels:\n- online | Digital subscription procurement and management\n### Revenue Models:\n- subscription | Recurring consumer payments for storage capacity and AI feature access\n\n## [Offering] Google Cloud Platform\n### Role in Business Model:\nThe enterprise infrastructure and AI development platform offering compute, storage, and machine learning capabilities including custom TPU/GPU infrastructure and the Vertex AI development environment. It enables workload migration, AI model training, and application deployment via consumption-based economics.\n### Explicit Support:\n- \"Through our Google Cloud Platform and Google Workspace offerings, Google Cloud generates revenues...\"\n- \"Customers use Google Cloud in multiple ways such as: AI-optimized Infrastructure, Developer Platform... Data and Analytics, Agents...\"\n- \"Developer Platform: delivers a fully managed AI development platform, through Vertex AI...\"\n### Segment Anchors:\n- Google Cloud | Core infrastructure offering of the enterprise segment\n### Parent Offering:\n- none | First-order platform offering\n### Child Offerings:\n- Vertex AI | Fully managed AI development platform for model tuning and deployment\n- Gemini Enterprise | AI agent platform for enterprise workflow automation and discovery\n### Channels:\n- none | Distributed through segment-level direct sales and online channels\n### Revenue Models:\n- consumption-based | Fees calculated according to compute, storage, and network resource utilization\n- subscription | Potential platform access fees for certain managed services\n\n## [Offering] Google Workspace\n### Role in Business Model:\nThe enterprise productivity and collaboration software suite integrating communication (Gmail), document creation (Docs, Sheets), and AI-powered agents. It monetizes through organizational seat subscriptions and enhanced productivity workflows.\n### Explicit Support:\n- \"Through our Google Cloud Platform and Google Workspace offerings...\"\n- \"Gemini for Google Workspace: brings our AI-powered agents into Gmail, Docs, Sheets...\"\n- \"subscriptions for... applications\" within Cloud segment description\n### Segment Anchors:\n- Google Cloud | Productivity application offering within the enterprise segment\n### Parent Offering:\n- none | Standalone application suite franchise\n### Child Offerings:\n- Gemini for Google Workspace | AI agent integration for productivity applications\n### Channels:\n- none | Distributed through segment-level direct sales and online channels\n### Revenue Models:\n- subscription | Recurring seat-based fees for application access and AI features\n\n## [Offering] Waymo\n### Role in Business Model:\nThe autonomous driving technology business providing fully autonomous ride-hailing services to consumers. It represents the commercially scaling moonshot within Other Bets, operating transportation-as-a-service in multiple domestic cities with international expansion underway.\n### Explicit Support:\n- \"Waymo, which is expanding to more cities domestically, entering international markets, and further scaling operations.\"\n- \"providing fully autonomous, paid ride-hailing services to customers in multiple cities\"\n- \"Revenues from Other Bets are generated primarily from the sale of autonomous transportation...\"\n### Segment Anchors:\n- Other Bets | Primary commercialized business within the frontier technology portfolio\n### Parent Offering:\n- none | Independent business unit offering\n### Child Offerings:\n- none | No specific named service tiers or product variants specified\n### Channels:\n- direct sales | Direct consumer contracting for ride services\n- online | Digital platform for ride hailing and payment\n### Revenue Models:\n- service fees | Fees charged for autonomous transportation and ride-hailing services\n\n# CORPORATE SCOPE\n## Operating Geographies:\n- Worldwide | Operations explicitly described as serving \"users around the world,\" \"people worldwide,\" with specific international expansion mentioned for cloud and autonomous driving services\n\n## Key Partners:\n- none | No specific external commercial companies named as strategic partners; relationships described generically (content creators, advertisers, OEMs, network partners) without naming specific partner entities",
+  "augmented_memo": "# ANALYTICAL FRAME\n## Summary:\nAlphabet operates as a holding company collection with Google as the dominant business. Google is organized into two primary business-model anchors: Google Services (consumer-facing platforms monetized chiefly through advertising and supported by subscriptions, platform fees, and hardware) and Google Cloud (enterprise infrastructure and productivity platforms monetized via consumption fees and subscriptions). A third segment, Other Bets, houses emerging frontier-technology businesses, with Waymo representing the primary commercialized entity alongside Isomorphic Labs and internet services infrastructure. The business model depends on aggregating consumer attention through high-scale digital platforms (Search, YouTube, Android, Chrome, Maps), converting that attention into advertising inventory sold through both proprietary properties and network partners, while diversifying into enterprise cloud services spanning AI infrastructure, cybersecurity, and data analytics, and experimental long-term bets in autonomous transportation and health technology.\n\n## Explicit Support:\n- \"Alphabet is a collection of businesses — the largest of which is Google. We report Google in two segments, Google Services and Google Cloud, and all non-Google businesses collectively as Other Bets.\"\n- \"Google Services generates revenues primarily by delivering both performance and brand advertising...\"\n- \"Through our Google Cloud Platform and Google Workspace offerings, Google Cloud generates revenues primarily from consumption-based fees and subscriptions...\"\n- \"Revenues from Other Bets are generated primarily from the sale of autonomous transportation and internet services.\"\n- \"Isomorphic Labs is reimagining the drug discovery process from first principles...\"\n\n# SEGMENTS\n## [Segment] Google Services\n### Role in Business Model:\nThe consumer-scale digital platform segment that aggregates global user attention through search, video content, mobile operating systems, browsers, mapping services, and application stores. It monetizes this attention primarily via advertising inventory sales to businesses across Search, YouTube, and Network partner properties, with secondary revenue streams from consumer subscriptions (YouTube services, Google One), digital content platform fees (Google Play), and proprietary hardware sales (Pixel). This segment functions as the cash-generating core that funds broader Alphabet investments.\n### Explicit Support:\n- \"For reporting purposes Google comprises two segments: Google Services and Google Cloud.\"\n- \"Google Services' core products and platforms include ads, Android, Chrome, devices, Gmail, Google Drive, Google Gemini, Google Maps, Google Photos, Google Play, Search, and YouTube...\"\n- \"Google Services generates revenues primarily by delivering both performance and brand advertising that appears on Google Search & other properties, YouTube, and Google Network partners' properties...\"\n### Customer Types:\n- consumers | Primary end users of Search, YouTube, Android, Chrome, Maps, and devices, generating data and engagement\n- large enterprises | Advertisers purchasing brand advertising and performance advertising campaigns at scale\n- small businesses | \"Millions of companies\" referenced as using advertising solutions to grow businesses\n- developers | Builders creating apps distributed via Google Play and participating in the Android ecosystem\n- content providers | Publishers and creators participating in the YouTube Partner Program and Google Network inventory\n### Channels:\n- online | Primary distribution for advertising delivery, application downloads, and subscription services\n- retail | Physical storefront distribution for Pixel hardware devices\n- OEMs | Pre-installation and bundling of Android and Chrome on third-party manufacturer devices\n\n## [Segment] Google Cloud\n### Role in Business Model:\nThe enterprise-facing business unit providing infrastructure-as-a-service, platform-as-a-service, and software-as-a-service to organizations modernizing IT systems, developing AI applications, securing digital operations, and analyzing data. Monetization relies on usage-based pricing for compute, storage, and AI accelerator resources combined with seat-based subscriptions for productivity software and AI agents, serving business and technical buyers.\n### Explicit Support:\n- \"Through our Google Cloud Platform and Google Workspace offerings, Google Cloud generates revenues primarily from consumption-based fees and subscriptions for infrastructure, platform, applications, and other cloud services.\"\n- \"Customers use Google Cloud in multiple ways such as: AI-optimized Infrastructure, Developer Platform, Cybersecurity, Data and Analytics, Agents...\"\n### Customer Types:\n- large enterprises | Organizations migrating IT infrastructure and deploying AI models at enterprise scale\n- developers | Technical users of Vertex AI and development platforms building custom applications\n- IT professionals | Administrators managing cloud infrastructure, cybersecurity, and data analytics platforms\n### Channels:\n- direct sales | Enterprise sales force contracting for cloud infrastructure and Workspace deployments\n- online | Self-service digital procurement for cloud resources and software subscriptions\n\n## [Segment] Other Bets\n### Role in Business Model:\nThe portfolio of independent early-stage and scaling businesses focused on frontier technologies outside Google's core operations. These entities range from research-phase moonshots to commercially scaling operations, generating revenue through direct service provision (autonomous transportation, internet infrastructure) and potentially licensing or research partnerships (drug discovery), while maintaining separate governance structures and external investment.\n### Explicit Support:\n- \"all non-Google businesses collectively as Other Bets\"\n- \"Alphabet's investment in the portfolio of Other Bets includes businesses that are at various stages of development, ranging from those in the research and development phase... to those that are scaling commercialization, such as Waymo...\"\n- \"Revenues from Other Bets are generated primarily from the sale of autonomous transportation and internet services.\"\n- \"Isomorphic Labs is reimagining the drug discovery process...\"\n### Customer Types:\n- consumers | End users purchasing autonomous ride-hailing transportation services\n- government agencies | Potential public-sector customers for autonomous transportation and infrastructure technology\n- healthcare organizations | Organizations engaged in drug discovery and pharmaceutical development (Isomorphic Labs)\n- large enterprises | Pharmaceutical and biotech companies utilizing AI-driven drug discovery platforms\n### Channels:\n- direct sales | Direct contracting for transportation services and enterprise research partnerships\n- online | Digital platforms for service discovery, booking, and payment\n\n# OFFERINGS\n## [Offering] Google Search\n### Role in Business Model:\nThe foundational information retrieval franchise organizing the world's information through text, multimodal queries, and AI-enhanced experiences (AI Overviews, AI Mode). It serves as the primary inventory source for high-intent advertising and the central traffic hub for the company's consumer ecosystem, integrating Gemini models for advanced reasoning capabilities.\n### Explicit Support:\n- \"Google Search helps people find information and make sense of the world in more natural and intuitive ways...\"\n- \"Google Services' core products and platforms include... Search...\"\n- \"Google Services generates revenues primarily by delivering both performance and brand advertising that appears on Google Search & other properties...\"\n- \"AI Mode allows users to ask more nuanced questions... using Gemini's advanced reasoning...\"\n### Segment Anchors:\n- Google Services | Core product platform within the consumer segment\n### Parent Offering:\n- none | First-order franchise offering\n### Child Offerings:\n- none | Features (AI Overviews, AI Mode) described but no distinct sub-product families defined\n### Channels:\n- none | Distributed through segment-level online channels\n### Revenue Models:\n- advertising | Performance and brand advertising served against search queries\n\n## [Offering] YouTube\n### Role in Business Model:\nThe video content platform franchise combining user-generated and professional content across long-form, short-form, and live streaming formats. It operates a dual-revenue model supporting the creator economy through the Partner Program while monetizing viewer engagement through advertising and premium subscriptions.\n### Explicit Support:\n- \"YouTube provides people with entertainment, information, and opportunities to learn something new and helps support the creator economy through the YouTube Partner Program.\"\n- \"Google Services' core products and platforms include... YouTube...\"\n- \"consumer subscriptions, which primarily include revenues from YouTube services, such as YouTube TV, YouTube Music and Premium, and NFL Sunday Ticket...\"\n### Segment Anchors:\n- Google Services | Core platform within the consumer segment\n### Parent Offering:\n- none | First-order franchise platform\n### Child Offerings:\n- YouTube TV | Subscription television service offering live TV and NFL Sunday Ticket\n- YouTube Music and Premium | Music streaming and ad-free subscription tier\n- NFL Sunday Ticket | Premium sports content package distributed through YouTube\n### Channels:\n- none | Distributed through segment-level online channels\n### Revenue Models:\n- advertising | Brand and performance advertising served across video content\n- subscription | Recurring fees for TV, Music/Premium, and sports content packages\n\n## [Offering] Google Network\n### Role in Business Model:\nThe third-party publisher advertising inventory network that extends Google's advertising reach beyond proprietary properties to partner websites and applications. It provides monetization infrastructure for content providers while offering advertisers extended reach and targeting capabilities, functioning as a distinct inventory source from Search and YouTube.\n### Explicit Support:\n- \"advertising that appears on Google Search & other properties, YouTube, and Google Network partners' properties ('Google Network properties')\"\n- \"content providers, primarily based on the quality of our advertiser base, our ability to help these partners generate revenues from advertising...\"\n### Segment Anchors:\n- Google Services | Advertising platform extension within the consumer segment\n### Parent Offering:\n- none | Standalone advertising network franchise\n### Child Offerings:\n- none | No distinct named child product families specified\n### Channels:\n- none | Distributed through partner publisher properties\n### Revenue Models:\n- advertising | Revenue sharing from ads served on third-party properties\n\n## [Offering] Google Play\n### Role in Business Model:\nThe digital content distribution and commerce platform for the Android ecosystem, enabling transactions between developers and consumers through application sales and in-app purchases while supporting digital content discovery across apps, games, and media.\n### Explicit Support:\n- \"platforms, which primarily include revenues from Google Play sales of apps and in-app purchases\"\n- \"Google Services' core products and platforms include... Google Play...\"\n### Segment Anchors:\n- Google Services | Platform offering within the consumer segment\n### Parent Offering:\n- none | Standalone platform franchise\n### Child Offerings:\n- none | No distinct named child product families specified\n### Channels:\n- online | Digital storefront accessed via Android devices and web interfaces\n### Revenue Models:\n- transaction fees | Revenue generated from digital commerce transactions and in-app purchases\n\n## [Offering] Android\n### Role in Business Model:\nThe open mobile operating system platform powering the global smartphone ecosystem beyond first-party hardware. It serves as a strategic distribution channel for Google services, Play Store commerce, and advertising inventory while enabling OEM partnerships and ecosystem lock-in.\n### Explicit Support:\n- \"Google Services' core products and platforms include... Android...\"\n- \"we continue to invest in platforms like our Android mobile operating system...\"\n### Segment Anchors:\n- Google Services | Core platform within the consumer segment\n### Parent Offering:\n- none | Standalone operating system platform\n### Child Offerings:\n- none | No named variants or editions specified as distinct child families\n### Channels:\n- OEMs | Distribution through original equipment manufacturers pre-installing the operating system\n### Revenue Models:\n- licensing | Platform distribution rights and service bundling agreements with hardware partners\n\n## [Offering] Chrome\n### Role in Business Model:\nThe browser and operating system platform (Chrome OS) providing essential internet access infrastructure and strategic distribution for Search and Google services. It extends the ecosystem beyond mobile devices to desktop and laptop computing environments while supporting web standards and cloud-based computing.\n### Explicit Support:\n- \"Google Services' core products and platforms include... Chrome...\"\n- \"we continue to invest in platforms like our... Chrome browser, and Chrome operating system...\"\n### Segment Anchors:\n- Google Services | Core platform within the consumer segment\n### Parent Offering:\n- none | Standalone platform franchise\n### Child Offerings:\n- none | No distinct named variants specified as separate child offerings\n### Channels:\n- online | Direct download distribution for browser\n- OEMs | Pre-installation of Chrome OS on third-party hardware devices\n### Revenue Models:\n- licensing | Distribution agreements and search traffic monetization\n\n## [Offering] Google Maps\n### Role in Business Model:\nThe location-based platform and mapping service providing navigation, local business discovery, and geographic information services. It generates advertising inventory through local search queries and location-based business promotions while supporting ecosystem functionality across other Google services.\n### Explicit Support:\n- \"Google Services' core products and platforms include... Google Maps...\"\n### Segment Anchors:\n- Google Services | Core platform within the consumer segment\n### Parent Offering:\n- none | Standalone platform franchise\n### Child Offerings:\n- none | No distinct named child product families specified\n### Channels:\n- online | Digital access through web and mobile applications\n### Revenue Models:\n- advertising | Local search and location-based advertising\n\n## [Offering] Gmail\n### Role in Business Model:\nThe electronic mail and communication platform serving billions of users with advertising-supported consumer access and enterprise-grade versions through Workspace subscriptions. It functions as a core engagement driver and data source for advertising relevance while providing enterprise collaboration infrastructure.\n### Explicit Support:\n- \"Google Services' core products and platforms include... Gmail...\"\n- \"Gemini for Google Workspace: brings our AI-powered agents into Gmail...\"\n### Segment Anchors:\n- Google Services | Consumer communication platform\n### Parent Offering:\n- none | Standalone communication platform franchise\n### Child Offerings:\n- none | Consumer and enterprise variants normalized into single offering node\n### Channels:\n- online | Digital access through web and mobile applications\n### Revenue Models:\n- advertising | Ad serving within consumer email interface\n- subscription | Enterprise access via Google Workspace (indirect)\n\n## [Offering] Google Drive\n### Role in Business Model:\nThe cloud storage and file synchronization platform enabling consumer and enterprise document storage, sharing, and collaboration. It monetizes through capacity-based subscriptions for consumers (via Google One) and seat-based enterprise licenses (via Workspace), serving as a foundational utility for digital content management.\n### Explicit Support:\n- \"Google Services' core products and platforms include... Google Drive...\"\n### Segment Anchors:\n- Google Services | Consumer cloud storage platform\n### Parent Offering:\n- none | Standalone storage platform franchise\n### Child Offerings:\n- none | Consumer and enterprise variants normalized into single offering node\n### Channels:\n- online | Digital access through web and mobile applications\n### Revenue Models:\n- subscription | Storage capacity subscriptions via Google One and Workspace\n\n## [Offering] Google Photos\n### Role in Business Model:\nThe photo and video storage, organization, and sharing platform utilizing AI for content management and search. It drives consumer subscription revenue through storage capacity upgrades (via Google One) and ecosystem engagement while supporting Pixel device value proposition.\n### Explicit Support:\n- \"Google Services' core products and platforms include... Google Photos...\"\n### Segment Anchors:\n- Google Services | Consumer media platform\n### Parent Offering:\n- none | Standalone media platform franchise\n### Child Offerings:\n- none | No distinct named child product families specified\n### Channels:\n- online | Digital access through web and mobile applications\n### Revenue Models:\n- subscription | Storage capacity subscriptions via Google One\n\n## [Offering] Pixel Devices\n### Role in Business Model:\nThe proprietary hardware device family integrating Google's AI, software, and hardware capabilities, serving as a physical endpoint for service adoption and a showcase for AI-first computing experiences including on-device AI processing and Gemini model integration.\n### Explicit Support:\n- \"Google Services' core products and platforms include... devices...\"\n- \"our family of devices... such as the new Pixel 10 series and the Pixel Watch 4\"\n- \"devices, which primarily include sales of the Pixel family of devices\"\n### Segment Anchors:\n- Google Services | Hardware offering within the consumer segment\n### Parent Offering:\n- none | Hardware product family\n### Child Offerings:\n- Pixel smartphones | Mobile phone device line represented by Pixel 10 series\n- Pixel wearables | Smartwatch device line represented by Pixel Watch 4\n### Channels:\n- retail | Physical retail distribution for hardware sales\n- online | Direct digital sales through company storefronts\n### Revenue Models:\n- hardware sales | Revenue from selling physical devices and equipment\n\n## [Offering] Google One\n### Role in Business Model:\nConsumer subscription service providing expanded cloud storage across Drive, Photos, and Gmail, plus premium AI model access. It represents the direct-to-consumer monetization of cloud infrastructure and AI capabilities outside the advertising model, bundling storage and AI features.\n### Explicit Support:\n- \"consumer subscriptions, which primarily include revenues from YouTube services... as well as Google One, which offers access to our most capable Gemini models\"\n### Segment Anchors:\n- Google Services | Consumer subscription offering distinct from advertising\n### Parent Offering:\n- none | Standalone subscription service\n### Child Offerings:\n- none | No distinct tier names specified as separate child offerings\n### Channels:\n- online | Digital subscription procurement and management\n### Revenue Models:\n- subscription | Recurring consumer payments for storage capacity and AI feature access\n\n## [Offering] Gemini Family\n### Role in Business Model:\nThe comprehensive AI model and application family spanning consumer and enterprise use cases, built on frontier models including Gemini 3. It serves as the central AI infrastructure unifying consumer assistance, enterprise workflow automation, and developer platforms through a full-stack approach optimized for custom TPUs and GPUs.\n### Explicit Support:\n- \"Gemini 3, our most intelligent AI model yet... our most capable iteration of agentic and generative coding technologies\"\n- \"Google Services' core products and platforms include... Google Gemini\"\n- \"including our Gemini family, third-party, and open models\"\n- \"Gemini Enterprise... Gemini for Google Workspace\"\n### Segment Anchors:\n- none | Cross-cutting family spanning multiple segments\n### Parent Offering:\n- none | Top-level AI franchise\n### Child Offerings:\n- Google Gemini | Consumer AI assistant and application ( anchored to Google Services)\n- Gemini Enterprise | Enterprise AI agent platform for workflow automation ( anchored to Google Cloud)\n- Gemini for Google Workspace | Productivity-integrated AI agents ( anchored to Google Cloud and Workspace)\n### Channels:\n- none | Distributed through segment-level channels\n### Revenue Models:\n- subscription | Enterprise and consumer subscription access\n- consumption-based | Model usage and API fees\n\n## [Offering] Google Cloud Platform\n### Role in Business Model:\nThe enterprise infrastructure and AI development platform offering compute, storage, AI accelerators (TPUs and GPUs), and machine learning capabilities. It enables workload migration, AI model training, cybersecurity protection, data analytics, and application deployment via consumption-based economics and specialized service tiers.\n### Explicit Support:\n- \"Through our Google Cloud Platform and Google Workspace offerings, Google Cloud generates revenues...\"\n- \"Customers use Google Cloud in multiple ways such as: AI-optimized Infrastructure, Developer Platform... Cybersecurity, Data and Analytics...\"\n### Segment Anchors:\n- Google Cloud | Core infrastructure offering of the enterprise segment\n### Parent Offering:\n- none | First-order platform offering\n### Child Offerings:\n- AI-optimized Infrastructure | Compute, storage, and AI accelerator resources (TPUs, GPUs) for workloads\n- Vertex AI | Fully managed AI development platform for model tuning and deployment (Developer Platform)\n- Cloud Cybersecurity | AI-powered threat intelligence and security solutions\n- Cloud Data and Analytics | Data lake, warehouse, and analytics platform unifying governance and ML\n- Gemini Enterprise | Enterprise AI agent platform (also listed under Gemini Family)\n### Channels:\n- none | Distributed through segment-level direct sales and online channels\n### Revenue Models:\n- consumption-based | Fees calculated according to compute, storage, network, and AI resource utilization\n- subscription | Platform access fees for certain managed services\n\n## [Offering] Google Workspace\n### Role in Business Model:\nThe enterprise productivity and collaboration software suite integrating communication (Gmail), document creation (Docs, Sheets), cloud storage (Drive), and AI-powered agents. It monetizes through organizational seat subscriptions and enhanced productivity workflows, competing in the enterprise communication and connectivity market.\n### Explicit Support:\n- \"Through our Google Cloud Platform and Google Workspace offerings...\"\n- \"Gemini for Google Workspace: brings our AI-powered agents into Gmail, Docs, Sheets...\"\n- \"subscriptions for... applications\" within Cloud segment description\n### Segment Anchors:\n- Google Cloud | Productivity application offering within the enterprise segment\n### Parent Offering:\n- none | Standalone application suite franchise\n### Child Offerings:\n- Gemini for Google Workspace | AI agent integration for productivity applications (also listed under Gemini Family)\n### Channels:\n- none | Distributed through segment-level direct sales and online channels\n### Revenue Models:\n- subscription | Recurring seat-based fees for application access and AI features\n\n## [Offering] Waymo\n### Role in Business Model:\nThe autonomous driving technology business providing fully autonomous ride-hailing services to consumers. It represents the commercially scaling moonshot within Other Bets, operating transportation-as-a-service in multiple domestic cities with international expansion underway and scaling operations.\n### Explicit Support:\n- \"Waymo, which is expanding to more cities domestically, entering international markets, and further scaling operations.\"\n- \"providing fully autonomous, paid ride-hailing services to customers in multiple cities\"\n- \"Revenues from Other Bets are generated primarily from the sale of autonomous transportation...\"\n### Segment Anchors:\n- Other Bets | Primary commercialized business within the frontier technology portfolio\n### Parent Offering:\n- none | Independent business unit offering\n### Child Offerings:\n- none | No specific named service tiers or product variants specified\n### Channels:\n- direct sales | Direct consumer contracting for ride services\n- online | Digital platform for ride hailing and payment\n### Revenue Models:\n- service fees | Fees charged for autonomous transportation and ride-hailing services\n\n## [Offering] Isomorphic Labs\n### Role in Business Model:\nThe AI-driven drug discovery business reimagining pharmaceutical development from first principles. It applies frontier AI models to accelerate medicine development, operating as a research and development phase business within Other Bets with potential revenue from pharmaceutical partnerships and licensing.\n### Explicit Support:\n- \"Isomorphic Labs is reimagining the drug discovery process from first principles, applying AI to accelerate the development of new medicines.\"\n### Segment Anchors:\n- Other Bets | Research-phase biotechnology business\n### Parent Offering:\n- none | Independent business unit offering\n### Child Offerings:\n- none | No specific named product lines or service tiers specified\n### Channels:\n- direct sales | Direct enterprise contracting for pharmaceutical research partnerships\n### Revenue Models:\n- service fees | Research and development service fees\n- licensing | Potential licensing of discovered compounds or AI technologies\n\n## [Offering] Internet Services\n### Role in Business Model:\nThe high-speed internet infrastructure business providing broadband connectivity services. It operates as a revenue-generating component of Other Bets distinct from autonomous transportation, delivering physical layer internet access to consumers and businesses.\n### Explicit Support:\n- \"Revenues from Other Bets are generated primarily from the sale of autonomous transportation and internet services.\"\n### Segment Anchors:\n- Other Bets | Infrastructure connectivity business\n### Parent Offering:\n- none | Standalone infrastructure offering\n### Child Offerings:\n- none | No specific named service tiers specified\n### Channels:\n- direct sales | Direct consumer and enterprise subscription contracting\n### Revenue Models:\n- subscription | Recurring fees for internet connectivity services\n\n# CORPORATE SCOPE\n## Operating Geographies:\n- Worldwide | Operations explicitly described as serving \"users around the world,\" \"people worldwide,\" with specific international expansion mentioned for cloud and autonomous driving services\n\n## Key Partners:\n- none | No specific external commercial companies named as strategic partners; relationships described generically (content creators, advertisers, OEMs, network partners) without naming specific partner entities",
+  "compiled_graph_extraction": {
+    "extraction_notes": "Graph compiled from analyst memo preserving parent-child offering hierarchies (YouTube children, Pixel Device children, Gemini Family children, GCP children) and split-franchise structure for Gemini cross-cutting offerings. Other Bets technically represents non-Google businesses per memo but included as segment node for structural completeness. Content providers omitted as customer type due to absence from canonical label set. No external partners named in memo.",
+    "triples": [
+      {
+        "subject": "Google",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Google Services",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Google",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Google Cloud",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Google",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Other Bets",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Google",
+        "subject_type": "Company",
+        "relation": "OPERATES_IN",
+        "object": "Worldwide",
+        "object_type": "Place"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "developers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "OEMs",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Google Search",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Search",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "YouTube",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "YouTube",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "YouTube",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "YouTube",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "YouTube TV",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "YouTube",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "YouTube Music and Premium",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "YouTube",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "NFL Sunday Ticket",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Google Network",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Network",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Google Play",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Play",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "transaction fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Android",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Android",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Chrome",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Chrome",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Google Maps",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Maps",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Gmail",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Gmail",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Gmail",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Google Drive",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Drive",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Google Photos",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Photos",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Pixel Devices",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Pixel Devices",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Pixel Devices",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Pixel smartphones",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Pixel Devices",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Pixel wearables",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Google One",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google One",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Google Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "developers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Google Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "IT professionals",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Google Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Google Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Google Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Google Cloud Platform",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Cloud Platform",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "consumption-based",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google Cloud Platform",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google Cloud Platform",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "AI-optimized Infrastructure",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Cloud Platform",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Vertex AI",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Cloud Platform",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Cloud Cybersecurity",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Cloud Platform",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Cloud Data and Analytics",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Google Workspace",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Workspace",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google",
+        "subject_type": "Company",
+        "relation": "OFFERS",
+        "object": "Gemini Family",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Gemini Family",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Google Gemini",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Gemini Family",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Gemini Enterprise",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Gemini Family",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Gemini for Google Workspace",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Google Gemini",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Gemini Enterprise",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Gemini for Google Workspace",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Other Bets",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Other Bets",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Other Bets",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "healthcare organizations",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Other Bets",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Other Bets",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Other Bets",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Other Bets",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Waymo",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Waymo",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Other Bets",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Isomorphic Labs",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Isomorphic Labs",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Isomorphic Labs",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Other Bets",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Internet Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Internet Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      }
+    ]
+  },
+  "final_extraction": {
+    "extraction_notes": "Removed Chrome licensing edge due to weak explicit support in memo (Chrome described as strategic distribution channel without explicit licensing revenue). Removed three generic capability bucket child offerings from Google Cloud Platform (AI-optimized Infrastructure, Cloud Cybersecurity, Cloud Data and Analytics) per rule to eliminate broad category labels masquerading as distinct offering nodes; retained Vertex AI and Gemini Enterprise as specific named product offerings. Preserved defensible parent-child hierarchies for YouTube, Pixel Devices, and Gemini Family. Preserved split-franchise structure for Gemini offerings anchored to respective segments.",
+    "triples": [
+      {
+        "subject": "Google",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Google Services",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Google",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Google Cloud",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Google",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Other Bets",
+        "object_type": "BusinessSegment"
+      },
+      {
+        "subject": "Google",
+        "subject_type": "Company",
+        "relation": "OPERATES_IN",
+        "object": "Worldwide",
+        "object_type": "Place"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "small businesses",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "developers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "retail",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "OEMs",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Google Search",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Search",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "YouTube",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "YouTube",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "YouTube",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "YouTube",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "YouTube TV",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "YouTube",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "YouTube Music and Premium",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "YouTube",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "NFL Sunday Ticket",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Google Network",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Network",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Google Play",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Play",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "transaction fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Android",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Android",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Chrome",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Google Maps",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Maps",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Gmail",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Gmail",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "advertising",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Gmail",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Google Drive",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Drive",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Google Photos",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Photos",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Pixel Devices",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Pixel Devices",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "hardware sales",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Pixel Devices",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Pixel smartphones",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Pixel Devices",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Pixel wearables",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Google One",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google One",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Google Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "developers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Google Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "IT professionals",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Google Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Google Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Google Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Google Cloud Platform",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Cloud Platform",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "consumption-based",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google Cloud Platform",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google Cloud Platform",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Vertex AI",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Google Workspace",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Workspace",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Google",
+        "subject_type": "Company",
+        "relation": "OFFERS",
+        "object": "Gemini Family",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Gemini Family",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Google Gemini",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Gemini Family",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Gemini Enterprise",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Gemini Family",
+        "subject_type": "Offering",
+        "relation": "OFFERS",
+        "object": "Gemini for Google Workspace",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Services",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Google Gemini",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Gemini Enterprise",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Google Cloud",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Gemini for Google Workspace",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Other Bets",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "consumers",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Other Bets",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "government agencies",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Other Bets",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "healthcare organizations",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Other Bets",
+        "subject_type": "BusinessSegment",
+        "relation": "SERVES",
+        "object": "large enterprises",
+        "object_type": "CustomerType"
+      },
+      {
+        "subject": "Other Bets",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "direct sales",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Other Bets",
+        "subject_type": "BusinessSegment",
+        "relation": "SELLS_THROUGH",
+        "object": "online",
+        "object_type": "Channel"
+      },
+      {
+        "subject": "Other Bets",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Waymo",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Waymo",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Other Bets",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Isomorphic Labs",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Isomorphic Labs",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "service fees",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Isomorphic Labs",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "licensing",
+        "object_type": "RevenueModel"
+      },
+      {
+        "subject": "Other Bets",
+        "subject_type": "BusinessSegment",
+        "relation": "OFFERS",
+        "object": "Internet Services",
+        "object_type": "Offering"
+      },
+      {
+        "subject": "Internet Services",
+        "subject_type": "Offering",
+        "relation": "MONETIZES_VIA",
+        "object": "subscription",
+        "object_type": "RevenueModel"
+      }
+    ]
+  }
+}
