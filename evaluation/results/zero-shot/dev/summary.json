@@ -844,6 +844,12 @@
     "evaluated_company_count": 4,
     "missing_prediction_count": 0,
     "primary_metric": "edge_macro_by_company",
+    "primary": {
+      "averaged_count": 4,
+      "precision": 0.4634135419154526,
+      "recall": 0.41664728682170543,
+      "f1": 0.43021073219886735
+    },
     "edge_micro": {
       "true_positives": 122,
       "false_positives": 130,
@@ -903,13 +909,6 @@
       "precision": 0.5294806415806416,
       "recall": 0.5556309523809524,
       "f1": 0.520821787937272
-    },
-    "averaged_count": 4,
-    "precision": 0.4634135419154526,
-    "recall": 0.41664728682170543,
-    "f1": 0.43021073219886735,
-    "true_positives": 134.5,
-    "false_positives": 117.5,
-    "false_negatives": 157.5
+    }
   }
 }

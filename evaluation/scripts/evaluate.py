@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import csv
 import json
 import shutil
 import unicodedata
@@ -482,35 +481,6 @@ def write_jsonl(path: Path, rows: list[Triple]) -> None:
             handle.write("\n")
 
 
-def write_unmatched_review_csv(path: Path, *, false_positives: list[Triple], false_negatives: list[Triple]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    fieldnames = ("row_id", "match_id", "source", *TRIPLE_FIELDS)
-    rows: list[dict[str, str]] = []
-    for index, triple in enumerate(false_negatives, start=1):
-        rows.append(
-            {
-                "row_id": f"gold_{index:04d}",
-                "match_id": "",
-                "source": "gold",
-                **triple,
-            }
-        )
-    for index, triple in enumerate(false_positives, start=1):
-        rows.append(
-            {
-                "row_id": f"predicted_{index:04d}",
-                "match_id": "",
-                "source": "predicted",
-                **triple,
-            }
-        )
-
-    with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(rows)
-
-
 def result_folder_has_files(path: Path) -> bool:
     return path.exists() and any(candidate.is_file() for candidate in path.rglob("*"))
 
@@ -714,11 +684,6 @@ def evaluate_company(paths: EvaluationPaths) -> dict[str, Any]:
     write_jsonl(paths.output_dir / "edge_false_positives.jsonl", result["edge_false_positives"])
     write_jsonl(paths.output_dir / "edge_false_negatives.jsonl", result["edge_false_negatives"])
     write_jsonl(paths.output_dir / "relaxed_matches.jsonl", result["relaxed_matches"])
-    write_unmatched_review_csv(
-        paths.output_dir / "unmatched_for_review.csv",
-        false_positives=result["false_positives"],
-        false_negatives=result["false_negatives"],
-    )
     return summary
 
 
@@ -754,10 +719,12 @@ def aggregate_metrics(results: list[dict[str, Any]]) -> dict[str, Any]:
     ]
     edge_macro = macro_average(edge_company_metrics)
     relaxed_macro = macro_average(relaxed_company_metrics)
+    primary_metric = "edge_macro_by_company"
     return {
         "evaluated_company_count": len(evaluated),
         "missing_prediction_count": sum(1 for result in results if result.get("status") == "missing_prediction"),
-        "primary_metric": "edge_macro_by_company",
+        "primary_metric": primary_metric,
+        "primary": edge_macro,
         "edge_micro": metric_payload(edge_tp, edge_fp, edge_fn),
         "edge_macro_by_company": edge_macro,
         "edge_macro_by_company_relation": macro_average(edge_relation_metrics),
@@ -767,10 +734,6 @@ def aggregate_metrics(results: list[dict[str, Any]]) -> dict[str, Any]:
         "relaxed_micro": weighted_metric_payload(relaxed_tp, relaxed_fp, relaxed_fn),
         "relaxed_macro_by_company": relaxed_macro,
         "relaxed_macro_by_company_relation": macro_average(relaxed_relation_metrics),
-        **edge_macro,
-        "true_positives": relaxed_tp,
-        "false_positives": relaxed_fp,
-        "false_negatives": relaxed_fn,
     }
 
 
@@ -931,6 +894,7 @@ def main() -> int:
             raise
 
     aggregate = summary["aggregate"]
+    primary = aggregate["primary"]
     edge_micro = aggregate["edge_micro"]
     strict_micro = aggregate["strict_micro"]
     relaxed_micro = aggregate["relaxed_micro"]
@@ -938,8 +902,8 @@ def main() -> int:
         "Evaluated "
         f"{aggregate['evaluated_company_count']} companies "
         f"(missing predictions: {aggregate['missing_prediction_count']}). "
-        f"3-field Macro-F1={aggregate['f1']:.3f}, "
-        f"precision={aggregate['precision']:.3f}, recall={aggregate['recall']:.3f}. "
+        f"3-field Macro-F1={primary['f1']:.3f}, "
+        f"precision={primary['precision']:.3f}, recall={primary['recall']:.3f}. "
         f"3-field Micro-F1={edge_micro['f1']:.3f}; "
         f"Strict Micro-F1={strict_micro['f1']:.3f}; "
         f"Relaxed Micro-F1={relaxed_micro['f1']:.3f}"

@@ -93,9 +93,11 @@ against manually curated benchmark triples under:
 evaluation/benchmarks/<split>/clean/
 ```
 
-The primary score is strict normalized typed-triple precision, recall, and F1.
-The secondary score is hand-matched precision, recall, and F1, where a reviewer
-can explicitly pair otherwise unmatched gold and predicted rows in a review CSV.
+The primary score is exact normalized 3-field edge agreement over
+`subject`, `relation`, and `object`, reported as micro precision/recall/F1 and
+macro-F1 by company. Strict 5-field typed-triple matching is kept as a
+diagnostic view, and relaxed graph-aware F1 gives partial credit for documented
+company aliases and hierarchy/roll-up alignments.
 
 Use [`evaluation/README.md`](./evaluation/README.md) for the evaluation
 commands and output files. Use
@@ -220,7 +222,7 @@ The docs are split by purpose:
 - [`docs/ontology.md`](./docs/ontology.md): the graph schema, design principles, canonical labels, validation behavior, and place rules
 - [`docs/runtime_guide.md`](./docs/runtime_guide.md): CLI commands, provider settings, Neo4j load/unload/status behavior, query runtime, output artifacts, and prompt workflow
 - [`docs/repo_structure.md`](./docs/repo_structure.md): a detailed map of the repository and what each major directory is for
-- [`evaluation/README.md`](./evaluation/README.md): benchmark layout, evaluation commands, result files, and hand-match workflow
+- [`evaluation/README.md`](./evaluation/README.md): benchmark layout, evaluation commands, metrics, result files, and reference datasets
 - [`docs/evaluation_contract.md`](./docs/evaluation_contract.md): the exact evaluation target, matching rules, metric definitions, and interpretation notes
 - [`finetuning/README.md`](./finetuning/README.md): the isolated fine-tuning island for the local query router/planner
 

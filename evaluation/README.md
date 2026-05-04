@@ -1,35 +1,54 @@
 # Evaluation
 
-This folder contains the benchmark data and evaluation code for the extraction pipelines.
+This folder contains the benchmark data, generated reports, and evaluator for
+the extraction pipelines.
 
-The benchmark is split into two sections:
+## Data Sources
 
-- `benchmarks/dev/`: development benchmark used while building and debugging the evaluator
-- `benchmarks/test/`: final held-out benchmark used for presentation metrics
+The evaluator reads clean JSONL benchmark files from:
 
-Each split stores the final clean benchmark files directly under `clean/`.
-The benchmark uses JSONL, with one typed triple per line:
-
-```json
-{"subject":"Microsoft","subject_type":"Company","relation":"HAS_SEGMENT","object":"Intelligent Cloud","object_type":"BusinessSegment"}
+```text
+evaluation/benchmarks/dev/clean/
+evaluation/benchmarks/test/clean/
 ```
 
-The clean file name must be the company slug used in `outputs/`.
-For example, `evaluation/benchmarks/dev/clean/microsoft.jsonl` is compared against `outputs/microsoft/<pipeline>/latest/resolved_triples.json`.
+The clean JSONL files are the canonical benchmark inputs. Source spreadsheets
+belong outside the evaluation package after conversion.
 
-The evaluation scripts should compare clean gold triples against pipeline outputs from:
+The evaluator compares each clean benchmark against post-resolution pipeline
+outputs from:
 
 ```text
 outputs/<company>/<pipeline>/latest/resolved_triples.json
 ```
 
-Primary score:
+## Metrics
 
-- strict normalized typed-triple precision, recall, and F1
+Primary metric:
 
-Secondary score:
+- exact normalized 3-field edge agreement over `subject`, `relation`, `object`
+- reported as 3-field micro precision/recall/F1 and macro-F1 by company
+- stored in summaries as `edge_micro`, `edge_macro_by_company`, and `primary`
 
-- hand-matched typed-triple precision, recall, and F1, using only manually tagged unmatched rows
+Diagnostic metrics:
+
+- strict 5-field typed-triple agreement over `subject`, `subject_type`,
+  `relation`, `object`, `object_type`
+- relation-level exact metrics in `by_relation`
+
+Secondary graph-aware metric:
+
+- relaxed weighted F1 with one-to-one greedy matching
+- exact typed-triple match: `1.00`
+- company alias / lexical normalization: `0.90`
+- subject/object parent-child hierarchy relation: `0.75`
+- segment roll-up relation: `0.50`
+
+Bootstrap confidence intervals live in:
+
+```text
+evaluation/results/bootstrap/
+```
 
 ## Run Evaluation
 
@@ -40,23 +59,30 @@ Evaluate all companies in one split for one pipeline:
 ./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --split test
 ```
 
-This writes results under:
-
-```text
-evaluation/results/zero-shot/dev/
-evaluation/results/zero-shot/test/
-```
-
 Evaluate one selected company for one selected pipeline:
 
 ```bash
 ./venv/bin/python -m evaluation.scripts.evaluate --pipeline analyst --company microsoft
 ```
 
-This writes results under:
+For deliberate reruns, add `--yes`:
+
+```bash
+./venv/bin/python -m evaluation.scripts.evaluate --pipeline analyst --split test --yes
+```
+
+## Output Files
+
+Split results are written under:
 
 ```text
-evaluation/results/cherry_picked/analyst/microsoft/
+evaluation/results/<pipeline>/<split>/
+```
+
+Cherry-picked company results are written under:
+
+```text
+evaluation/results/cherry_picked/<pipeline>/<company>/
 ```
 
 Each evaluated company writes:
@@ -65,55 +91,16 @@ Each evaluated company writes:
 - `matched.jsonl`
 - `false_positives.jsonl`
 - `false_negatives.jsonl`
-- `unmatched_for_review.csv`
+- `edge_matched.jsonl`
+- `edge_false_positives.jsonl`
+- `edge_false_negatives.jsonl`
+- `relaxed_matches.jsonl`
 
-For example:
+Each run also writes `summary.json`.
 
-```text
-evaluation/results/zero-shot/dev/companies/microsoft/unmatched_for_review.csv
-evaluation/results/zero-shot/test/companies/apple/unmatched_for_review.csv
-evaluation/results/cherry_picked/analyst/microsoft/unmatched_for_review.csv
-```
+JSON/JSONL files are the canonical generated reporting artifacts and are the
+right format for publication.
 
-Each run also writes a `summary.json`.
-
-If the target result folder already contains files, the evaluator asks before overwriting them.
-Answer `n` to cancel and leave existing results untouched.
-If overwrite is approved, the old results are replaced only after the new evaluation succeeds.
-
-For deliberate reruns, add `--yes`:
-
-```bash
-./venv/bin/python -m evaluation.scripts.evaluate --pipeline zero-shot --split dev --yes
-```
-
-## Hand-Match Review
-
-Strict metrics are always written. The evaluator writes every unmatched strict triple to `unmatched_for_review.csv` so naming differences can be reviewed manually in a spreadsheet.
-
-The review CSV separates unmatched gold triples from unmatched predicted triples:
-
-- `source=gold`: gold triples not matched by the pipeline
-- `source=predicted`: predicted triples not found in the gold benchmark
-
-To hand-match two rows, put the same value in `match_id` for the corresponding gold and predicted rows. For example, use `1` for the first hand match, `2` for the second hand match, and so on.
-Each `match_id` must be used on exactly one `source=gold` row and exactly one `source=predicted` row. Reusing a `match_id` for multiple pairs is rejected and does not affect hand-matched metrics.
-
-After editing the review CSV, compute hand-matched second-tier metrics with:
-
-```bash
-./venv/bin/python -m evaluation.scripts.apply_hand_matches --results-dir evaluation/results/zero-shot/dev
-```
-
-This writes:
-
-- `hand_matched/companies/<company>/metrics.json` for each reviewed company
-- `hand_matched/summary.json` for the whole result folder
-
-If `hand_matched/` already contains files, the script asks before overwriting them.
-If overwrite is approved, the old hand-matched results are replaced only after the new computation succeeds.
-For deliberate reruns, add `--yes`:
-
-```bash
-./venv/bin/python -m evaluation.scripts.apply_hand_matches --results-dir evaluation/results/zero-shot/dev --yes
-```
+If the target result folder already contains files, the evaluator asks before
+overwriting. If overwrite is approved, existing results are replaced only after
+the new evaluation run succeeds.

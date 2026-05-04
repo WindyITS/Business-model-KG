@@ -186,10 +186,8 @@ def test_split_evaluation_writes_pipeline_split_results(tmp_path: Path):
     )
     summary = evaluate_paths(paths, output_root=evaluation_root / "results" / "zero-shot" / "dev")
 
-    assert summary["aggregate"]["true_positives"] == 1
-    assert summary["aggregate"]["false_positives"] == 1
-    assert summary["aggregate"]["false_negatives"] == 0
     assert summary["aggregate"]["primary_metric"] == "edge_macro_by_company"
+    assert summary["aggregate"]["primary"] == summary["aggregate"]["edge_macro_by_company"]
     assert summary["aggregate"]["edge_micro"]["true_positives"] == 1
     assert summary["aggregate"]["edge_micro"]["false_positives"] == 1
     assert summary["aggregate"]["edge_micro"]["false_negatives"] == 0
@@ -202,15 +200,6 @@ def test_split_evaluation_writes_pipeline_split_results(tmp_path: Path):
         / "companies"
         / "microsoft"
         / "false_positives.jsonl"
-    ).is_file()
-    assert (
-        evaluation_root
-        / "results"
-        / "zero-shot"
-        / "dev"
-        / "companies"
-        / "microsoft"
-        / "unmatched_for_review.csv"
     ).is_file()
     assert (
         evaluation_root
