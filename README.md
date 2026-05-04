@@ -5,8 +5,7 @@ business-model knowledge graphs.
 
 The project asks a practical research question: can a language model extract a
 useful and comparable view of how companies make money while staying inside a
-fixed graph schema and leaving enough artifacts behind for evaluation,
-debugging, and reproduction?
+fixed graph schema?
 
 The repository contains the maintained extraction stack, the ontology, the
 evaluation benchmark interface, an optional Neo4j query runtime, and an isolated
@@ -35,19 +34,19 @@ sharing the same ontology, validation, output layout, and evaluator:
 - `memo_graph_only`: memo-first extraction without later augmentation or critique
 - `zero-shot`: direct one-pass graph extraction
 
-For the conceptual tour, start with
-[`docs/project_walkthrough.md`](./docs/project_walkthrough.md). For the schema,
-see [`docs/ontology.md`](./docs/ontology.md).
+For the conceptual tour, start with [`docs/project_walkthrough.md`](./docs/project_walkthrough.md).
+
+For the schema, see [`docs/ontology.md`](./docs/ontology.md).
 
 ## Quick Start
 
 Requirements:
 
 - Python 3.10+
-- an OpenAI-compatible local endpoint such as LM Studio if you want to run new extraction calls
+- an OpenAI-compatible local endpoint such as LM Studio if you want to run new extraction calls locally
+- an OpenCode Go API key for hosted extraction or hosted query fallback
 - optionally Docker and Neo4j for graph loading and querying
 - optionally Apple Silicon/macOS with working Metal for the local query-stack planner
-- optionally an OpenCode Go API key for hosted extraction or hosted query fallback
 
 Bootstrap a source checkout:
 
@@ -67,6 +66,8 @@ OpenCode Go with an API key.
 
 ```bash
 ./scripts/kg-pipeline data/microsoft_10k.txt --skip-neo4j
+
+./scripts/kg-pipeline data/microsoft_10k.txt --skip-neo4j --provider opencode-go --model <model>
 ```
 
 Start Neo4j and load saved outputs when you want the graph query layer:

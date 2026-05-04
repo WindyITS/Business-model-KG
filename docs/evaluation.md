@@ -7,7 +7,7 @@ benchmark mirror.
 ## What Gets Evaluated
 
 The evaluator compares clean gold benchmark triples against generated pipeline
-outputs after entity resolution.
+outputs.
 
 Gold benchmarks live under:
 

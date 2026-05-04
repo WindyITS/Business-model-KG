@@ -13,7 +13,7 @@ another may describe customer channels or geographies in a different order.
 Business Model KG turns selected 10-K business sections into a graph with a
 consistent schema. The goal is not to preserve every sentence. The goal is to
 extract a comparable business-model view that can be inspected, evaluated, and
-queried.
+queried and that, most of all, provides a useful point of view over the business model of a company.
 
 ## The Core Idea
 
@@ -86,7 +86,7 @@ the last successful output.
 
 The evaluator compares saved `resolved_triples.json` files against curated gold
 benchmark triples. It reports exact precision, recall, F1, macro-F1, and a
-relaxed graph-aware F1.
+relaxed graph-aware F1 mainly.
 
 The evaluation island is useful because it separates model extraction from
 measurement. You can reproduce the reported evaluation from checked-in

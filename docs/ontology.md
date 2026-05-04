@@ -3,6 +3,7 @@
 Final segment-centered ontology used by the maintained extraction pipelines.
 
 This version prioritizes:
+
 - canonical structure
 - higher standardization across companies
 - conservative extraction for semantic business-model facts, with broader but still text-grounded company geography capture
@@ -13,6 +14,7 @@ This version prioritizes:
 ### 1. Scope-first modeling
 
 The graph is organized around three scopes:
+
 - `Company`: the corporate shell
 - `BusinessSegment`: the primary semantic anchor
 - `Offering`: the inventory layer
@@ -22,6 +24,7 @@ The graph is organized around three scopes:
 The extractor should emit only canonical facts that are justified directly by the filing.
 
 Do not:
+
 - duplicate facts upward automatically
 - push segment facts down to offerings automatically
 - materialize inherited convenience triples during extraction
@@ -34,6 +37,7 @@ The extraction format stays canonical and does not add extra scope fields to tri
 
 At Neo4j load time, however, the runtime scopes company-owned inventory nodes so same-named
 entities from different companies do not collapse together:
+
 - `BusinessSegment` nodes are keyed by `(company_name, name)`
 - `Offering` nodes are keyed by `(company_name, name)`
 - `Company`, `Channel`, `CustomerType`, `RevenueModel`, and `Place` remain globally keyed by `name`
@@ -46,6 +50,7 @@ one shared `Offering` node in the graph.
 If the filing only states a fact at a broad level, do not force a more granular triple just to make the graph denser.
 
 Exception:
+
 - for `SERVES`, conservative segment-level inference is allowed when a customer type is clearly stated or clearly implied by a segment's offerings and descriptions
 
 ### 4. Closed-label discipline
@@ -59,6 +64,7 @@ If a phrase does not map clearly to one canonical label, omit it.
 The canonical node and relation schema lives in [`src/ontology/ontology.json`](../src/ontology/ontology.json).
 
 In practice, though, the production ontology is enforced through three layers together:
+
 - the formal schema and canonical labels
 - the maintained extraction runtimes in [`src/llm/`](../src/llm/), the pipeline registry under [`src/llm_extraction/pipelines/`](../src/llm_extraction/pipelines/), and the prompt assets in [`prompts/analyst/`](../prompts/analyst/), [`prompts/memo_graph_only/`](../prompts/memo_graph_only/), and [`prompts/zero-shot/`](../prompts/zero-shot/)
 - the runtime validator in [`src/ontology/validator.py`](../src/ontology/validator.py)
@@ -108,11 +114,13 @@ Links a company to a formally named internal business segment that is part of th
 `Company -> Offering | BusinessSegment -> Offering | Offering -> Offering`
 
 Links:
+
 - a business segment to its offerings
 - a fallback company subject to an offering when no segment anchor exists
 - an explicit umbrella offering to a child offering when the filing directly states that family relationship
 
 Rules:
+
 - `BusinessSegment -> OFFERS -> Offering` is primary
 - `Company -> OFFERS -> Offering` is fallback only when, after considering the whole filing, no segment anchor is supportable anywhere
 - do not use `Company -> OFFERS -> Offering` just because an offering is described at company scope, as universal, or as shared/common infrastructure; if the evidence ties it to multiple segments, attach it to each supported `BusinessSegment`
@@ -134,6 +142,7 @@ Rules:
 Links a business segment to a canonical customer category that it targets, supports, or serves commercially.
 
 Rules:
+
 - `SERVES` is canonical only at `BusinessSegment` scope
 - if a customer type is stated at company scope, attach it only to the `BusinessSegment` nodes where it is clearly stated or clearly implied by the segment's offerings and descriptions
 - do not spread one customer type across multiple segments unless each segment has its own support
@@ -151,6 +160,7 @@ Rules:
 Links a company to a normalized, business-relevant geography in which it operates, conducts business, has employees or a local entity, serves customers in a meaningful way, or otherwise has meaningful market presence.
 
 Rules:
+
 - strictly company-level
 - use named countries, approved macro-regions, or `Worldwide` when the filing clearly supports a global operating footprint
 - when a named geography is clearly tied to the company's own business presence, prefer recall over unnecessary omission
@@ -172,6 +182,7 @@ Rules:
 Links a business segment or, only when no segment anchor exists, an offering to a canonical sales or distribution channel through which it reaches customers.
 
 Rules:
+
 - `BusinessSegment` is the primary anchor
 - `Offering` is a fallback only for offerings without a business segment
 - `Company` is not a valid subject
@@ -187,6 +198,7 @@ Rules:
 Links a company to another company with which it has a named strategic, commercial, distribution, technology, integration, or go-to-market partnership.
 
 Rules:
+
 - strictly company-level
 - excludes incidental mentions and ordinary supplier or customer relationships
 - do not use `PARTNERS_WITH` for suppliers, customers, competitors, ecosystem mentions, or channel relationships
@@ -198,6 +210,7 @@ Rules:
 Links an offering to the canonical revenue model through which it earns money.
 
 Rules:
+
 - `MONETIZES_VIA` is canonical only at `Offering` scope
 - do not attach directly to `BusinessSegment` or `Company`
 - if an offering family hierarchy exists, attach `MONETIZES_VIA` to the family parent rather than to its child offerings
@@ -207,15 +220,15 @@ Rules:
 
 ## Relation Validity Matrix
 
-| Relation | Subject types | Object type |
-| --- | --- | --- |
-| `HAS_SEGMENT` | `Company` | `BusinessSegment` |
-| `OFFERS` | `Company`, `BusinessSegment`, `Offering` | `Offering` |
-| `SERVES` | `BusinessSegment` | `CustomerType` |
-| `OPERATES_IN` | `Company` | `Place` |
-| `SELLS_THROUGH` | `BusinessSegment`, `Offering` | `Channel` |
-| `PARTNERS_WITH` | `Company` | `Company` |
-| `MONETIZES_VIA` | `Offering` | `RevenueModel` |
+| Relation          | Subject types                                  | Object type         |
+| ----------------- | ---------------------------------------------- | ------------------- |
+| `HAS_SEGMENT`   | `Company`                                    | `BusinessSegment` |
+| `OFFERS`        | `Company`, `BusinessSegment`, `Offering` | `Offering`        |
+| `SERVES`        | `BusinessSegment`                            | `CustomerType`    |
+| `OPERATES_IN`   | `Company`                                    | `Place`           |
+| `SELLS_THROUGH` | `BusinessSegment`, `Offering`              | `Channel`         |
+| `PARTNERS_WITH` | `Company`                                    | `Company`         |
+| `MONETIZES_VIA` | `Offering`                                   | `RevenueModel`    |
 
 ## Runtime Validation And Normalization
 
@@ -230,6 +243,7 @@ The runtime validator does more than just check the schema:
 - the main CLI runtime validates with text grounding disabled by default and relies on the staged extraction and reflection process for factual support
 
 Additional structural enforcement:
+
 - a child `Offering` may have at most one `Offering` parent
 - a child `Offering` with an explicit offering parent cannot carry `MONETIZES_VIA`
 - an `Offering` with a direct `BusinessSegment` anchor cannot carry `SELLS_THROUGH`
@@ -277,6 +291,7 @@ Additional structural enforcement:
 ## `Place` Constraints
 
 `OPERATES_IN` is limited to:
+
 - sovereign countries
 - U.S. states
 - `District of Columbia`
@@ -284,6 +299,7 @@ Additional structural enforcement:
 - `Worldwide` when the filing clearly supports a global operating footprint
 
 Approved macro-regions:
+
 - `Africa`
 - `APAC`
 - `Americas`
@@ -302,6 +318,7 @@ Approved macro-regions:
 - `Western Europe`
 
 Normalization examples:
+
 - `U.S.`, `USA` -> `United States`
 - `U.K.`, `UK` -> `United Kingdom`
 - `asia-pacific` -> `Asia Pacific`
@@ -309,6 +326,7 @@ Normalization examples:
 - `global`, `world wide`, `worldwide` -> `Worldwide`
 
 Do not use:
+
 - cities
 - office sites
 - vague global placeholders
@@ -324,10 +342,12 @@ For downstream querying, Neo4j keeps only canonical `Company-[:OPERATES_IN]->Pla
 facts and does not materialize a derived place hierarchy as relationships.
 
 Instead, the loader may attach query helper list properties to each extracted `Place`:
+
 - `within_places`: broader canonical places that contain the place
 - `includes_places`: narrower canonical places that the place contains
 
 Examples:
+
 - `Italy` may carry `within_places = ["Europe", "Western Europe", "EMEA", "European Union"]`
 - `Europe` may carry `includes_places = ["Western Europe", "Eastern Europe", "Italy", "Germany", ...]`
 - `United States` may carry `includes_places = ["Alabama", "Alaska", ..., "Wyoming"]`
@@ -383,13 +403,12 @@ If the filing itself uses a single semantic parent heading, explicit composite h
 ### Rule 3: No derivation during extraction
 
 Do not derive:
+
 - company-level facts from segment or offering facts
 - offering-level facts from segment facts
 - inherited convenience triples for analytics
 
 ### Rule 4: Precision first, with explicit exceptions
-
-If a fact is ambiguous, omit it.
 
 For `SERVES`, conservative segment-specific inference is allowed when a customer type is clearly stated or clearly implied by a segment's offerings and descriptions.
 
