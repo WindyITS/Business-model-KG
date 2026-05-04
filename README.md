@@ -94,7 +94,7 @@ bundle, are downloaded from Hugging Face or generated locally.
 
 The public artifacts are:
 
-- [`WindyITS/business-model-kg-benchmark-outputs`](https://huggingface.co/datasets/WindyITS/business-model-kg-benchmark-outputs): benchmark triples and generated extraction outputs
+- [`WindyITS/business-model-kg-benchmark-outputs`](https://huggingface.co/datasets/WindyITS/business-model-kg-benchmark-outputs): benchmark triples
 - [`WindyITS/business-model-kg-query-planner-data`](https://huggingface.co/datasets/WindyITS/business-model-kg-query-planner-data): query-router/planner fine-tuning data
 - [`WindyITS/business-model-kg-query-stack`](https://huggingface.co/WindyITS/business-model-kg-query-stack): deployable local query-stack bundle
 

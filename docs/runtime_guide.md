@@ -163,19 +163,19 @@ export OPENCODE_GO_API_KEY=your_key_here
 Render a read-only Cypher query with the routed stack:
 
 ```bash
-./scripts/kg-query-cypher "Which companies sell to developers through direct sales?"
+./scripts/kg-query-cypher "<question about the graph>"
 ```
 
-Force hosted fallback only:
+Force hosted fallback only when an OpenCode Go API key is configured:
 
 ```bash
-./scripts/kg-query-cypher "Which company segments sell through marketplaces?" --stack fallback
+./scripts/kg-query-cypher "<question about the graph>" --stack fallback
 ```
 
 Override the local query-stack bundle:
 
 ```bash
-./scripts/kg-query-cypher "Which company segments sell through marketplaces?" \
+./scripts/kg-query-cypher "<question about the graph>" \
   --local-stack-bundle-dir /path/to/runtime_assets/query_stack
 ```
 
@@ -183,7 +183,7 @@ After Neo4j is running and saved outputs have been loaded, run a
 natural-language query against the graph:
 
 ```bash
-./scripts/kg-query "Which companies sell to developers through direct sales?"
+./scripts/kg-query "<question about the graph>"
 ```
 
 Query command notes:

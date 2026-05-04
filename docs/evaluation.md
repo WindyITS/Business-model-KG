@@ -73,36 +73,30 @@ evaluation/benchmarks/annotation_reliability/
 
 ## Public Artifacts
 
-The public evaluation artifacts are published at:
+The public benchmark artifact is published at:
 
 ```text
 https://huggingface.co/datasets/WindyITS/business-model-kg-benchmark-outputs
 ```
 
-The Hugging Face dataset contains:
+The Hugging Face dataset contains benchmark files:
 
 ```text
 benchmarks/
-outputs/
 ```
 
 The benchmark folder can be copied directly into the repo as
 `evaluation/benchmarks/`.
 
-The published outputs use this layout:
-
-```text
-outputs/<company>/<pipeline>/resolved_triples.json
-```
-
-The local evaluator expects:
+Reference extraction outputs are shipped with this repository. The local
+evaluator expects predictions at:
 
 ```text
 outputs/<company>/<pipeline>/latest/resolved_triples.json
 ```
 
-When reproducing the experiment, place each downloaded output file inside the
-corresponding `latest/` folder.
+Those checked-in `latest/` folders include the run metadata needed for both
+evaluation and Neo4j loading.
 
 ## Reproduce From Hugging Face
 
@@ -114,7 +108,7 @@ For evaluation-focused readers, the important contract is:
 
 - bootstrap the main environment before using `./venv/bin/...`
 - use benchmark files under `evaluation/benchmarks/`
-- use generated predictions under `outputs/<company>/<pipeline>/latest/`
+- use checked-in reference predictions under `outputs/<company>/<pipeline>/latest/`
 - run `evaluation.scripts.evaluate` for each pipeline and split
 
 Run bootstrap confidence intervals:
