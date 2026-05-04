@@ -25,6 +25,7 @@ venv/
 
 # Outputs / scratch
 outputs/
+notes/
 query_stack_behavior_examples.md
 data/query_planner_curated/
 dist/
