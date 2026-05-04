@@ -25,7 +25,7 @@ Each JSONL record keeps the five typed-triple fields:
 subject; subject_type; relation; object; object_type
 ```
 
-The primary exact score intentionally ignores the type fields, but they remain necessary for strict diagnostics, ontology validation, and relaxed hierarchy matching.
+The primary exact score intentionally ignores the type fields, but they remain necessary for ontology validation and relaxed hierarchy matching.
 
 Predicted triples are loaded from:
 
@@ -97,9 +97,17 @@ Relation names and node types require exact labels after trimming.
 
 The clean benchmark may canonicalize company-level market coverage to `Worldwide` during manual curation. This is a benchmark policy, not evaluator-side fuzzy matching.
 
-## Primary Exact Metric
+## Metrics
 
-The primary exact metric is 3-field edge agreement over:
+The evaluator computes only these five scores:
+
+- `precision`
+- `recall`
+- `f1`
+- `macro_f1`
+- `relaxed_f1`
+
+Exact precision, recall, F1, and macro-F1 use normalized 3-field edge agreement over:
 
 ```text
 subject_key
@@ -107,42 +115,7 @@ relation
 object_key
 ```
 
-This is the headline metric because the downstream graph edge is operationally the triple, and historical annotation sheets sometimes differed on type fields.
-
-The evaluator reports:
-
-- `edge_micro`
-- `edge_macro_by_company`
-- `edge_macro_by_company_relation`
-- `primary`, an alias for `edge_macro_by_company`
-
-The `primary_metric` field is:
-
-```text
-edge_macro_by_company
-```
-
-## Strict Diagnostic Metric
-
-Strict 5-field typed-triple agreement is retained as a diagnostic metric over:
-
-```text
-subject_key
-subject_type
-relation
-object_key
-object_type
-```
-
-The evaluator reports:
-
-- `strict_micro`
-- `strict_macro_by_company`
-- `strict_macro_by_company_relation`
-
-Strict typed metrics should not be described as the headline score.
-
-## Relaxed Graph-Aware Metric
+This is the headline exact matching target because the downstream graph edge is operationally the triple, and historical annotation sheets sometimes differed on type fields.
 
 Relaxed F1 is the secondary graph-aware metric. It estimates how much exact F1 penalizes graph-near naming and hierarchy-alignment differences.
 
@@ -165,13 +138,6 @@ weighted_FP = unique_predictions - weighted_TP
 weighted_FN = unique_gold - weighted_TP
 ```
 
-The evaluator reports:
-
-- `relaxed_micro`
-- `relaxed_macro_by_company`
-- `relaxed_macro_by_company_relation`
-- `relaxed_matches.jsonl`
-
 ## Outputs
 
 Split results are written under:
@@ -192,9 +158,6 @@ Each evaluated company writes:
 - `matched.jsonl`
 - `false_positives.jsonl`
 - `false_negatives.jsonl`
-- `edge_matched.jsonl`
-- `edge_false_positives.jsonl`
-- `edge_false_negatives.jsonl`
 - `relaxed_matches.jsonl`
 
 Each split or cherry-picked run also writes a `summary.json`.
@@ -207,12 +170,6 @@ Use exact 3-field edge metrics as the objective headline:
 
 ```text
 Exact 3-field F1 measures edge-level graph agreement.
-```
-
-Use strict 5-field typed metrics as a diagnostic lower-bound view:
-
-```text
-Strict 5-field F1 measures typed-triple agreement after mechanical normalization.
 ```
 
 Use relaxed graph-aware F1 as a secondary semantic/hierarchy diagnostic:
@@ -402,8 +359,7 @@ The intended unit of qualitative review is one company and one pipeline output. 
 
 Final reporting should present all three layers separately:
 
-- `Exact 3-field F1`: normalized edge agreement over `subject`, `relation`, and `object`.
-- `Strict 5-field F1`: typed-triple agreement after mechanical normalization, used diagnostically.
+- `Exact 3-field precision`, `recall`, `F1`, and `macro-F1`: normalized edge agreement over `subject`, `relation`, and `object`.
 - `Relaxed F1`: graph-aware agreement after documented alias, hierarchy, and roll-up allowances.
 - `Qualitative graph score`: rubric-based assessment of coverage, granularity, geography, noise, and usefulness.
 

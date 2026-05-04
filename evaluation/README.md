@@ -24,21 +24,13 @@ outputs/<company>/<pipeline>/latest/resolved_triples.json
 
 ## Metrics
 
-Primary metric:
+Metrics:
 
-- exact normalized 3-field edge agreement over `subject`, `relation`, `object`
-- reported as 3-field micro precision/recall/F1 and macro-F1 by company
-- stored in summaries as `edge_micro`, `edge_macro_by_company`, and `primary`
-
-Diagnostic metrics:
-
-- strict 5-field typed-triple agreement over `subject`, `subject_type`,
-  `relation`, `object`, `object_type`
-- relation-level exact metrics in `by_relation`
-
-Secondary graph-aware metric:
-
-- relaxed weighted F1 with one-to-one greedy matching
+- exact precision over normalized 3-field edges
+- exact recall over normalized 3-field edges
+- exact F1 over normalized 3-field edges
+- exact macro-F1 by company
+- relaxed graph-aware F1 with one-to-one greedy matching
 - exact typed-triple match: `1.00`
 - company alias / lexical normalization: `0.90`
 - subject/object parent-child hierarchy relation: `0.75`
@@ -91,9 +83,6 @@ Each evaluated company writes:
 - `matched.jsonl`
 - `false_positives.jsonl`
 - `false_negatives.jsonl`
-- `edge_matched.jsonl`
-- `edge_false_positives.jsonl`
-- `edge_false_negatives.jsonl`
 - `relaxed_matches.jsonl`
 
 Each run also writes `summary.json`.

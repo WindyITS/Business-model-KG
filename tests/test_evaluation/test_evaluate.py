@@ -22,7 +22,7 @@ def write_jsonl(path: Path, rows: list[dict[str, str]]):
     path.write_text("\n".join(json.dumps(row) for row in rows) + "\n", encoding="utf-8")
 
 
-def test_evaluate_triples_uses_strict_normalized_typed_matching():
+def test_evaluate_triples_uses_normalized_edge_matching():
     gold = [
         {
             "subject": "Microsoft",
@@ -58,15 +58,12 @@ def test_evaluate_triples_uses_strict_normalized_typed_matching():
 
     result = evaluate_triples(gold, predicted)
 
-    assert result["metrics"]["true_positives"] == 1
-    assert result["metrics"]["false_positives"] == 1
-    assert result["metrics"]["false_negatives"] == 1
-    assert result["metrics"]["precision"] == 0.5
-    assert result["metrics"]["recall"] == 0.5
-    assert result["metrics"]["f1"] == 0.5
-    assert result["edge"]["true_positives"] == 2
-    assert result["edge"]["false_positives"] == 0
-    assert result["edge"]["false_negatives"] == 0
+    assert result["metrics"] == {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "relaxed_f1": 0.5,
+    }
 
 
 def test_evaluate_triples_is_case_insensitive_for_entity_values():
@@ -89,7 +86,7 @@ def test_evaluate_triples_is_case_insensitive_for_entity_values():
         }
     ]
 
-    assert evaluate_triples(gold, predicted)["metrics"]["true_positives"] == 1
+    assert evaluate_triples(gold, predicted)["metrics"]["f1"] == 1.0
 
 
 def test_evaluate_triples_gives_partial_credit_for_hierarchy_alignment():
@@ -135,10 +132,8 @@ def test_evaluate_triples_gives_partial_credit_for_hierarchy_alignment():
 
     result = evaluate_triples(gold, predicted)
 
-    assert result["strict"]["true_positives"] == 0
-    assert result["relaxed"]["true_positives"] == 1.5
-    assert result["relaxed"]["false_positives"] == 1.5
-    assert result["relaxed"]["false_negatives"] == 0.5
+    assert result["metrics"]["f1"] == 0.0
+    assert result["metrics"]["relaxed_f1"] == 0.6
 
 
 def test_split_evaluation_writes_pipeline_split_results(tmp_path: Path):
@@ -186,11 +181,15 @@ def test_split_evaluation_writes_pipeline_split_results(tmp_path: Path):
     )
     summary = evaluate_paths(paths, output_root=evaluation_root / "results" / "zero-shot" / "dev")
 
-    assert summary["aggregate"]["primary_metric"] == "edge_macro_by_company"
-    assert summary["aggregate"]["primary"] == summary["aggregate"]["edge_macro_by_company"]
-    assert summary["aggregate"]["edge_micro"]["true_positives"] == 1
-    assert summary["aggregate"]["edge_micro"]["false_positives"] == 1
-    assert summary["aggregate"]["edge_micro"]["false_negatives"] == 0
+    assert summary["aggregate"] == {
+        "evaluated_company_count": 1,
+        "missing_prediction_count": 0,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 2 / 3,
+        "macro_f1": 2 / 3,
+        "relaxed_f1": 2 / 3,
+    }
     assert (evaluation_root / "results" / "zero-shot" / "dev" / "summary.json").is_file()
     assert (
         evaluation_root
@@ -208,7 +207,7 @@ def test_split_evaluation_writes_pipeline_split_results(tmp_path: Path):
         / "dev"
         / "companies"
         / "microsoft"
-        / "edge_false_positives.jsonl"
+        / "relaxed_matches.jsonl"
     ).is_file()
 
 

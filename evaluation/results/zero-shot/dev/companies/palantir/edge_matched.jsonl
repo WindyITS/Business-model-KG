@@ -1,6 +1,0 @@
-{"subject":"Commercial","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"direct sales","object_type":"Channel"}
-{"subject":"Government","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"direct sales","object_type":"Channel"}
-{"subject":"Palantir","subject_type":"Company","relation":"HAS_SEGMENT","object":"Commercial","object_type":"BusinessSegment"}
-{"subject":"Palantir","subject_type":"Company","relation":"HAS_SEGMENT","object":"Government","object_type":"BusinessSegment"}
-{"subject":"Palantir","subject_type":"Company","relation":"OPERATES_IN","object":"Worldwide","object_type":"Place"}
-{"subject":"Palantir","subject_type":"Company","relation":"PARTNERS_WITH","object":"Fujitsu Limited","object_type":"Company"}

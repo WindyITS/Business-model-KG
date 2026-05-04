@@ -190,9 +190,6 @@ def metric_payload(tp: int, fp: int, fn: int) -> dict[str, Any]:
     recall = tp / (tp + fn) if tp + fn else 0.0
     f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
     return {
-        "true_positives": tp,
-        "false_positives": fp,
-        "false_negatives": fn,
         "precision": precision,
         "recall": recall,
         "f1": f1,
@@ -204,9 +201,6 @@ def weighted_metric_payload(tp: float, fp: float, fn: float) -> dict[str, Any]:
     recall = tp / (tp + fn) if tp + fn else 0.0
     f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
     return {
-        "true_positives": tp,
-        "false_positives": fp,
-        "false_negatives": fn,
         "precision": precision,
         "recall": recall,
         "f1": f1,
@@ -216,13 +210,11 @@ def weighted_metric_payload(tp: float, fp: float, fn: float) -> dict[str, Any]:
 def macro_average(metrics: list[dict[str, Any]]) -> dict[str, Any]:
     if not metrics:
         return {
-            "averaged_count": 0,
             "precision": 0.0,
             "recall": 0.0,
             "f1": 0.0,
         }
     return {
-        "averaged_count": len(metrics),
         "precision": sum(float(metric["precision"]) for metric in metrics) / len(metrics),
         "recall": sum(float(metric["recall"]) for metric in metrics) / len(metrics),
         "f1": sum(float(metric["f1"]) for metric in metrics) / len(metrics),
@@ -454,12 +446,15 @@ def weighted_evaluate_triples(
         context = build_matching_context([*gold_by_key.values(), *predicted_by_key.values()])
     matches = greedy_weighted_matches(gold_by_key, predicted_by_key, context=context)
     weighted_tp = sum(float(match["weight"]) for match in matches)
+    weighted_fp = len(predicted_by_key) - weighted_tp
+    weighted_fn = len(gold_by_key) - weighted_tp
     return {
-        "metrics": weighted_metric_payload(
-            tp=weighted_tp,
-            fp=len(predicted_by_key) - weighted_tp,
-            fn=len(gold_by_key) - weighted_tp,
-        ),
+        "metrics": weighted_metric_payload(tp=weighted_tp, fp=weighted_fp, fn=weighted_fn),
+        "counts": {
+            "true_positives": weighted_tp,
+            "false_positives": weighted_fp,
+            "false_negatives": weighted_fn,
+        },
         "matches": matches,
     }
 
@@ -533,74 +528,26 @@ def cleanup_staging_folder(staging_root: Path) -> None:
 
 
 def evaluate_triples(gold_triples: list[Triple], predicted_triples: list[Triple]) -> dict[str, Any]:
-    gold_by_key = unique_by_key(gold_triples)
-    predicted_by_key = unique_by_key(predicted_triples)
     edge_result = evaluate_edges(gold_triples, predicted_triples)
-
-    gold_keys = set(gold_by_key)
-    predicted_keys = set(predicted_by_key)
-    matched_keys = gold_keys & predicted_keys
-    false_positive_keys = predicted_keys - gold_keys
-    false_negative_keys = gold_keys - predicted_keys
-
-    strict_metrics = metric_payload(
-        tp=len(matched_keys),
-        fp=len(false_positive_keys),
-        fn=len(false_negative_keys),
-    )
-    full_context = build_matching_context([*gold_by_key.values(), *predicted_by_key.values()])
+    full_context = build_matching_context([*gold_triples, *predicted_triples])
     relaxed_result = weighted_evaluate_triples(gold_triples, predicted_triples, context=full_context)
 
-    by_relation: dict[str, dict[str, Any]] = {}
-    for relation in RELATIONS:
-        relation_gold = [triple for triple in gold_triples if triple["relation"] == relation]
-        relation_predicted = [triple for triple in predicted_triples if triple["relation"] == relation]
-        if not relation_gold and not relation_predicted:
-            continue
-        strict_relation = evaluate_triples_strict_only(relation_gold, relation_predicted)
-        edge_relation = evaluate_edges_strict_only(relation_gold, relation_predicted)
-        relaxed_relation = weighted_evaluate_triples(relation_gold, relation_predicted, context=full_context)
-        by_relation[relation] = {
-            "edge": edge_relation["metrics"],
-            "strict": strict_relation["metrics"],
-            "relaxed": relaxed_relation["metrics"],
-        }
-
     return {
-        "metrics": strict_metrics,
-        "edge": edge_result["metrics"],
-        "strict": strict_metrics,
-        "relaxed": relaxed_result["metrics"],
-        "by_relation": by_relation,
+        "metrics": {
+            **edge_result["metrics"],
+            "relaxed_f1": relaxed_result["metrics"]["f1"],
+        },
         "counts": {
             "gold_triples": len(gold_triples),
-            "gold_unique_triples": len(gold_by_key),
             "predicted_triples": len(predicted_triples),
-            "predicted_unique_triples": len(predicted_by_key),
             **edge_result["counts"],
         },
-        "matched": sort_triples([gold_by_key[key] for key in matched_keys]),
-        "false_positives": sort_triples([predicted_by_key[key] for key in false_positive_keys]),
-        "false_negatives": sort_triples([gold_by_key[key] for key in false_negative_keys]),
-        "edge_matched": edge_result["matched"],
-        "edge_false_positives": edge_result["false_positives"],
-        "edge_false_negatives": edge_result["false_negatives"],
+        "exact_counts": edge_result["metric_counts"],
+        "relaxed_counts": relaxed_result["counts"],
+        "matched": edge_result["matched"],
+        "false_positives": edge_result["false_positives"],
+        "false_negatives": edge_result["false_negatives"],
         "relaxed_matches": relaxed_result["matches"],
-    }
-
-
-def evaluate_triples_strict_only(gold_triples: list[Triple], predicted_triples: list[Triple]) -> dict[str, Any]:
-    gold_by_key = unique_by_key(gold_triples)
-    predicted_by_key = unique_by_key(predicted_triples)
-    gold_keys = set(gold_by_key)
-    predicted_keys = set(predicted_by_key)
-    matched_keys = gold_keys & predicted_keys
-    return {
-        "metrics": metric_payload(
-            tp=len(matched_keys),
-            fp=len(predicted_keys - gold_keys),
-            fn=len(gold_keys - predicted_keys),
-        )
     }
 
 
@@ -612,12 +559,16 @@ def evaluate_edges(gold_triples: list[Triple], predicted_triples: list[Triple]) 
     matched_keys = gold_keys & predicted_keys
     false_positive_keys = predicted_keys - gold_keys
     false_negative_keys = gold_keys - predicted_keys
+    tp = len(matched_keys)
+    fp = len(false_positive_keys)
+    fn = len(false_negative_keys)
     return {
-        "metrics": metric_payload(
-            tp=len(matched_keys),
-            fp=len(false_positive_keys),
-            fn=len(false_negative_keys),
-        ),
+        "metrics": metric_payload(tp=tp, fp=fp, fn=fn),
+        "metric_counts": {
+            "true_positives": tp,
+            "false_positives": fp,
+            "false_negatives": fn,
+        },
         "counts": {
             "gold_unique_edges": len(gold_by_key),
             "predicted_unique_edges": len(predicted_by_key),
@@ -625,21 +576,6 @@ def evaluate_edges(gold_triples: list[Triple], predicted_triples: list[Triple]) 
         "matched": sort_triples([gold_by_key[key] for key in matched_keys]),
         "false_positives": sort_triples([predicted_by_key[key] for key in false_positive_keys]),
         "false_negatives": sort_triples([gold_by_key[key] for key in false_negative_keys]),
-    }
-
-
-def evaluate_edges_strict_only(gold_triples: list[Triple], predicted_triples: list[Triple]) -> dict[str, Any]:
-    gold_by_key = unique_by_edge_key(gold_triples)
-    predicted_by_key = unique_by_edge_key(predicted_triples)
-    gold_keys = set(gold_by_key)
-    predicted_keys = set(predicted_by_key)
-    matched_keys = gold_keys & predicted_keys
-    return {
-        "metrics": metric_payload(
-            tp=len(matched_keys),
-            fp=len(predicted_keys - gold_keys),
-            fn=len(gold_keys - predicted_keys),
-        )
     }
 
 
@@ -670,70 +606,38 @@ def evaluate_company(paths: EvaluationPaths) -> dict[str, Any]:
         "prediction_path": str(paths.prediction_path),
         **result["counts"],
         **result["metrics"],
-        "edge": result["edge"],
-        "strict": result["strict"],
-        "relaxed": result["relaxed"],
-        "by_relation": result["by_relation"],
     }
 
     write_json(paths.output_dir / "metrics.json", summary)
     write_jsonl(paths.output_dir / "matched.jsonl", result["matched"])
     write_jsonl(paths.output_dir / "false_positives.jsonl", result["false_positives"])
     write_jsonl(paths.output_dir / "false_negatives.jsonl", result["false_negatives"])
-    write_jsonl(paths.output_dir / "edge_matched.jsonl", result["edge_matched"])
-    write_jsonl(paths.output_dir / "edge_false_positives.jsonl", result["edge_false_positives"])
-    write_jsonl(paths.output_dir / "edge_false_negatives.jsonl", result["edge_false_negatives"])
     write_jsonl(paths.output_dir / "relaxed_matches.jsonl", result["relaxed_matches"])
+    summary["_exact_counts"] = result["exact_counts"]
+    summary["_relaxed_counts"] = result["relaxed_counts"]
     return summary
 
 
 def aggregate_metrics(results: list[dict[str, Any]]) -> dict[str, Any]:
     evaluated = [result for result in results if result.get("status") == "evaluated"]
-    edge_tp = sum(int(result["edge"]["true_positives"]) for result in evaluated)
-    edge_fp = sum(int(result["edge"]["false_positives"]) for result in evaluated)
-    edge_fn = sum(int(result["edge"]["false_negatives"]) for result in evaluated)
-    strict_tp = sum(int(result["strict"]["true_positives"]) for result in evaluated)
-    strict_fp = sum(int(result["strict"]["false_positives"]) for result in evaluated)
-    strict_fn = sum(int(result["strict"]["false_negatives"]) for result in evaluated)
-    relaxed_tp = sum(float(result["relaxed"]["true_positives"]) for result in evaluated)
-    relaxed_fp = sum(float(result["relaxed"]["false_positives"]) for result in evaluated)
-    relaxed_fn = sum(float(result["relaxed"]["false_negatives"]) for result in evaluated)
+    exact_tp = sum(int(result["_exact_counts"]["true_positives"]) for result in evaluated)
+    exact_fp = sum(int(result["_exact_counts"]["false_positives"]) for result in evaluated)
+    exact_fn = sum(int(result["_exact_counts"]["false_negatives"]) for result in evaluated)
+    relaxed_tp = sum(float(result["_relaxed_counts"]["true_positives"]) for result in evaluated)
+    relaxed_fp = sum(float(result["_relaxed_counts"]["false_positives"]) for result in evaluated)
+    relaxed_fn = sum(float(result["_relaxed_counts"]["false_negatives"]) for result in evaluated)
 
-    edge_company_metrics = [result["edge"] for result in evaluated]
-    strict_company_metrics = [result["strict"] for result in evaluated]
-    relaxed_company_metrics = [result["relaxed"] for result in evaluated]
-    edge_relation_metrics = [
-        relation_payload["edge"]
-        for result in evaluated
-        for relation_payload in result.get("by_relation", {}).values()
-    ]
-    strict_relation_metrics = [
-        relation_payload["strict"]
-        for result in evaluated
-        for relation_payload in result.get("by_relation", {}).values()
-    ]
-    relaxed_relation_metrics = [
-        relation_payload["relaxed"]
-        for result in evaluated
-        for relation_payload in result.get("by_relation", {}).values()
-    ]
-    edge_macro = macro_average(edge_company_metrics)
-    relaxed_macro = macro_average(relaxed_company_metrics)
-    primary_metric = "edge_macro_by_company"
+    exact_metrics = metric_payload(exact_tp, exact_fp, exact_fn)
+    exact_macro = macro_average(evaluated)
+    relaxed_metrics = weighted_metric_payload(relaxed_tp, relaxed_fp, relaxed_fn)
     return {
         "evaluated_company_count": len(evaluated),
         "missing_prediction_count": sum(1 for result in results if result.get("status") == "missing_prediction"),
-        "primary_metric": primary_metric,
-        "primary": edge_macro,
-        "edge_micro": metric_payload(edge_tp, edge_fp, edge_fn),
-        "edge_macro_by_company": edge_macro,
-        "edge_macro_by_company_relation": macro_average(edge_relation_metrics),
-        "strict_micro": metric_payload(strict_tp, strict_fp, strict_fn),
-        "strict_macro_by_company": macro_average(strict_company_metrics),
-        "strict_macro_by_company_relation": macro_average(strict_relation_metrics),
-        "relaxed_micro": weighted_metric_payload(relaxed_tp, relaxed_fp, relaxed_fn),
-        "relaxed_macro_by_company": relaxed_macro,
-        "relaxed_macro_by_company_relation": macro_average(relaxed_relation_metrics),
+        "precision": exact_metrics["precision"],
+        "recall": exact_metrics["recall"],
+        "f1": exact_metrics["f1"],
+        "macro_f1": exact_macro["f1"],
+        "relaxed_f1": relaxed_metrics["f1"],
     }
 
 
@@ -811,9 +715,13 @@ def build_cherry_pick_evaluation_path(
 
 def evaluate_paths(paths: list[EvaluationPaths], *, output_root: Path) -> dict[str, Any]:
     results = [evaluate_company(path) for path in paths]
+    public_results = [
+        {key: value for key, value in result.items() if not key.startswith("_")}
+        for result in results
+    ]
     summary = {
-        "result_count": len(results),
-        "results": results,
+        "result_count": len(public_results),
+        "results": public_results,
         "aggregate": aggregate_metrics(results),
     }
     write_json(output_root / "summary.json", summary)
@@ -894,19 +802,15 @@ def main() -> int:
             raise
 
     aggregate = summary["aggregate"]
-    primary = aggregate["primary"]
-    edge_micro = aggregate["edge_micro"]
-    strict_micro = aggregate["strict_micro"]
-    relaxed_micro = aggregate["relaxed_micro"]
     print(
         "Evaluated "
         f"{aggregate['evaluated_company_count']} companies "
         f"(missing predictions: {aggregate['missing_prediction_count']}). "
-        f"3-field Macro-F1={primary['f1']:.3f}, "
-        f"precision={primary['precision']:.3f}, recall={primary['recall']:.3f}. "
-        f"3-field Micro-F1={edge_micro['f1']:.3f}; "
-        f"Strict Micro-F1={strict_micro['f1']:.3f}; "
-        f"Relaxed Micro-F1={relaxed_micro['f1']:.3f}"
+        f"precision={aggregate['precision']:.3f}, "
+        f"recall={aggregate['recall']:.3f}, "
+        f"F1={aggregate['f1']:.3f}, "
+        f"Macro-F1={aggregate['macro_f1']:.3f}, "
+        f"Relaxed F1={aggregate['relaxed_f1']:.3f}"
     )
     print(f"Results: {output_root}")
     return 0

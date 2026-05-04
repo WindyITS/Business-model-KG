@@ -93,11 +93,9 @@ against manually curated benchmark triples under:
 evaluation/benchmarks/<split>/clean/
 ```
 
-The primary score is exact normalized 3-field edge agreement over
-`subject`, `relation`, and `object`, reported as micro precision/recall/F1 and
-macro-F1 by company. Strict 5-field typed-triple matching is kept as a
-diagnostic view, and relaxed graph-aware F1 gives partial credit for documented
-company aliases and hierarchy/roll-up alignments.
+The evaluator reports only five scores: exact precision, exact recall, exact
+F1, exact macro-F1 by company, and relaxed graph-aware F1. Exact scores use
+normalized 3-field edge agreement over `subject`, `relation`, and `object`.
 
 Use [`evaluation/README.md`](./evaluation/README.md) for the evaluation
 commands and output files. Use
