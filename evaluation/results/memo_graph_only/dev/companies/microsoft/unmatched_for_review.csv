@@ -16,11 +16,11 @@ gold_0014,,gold,Enterprise and Partner Services,Offering,OFFERS,Industry Solutio
 gold_0015,,gold,Enterprise and Partner Services,Offering,OFFERS,Learning Experience,Offering
 gold_0016,,gold,Enterprise and Partner Services,Offering,OFFERS,Microsoft Partner Network,Offering
 gold_0017,,gold,Enterprise and Partner Services,Offering,OFFERS,Nuance Professional Services,Offering
-gold_0018,1,gold,Gaming,Offering,MONETIZES_VIA,advertising,RevenueModel
-gold_0019,2,gold,Gaming,Offering,MONETIZES_VIA,hardware sales,RevenueModel
-gold_0020,3,gold,Gaming,Offering,MONETIZES_VIA,subscription,RevenueModel
+gold_0018,,gold,Gaming,Offering,MONETIZES_VIA,advertising,RevenueModel
+gold_0019,,gold,Gaming,Offering,MONETIZES_VIA,hardware sales,RevenueModel
+gold_0020,,gold,Gaming,Offering,MONETIZES_VIA,subscription,RevenueModel
 gold_0021,,gold,Gaming,Offering,OFFERS,Xbox content and services,Offering
-gold_0022,4,gold,Gaming,Offering,OFFERS,Xbox hardware,Offering
+gold_0022,,gold,Gaming,Offering,OFFERS,Xbox hardware,Offering
 gold_0023,,gold,Intelligent Cloud,BusinessSegment,OFFERS,Enterprise and Partner Services,Offering
 gold_0024,,gold,Intelligent Cloud,BusinessSegment,OFFERS,Server products and cloud services,Offering
 gold_0025,,gold,Intelligent Cloud,BusinessSegment,SELLS_THROUGH,retail,Channel
@@ -43,7 +43,7 @@ gold_0041,,gold,Microsoft 365 Commercial products,Offering,OFFERS,Windows Commer
 gold_0042,,gold,Microsoft 365 Consumer,Offering,OFFERS,Microsoft 365 Consumer subscriptions,Offering
 gold_0043,,gold,Microsoft 365 Consumer,Offering,OFFERS,Office licensed on-premises,Offering
 gold_0044,,gold,Microsoft 365 Consumer,Offering,OFFERS,other consumer services,Offering
-gold_0045,5,gold,More Personal Computing,BusinessSegment,OFFERS,Gaming,Offering
+gold_0045,,gold,More Personal Computing,BusinessSegment,OFFERS,Gaming,Offering
 gold_0046,,gold,More Personal Computing,BusinessSegment,OFFERS,Windows and Devices,Offering
 gold_0047,,gold,More Personal Computing,BusinessSegment,SERVES,mid-market companies,CustomerType
 gold_0048,,gold,Productivity and Business Processes,BusinessSegment,OFFERS,Dynamics,Offering
@@ -52,11 +52,11 @@ gold_0050,,gold,Productivity and Business Processes,BusinessSegment,SELLS_THROUG
 gold_0051,,gold,Productivity and Business Processes,BusinessSegment,SERVES,consumers,CustomerType
 gold_0052,,gold,Search and News Advertising,Offering,OFFERS,Bing and Copilot,Offering
 gold_0053,,gold,Search and News Advertising,Offering,OFFERS,third-party affiliates,Offering
-gold_0054,6,gold,Server Products,Offering,OFFERS,Client Access Licenses (CALs),Offering
-gold_0055,7,gold,Server Products,Offering,OFFERS,SQL Server,Offering
-gold_0056,8,gold,Server Products,Offering,OFFERS,System Center,Offering
-gold_0057,9,gold,Server Products,Offering,OFFERS,Visual Studio,Offering
-gold_0058,10,gold,Server Products,Offering,OFFERS,Windows Server,Offering
+gold_0054,,gold,Server Products,Offering,OFFERS,Client Access Licenses (CALs),Offering
+gold_0055,,gold,Server Products,Offering,OFFERS,SQL Server,Offering
+gold_0056,,gold,Server Products,Offering,OFFERS,System Center,Offering
+gold_0057,,gold,Server Products,Offering,OFFERS,Visual Studio,Offering
+gold_0058,,gold,Server Products,Offering,OFFERS,Windows Server,Offering
 gold_0059,,gold,Server Products,Offering,OFFERS,other on-premises offerings,Offering
 gold_0060,,gold,Server products and cloud services,Offering,MONETIZES_VIA,consumption-based,RevenueModel
 gold_0061,,gold,Server products and cloud services,Offering,MONETIZES_VIA,licensing,RevenueModel
@@ -95,7 +95,7 @@ predicted_0021,,predicted,Microsoft 365 Consumer,Offering,OFFERS,OneDrive,Offeri
 predicted_0022,,predicted,Microsoft 365 Consumer,Offering,OFFERS,Outlook.com,Offering
 predicted_0023,,predicted,More Personal Computing,BusinessSegment,OFFERS,Surface,Offering
 predicted_0024,,predicted,More Personal Computing,BusinessSegment,OFFERS,Windows OEM,Offering
-predicted_0025,5,predicted,More Personal Computing,BusinessSegment,OFFERS,Xbox Gaming Platform,Offering
+predicted_0025,,predicted,More Personal Computing,BusinessSegment,OFFERS,Xbox Gaming Platform,Offering
 predicted_0026,,predicted,More Personal Computing,BusinessSegment,SELLS_THROUGH,direct sales,Channel
 predicted_0027,,predicted,More Personal Computing,BusinessSegment,SERVES,developers,CustomerType
 predicted_0028,,predicted,Nuance Healthcare,Offering,MONETIZES_VIA,service fees,RevenueModel
@@ -114,16 +114,16 @@ predicted_0040,,predicted,Windows OEM,Offering,MONETIZES_VIA,licensing,RevenueMo
 predicted_0041,,predicted,Windows OEM,Offering,OFFERS,Windows Pro,Offering
 predicted_0042,,predicted,Windows OEM,Offering,OFFERS,Windows non-Pro,Offering
 predicted_0043,,predicted,Windows Server Products,Offering,MONETIZES_VIA,licensing,RevenueModel
-predicted_0044,6,predicted,Windows Server Products,Offering,OFFERS,Client Access Licenses (CALs),Offering
-predicted_0045,7,predicted,Windows Server Products,Offering,OFFERS,SQL Server,Offering
-predicted_0046,8,predicted,Windows Server Products,Offering,OFFERS,System Center,Offering
-predicted_0047,9,predicted,Windows Server Products,Offering,OFFERS,Visual Studio,Offering
-predicted_0048,10,predicted,Windows Server Products,Offering,OFFERS,Windows Server,Offering
-predicted_0049,1,predicted,Xbox Gaming Platform,Offering,MONETIZES_VIA,advertising,RevenueModel
-predicted_0050,2,predicted,Xbox Gaming Platform,Offering,MONETIZES_VIA,hardware sales,RevenueModel
-predicted_0051,3,predicted,Xbox Gaming Platform,Offering,MONETIZES_VIA,subscription,RevenueModel
+predicted_0044,,predicted,Windows Server Products,Offering,OFFERS,Client Access Licenses (CALs),Offering
+predicted_0045,,predicted,Windows Server Products,Offering,OFFERS,SQL Server,Offering
+predicted_0046,,predicted,Windows Server Products,Offering,OFFERS,System Center,Offering
+predicted_0047,,predicted,Windows Server Products,Offering,OFFERS,Visual Studio,Offering
+predicted_0048,,predicted,Windows Server Products,Offering,OFFERS,Windows Server,Offering
+predicted_0049,,predicted,Xbox Gaming Platform,Offering,MONETIZES_VIA,advertising,RevenueModel
+predicted_0050,,predicted,Xbox Gaming Platform,Offering,MONETIZES_VIA,hardware sales,RevenueModel
+predicted_0051,,predicted,Xbox Gaming Platform,Offering,MONETIZES_VIA,subscription,RevenueModel
 predicted_0052,,predicted,Xbox Gaming Platform,Offering,OFFERS,First-Party Content,Offering
 predicted_0053,,predicted,Xbox Gaming Platform,Offering,OFFERS,Third-Party Content,Offering
 predicted_0054,,predicted,Xbox Gaming Platform,Offering,OFFERS,Xbox Cloud Gaming,Offering
 predicted_0055,,predicted,Xbox Gaming Platform,Offering,OFFERS,Xbox Game Pass,Offering
-predicted_0056,4,predicted,Xbox Gaming Platform,Offering,OFFERS,Xbox Hardware,Offering
+predicted_0056,,predicted,Xbox Gaming Platform,Offering,OFFERS,Xbox Hardware,Offering

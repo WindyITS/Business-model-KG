@@ -1,0 +1,26 @@
+{"subject":"Flipkart","subject_type":"Offering","relation":"MONETIZES_VIA","object":"advertising","object_type":"RevenueModel"}
+{"subject":"Flipkart","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Flipkart","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"PhonePe","subject_type":"Offering","relation":"MONETIZES_VIA","object":"transaction fees","object_type":"RevenueModel"}
+{"subject":"Sam's Club Membership","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"Sam's Club Membership","subject_type":"Offering","relation":"OFFERS","object":"Club Membership","object_type":"Offering"}
+{"subject":"Sam's Club Membership","subject_type":"Offering","relation":"OFFERS","object":"Plus Membership","object_type":"Offering"}
+{"subject":"Sam's Club Retail Operations","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"Sam's Club Membership","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"Sam's Club Retail Operations","object_type":"Offering"}
+{"subject":"Sam's Club U.S.","subject_type":"BusinessSegment","relation":"SERVES","object":"small businesses","object_type":"CustomerType"}
+{"subject":"Walmart Advertising Solutions","subject_type":"Offering","relation":"MONETIZES_VIA","object":"advertising","object_type":"RevenueModel"}
+{"subject":"Walmart Financial Services","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"Walmart Financial Services","subject_type":"Offering","relation":"MONETIZES_VIA","object":"transaction fees","object_type":"RevenueModel"}
+{"subject":"Walmart International","subject_type":"BusinessSegment","relation":"OFFERS","object":"Flipkart","object_type":"Offering"}
+{"subject":"Walmart International","subject_type":"BusinessSegment","relation":"OFFERS","object":"PhonePe","object_type":"Offering"}
+{"subject":"Walmart International","subject_type":"BusinessSegment","relation":"OFFERS","object":"Walmart Marketplace and Fulfillment Services","object_type":"Offering"}
+{"subject":"Walmart International","subject_type":"BusinessSegment","relation":"SERVES","object":"consumers","object_type":"CustomerType"}
+{"subject":"Walmart International","subject_type":"BusinessSegment","relation":"SERVES","object":"small businesses","object_type":"CustomerType"}
+{"subject":"Walmart Marketplace and Fulfillment Services","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"Walmart U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"Walmart Marketplace and Fulfillment Services","object_type":"Offering"}
+{"subject":"Walmart U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"Walmart U.S. Retail Operations","object_type":"Offering"}
+{"subject":"Walmart U.S.","subject_type":"BusinessSegment","relation":"OFFERS","object":"Walmart+","object_type":"Offering"}
+{"subject":"Walmart U.S.","subject_type":"BusinessSegment","relation":"SERVES","object":"small businesses","object_type":"CustomerType"}
+{"subject":"Walmart U.S. Retail Operations","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Walmart+","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}

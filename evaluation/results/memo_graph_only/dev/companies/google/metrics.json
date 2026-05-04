@@ -10,10 +10,194 @@
   "gold_unique_triples": 50,
   "predicted_triples": 62,
   "predicted_unique_triples": 62,
+  "gold_unique_edges": 50,
+  "predicted_unique_edges": 62,
   "true_positives": 23,
   "false_positives": 39,
   "false_negatives": 27,
   "precision": 0.3709677419354839,
   "recall": 0.46,
-  "f1": 0.4107142857142857
+  "f1": 0.4107142857142857,
+  "edge": {
+    "true_positives": 23,
+    "false_positives": 39,
+    "false_negatives": 27,
+    "precision": 0.3709677419354839,
+    "recall": 0.46,
+    "f1": 0.4107142857142857
+  },
+  "strict": {
+    "true_positives": 23,
+    "false_positives": 39,
+    "false_negatives": 27,
+    "precision": 0.3709677419354839,
+    "recall": 0.46,
+    "f1": 0.4107142857142857
+  },
+  "relaxed": {
+    "true_positives": 23.75,
+    "false_positives": 38.25,
+    "false_negatives": 26.25,
+    "precision": 0.38306451612903225,
+    "recall": 0.475,
+    "f1": 0.42410714285714285
+  },
+  "by_relation": {
+    "HAS_SEGMENT": {
+      "edge": {
+        "true_positives": 0,
+        "false_positives": 3,
+        "false_negatives": 3,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "strict": {
+        "true_positives": 0,
+        "false_positives": 3,
+        "false_negatives": 3,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "relaxed": {
+        "true_positives": 0,
+        "false_positives": 3,
+        "false_negatives": 3,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    "OFFERS": {
+      "edge": {
+        "true_positives": 11,
+        "false_positives": 12,
+        "false_negatives": 23,
+        "precision": 0.4782608695652174,
+        "recall": 0.3235294117647059,
+        "f1": 0.3859649122807018
+      },
+      "strict": {
+        "true_positives": 11,
+        "false_positives": 12,
+        "false_negatives": 23,
+        "precision": 0.4782608695652174,
+        "recall": 0.3235294117647059,
+        "f1": 0.3859649122807018
+      },
+      "relaxed": {
+        "true_positives": 11.75,
+        "false_positives": 11.25,
+        "false_negatives": 22.25,
+        "precision": 0.5108695652173914,
+        "recall": 0.34558823529411764,
+        "f1": 0.412280701754386
+      }
+    },
+    "SERVES": {
+      "edge": {
+        "true_positives": 0,
+        "false_positives": 10,
+        "false_negatives": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "strict": {
+        "true_positives": 0,
+        "false_positives": 10,
+        "false_negatives": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "relaxed": {
+        "true_positives": 0,
+        "false_positives": 10,
+        "false_negatives": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    "SELLS_THROUGH": {
+      "edge": {
+        "true_positives": 3,
+        "false_positives": 5,
+        "false_negatives": 0,
+        "precision": 0.375,
+        "recall": 1.0,
+        "f1": 0.5454545454545454
+      },
+      "strict": {
+        "true_positives": 3,
+        "false_positives": 5,
+        "false_negatives": 0,
+        "precision": 0.375,
+        "recall": 1.0,
+        "f1": 0.5454545454545454
+      },
+      "relaxed": {
+        "true_positives": 3.0,
+        "false_positives": 5.0,
+        "false_negatives": 0.0,
+        "precision": 0.375,
+        "recall": 1.0,
+        "f1": 0.5454545454545454
+      }
+    },
+    "OPERATES_IN": {
+      "edge": {
+        "true_positives": 0,
+        "false_positives": 1,
+        "false_negatives": 1,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "strict": {
+        "true_positives": 0,
+        "false_positives": 1,
+        "false_negatives": 1,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "relaxed": {
+        "true_positives": 0,
+        "false_positives": 1,
+        "false_negatives": 1,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    "MONETIZES_VIA": {
+      "edge": {
+        "true_positives": 9,
+        "false_positives": 8,
+        "false_negatives": 0,
+        "precision": 0.5294117647058824,
+        "recall": 1.0,
+        "f1": 0.6923076923076924
+      },
+      "strict": {
+        "true_positives": 9,
+        "false_positives": 8,
+        "false_negatives": 0,
+        "precision": 0.5294117647058824,
+        "recall": 1.0,
+        "f1": 0.6923076923076924
+      },
+      "relaxed": {
+        "true_positives": 9.0,
+        "false_positives": 8.0,
+        "false_negatives": 0.0,
+        "precision": 0.5294117647058824,
+        "recall": 1.0,
+        "f1": 0.6923076923076924
+      }
+    }
+  }
 }

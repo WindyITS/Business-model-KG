@@ -3,7 +3,7 @@ gold_0001,,gold,Azure and other cloud services,Offering,OFFERS,GitHub,Offering
 gold_0002,,gold,Azure and other cloud services,Offering,OFFERS,Nuance Healthcare,Offering
 gold_0003,,gold,Azure and other cloud services,Offering,OFFERS,cloud and AI consumption-based services,Offering
 gold_0004,,gold,Azure and other cloud services,Offering,OFFERS,other cloud services,Offering
-gold_0005,1,gold,Azure and other cloud services,Offering,OFFERS,virtual desktop offerings,Offering
+gold_0005,,gold,Azure and other cloud services,Offering,OFFERS,virtual desktop offerings,Offering
 gold_0006,,gold,Devices,Offering,OFFERS,PC Accessories,Offering
 gold_0007,,gold,Devices,Offering,OFFERS,Surface,Offering
 gold_0008,,gold,Dynamics 365,Offering,OFFERS,CRM,Offering
@@ -52,7 +52,7 @@ gold_0050,,gold,Xbox content and services,Offering,OFFERS,other cloud services,O
 predicted_0001,,predicted,Azure,Offering,MONETIZES_VIA,consumption-based,RevenueModel
 predicted_0002,,predicted,Azure,Offering,MONETIZES_VIA,subscription,RevenueModel
 predicted_0003,,predicted,Azure,Offering,OFFERS,Azure AI Foundry,Offering
-predicted_0004,1,predicted,Azure,Offering,OFFERS,Azure Virtual Desktop,Offering
+predicted_0004,,predicted,Azure,Offering,OFFERS,Azure Virtual Desktop,Offering
 predicted_0005,,predicted,Dynamics,Offering,MONETIZES_VIA,subscription,RevenueModel
 predicted_0006,,predicted,Enterprise and Partner Services,Offering,MONETIZES_VIA,service fees,RevenueModel
 predicted_0007,,predicted,Gaming,Offering,MONETIZES_VIA,transaction fees,RevenueModel

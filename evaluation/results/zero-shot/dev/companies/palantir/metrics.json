@@ -10,10 +10,194 @@
   "gold_unique_triples": 36,
   "predicted_triples": 20,
   "predicted_unique_triples": 20,
+  "gold_unique_edges": 36,
+  "predicted_unique_edges": 20,
   "true_positives": 6,
   "false_positives": 14,
   "false_negatives": 30,
   "precision": 0.3,
   "recall": 0.16666666666666666,
-  "f1": 0.21428571428571427
+  "f1": 0.21428571428571427,
+  "edge": {
+    "true_positives": 6,
+    "false_positives": 14,
+    "false_negatives": 30,
+    "precision": 0.3,
+    "recall": 0.16666666666666666,
+    "f1": 0.21428571428571427
+  },
+  "strict": {
+    "true_positives": 6,
+    "false_positives": 14,
+    "false_negatives": 30,
+    "precision": 0.3,
+    "recall": 0.16666666666666666,
+    "f1": 0.21428571428571427
+  },
+  "relaxed": {
+    "true_positives": 6.0,
+    "false_positives": 14.0,
+    "false_negatives": 30.0,
+    "precision": 0.3,
+    "recall": 0.16666666666666666,
+    "f1": 0.21428571428571427
+  },
+  "by_relation": {
+    "HAS_SEGMENT": {
+      "edge": {
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "strict": {
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "relaxed": {
+        "true_positives": 2.0,
+        "false_positives": 0.0,
+        "false_negatives": 0.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      }
+    },
+    "OFFERS": {
+      "edge": {
+        "true_positives": 0,
+        "false_positives": 7,
+        "false_negatives": 28,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "strict": {
+        "true_positives": 0,
+        "false_positives": 7,
+        "false_negatives": 28,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "relaxed": {
+        "true_positives": 0,
+        "false_positives": 7,
+        "false_negatives": 28,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    "SERVES": {
+      "edge": {
+        "true_positives": 0,
+        "false_positives": 6,
+        "false_negatives": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "strict": {
+        "true_positives": 0,
+        "false_positives": 6,
+        "false_negatives": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "relaxed": {
+        "true_positives": 0,
+        "false_positives": 6,
+        "false_negatives": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    "SELLS_THROUGH": {
+      "edge": {
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 2,
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6666666666666666
+      },
+      "strict": {
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 2,
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6666666666666666
+      },
+      "relaxed": {
+        "true_positives": 2.0,
+        "false_positives": 0.0,
+        "false_negatives": 2.0,
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6666666666666666
+      }
+    },
+    "OPERATES_IN": {
+      "edge": {
+        "true_positives": 1,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6666666666666666
+      },
+      "strict": {
+        "true_positives": 1,
+        "false_positives": 1,
+        "false_negatives": 0,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6666666666666666
+      },
+      "relaxed": {
+        "true_positives": 1.0,
+        "false_positives": 1.0,
+        "false_negatives": 0.0,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6666666666666666
+      }
+    },
+    "PARTNERS_WITH": {
+      "edge": {
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "strict": {
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "relaxed": {
+        "true_positives": 1.0,
+        "false_positives": 0.0,
+        "false_negatives": 0.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      }
+    }
+  }
 }

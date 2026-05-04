@@ -1,66 +1,61 @@
 row_id,match_id,source,subject,subject_type,relation,object,object_type
-gold_0001,,gold,Amazon Prime,Offering,MONETIZES_VIA,hardware sales,RevenueModel
-gold_0002,,gold,Amazon Web Services (AWS),BusinessSegment,OFFERS,analytics services,Offering
-gold_0003,,gold,Amazon Web Services (AWS),BusinessSegment,OFFERS,artificial intelligence services,Offering
-gold_0004,,gold,Amazon Web Services (AWS),BusinessSegment,OFFERS,compute services,Offering
-gold_0005,,gold,Amazon Web Services (AWS),BusinessSegment,OFFERS,database services,Offering
-gold_0006,,gold,Amazon Web Services (AWS),BusinessSegment,OFFERS,machine learning services,Offering
-gold_0007,1,gold,Amazon Web Services (AWS),BusinessSegment,OFFERS,on-demand technology services,Offering
-gold_0008,,gold,Amazon Web Services (AWS),BusinessSegment,OFFERS,storage services,Offering
-gold_0009,,gold,Amazon Web Services (AWS),BusinessSegment,SERVES,mid-market companies,CustomerType
-gold_0010,,gold,Amazon Web Services (AWS),BusinessSegment,SERVES,small businesses,CustomerType
-gold_0011,,gold,Blink,Offering,MONETIZES_VIA,hardware sales,RevenueModel
-gold_0012,,gold,Echo,Offering,MONETIZES_VIA,hardware sales,RevenueModel
-gold_0013,,gold,Fire TV,Offering,MONETIZES_VIA,hardware sales,RevenueModel
-gold_0014,,gold,Fire Tablet,Offering,MONETIZES_VIA,hardware sales,RevenueModel
-gold_0015,,gold,International,BusinessSegment,OFFERS,Blink,Offering
-gold_0016,,gold,International,BusinessSegment,OFFERS,Echo,Offering
-gold_0017,,gold,International,BusinessSegment,OFFERS,Fire TV,Offering
-gold_0018,,gold,International,BusinessSegment,OFFERS,Fire Tablet,Offering
-gold_0019,,gold,International,BusinessSegment,OFFERS,Kindle,Offering
-gold_0020,,gold,International,BusinessSegment,OFFERS,Ring,Offering
-gold_0021,,gold,International,BusinessSegment,OFFERS,display advertising,Offering
-gold_0022,,gold,International,BusinessSegment,OFFERS,eero,Offering
-gold_0023,,gold,International,BusinessSegment,OFFERS,media content,Offering
-gold_0024,,gold,International,BusinessSegment,OFFERS,programs,Offering
-gold_0025,,gold,International,BusinessSegment,OFFERS,sponsored ads,Offering
-gold_0026,,gold,International,BusinessSegment,OFFERS,video advertising,Offering
-gold_0027,,gold,International,BusinessSegment,SERVES,manufacturers,CustomerType
-gold_0028,,gold,International,BusinessSegment,SERVES,mid-market companies,CustomerType
-gold_0029,,gold,International,BusinessSegment,SERVES,small businesses,CustomerType
-gold_0030,,gold,Kindle,Offering,MONETIZES_VIA,hardware sales,RevenueModel
-gold_0031,,gold,North America,BusinessSegment,OFFERS,Blink,Offering
-gold_0032,,gold,North America,BusinessSegment,OFFERS,Echo,Offering
-gold_0033,,gold,North America,BusinessSegment,OFFERS,Fire TV,Offering
-gold_0034,,gold,North America,BusinessSegment,OFFERS,Fire Tablet,Offering
-gold_0035,,gold,North America,BusinessSegment,OFFERS,Kindle,Offering
-gold_0036,,gold,North America,BusinessSegment,OFFERS,Ring,Offering
-gold_0037,,gold,North America,BusinessSegment,OFFERS,display advertising,Offering
-gold_0038,,gold,North America,BusinessSegment,OFFERS,eero,Offering
-gold_0039,,gold,North America,BusinessSegment,OFFERS,media content,Offering
-gold_0040,,gold,North America,BusinessSegment,OFFERS,programs,Offering
-gold_0041,,gold,North America,BusinessSegment,OFFERS,sponsored ads,Offering
-gold_0042,,gold,North America,BusinessSegment,OFFERS,video advertising,Offering
-gold_0043,,gold,North America,BusinessSegment,SERVES,manufacturers,CustomerType
-gold_0044,,gold,North America,BusinessSegment,SERVES,mid-market companies,CustomerType
-gold_0045,,gold,North America,BusinessSegment,SERVES,small businesses,CustomerType
-gold_0046,,gold,Ring,Offering,MONETIZES_VIA,hardware sales,RevenueModel
-gold_0047,,gold,analytics services,Offering,MONETIZES_VIA,service fees,RevenueModel
-gold_0048,,gold,artificial intelligence services,Offering,MONETIZES_VIA,consumption-based,RevenueModel
-gold_0049,,gold,compute services,Offering,MONETIZES_VIA,consumption-based,RevenueModel
-gold_0050,,gold,database services,Offering,MONETIZES_VIA,consumption-based,RevenueModel
-gold_0051,,gold,display advertising,Offering,MONETIZES_VIA,advertising,RevenueModel
-gold_0052,,gold,eero,Offering,MONETIZES_VIA,hardware sales,RevenueModel
-gold_0053,,gold,machine learning services,Offering,MONETIZES_VIA,consumption-based,RevenueModel
-gold_0054,,gold,media content,Offering,MONETIZES_VIA,hardware sales,RevenueModel
-gold_0055,2,gold,on-demand technology services,Offering,MONETIZES_VIA,consumption-based,RevenueModel
-gold_0056,,gold,sponsored ads,Offering,MONETIZES_VIA,advertising,RevenueModel
-gold_0057,,gold,storage services,Offering,MONETIZES_VIA,consumption-based,RevenueModel
-gold_0058,,gold,video advertising,Offering,MONETIZES_VIA,advertising,RevenueModel
-predicted_0001,2,predicted,AWS Cloud Services,Offering,MONETIZES_VIA,consumption-based,RevenueModel
+gold_0001,,gold,AWS Cloud Services,Offering,MONETIZES_VIA,advertising,RevenueModel
+gold_0002,,gold,Amazon Prime,Offering,MONETIZES_VIA,hardware sales,RevenueModel
+gold_0003,,gold,Amazon Web Services (AWS),BusinessSegment,OFFERS,analytics services,Offering
+gold_0004,,gold,Amazon Web Services (AWS),BusinessSegment,OFFERS,artificial intelligence services,Offering
+gold_0005,,gold,Amazon Web Services (AWS),BusinessSegment,OFFERS,compute services,Offering
+gold_0006,,gold,Amazon Web Services (AWS),BusinessSegment,OFFERS,database services,Offering
+gold_0007,,gold,Amazon Web Services (AWS),BusinessSegment,OFFERS,machine learning services,Offering
+gold_0008,,gold,Amazon Web Services (AWS),BusinessSegment,OFFERS,on-demand technology services,Offering
+gold_0009,,gold,Amazon Web Services (AWS),BusinessSegment,OFFERS,storage services,Offering
+gold_0010,,gold,Amazon Web Services (AWS),BusinessSegment,SERVES,consumers,CustomerType
+gold_0011,,gold,Amazon Web Services (AWS),BusinessSegment,SERVES,mid-market companies,CustomerType
+gold_0012,,gold,Amazon Web Services (AWS),BusinessSegment,SERVES,small businesses,CustomerType
+gold_0013,,gold,Blink,Offering,MONETIZES_VIA,hardware sales,RevenueModel
+gold_0014,,gold,Echo,Offering,MONETIZES_VIA,hardware sales,RevenueModel
+gold_0015,,gold,Fire TV,Offering,MONETIZES_VIA,hardware sales,RevenueModel
+gold_0016,,gold,Fire Tablet,Offering,MONETIZES_VIA,hardware sales,RevenueModel
+gold_0017,,gold,International,BusinessSegment,OFFERS,Blink,Offering
+gold_0018,,gold,International,BusinessSegment,OFFERS,Echo,Offering
+gold_0019,,gold,International,BusinessSegment,OFFERS,Fire TV,Offering
+gold_0020,,gold,International,BusinessSegment,OFFERS,Fire Tablet,Offering
+gold_0021,,gold,International,BusinessSegment,OFFERS,Kindle,Offering
+gold_0022,,gold,International,BusinessSegment,OFFERS,Ring,Offering
+gold_0023,,gold,International,BusinessSegment,OFFERS,display advertising,Offering
+gold_0024,,gold,International,BusinessSegment,OFFERS,eero,Offering
+gold_0025,,gold,International,BusinessSegment,OFFERS,media content,Offering
+gold_0026,,gold,International,BusinessSegment,OFFERS,programs,Offering
+gold_0027,,gold,International,BusinessSegment,OFFERS,sponsored ads,Offering
+gold_0028,,gold,International,BusinessSegment,OFFERS,video advertising,Offering
+gold_0029,,gold,International,BusinessSegment,SERVES,manufacturers,CustomerType
+gold_0030,,gold,International,BusinessSegment,SERVES,mid-market companies,CustomerType
+gold_0031,,gold,International,BusinessSegment,SERVES,small businesses,CustomerType
+gold_0032,,gold,Kindle,Offering,MONETIZES_VIA,hardware sales,RevenueModel
+gold_0033,,gold,North America,BusinessSegment,OFFERS,display advertising,Offering
+gold_0034,,gold,North America,BusinessSegment,OFFERS,media content,Offering
+gold_0035,,gold,North America,BusinessSegment,OFFERS,programs,Offering
+gold_0036,,gold,North America,BusinessSegment,OFFERS,sponsored ads,Offering
+gold_0037,,gold,North America,BusinessSegment,OFFERS,video advertising,Offering
+gold_0038,,gold,North America,BusinessSegment,SERVES,manufacturers,CustomerType
+gold_0039,,gold,North America,BusinessSegment,SERVES,mid-market companies,CustomerType
+gold_0040,,gold,North America,BusinessSegment,SERVES,small businesses,CustomerType
+gold_0041,,gold,Ring,Offering,MONETIZES_VIA,hardware sales,RevenueModel
+gold_0042,,gold,analytics services,Offering,MONETIZES_VIA,service fees,RevenueModel
+gold_0043,,gold,artificial intelligence services,Offering,MONETIZES_VIA,consumption-based,RevenueModel
+gold_0044,,gold,compute services,Offering,MONETIZES_VIA,consumption-based,RevenueModel
+gold_0045,,gold,database services,Offering,MONETIZES_VIA,consumption-based,RevenueModel
+gold_0046,,gold,display advertising,Offering,MONETIZES_VIA,advertising,RevenueModel
+gold_0047,,gold,eero,Offering,MONETIZES_VIA,hardware sales,RevenueModel
+gold_0048,,gold,machine learning services,Offering,MONETIZES_VIA,consumption-based,RevenueModel
+gold_0049,,gold,media content,Offering,MONETIZES_VIA,hardware sales,RevenueModel
+gold_0050,,gold,on-demand technology services,Offering,MONETIZES_VIA,consumption-based,RevenueModel
+gold_0051,,gold,sponsored ads,Offering,MONETIZES_VIA,advertising,RevenueModel
+gold_0052,,gold,storage services,Offering,MONETIZES_VIA,consumption-based,RevenueModel
+gold_0053,,gold,video advertising,Offering,MONETIZES_VIA,advertising,RevenueModel
+predicted_0001,,predicted,AWS Cloud Services,Offering,MONETIZES_VIA,consumption-based,RevenueModel
 predicted_0002,,predicted,Amazon,Company,OPERATES_IN,Worldwide,Place
 predicted_0003,,predicted,Amazon Prime,Offering,MONETIZES_VIA,subscription,RevenueModel
-predicted_0004,1,predicted,Amazon Web Services (AWS),BusinessSegment,OFFERS,AWS Cloud Services,Offering
+predicted_0004,,predicted,Amazon Web Services (AWS),BusinessSegment,OFFERS,AWS Cloud Services,Offering
 predicted_0005,,predicted,Amazon Web Services (AWS),BusinessSegment,SELLS_THROUGH,direct sales,Channel
 predicted_0006,,predicted,Amazon Web Services (AWS),BusinessSegment,SELLS_THROUGH,online,Channel
 predicted_0007,,predicted,Consumer Devices,Offering,MONETIZES_VIA,hardware sales,RevenueModel

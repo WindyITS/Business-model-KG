@@ -1,6 +1,6 @@
 row_id,match_id,source,subject,subject_type,relation,object,object_type
-gold_0001,1,gold,Advertising,Offering,MONETIZES_VIA,advertising,RevenueModel
-gold_0002,2,gold,Advertising,Offering,MONETIZES_VIA,licensing,RevenueModel
+gold_0001,,gold,Advertising,Offering,MONETIZES_VIA,advertising,RevenueModel
+gold_0002,,gold,Advertising,Offering,MONETIZES_VIA,licensing,RevenueModel
 gold_0003,,gold,Americas,BusinessSegment,OFFERS,hardware and software products,Offering
 gold_0004,,gold,Americas,BusinessSegment,OFFERS,services,Offering
 gold_0005,,gold,Americas,BusinessSegment,SELLS_THROUGH,direct sales,Channel
@@ -23,9 +23,9 @@ gold_0021,,gold,Apple,Company,OFFERS,Payment Services,Offering
 gold_0022,,gold,Apple,Company,OFFERS,Wearables,Offering
 gold_0023,,gold,Apple,Company,OFFERS,iPad,Offering
 gold_0024,,gold,Apple,Company,OFFERS,iPhone,Offering
-gold_0025,8,gold,Apple Watch,Offering,OFFERS,Apple Watch SE 3,Offering
-gold_0026,9,gold,Apple Watch,Offering,OFFERS,Apple Watch Series 11,Offering
-gold_0027,10,gold,Apple Watch,Offering,OFFERS,Apple Watch Ultra 3,Offering
+gold_0025,,gold,Apple Watch,Offering,OFFERS,Apple Watch SE 3,Offering
+gold_0026,,gold,Apple Watch,Offering,OFFERS,Apple Watch Series 11,Offering
+gold_0027,,gold,Apple Watch,Offering,OFFERS,Apple Watch Ultra 3,Offering
 gold_0028,,gold,Digital Content,Offering,MONETIZES_VIA,subscription,RevenueModel
 gold_0029,,gold,Digital Content,Offering,OFFERS,Subscription Content Services,Offering
 gold_0030,,gold,Europe,BusinessSegment,OFFERS,hardware and software products,Offering
@@ -57,18 +57,18 @@ gold_0055,,gold,Rest of Asia Pacific,BusinessSegment,SELLS_THROUGH,direct sales,
 gold_0056,,gold,Rest of Asia Pacific,BusinessSegment,SELLS_THROUGH,online,Channel
 gold_0057,,gold,Rest of Asia Pacific,BusinessSegment,SELLS_THROUGH,resellers,Channel
 gold_0058,,gold,Rest of Asia Pacific,BusinessSegment,SELLS_THROUGH,retail,Channel
-gold_0059,3,gold,Subscription Content Services,Offering,OFFERS,Apple Arcade,Offering
-gold_0060,4,gold,Subscription Content Services,Offering,OFFERS,Apple Fitness+,Offering
-gold_0061,5,gold,Subscription Content Services,Offering,OFFERS,Apple Music,Offering
-gold_0062,6,gold,Subscription Content Services,Offering,OFFERS,Apple News+,Offering
-gold_0063,7,gold,Subscription Content Services,Offering,OFFERS,Apple TV,Offering
+gold_0059,,gold,Subscription Content Services,Offering,OFFERS,Apple Arcade,Offering
+gold_0060,,gold,Subscription Content Services,Offering,OFFERS,Apple Fitness+,Offering
+gold_0061,,gold,Subscription Content Services,Offering,OFFERS,Apple Music,Offering
+gold_0062,,gold,Subscription Content Services,Offering,OFFERS,Apple News+,Offering
+gold_0063,,gold,Subscription Content Services,Offering,OFFERS,Apple TV,Offering
 gold_0064,,gold,Wearables,Offering,OFFERS,Apple Vision Pro,Offering
 gold_0065,,gold,Wearables,Offering,OFFERS,Apple Watch,Offering
 gold_0066,,gold,Wearables,Offering,OFFERS,wireless headphones,Offering
 gold_0067,,gold,iPhone,Offering,OFFERS,iPhone 16,Offering
 gold_0068,,gold,iPhone,Offering,OFFERS,iPhone 16e,Offering
 gold_0069,,gold,iPhone,Offering,OFFERS,iPhone 17,Offering
-gold_0070,11,gold,iPhone,Offering,OFFERS,iPhone 17 Pro,Offering
+gold_0070,,gold,iPhone,Offering,OFFERS,iPhone 17 Pro,Offering
 gold_0071,,gold,wireless headphones,Offering,OFFERS,AirPods,Offering
 gold_0072,,gold,wireless headphones,Offering,OFFERS,AirPods Max,Offering
 gold_0073,,gold,wireless headphones,Offering,OFFERS,AirPods Pro,Offering
@@ -83,20 +83,20 @@ predicted_0007,,predicted,Apple,Company,HAS_SEGMENT,"Wearables, Home and Accesso
 predicted_0008,,predicted,Apple,Company,HAS_SEGMENT,iPad,BusinessSegment
 predicted_0009,,predicted,Apple,Company,HAS_SEGMENT,iPhone,BusinessSegment
 predicted_0010,,predicted,Apple Accessories,Offering,MONETIZES_VIA,hardware sales,RevenueModel
-predicted_0011,1,predicted,Apple Advertising,Offering,MONETIZES_VIA,advertising,RevenueModel
-predicted_0012,2,predicted,Apple Advertising,Offering,MONETIZES_VIA,licensing,RevenueModel
+predicted_0011,,predicted,Apple Advertising,Offering,MONETIZES_VIA,advertising,RevenueModel
+predicted_0012,,predicted,Apple Advertising,Offering,MONETIZES_VIA,licensing,RevenueModel
 predicted_0013,,predicted,Apple Content Subscriptions,Offering,MONETIZES_VIA,subscription,RevenueModel
-predicted_0014,3,predicted,Apple Content Subscriptions,Offering,OFFERS,Apple Arcade,Offering
-predicted_0015,4,predicted,Apple Content Subscriptions,Offering,OFFERS,Apple Fitness+,Offering
-predicted_0016,5,predicted,Apple Content Subscriptions,Offering,OFFERS,Apple Music,Offering
-predicted_0017,6,predicted,Apple Content Subscriptions,Offering,OFFERS,Apple News+,Offering
-predicted_0018,7,predicted,Apple Content Subscriptions,Offering,OFFERS,Apple TV Service,Offering
+predicted_0014,,predicted,Apple Content Subscriptions,Offering,OFFERS,Apple Arcade,Offering
+predicted_0015,,predicted,Apple Content Subscriptions,Offering,OFFERS,Apple Fitness+,Offering
+predicted_0016,,predicted,Apple Content Subscriptions,Offering,OFFERS,Apple Music,Offering
+predicted_0017,,predicted,Apple Content Subscriptions,Offering,OFFERS,Apple News+,Offering
+predicted_0018,,predicted,Apple Content Subscriptions,Offering,OFFERS,Apple TV Service,Offering
 predicted_0019,,predicted,Apple TV Hardware,Offering,MONETIZES_VIA,hardware sales,RevenueModel
 predicted_0020,,predicted,Apple Vision Pro,Offering,MONETIZES_VIA,hardware sales,RevenueModel
 predicted_0021,,predicted,Apple Watch,Offering,MONETIZES_VIA,hardware sales,RevenueModel
-predicted_0022,8,predicted,Apple Watch,Offering,OFFERS,Apple Watch SE,Offering
-predicted_0023,9,predicted,Apple Watch,Offering,OFFERS,Apple Watch Series,Offering
-predicted_0024,10,predicted,Apple Watch,Offering,OFFERS,Apple Watch Ultra,Offering
+predicted_0022,,predicted,Apple Watch,Offering,OFFERS,Apple Watch SE,Offering
+predicted_0023,,predicted,Apple Watch,Offering,OFFERS,Apple Watch Series,Offering
+predicted_0024,,predicted,Apple Watch,Offering,OFFERS,Apple Watch Ultra,Offering
 predicted_0025,,predicted,Beats Products,Offering,MONETIZES_VIA,hardware sales,RevenueModel
 predicted_0026,,predicted,HomePod,Offering,MONETIZES_VIA,hardware sales,RevenueModel
 predicted_0027,,predicted,HomePod,Offering,OFFERS,HomePod Standard,Offering
@@ -168,6 +168,6 @@ predicted_0092,,predicted,iPhone,BusinessSegment,SERVES,large enterprises,Custom
 predicted_0093,,predicted,iPhone,BusinessSegment,SERVES,mid-market companies,CustomerType
 predicted_0094,,predicted,iPhone,BusinessSegment,SERVES,small businesses,CustomerType
 predicted_0095,,predicted,iPhone,Offering,MONETIZES_VIA,hardware sales,RevenueModel
-predicted_0096,11,predicted,iPhone,Offering,OFFERS,iPhone Pro,Offering
+predicted_0096,,predicted,iPhone,Offering,OFFERS,iPhone Pro,Offering
 predicted_0097,,predicted,iPhone,Offering,OFFERS,iPhone SE,Offering
 predicted_0098,,predicted,iPhone,Offering,OFFERS,iPhone Standard,Offering

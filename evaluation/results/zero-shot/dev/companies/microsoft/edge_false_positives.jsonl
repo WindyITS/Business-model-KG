@@ -1,0 +1,41 @@
+{"subject":"Azure","subject_type":"Offering","relation":"MONETIZES_VIA","object":"consumption-based","object_type":"RevenueModel"}
+{"subject":"Dynamics 365","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"Dynamics on-premises","subject_type":"Offering","relation":"MONETIZES_VIA","object":"licensing","object_type":"RevenueModel"}
+{"subject":"Enterprise Support Services","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"GitHub","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"Industry Solutions","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"Intelligent Cloud","subject_type":"BusinessSegment","relation":"OFFERS","object":"Azure","object_type":"Offering"}
+{"subject":"Intelligent Cloud","subject_type":"BusinessSegment","relation":"OFFERS","object":"Enterprise Support Services","object_type":"Offering"}
+{"subject":"Intelligent Cloud","subject_type":"BusinessSegment","relation":"OFFERS","object":"GitHub","object_type":"Offering"}
+{"subject":"Intelligent Cloud","subject_type":"BusinessSegment","relation":"OFFERS","object":"Industry Solutions","object_type":"Offering"}
+{"subject":"Intelligent Cloud","subject_type":"BusinessSegment","relation":"OFFERS","object":"Nuance Healthcare","object_type":"Offering"}
+{"subject":"Intelligent Cloud","subject_type":"BusinessSegment","relation":"OFFERS","object":"SQL Server","object_type":"Offering"}
+{"subject":"Intelligent Cloud","subject_type":"BusinessSegment","relation":"OFFERS","object":"System Center","object_type":"Offering"}
+{"subject":"Intelligent Cloud","subject_type":"BusinessSegment","relation":"OFFERS","object":"Visual Studio","object_type":"Offering"}
+{"subject":"Intelligent Cloud","subject_type":"BusinessSegment","relation":"OFFERS","object":"Windows Server","object_type":"Offering"}
+{"subject":"Intelligent Cloud","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"distributors","object_type":"Channel"}
+{"subject":"Intelligent Cloud","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"managed service providers","object_type":"Channel"}
+{"subject":"Intelligent Cloud","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"resellers","object_type":"Channel"}
+{"subject":"Microsoft","subject_type":"Company","relation":"OPERATES_IN","object":"Americas","object_type":"Place"}
+{"subject":"Microsoft","subject_type":"Company","relation":"OPERATES_IN","object":"Asia Pacific","object_type":"Place"}
+{"subject":"Microsoft","subject_type":"Company","relation":"OPERATES_IN","object":"Europe","object_type":"Place"}
+{"subject":"Microsoft","subject_type":"Company","relation":"OPERATES_IN","object":"Middle East","object_type":"Place"}
+{"subject":"Microsoft 365 Commercial","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"More Personal Computing","subject_type":"BusinessSegment","relation":"OFFERS","object":"Surface","object_type":"Offering"}
+{"subject":"More Personal Computing","subject_type":"BusinessSegment","relation":"OFFERS","object":"Windows","object_type":"Offering"}
+{"subject":"More Personal Computing","subject_type":"BusinessSegment","relation":"OFFERS","object":"Xbox Game Pass","object_type":"Offering"}
+{"subject":"More Personal Computing","subject_type":"BusinessSegment","relation":"OFFERS","object":"Xbox content and services","object_type":"Offering"}
+{"subject":"More Personal Computing","subject_type":"BusinessSegment","relation":"OFFERS","object":"Xbox hardware","object_type":"Offering"}
+{"subject":"More Personal Computing","subject_type":"BusinessSegment","relation":"SERVES","object":"educational institutions","object_type":"CustomerType"}
+{"subject":"Productivity and Business Processes","subject_type":"BusinessSegment","relation":"OFFERS","object":"Dynamics 365","object_type":"Offering"}
+{"subject":"Productivity and Business Processes","subject_type":"BusinessSegment","relation":"OFFERS","object":"Dynamics on-premises","object_type":"Offering"}
+{"subject":"Productivity and Business Processes","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"retail","object_type":"Channel"}
+{"subject":"Productivity and Business Processes","subject_type":"BusinessSegment","relation":"SERVES","object":"developers","object_type":"CustomerType"}
+{"subject":"SQL Server","subject_type":"Offering","relation":"MONETIZES_VIA","object":"licensing","object_type":"RevenueModel"}
+{"subject":"Surface","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"System Center","subject_type":"Offering","relation":"MONETIZES_VIA","object":"licensing","object_type":"RevenueModel"}
+{"subject":"Visual Studio","subject_type":"Offering","relation":"MONETIZES_VIA","object":"licensing","object_type":"RevenueModel"}
+{"subject":"Windows","subject_type":"Offering","relation":"MONETIZES_VIA","object":"licensing","object_type":"RevenueModel"}
+{"subject":"Windows Server","subject_type":"Offering","relation":"MONETIZES_VIA","object":"licensing","object_type":"RevenueModel"}
+{"subject":"Xbox Game Pass","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"subject":"Xbox hardware","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}

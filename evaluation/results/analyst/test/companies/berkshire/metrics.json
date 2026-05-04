@@ -6,14 +6,224 @@
   "status": "evaluated",
   "gold_path": "/Users/giuliosighieri/Desktop/kg-v0/evaluation/benchmarks/test/clean/berkshire.jsonl",
   "prediction_path": "/Users/giuliosighieri/Desktop/kg-v0/outputs/berkshire/analyst/latest/resolved_triples.json",
-  "gold_triples": 327,
-  "gold_unique_triples": 327,
+  "gold_triples": 317,
+  "gold_unique_triples": 317,
   "predicted_triples": 298,
   "predicted_unique_triples": 298,
-  "true_positives": 17,
-  "false_positives": 281,
-  "false_negatives": 310,
-  "precision": 0.05704697986577181,
-  "recall": 0.05198776758409786,
-  "f1": 0.0544
+  "gold_unique_edges": 317,
+  "predicted_unique_edges": 298,
+  "true_positives": 18,
+  "false_positives": 280,
+  "false_negatives": 299,
+  "precision": 0.06040268456375839,
+  "recall": 0.056782334384858045,
+  "f1": 0.05853658536585366,
+  "edge": {
+    "true_positives": 18,
+    "false_positives": 280,
+    "false_negatives": 299,
+    "precision": 0.06040268456375839,
+    "recall": 0.056782334384858045,
+    "f1": 0.05853658536585366
+  },
+  "strict": {
+    "true_positives": 18,
+    "false_positives": 280,
+    "false_negatives": 299,
+    "precision": 0.06040268456375839,
+    "recall": 0.056782334384858045,
+    "f1": 0.05853658536585366
+  },
+  "relaxed": {
+    "true_positives": 33.9,
+    "false_positives": 264.1,
+    "false_negatives": 283.1,
+    "precision": 0.11375838926174496,
+    "recall": 0.10694006309148264,
+    "f1": 0.11024390243902439
+  },
+  "by_relation": {
+    "HAS_SEGMENT": {
+      "edge": {
+        "true_positives": 0,
+        "false_positives": 5,
+        "false_negatives": 17,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "strict": {
+        "true_positives": 0,
+        "false_positives": 5,
+        "false_negatives": 17,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "relaxed": {
+        "true_positives": 4.1,
+        "false_positives": 0.9000000000000004,
+        "false_negatives": 12.9,
+        "precision": 0.82,
+        "recall": 0.24117647058823527,
+        "f1": 0.3727272727272727
+      }
+    },
+    "OFFERS": {
+      "edge": {
+        "true_positives": 0,
+        "false_positives": 185,
+        "false_negatives": 124,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "strict": {
+        "true_positives": 0,
+        "false_positives": 185,
+        "false_negatives": 124,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "relaxed": {
+        "true_positives": 2.5,
+        "false_positives": 182.5,
+        "false_negatives": 121.5,
+        "precision": 0.013513513513513514,
+        "recall": 0.020161290322580645,
+        "f1": 0.016181229773462785
+      }
+    },
+    "SERVES": {
+      "edge": {
+        "true_positives": 11,
+        "false_positives": 12,
+        "false_negatives": 39,
+        "precision": 0.4782608695652174,
+        "recall": 0.22,
+        "f1": 0.30136986301369867
+      },
+      "strict": {
+        "true_positives": 11,
+        "false_positives": 12,
+        "false_negatives": 39,
+        "precision": 0.4782608695652174,
+        "recall": 0.22,
+        "f1": 0.30136986301369867
+      },
+      "relaxed": {
+        "true_positives": 14.0,
+        "false_positives": 9.0,
+        "false_negatives": 36.0,
+        "precision": 0.6086956521739131,
+        "recall": 0.28,
+        "f1": 0.3835616438356165
+      }
+    },
+    "SELLS_THROUGH": {
+      "edge": {
+        "true_positives": 3,
+        "false_positives": 12,
+        "false_negatives": 0,
+        "precision": 0.2,
+        "recall": 1.0,
+        "f1": 0.33333333333333337
+      },
+      "strict": {
+        "true_positives": 3,
+        "false_positives": 12,
+        "false_negatives": 0,
+        "precision": 0.2,
+        "recall": 1.0,
+        "f1": 0.33333333333333337
+      },
+      "relaxed": {
+        "true_positives": 3.0,
+        "false_positives": 12.0,
+        "false_negatives": 0.0,
+        "precision": 0.2,
+        "recall": 1.0,
+        "f1": 0.33333333333333337
+      }
+    },
+    "OPERATES_IN": {
+      "edge": {
+        "true_positives": 0,
+        "false_positives": 1,
+        "false_negatives": 2,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "strict": {
+        "true_positives": 0,
+        "false_positives": 1,
+        "false_negatives": 2,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "relaxed": {
+        "true_positives": 0.9,
+        "false_positives": 0.09999999999999998,
+        "false_negatives": 1.1,
+        "precision": 0.9,
+        "recall": 0.45,
+        "f1": 0.6
+      }
+    },
+    "PARTNERS_WITH": {
+      "edge": {
+        "true_positives": 0,
+        "false_positives": 6,
+        "false_negatives": 6,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "strict": {
+        "true_positives": 0,
+        "false_positives": 6,
+        "false_negatives": 6,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "relaxed": {
+        "true_positives": 0.9,
+        "false_positives": 5.1,
+        "false_negatives": 5.1,
+        "precision": 0.15,
+        "recall": 0.15,
+        "f1": 0.15
+      }
+    },
+    "MONETIZES_VIA": {
+      "edge": {
+        "true_positives": 4,
+        "false_positives": 59,
+        "false_negatives": 111,
+        "precision": 0.06349206349206349,
+        "recall": 0.034782608695652174,
+        "f1": 0.0449438202247191
+      },
+      "strict": {
+        "true_positives": 4,
+        "false_positives": 59,
+        "false_negatives": 111,
+        "precision": 0.06349206349206349,
+        "recall": 0.034782608695652174,
+        "f1": 0.0449438202247191
+      },
+      "relaxed": {
+        "true_positives": 8.5,
+        "false_positives": 54.5,
+        "false_negatives": 106.5,
+        "precision": 0.1349206349206349,
+        "recall": 0.07391304347826087,
+        "f1": 0.0955056179775281
+      }
+    }
+  }
 }

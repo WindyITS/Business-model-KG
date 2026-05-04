@@ -1,6 +1,6 @@
 row_id,match_id,source,subject,subject_type,relation,object,object_type
-gold_0001,1,gold,Advertising,Offering,MONETIZES_VIA,advertising,RevenueModel
-gold_0002,2,gold,Advertising,Offering,MONETIZES_VIA,licensing,RevenueModel
+gold_0001,,gold,Advertising,Offering,MONETIZES_VIA,advertising,RevenueModel
+gold_0002,,gold,Advertising,Offering,MONETIZES_VIA,licensing,RevenueModel
 gold_0003,,gold,Americas,BusinessSegment,OFFERS,hardware and software products,Offering
 gold_0004,,gold,Americas,BusinessSegment,OFFERS,services,Offering
 gold_0005,,gold,Apple,Company,OFFERS,Accessories,Offering
@@ -23,27 +23,27 @@ gold_0021,,gold,Europe,BusinessSegment,OFFERS,hardware and software products,Off
 gold_0022,,gold,Europe,BusinessSegment,OFFERS,services,Offering
 gold_0023,,gold,Greater China,BusinessSegment,OFFERS,hardware and software products,Offering
 gold_0024,,gold,Greater China,BusinessSegment,OFFERS,services,Offering
-gold_0025,3,gold,Home,Offering,OFFERS,Apple TV 4K,Offering
-gold_0026,4,gold,Home,Offering,OFFERS,HomePod,Offering
-gold_0027,5,gold,Home,Offering,OFFERS,HomePod mini,Offering
+gold_0025,,gold,Home,Offering,OFFERS,Apple TV 4K,Offering
+gold_0026,,gold,Home,Offering,OFFERS,HomePod,Offering
+gold_0027,,gold,Home,Offering,OFFERS,HomePod mini,Offering
 gold_0028,,gold,Japan,BusinessSegment,OFFERS,hardware and software products,Offering
 gold_0029,,gold,Japan,BusinessSegment,OFFERS,services,Offering
 gold_0030,,gold,Rest of Asia Pacific,BusinessSegment,OFFERS,hardware and software products,Offering
 gold_0031,,gold,Rest of Asia Pacific,BusinessSegment,OFFERS,services,Offering
-gold_0032,6,gold,Subscription Content Services,Offering,OFFERS,Apple TV,Offering
+gold_0032,,gold,Subscription Content Services,Offering,OFFERS,Apple TV,Offering
 gold_0033,,gold,Wearables,Offering,OFFERS,Apple Watch,Offering
 gold_0034,,gold,Wearables,Offering,OFFERS,wireless headphones,Offering
 gold_0035,,gold,iPhone,Offering,OFFERS,iPhone 16,Offering
 gold_0036,,gold,iPhone,Offering,OFFERS,iPhone 16e,Offering
 gold_0037,,gold,iPhone,Offering,OFFERS,iPhone 17,Offering
-gold_0038,7,gold,iPhone,Offering,OFFERS,iPhone 17 Pro,Offering
+gold_0038,,gold,iPhone,Offering,OFFERS,iPhone 17 Pro,Offering
 gold_0039,,gold,wireless headphones,Offering,OFFERS,AirPods,Offering
 gold_0040,,gold,wireless headphones,Offering,OFFERS,AirPods Max,Offering
 gold_0041,,gold,wireless headphones,Offering,OFFERS,AirPods Pro,Offering
 gold_0042,,gold,wireless headphones,Offering,OFFERS,Beats Products,Offering
 predicted_0001,,predicted,Accessories,Offering,MONETIZES_VIA,hardware sales,RevenueModel
-predicted_0002,1,predicted,Advertising Services,Offering,MONETIZES_VIA,advertising,RevenueModel
-predicted_0003,2,predicted,Advertising Services,Offering,MONETIZES_VIA,licensing,RevenueModel
+predicted_0002,,predicted,Advertising Services,Offering,MONETIZES_VIA,advertising,RevenueModel
+predicted_0003,,predicted,Advertising Services,Offering,MONETIZES_VIA,licensing,RevenueModel
 predicted_0004,,predicted,Americas,BusinessSegment,OFFERS,Accessories,Offering
 predicted_0005,,predicted,Americas,BusinessSegment,OFFERS,Advertising Services,Offering
 predicted_0006,,predicted,Americas,BusinessSegment,OFFERS,App Store,Offering
@@ -101,9 +101,9 @@ predicted_0057,,predicted,Greater China,BusinessSegment,SERVES,large enterprises
 predicted_0058,,predicted,Greater China,BusinessSegment,SERVES,mid-market companies,CustomerType
 predicted_0059,,predicted,Greater China,BusinessSegment,SERVES,small businesses,CustomerType
 predicted_0060,,predicted,Home Products,Offering,MONETIZES_VIA,hardware sales,RevenueModel
-predicted_0061,3,predicted,Home Products,Offering,OFFERS,Apple TV Device,Offering
-predicted_0062,4,predicted,Home Products,Offering,OFFERS,HomePod,Offering
-predicted_0063,5,predicted,Home Products,Offering,OFFERS,HomePod mini,Offering
+predicted_0061,,predicted,Home Products,Offering,OFFERS,Apple TV Device,Offering
+predicted_0062,,predicted,Home Products,Offering,OFFERS,HomePod,Offering
+predicted_0063,,predicted,Home Products,Offering,OFFERS,HomePod mini,Offering
 predicted_0064,,predicted,Japan,BusinessSegment,OFFERS,Accessories,Offering
 predicted_0065,,predicted,Japan,BusinessSegment,OFFERS,Advertising Services,Offering
 predicted_0066,,predicted,Japan,BusinessSegment,OFFERS,App Store,Offering
@@ -143,7 +143,7 @@ predicted_0099,,predicted,Rest of Asia Pacific,BusinessSegment,SERVES,large ente
 predicted_0100,,predicted,Rest of Asia Pacific,BusinessSegment,SERVES,mid-market companies,CustomerType
 predicted_0101,,predicted,Rest of Asia Pacific,BusinessSegment,SERVES,small businesses,CustomerType
 predicted_0102,,predicted,Subscription Content Services,Offering,MONETIZES_VIA,subscription,RevenueModel
-predicted_0103,6,predicted,Subscription Content Services,Offering,OFFERS,Apple TV Content,Offering
+predicted_0103,,predicted,Subscription Content Services,Offering,OFFERS,Apple TV Content,Offering
 predicted_0104,,predicted,Wearables,Offering,MONETIZES_VIA,hardware sales,RevenueModel
 predicted_0105,,predicted,Wearables,Offering,OFFERS,AirPods,Offering
 predicted_0106,,predicted,Wearables,Offering,OFFERS,AirPods Max,Offering
@@ -155,5 +155,5 @@ predicted_0111,,predicted,Wearables,Offering,OFFERS,Beats Products,Offering
 predicted_0112,,predicted,iPad,Offering,OFFERS,iPad Standard,Offering
 predicted_0113,,predicted,iPhone,Offering,MONETIZES_VIA,hardware sales,RevenueModel
 predicted_0114,,predicted,iPhone,Offering,OFFERS,iPhone Entry,Offering
-predicted_0115,7,predicted,iPhone,Offering,OFFERS,iPhone Pro,Offering
+predicted_0115,,predicted,iPhone,Offering,OFFERS,iPhone Pro,Offering
 predicted_0116,,predicted,iPhone,Offering,OFFERS,iPhone Standard,Offering

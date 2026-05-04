@@ -64,6 +64,9 @@ def test_evaluate_triples_uses_strict_normalized_typed_matching():
     assert result["metrics"]["precision"] == 0.5
     assert result["metrics"]["recall"] == 0.5
     assert result["metrics"]["f1"] == 0.5
+    assert result["edge"]["true_positives"] == 2
+    assert result["edge"]["false_positives"] == 0
+    assert result["edge"]["false_negatives"] == 0
 
 
 def test_evaluate_triples_is_case_insensitive_for_entity_values():
@@ -87,6 +90,55 @@ def test_evaluate_triples_is_case_insensitive_for_entity_values():
     ]
 
     assert evaluate_triples(gold, predicted)["metrics"]["true_positives"] == 1
+
+
+def test_evaluate_triples_gives_partial_credit_for_hierarchy_alignment():
+    gold = [
+        {
+            "subject": "Digital Media",
+            "subject_type": "BusinessSegment",
+            "relation": "OFFERS",
+            "object": "Photoshop",
+            "object_type": "Offering",
+        },
+        {
+            "subject": "Photoshop",
+            "subject_type": "Offering",
+            "relation": "MONETIZES_VIA",
+            "object": "subscription",
+            "object_type": "RevenueModel",
+        },
+    ]
+    predicted = [
+        {
+            "subject": "Digital Media",
+            "subject_type": "BusinessSegment",
+            "relation": "OFFERS",
+            "object": "Creative Cloud",
+            "object_type": "Offering",
+        },
+        {
+            "subject": "Creative Cloud",
+            "subject_type": "Offering",
+            "relation": "OFFERS",
+            "object": "Photoshop",
+            "object_type": "Offering",
+        },
+        {
+            "subject": "Creative Cloud",
+            "subject_type": "Offering",
+            "relation": "MONETIZES_VIA",
+            "object": "subscription",
+            "object_type": "RevenueModel",
+        },
+    ]
+
+    result = evaluate_triples(gold, predicted)
+
+    assert result["strict"]["true_positives"] == 0
+    assert result["relaxed"]["true_positives"] == 1.5
+    assert result["relaxed"]["false_positives"] == 1.5
+    assert result["relaxed"]["false_negatives"] == 0.5
 
 
 def test_split_evaluation_writes_pipeline_split_results(tmp_path: Path):
@@ -137,6 +189,10 @@ def test_split_evaluation_writes_pipeline_split_results(tmp_path: Path):
     assert summary["aggregate"]["true_positives"] == 1
     assert summary["aggregate"]["false_positives"] == 1
     assert summary["aggregate"]["false_negatives"] == 0
+    assert summary["aggregate"]["primary_metric"] == "edge_macro_by_company"
+    assert summary["aggregate"]["edge_micro"]["true_positives"] == 1
+    assert summary["aggregate"]["edge_micro"]["false_positives"] == 1
+    assert summary["aggregate"]["edge_micro"]["false_negatives"] == 0
     assert (evaluation_root / "results" / "zero-shot" / "dev" / "summary.json").is_file()
     assert (
         evaluation_root
@@ -155,6 +211,15 @@ def test_split_evaluation_writes_pipeline_split_results(tmp_path: Path):
         / "companies"
         / "microsoft"
         / "unmatched_for_review.csv"
+    ).is_file()
+    assert (
+        evaluation_root
+        / "results"
+        / "zero-shot"
+        / "dev"
+        / "companies"
+        / "microsoft"
+        / "edge_false_positives.jsonl"
     ).is_file()
 
 

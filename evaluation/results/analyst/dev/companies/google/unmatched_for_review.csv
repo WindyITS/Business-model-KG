@@ -1,10 +1,10 @@
 row_id,match_id,source,subject,subject_type,relation,object,object_type
 gold_0001,,gold,Agents,Offering,OFFERS,Gemini Enterprise,Offering
 gold_0002,,gold,Agents,Offering,OFFERS,Gemini for Google Workspace,Offering
-gold_0003,1,gold,Alphabet,Company,HAS_SEGMENT,Google Cloud,BusinessSegment
-gold_0004,2,gold,Alphabet,Company,HAS_SEGMENT,Google Services,BusinessSegment
-gold_0005,3,gold,Alphabet,Company,HAS_SEGMENT,Other Bets,BusinessSegment
-gold_0006,4,gold,Alphabet,Company,OPERATES_IN,Worldwide,Place
+gold_0003,,gold,Alphabet,Company,HAS_SEGMENT,Google Cloud,BusinessSegment
+gold_0004,,gold,Alphabet,Company,HAS_SEGMENT,Google Services,BusinessSegment
+gold_0005,,gold,Alphabet,Company,HAS_SEGMENT,Other Bets,BusinessSegment
+gold_0006,,gold,Alphabet,Company,OPERATES_IN,Worldwide,Place
 gold_0007,,gold,Developer Platform,Offering,OFFERS,Vertex AI,Offering
 gold_0008,,gold,Google Cloud,BusinessSegment,OFFERS,AI-optimized Infrastructure,Offering
 gold_0009,,gold,Google Cloud,BusinessSegment,OFFERS,Agents,Offering
@@ -25,11 +25,11 @@ predicted_0003,,predicted,Gemini Family,Offering,OFFERS,Gemini for Google Worksp
 predicted_0004,,predicted,Gemini Family,Offering,OFFERS,Google Gemini,Offering
 predicted_0005,,predicted,Gmail,Offering,MONETIZES_VIA,advertising,RevenueModel
 predicted_0006,,predicted,Gmail,Offering,MONETIZES_VIA,subscription,RevenueModel
-predicted_0007,1,predicted,Google,Company,HAS_SEGMENT,Google Cloud,BusinessSegment
-predicted_0008,2,predicted,Google,Company,HAS_SEGMENT,Google Services,BusinessSegment
-predicted_0009,3,predicted,Google,Company,HAS_SEGMENT,Other Bets,BusinessSegment
+predicted_0007,,predicted,Google,Company,HAS_SEGMENT,Google Cloud,BusinessSegment
+predicted_0008,,predicted,Google,Company,HAS_SEGMENT,Google Services,BusinessSegment
+predicted_0009,,predicted,Google,Company,HAS_SEGMENT,Other Bets,BusinessSegment
 predicted_0010,,predicted,Google,Company,OFFERS,Gemini Family,Offering
-predicted_0011,4,predicted,Google,Company,OPERATES_IN,Worldwide,Place
+predicted_0011,,predicted,Google,Company,OPERATES_IN,Worldwide,Place
 predicted_0012,,predicted,Google Cloud,BusinessSegment,OFFERS,Gemini Enterprise,Offering
 predicted_0013,,predicted,Google Cloud,BusinessSegment,OFFERS,Gemini for Google Workspace,Offering
 predicted_0014,,predicted,Google Cloud,BusinessSegment,SELLS_THROUGH,direct sales,Channel

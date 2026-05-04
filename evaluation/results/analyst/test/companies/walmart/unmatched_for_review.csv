@@ -14,7 +14,7 @@ gold_0012,,gold,Walmart International,BusinessSegment,OFFERS,delivery services,O
 gold_0013,,gold,Walmart U.S.,BusinessSegment,OFFERS,General merchandise,Offering
 gold_0014,,gold,Walmart U.S.,BusinessSegment,OFFERS,Grocery,Offering
 gold_0015,,gold,Walmart U.S.,BusinessSegment,OFFERS,fuel,Offering
-gold_0016,1,gold,Walmart U.S.,BusinessSegment,OFFERS,supply chain and fulfillment capabilities,Offering
+gold_0016,,gold,Walmart U.S.,BusinessSegment,OFFERS,supply chain and fulfillment capabilities,Offering
 predicted_0001,,predicted,Flipkart Platform,Offering,MONETIZES_VIA,advertising,RevenueModel
 predicted_0002,,predicted,Flipkart Platform,Offering,MONETIZES_VIA,transaction fees,RevenueModel
 predicted_0003,,predicted,PhonePe Platform,Offering,MONETIZES_VIA,transaction fees,RevenueModel
@@ -43,7 +43,7 @@ predicted_0025,,predicted,Walmart International,BusinessSegment,SERVES,small bus
 predicted_0026,,predicted,Walmart Marketplace Platform,Offering,MONETIZES_VIA,transaction fees,RevenueModel
 predicted_0027,,predicted,Walmart U.S.,BusinessSegment,OFFERS,Equate Product Family,Offering
 predicted_0028,,predicted,Walmart U.S.,BusinessSegment,OFFERS,Great Value Product Family,Offering
-predicted_0029,1,predicted,Walmart U.S.,BusinessSegment,OFFERS,Walmart Fulfillment Services,Offering
+predicted_0029,,predicted,Walmart U.S.,BusinessSegment,OFFERS,Walmart Fulfillment Services,Offering
 predicted_0030,,predicted,Walmart U.S.,BusinessSegment,OFFERS,Walmart Marketplace Platform,Offering
 predicted_0031,,predicted,Walmart U.S.,BusinessSegment,OFFERS,Walmart+ Membership Program,Offering
 predicted_0032,,predicted,Walmart U.S.,BusinessSegment,SERVES,small businesses,CustomerType
