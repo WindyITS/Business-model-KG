@@ -8,6 +8,13 @@ version = "0.1.0"
 description = "Isolated fine-tuning pipeline for router + 4-bit Qwen QLoRA planner."
 readme = "README.md"
 requires-python = ">=3.10"
+authors = [
+    {name = "Giulio Sighieri"},
+    {name = "Luca Amigoni"},
+    {name = "Yucheng Zhong"},
+    {name = "Ion Babin"},
+    {name = "Giovanni Ciaramella"},
+]
 dependencies = [
     "accelerate>=1.6,<2",
     "datasets>=3.2,<4",
@@ -38,3 +45,6 @@ package-dir = {"" = "src"}
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["kg_query_planner_ft", "kg_query_planner_ft.*"]
+
+[tool.setuptools.package-data]
+kg_query_planner_ft = ["package_config/*.json"]

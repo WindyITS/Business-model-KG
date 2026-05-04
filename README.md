@@ -218,6 +218,7 @@ The docs are split by purpose:
 - [`docs/ontology.md`](./docs/ontology.md): the graph schema, design principles, canonical labels, validation behavior, and place rules
 - [`docs/runtime_guide.md`](./docs/runtime_guide.md): CLI commands, provider settings, Neo4j load/unload/status behavior, query runtime, output artifacts, and prompt workflow
 - [`docs/repo_structure.md`](./docs/repo_structure.md): a detailed map of the repository and what each major directory is for
+- [`docs/reproducibility.md`](./docs/reproducibility.md): per-island reproducibility guide for using the project, reproducing evaluation, and rerunning fine-tuning
 - [`docs/evaluation.md`](./docs/evaluation.md): evaluation workflow, public artifact layout, reproduction commands, scoring rules, and output files
 - [`evaluation/README.md`](./evaluation/README.md): benchmark layout, evaluation commands, metrics, result files, and reference datasets
 - [`finetuning/README.md`](./finetuning/README.md): the isolated fine-tuning island for the local query router/planner

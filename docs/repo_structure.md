@@ -194,6 +194,8 @@ finetuning/
   pyproject.toml
   config/
   scripts/
+    bootstrap_env.sh
+    download_query_planner_data.sh
   src/kg_query_planner_ft/
   tests/
   artifacts/

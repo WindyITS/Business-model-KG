@@ -92,7 +92,14 @@ corresponding `latest/` folder.
 
 ## Reproduce From Hugging Face
 
-From the repository root, download the public dataset:
+From the repository root, install the Hugging Face download CLI if it is not
+already available:
+
+```bash
+./venv/bin/python -m pip install "huggingface_hub[cli]"
+```
+
+Download the public dataset:
 
 ```bash
 huggingface-cli download WindyITS/business-model-kg-benchmark-outputs \

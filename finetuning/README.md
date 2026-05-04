@@ -10,6 +10,10 @@ It contains an isolated fine-tuning pipeline for:
 The main repo does not import anything from this island.
 The only handoff back to the main runtime is a published deployment bundle under `runtime_assets/query_stack/`.
 
+This island is meant to be reproducible on its own: create the dedicated
+environment, download the public query-planner dataset, run the preparation and
+training commands, then publish the resulting bundle back into the main runtime.
+
 ## Locations
 
 - Environment root: `finetuning/.venv`
@@ -23,7 +27,34 @@ Prepared datasets, checkpoints, logs, and adapters are written under that in-rep
 bash finetuning/scripts/bootstrap_env.sh
 ```
 
-That creates the dedicated project-local environment and installs this island in editable mode.
+That creates the dedicated project-local environment and installs this island
+in editable mode with its fine-tuning dependencies.
+
+Download the public fine-tuning dataset:
+
+```bash
+bash finetuning/scripts/download_query_planner_data.sh
+```
+
+The download command uses the Hugging Face CLI installed in
+`finetuning/.venv`, downloads `WindyITS/business-model-kg-query-planner-data`,
+and places it under:
+
+```text
+data/query_planner_curated/
+```
+
+The default config then reads:
+
+```text
+data/query_planner_curated/v1_final/
+```
+
+Activate the isolated environment before running the CLIs:
+
+```bash
+source finetuning/.venv/bin/activate
+```
 
 ## Commands
 
@@ -48,6 +79,9 @@ publish-query-stack
 4. `train-planner`
 5. `eval-planner`
 6. `publish-query-stack`
+
+After `publish-query-stack`, the main runtime can use the generated bundle from
+`runtime_assets/query_stack/`.
 
 ## Output Layout
 
@@ -84,6 +118,10 @@ runtime_assets/query_stack/
 
 ## Notes
 
+- The default source-checkout config is `finetuning/config/default.json`.
+- Installed wheels carry a fallback copy of that default config. Relative paths
+  resolve from the current working directory, or from `KG_QUERY_PLANNER_FT_ROOT`
+  when that environment variable is set.
 - The planner is trained only on `local_safe` rows.
 - Optional planner-only train augmentations can live in `data/query_planner_curated/v1_final/planner_only_open_literal_copying_augmentation.jsonl`; `prepare-data` folds them into the planner train split without changing the router dataset.
 - The planner default base model is `mlx-community/Qwen3-4B-Instruct-2507-4bit`, so `train-planner` runs QLoRA rather than full-precision LoRA.

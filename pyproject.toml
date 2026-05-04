@@ -8,6 +8,13 @@ version = "0.1.0"
 description = "Local pipelines and runtime tooling for business-model knowledge graphs."
 readme = "README.md"
 requires-python = ">=3.10"
+authors = [
+    {name = "Giulio Sighieri"},
+    {name = "Luca Amigoni"},
+    {name = "Yucheng Zhong"},
+    {name = "Ion Babin"},
+    {name = "Giovanni Ciaramella"},
+]
 dependencies = [
     "neo4j==6.1.0",
     "openai==2.30.0",

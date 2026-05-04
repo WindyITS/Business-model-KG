@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import os
+from importlib import resources
 from pathlib import Path
 
 from pydantic import BaseModel, Field
@@ -49,7 +51,15 @@ class FineTuningConfig(BaseModel):
 
 
 def repo_root() -> Path:
-    return Path(__file__).resolve().parents[3]
+    override = os.environ.get("KG_QUERY_PLANNER_FT_ROOT")
+    if override:
+        return Path(override).expanduser().resolve()
+
+    source_root = Path(__file__).resolve().parents[3]
+    if (source_root / "finetuning" / "config" / "default.json").is_file():
+        return source_root
+
+    return Path.cwd().resolve()
 
 
 def finetuning_root() -> Path:
@@ -57,7 +67,10 @@ def finetuning_root() -> Path:
 
 
 def default_config_path() -> Path:
-    return finetuning_root() / "config" / "default.json"
+    source_config = finetuning_root() / "config" / "default.json"
+    if source_config.is_file():
+        return source_config
+    return Path(str(resources.files("kg_query_planner_ft").joinpath("package_config/default.json")))
 
 
 def load_config(path: str | Path | None = None) -> FineTuningConfig:
