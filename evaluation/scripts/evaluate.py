@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import random
 import shutil
 import unicodedata
 from dataclasses import dataclass, replace
@@ -19,6 +20,8 @@ QUOTE_CHARS = "\"'`“”‘’ "
 TRIPLE_FIELDS: tuple[str, ...] = ("subject", "subject_type", "relation", "object", "object_type")
 EDGE_FIELDS: tuple[str, ...] = ("subject", "relation", "object")
 SPLITS: tuple[str, ...] = ("dev", "test")
+DEFAULT_PIPELINES: tuple[str, ...] = ("zero-shot", "memo_graph_only", "analyst")
+BOOTSTRAP_SEED = 20260430
 
 
 Triple = dict[str, str]
@@ -618,6 +621,36 @@ def evaluate_company(paths: EvaluationPaths) -> dict[str, Any]:
     return summary
 
 
+def evaluate_company_metrics(paths: EvaluationPaths) -> dict[str, Any]:
+    if not paths.prediction_path.is_file():
+        return {
+            "company": paths.company,
+            "company_slug": paths.company_slug,
+            "pipeline": paths.pipeline,
+            "split": paths.split,
+            "status": "missing_prediction",
+            "gold_path": str(paths.gold_path),
+            "prediction_path": str(paths.prediction_path),
+        }
+
+    gold_triples = read_jsonl(paths.gold_path)
+    predicted_triples = read_prediction_triples(paths.prediction_path)
+    result = evaluate_triples(gold_triples, predicted_triples)
+    return {
+        "company": paths.company,
+        "company_slug": paths.company_slug,
+        "pipeline": paths.pipeline,
+        "split": paths.split,
+        "status": "evaluated",
+        "gold_path": str(paths.gold_path),
+        "prediction_path": str(paths.prediction_path),
+        **result["counts"],
+        **result["metrics"],
+        "_exact_counts": result["exact_counts"],
+        "_relaxed_counts": result["relaxed_counts"],
+    }
+
+
 def aggregate_metrics(results: list[dict[str, Any]]) -> dict[str, Any]:
     evaluated = [result for result in results if result.get("status") == "evaluated"]
     exact_tp = sum(int(result["_exact_counts"]["true_positives"]) for result in evaluated)
@@ -728,11 +761,266 @@ def evaluate_paths(paths: list[EvaluationPaths], *, output_root: Path) -> dict[s
     return summary
 
 
+def percentile(values: list[float], quantile: float) -> float:
+    if not values:
+        return 0.0
+    ordered = sorted(values)
+    index = quantile * (len(ordered) - 1)
+    lower = int(index)
+    upper = min(lower + 1, len(ordered) - 1)
+    if lower == upper:
+        return ordered[lower]
+    fraction = index - lower
+    return ordered[lower] * (1 - fraction) + ordered[upper] * fraction
+
+
+def metric_ci(samples: list[dict[str, Any]], metric: str) -> dict[str, float]:
+    values = [float(sample[metric]) for sample in samples]
+    return {
+        "mean": sum(values) / len(values) if values else 0.0,
+        "low": percentile(values, 0.025),
+        "high": percentile(values, 0.975),
+    }
+
+
+def bootstrap_metrics(
+    *,
+    root: Path,
+    outputs_root: Path,
+    split: str,
+    pipelines: list[str],
+    companies: list[str],
+    n_bootstrap: int,
+    seed: int,
+) -> dict[str, Any]:
+    payload: dict[str, Any] = {
+        "method": "company-level bootstrap",
+        "n_bootstrap": n_bootstrap,
+        "seed": seed,
+        "split": split,
+        "companies": companies,
+        "point_estimates": {},
+        "confidence_intervals": {},
+    }
+
+    for pipeline in pipelines:
+        rng = random.Random(seed)
+        paths = build_split_evaluation_paths(root=root, outputs_root=outputs_root, pipeline=pipeline, split=split)
+        selected_paths = [path for path in paths if path.company_slug in companies]
+        company_results = [evaluate_company_metrics(path) for path in selected_paths]
+        evaluated = [result for result in company_results if result.get("status") == "evaluated"]
+        point_estimate = aggregate_metrics(evaluated)
+        payload["point_estimates"][pipeline] = {
+            "precision": point_estimate["precision"],
+            "recall": point_estimate["recall"],
+            "f1": point_estimate["f1"],
+            "macro_f1": point_estimate["macro_f1"],
+            "relaxed_f1": point_estimate["relaxed_f1"],
+        }
+        samples = [
+            aggregate_metrics([rng.choice(evaluated) for _ in evaluated])
+            for _sample_index in range(n_bootstrap)
+        ] if evaluated else []
+        payload["confidence_intervals"][pipeline] = {
+            metric: metric_ci(samples, metric)
+            for metric in ("precision", "recall", "f1", "macro_f1", "relaxed_f1")
+        }
+
+    return payload
+
+
+def bootstrap_scope_payloads(
+    *,
+    root: Path,
+    outputs_root: Path,
+    split: str,
+    pipelines: list[str],
+    n_bootstrap: int,
+    seed: int,
+) -> dict[str, dict[str, Any]]:
+    clean_dir = root / "benchmarks" / split / "clean"
+    all_companies = sorted(path.stem for path in clean_dir.glob("*.jsonl") if path.is_file())
+    non_berkshire = [company for company in all_companies if company != "berkshire"]
+    return {
+        "luca_full_test_1000_bootstrap.json": bootstrap_metrics(
+            root=root,
+            outputs_root=outputs_root,
+            split=split,
+            pipelines=pipelines,
+            companies=all_companies,
+            n_bootstrap=n_bootstrap,
+            seed=seed,
+        ),
+        "luca_non_berkshire_1000_bootstrap.json": bootstrap_metrics(
+            root=root,
+            outputs_root=outputs_root,
+            split=split,
+            pipelines=pipelines,
+            companies=non_berkshire,
+            n_bootstrap=n_bootstrap,
+            seed=seed,
+        ),
+    }
+
+
+def edge_record_key(row: dict[str, Any]) -> EdgeKey:
+    return (
+        entity_key(str(row["subject"])),
+        str(row["relation"]).strip(),
+        entity_key(str(row["object"])),
+    )
+
+
+def read_annotation_edges(path: Path) -> dict[str, set[EdgeKey]]:
+    annotators: dict[str, set[EdgeKey]] = defaultdict(set)
+    for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+        if not line.strip():
+            continue
+        row = json.loads(line)
+        if not isinstance(row, dict) or "annotator" not in row:
+            raise ValueError(f"{path}:{line_number} is not an annotation edge object.")
+        annotators[str(row["annotator"])].add(edge_record_key(row))
+    return dict(annotators)
+
+
+def jaccard(left: set[EdgeKey], right: set[EdgeKey]) -> float:
+    union = left | right
+    return len(left & right) / len(union) if union else 1.0
+
+
+def pairwise_f1(left: set[EdgeKey], right: set[EdgeKey]) -> float:
+    overlap = len(left & right)
+    denominator = len(left) + len(right)
+    return 2 * overlap / denominator if denominator else 1.0
+
+
+def average_pairwise(values: dict[str, set[EdgeKey]], fn) -> float:
+    labels = sorted(values)
+    pairs = [
+        fn(values[left], values[right])
+        for index, left in enumerate(labels)
+        for right in labels[index + 1 :]
+    ]
+    return sum(pairs) / len(pairs) if pairs else 1.0
+
+
+def edge_support_counts(annotator_edges: dict[str, set[EdgeKey]]) -> dict[str, int]:
+    union = set().union(*annotator_edges.values()) if annotator_edges else set()
+    counts = {"unanimous": 0, "majority_only": 0, "single_annotator": 0}
+    annotator_count = len(annotator_edges)
+    for edge in union:
+        support = sum(edge in edges for edges in annotator_edges.values())
+        if support == annotator_count:
+            counts["unanimous"] += 1
+        elif support > annotator_count / 2:
+            counts["majority_only"] += 1
+        else:
+            counts["single_annotator"] += 1
+    return counts
+
+
+def annotation_reliability_payload(root: Path) -> dict[str, Any]:
+    source_dir = root / "benchmarks" / "annotation_reliability"
+    annotator_edges = read_annotation_edges(source_dir / "amazon_inter_annotator_edges.jsonl")
+    required = {"official", "luca", "zhong"}
+    if set(annotator_edges) != required:
+        raise ValueError(f"Expected annotators {sorted(required)}, found {sorted(annotator_edges)}.")
+
+    official = annotator_edges["official"]
+    luca = annotator_edges["luca"]
+    zhong = annotator_edges["zhong"]
+    union = official | luca | zhong
+    intersection = official & luca & zhong
+    support_counts = edge_support_counts(annotator_edges)
+    relation_rows = []
+    for relation in RELATIONS:
+        relation_edges = {
+            annotator: {edge for edge in edges if edge[1] == relation}
+            for annotator, edges in annotator_edges.items()
+        }
+        relation_union = set().union(*relation_edges.values()) if relation_edges else set()
+        if not relation_union:
+            continue
+        relation_rows.append(
+            {
+                "relation": relation,
+                "krippendorffs_alpha": average_pairwise(relation_edges, pairwise_f1),
+                "three_way_jaccard": (
+                    len(set.intersection(*relation_edges.values())) / len(relation_union)
+                    if relation_union
+                    else 1.0
+                ),
+            }
+        )
+
+    intra_rows = [
+        json.loads(line)
+        for line in (source_dir / "intra_annotator_counts.jsonl").read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    for row in intra_rows:
+        row["metric_set"] = "intra_annotator"
+        row["scope"] = str(row["label"]).casefold().replace(" ", "_")
+
+    inter_summary = {
+        "metric_set": "inter_annotator_amazon",
+        "official_edges": len(official),
+        "luca_edges": len(luca),
+        "zhong_edges": len(zhong),
+        "official_vs_luca_jaccard": jaccard(official, luca),
+        "official_vs_zhong_jaccard": jaccard(official, zhong),
+        "luca_vs_zhong_jaccard": jaccard(luca, zhong),
+        "average_pairwise_jaccard": average_pairwise(annotator_edges, jaccard),
+        "three_way_jaccard": len(intersection) / len(union) if union else 1.0,
+        "krippendorffs_alpha": average_pairwise(annotator_edges, pairwise_f1),
+        "candidate_edges": len(union),
+        **support_counts,
+    }
+    return {
+        "summary": {
+            "inter_annotator_amazon": inter_summary,
+            "per_relation_amazon": relation_rows,
+            "intra_annotator": {
+                "combined_micro": next(row for row in intra_rows if row["scope"] == "combined_micro"),
+                "macro_average": next(row for row in intra_rows if row["scope"] == "macro_average"),
+            },
+            "notes": [
+                "Amazon inter-annotator metrics use normalized 3-field edges.",
+                "krippendorffs_alpha is computed as average pairwise edge-set F1 over the induced candidate-edge universe.",
+                "Intra-annotator metrics are normalized from repeat-annotation counts.",
+            ],
+        },
+        "inter_rows": [
+            {
+                "metric_set": "inter_annotator_amazon",
+                "scope": "overall",
+                **inter_summary,
+            }
+        ],
+        "relation_rows": relation_rows,
+        "intra_rows": intra_rows,
+    }
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Evaluate extraction outputs against clean gold benchmark triples.")
-    parser.add_argument("--pipeline", required=True, help="Extraction pipeline to evaluate, for example zero-shot or analyst.")
+    parser.add_argument("--pipeline", default=None, help="Extraction pipeline to evaluate, for example zero-shot or analyst.")
+    parser.add_argument(
+        "--pipelines",
+        nargs="+",
+        default=list(DEFAULT_PIPELINES),
+        help="Pipelines for reporting modes such as bootstrap.",
+    )
     parser.add_argument("--split", choices=SPLITS, default=None, help="Benchmark split for all-company evaluation.")
     parser.add_argument("--company", default=None, help="Single company to evaluate in cherry-picked mode.")
+    parser.add_argument("--bootstrap", action="store_true", help="Compute paper bootstrap confidence intervals.")
+    parser.add_argument("--bootstrap-samples", type=int, default=1000, help="Number of bootstrap samples.")
+    parser.add_argument("--bootstrap-seed", type=int, default=BOOTSTRAP_SEED, help="Bootstrap random seed.")
+    parser.add_argument(
+        "--annotation-reliability",
+        action="store_true",
+        help="Compute Amazon inter-annotator and intra-annotator reliability artifacts.",
+    )
     parser.add_argument(
         "--root",
         type=Path,
@@ -758,10 +1046,58 @@ def main() -> int:
     root = args.root.resolve()
     outputs_root = args.outputs_root.resolve()
 
+    if args.bootstrap:
+        if args.company:
+            raise SystemExit("--bootstrap runs on split-level company samples; do not combine it with --company.")
+        split = args.split or "test"
+        output_root = root / "results" / "bootstrap"
+        if not prepare_result_folder(output_root, assume_yes=args.yes):
+            print("Bootstrap cancelled. Existing results were left unchanged.")
+            return 0
+        staging_root = staging_result_folder(output_root)
+        try:
+            payloads = bootstrap_scope_payloads(
+                root=root,
+                outputs_root=outputs_root,
+                split=split,
+                pipelines=args.pipelines,
+                n_bootstrap=args.bootstrap_samples,
+                seed=args.bootstrap_seed,
+            )
+            for filename, payload in payloads.items():
+                write_json(staging_root / filename, payload)
+            finalize_result_folder(staging_root, output_root)
+        except Exception:
+            cleanup_staging_folder(staging_root)
+            raise
+        print(f"Bootstrap results: {output_root}")
+        return 0
+
+    if args.annotation_reliability:
+        output_root = root / "results" / "annotation_reliability"
+        if not prepare_result_folder(output_root, assume_yes=args.yes):
+            print("Annotation reliability cancelled. Existing results were left unchanged.")
+            return 0
+        staging_root = staging_result_folder(output_root)
+        try:
+            payload = annotation_reliability_payload(root)
+            write_json(staging_root / "summary.json", payload["summary"])
+            write_jsonl(staging_root / "inter_annotator_amazon.jsonl", payload["inter_rows"])
+            write_jsonl(staging_root / "per_relation_amazon_reliability.jsonl", payload["relation_rows"])
+            write_jsonl(staging_root / "intra_annotator.jsonl", payload["intra_rows"])
+            finalize_result_folder(staging_root, output_root)
+        except Exception:
+            cleanup_staging_folder(staging_root)
+            raise
+        print(f"Annotation reliability results: {output_root}")
+        return 0
+
     if args.company and args.split:
         raise SystemExit("--company and --split are separate modes. Use --company for cherry-picked evaluation or --split for all-company evaluation.")
     if not args.company and not args.split:
         raise SystemExit("Provide either --split for all-company evaluation or --company for cherry-picked evaluation.")
+    if not args.pipeline:
+        raise SystemExit("Provide --pipeline for extraction evaluation.")
 
     if args.company:
         path = build_cherry_pick_evaluation_path(

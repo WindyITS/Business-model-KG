@@ -1,0 +1,225 @@
+{"annotator":"official","subject":"Amazon","relation":"HAS_SEGMENT","object":"North America"}
+{"annotator":"official","subject":"Amazon","relation":"HAS_SEGMENT","object":"International"}
+{"annotator":"official","subject":"Amazon","relation":"HAS_SEGMENT","object":"Amazon Web Services (AWS)"}
+{"annotator":"official","subject":"North America","relation":"SERVES","object":"consumers"}
+{"annotator":"official","subject":"International","relation":"SERVES","object":"consumers"}
+{"annotator":"official","subject":"North America","relation":"SELLS_THROUGH","object":"online"}
+{"annotator":"official","subject":"International","relation":"SELLS_THROUGH","object":"online"}
+{"annotator":"official","subject":"North America","relation":"SELLS_THROUGH","object":"retail"}
+{"annotator":"official","subject":"International","relation":"SELLS_THROUGH","object":"retail"}
+{"annotator":"official","subject":"North America","relation":"OFFERS","object":"Kindle"}
+{"annotator":"official","subject":"International","relation":"OFFERS","object":"Kindle"}
+{"annotator":"official","subject":"North America","relation":"OFFERS","object":"Fire tablet"}
+{"annotator":"official","subject":"International","relation":"OFFERS","object":"Fire tablet"}
+{"annotator":"official","subject":"North America","relation":"OFFERS","object":"Fire TV"}
+{"annotator":"official","subject":"International","relation":"OFFERS","object":"Fire TV"}
+{"annotator":"official","subject":"North America","relation":"OFFERS","object":"Echo"}
+{"annotator":"official","subject":"International","relation":"OFFERS","object":"Echo"}
+{"annotator":"official","subject":"North America","relation":"OFFERS","object":"Ring"}
+{"annotator":"official","subject":"International","relation":"OFFERS","object":"Ring"}
+{"annotator":"official","subject":"North America","relation":"OFFERS","object":"Blink"}
+{"annotator":"official","subject":"International","relation":"OFFERS","object":"Blink"}
+{"annotator":"official","subject":"North America","relation":"OFFERS","object":"eero"}
+{"annotator":"official","subject":"International","relation":"OFFERS","object":"eero"}
+{"annotator":"official","subject":"North America","relation":"OFFERS","object":"media content"}
+{"annotator":"official","subject":"International","relation":"OFFERS","object":"media content"}
+{"annotator":"official","subject":"North America","relation":"OFFERS","object":"Amazon Prime"}
+{"annotator":"official","subject":"International","relation":"OFFERS","object":"Amazon Prime"}
+{"annotator":"official","subject":"North America","relation":"OFFERS","object":"programs"}
+{"annotator":"official","subject":"International","relation":"OFFERS","object":"programs"}
+{"annotator":"official","subject":"Amazon Web Services (AWS)","relation":"OFFERS","object":"on-demand technology services"}
+{"annotator":"official","subject":"Amazon Web Services (AWS)","relation":"OFFERS","object":"compute servicess"}
+{"annotator":"official","subject":"Amazon Web Services (AWS)","relation":"OFFERS","object":"storage services"}
+{"annotator":"official","subject":"Amazon Web Services (AWS)","relation":"OFFERS","object":"database services"}
+{"annotator":"official","subject":"Amazon Web Services (AWS)","relation":"OFFERS","object":"artificial intelligence services"}
+{"annotator":"official","subject":"Amazon Web Services (AWS)","relation":"OFFERS","object":"machine learning services"}
+{"annotator":"official","subject":"Amazon Web Services (AWS)","relation":"OFFERS","object":"analytics services"}
+{"annotator":"official","subject":"Amazon Web Services (AWS)","relation":"SERVES","object":"small businesses"}
+{"annotator":"official","subject":"Amazon Web Services (AWS)","relation":"SERVES","object":"mid-market companies"}
+{"annotator":"official","subject":"Amazon Web Services (AWS)","relation":"SERVES","object":"large enterprises"}
+{"annotator":"official","subject":"Amazon Web Services (AWS)","relation":"SERVES","object":"developers"}
+{"annotator":"official","subject":"Amazon Web Services (AWS)","relation":"SERVES","object":"government agencies"}
+{"annotator":"official","subject":"Amazon Web Services (AWS)","relation":"SERVES","object":"educational institutions"}
+{"annotator":"official","subject":"International","relation":"OFFERS","object":"sponsored ads"}
+{"annotator":"official","subject":"International","relation":"OFFERS","object":"display advertising"}
+{"annotator":"official","subject":"International","relation":"OFFERS","object":"video advertising"}
+{"annotator":"official","subject":"International","relation":"OFFERS","object":"advertising services"}
+{"annotator":"official","subject":"North America","relation":"OFFERS","object":"sponsored ads"}
+{"annotator":"official","subject":"North America","relation":"OFFERS","object":"display advertising"}
+{"annotator":"official","subject":"North America","relation":"OFFERS","object":"video advertising"}
+{"annotator":"official","subject":"North America","relation":"OFFERS","object":"advertising services"}
+{"annotator":"official","subject":"North America","relation":"SERVES","object":"retailers"}
+{"annotator":"official","subject":"International","relation":"SERVES","object":"retailers"}
+{"annotator":"official","subject":"North America","relation":"SERVES","object":"manufacturers"}
+{"annotator":"official","subject":"International","relation":"SERVES","object":"manufacturers"}
+{"annotator":"official","subject":"North America","relation":"SERVES","object":"small businesses"}
+{"annotator":"official","subject":"International","relation":"SERVES","object":"small businesses"}
+{"annotator":"official","subject":"North America","relation":"SERVES","object":"mid-market companies"}
+{"annotator":"official","subject":"International","relation":"SERVES","object":"mid-market companies"}
+{"annotator":"official","subject":"North America","relation":"SERVES","object":"large enterprises"}
+{"annotator":"official","subject":"International","relation":"SERVES","object":"large enterprises"}
+{"annotator":"official","subject":"Kindle","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"official","subject":"Fire tablet","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"official","subject":"Fire TV","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"official","subject":"Echo","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"official","subject":"Ring","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"official","subject":"Blink","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"official","subject":"eero","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"official","subject":"media content","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"official","subject":"Amazon Prime","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"official","subject":"on-demand technology services","relation":"MONETIZES_VIA","object":"consumption-based"}
+{"annotator":"official","subject":"compute servicess","relation":"MONETIZES_VIA","object":"consumption-based"}
+{"annotator":"official","subject":"storage services","relation":"MONETIZES_VIA","object":"consumption-based"}
+{"annotator":"official","subject":"database services","relation":"MONETIZES_VIA","object":"consumption-based"}
+{"annotator":"official","subject":"artificial intelligence services","relation":"MONETIZES_VIA","object":"consumption-based"}
+{"annotator":"official","subject":"machine learning services","relation":"MONETIZES_VIA","object":"consumption-based"}
+{"annotator":"official","subject":"analytics services","relation":"MONETIZES_VIA","object":"service fees"}
+{"annotator":"official","subject":"sponsored ads","relation":"MONETIZES_VIA","object":"advertising"}
+{"annotator":"official","subject":"display advertising","relation":"MONETIZES_VIA","object":"advertising"}
+{"annotator":"official","subject":"video advertising","relation":"MONETIZES_VIA","object":"advertising"}
+{"annotator":"official","subject":"advertising services","relation":"MONETIZES_VIA","object":"advertising"}
+{"annotator":"luca","subject":"Amazon","relation":"HAS_SEGMENT","object":"North America"}
+{"annotator":"luca","subject":"Amazon","relation":"HAS_SEGMENT","object":"International"}
+{"annotator":"luca","subject":"Amazon","relation":"HAS_SEGMENT","object":"Amazon Web Services (AWS)"}
+{"annotator":"luca","subject":"North America","relation":"SERVES","object":"consumers"}
+{"annotator":"luca","subject":"International","relation":"SERVES","object":"consumers"}
+{"annotator":"luca","subject":"North America","relation":"SELLS_THROUGH","object":"online"}
+{"annotator":"luca","subject":"International","relation":"SELLS_THROUGH","object":"online"}
+{"annotator":"luca","subject":"North America","relation":"SELLS_THROUGH","object":"retail"}
+{"annotator":"luca","subject":"International","relation":"SELLS_THROUGH","object":"retail"}
+{"annotator":"luca","subject":"International","relation":"OFFERS","object":"Kindle"}
+{"annotator":"luca","subject":"International","relation":"OFFERS","object":"Fire Tablet"}
+{"annotator":"luca","subject":"International","relation":"OFFERS","object":"Fire TV"}
+{"annotator":"luca","subject":"International","relation":"OFFERS","object":"Echo"}
+{"annotator":"luca","subject":"International","relation":"OFFERS","object":"Ring"}
+{"annotator":"luca","subject":"International","relation":"OFFERS","object":"Blink"}
+{"annotator":"luca","subject":"International","relation":"OFFERS","object":"eero"}
+{"annotator":"luca","subject":"North America","relation":"OFFERS","object":"media content"}
+{"annotator":"luca","subject":"International","relation":"OFFERS","object":"media content"}
+{"annotator":"luca","subject":"North America","relation":"OFFERS","object":"Amazon Prime"}
+{"annotator":"luca","subject":"International","relation":"OFFERS","object":"Amazon Prime"}
+{"annotator":"luca","subject":"North America","relation":"OFFERS","object":"programs"}
+{"annotator":"luca","subject":"International","relation":"OFFERS","object":"programs"}
+{"annotator":"luca","subject":"Amazon Web Services (AWS)","relation":"OFFERS","object":"on-demand technology services"}
+{"annotator":"luca","subject":"Amazon Web Services (AWS)","relation":"OFFERS","object":"compute services"}
+{"annotator":"luca","subject":"Amazon Web Services (AWS)","relation":"OFFERS","object":"storage services"}
+{"annotator":"luca","subject":"Amazon Web Services (AWS)","relation":"OFFERS","object":"database services"}
+{"annotator":"luca","subject":"Amazon Web Services (AWS)","relation":"OFFERS","object":"artificial intelligence services"}
+{"annotator":"luca","subject":"Amazon Web Services (AWS)","relation":"OFFERS","object":"machine learning services"}
+{"annotator":"luca","subject":"Amazon Web Services (AWS)","relation":"OFFERS","object":"analytics services"}
+{"annotator":"luca","subject":"Amazon Web Services (AWS)","relation":"SERVES","object":"small businesses"}
+{"annotator":"luca","subject":"Amazon Web Services (AWS)","relation":"SERVES","object":"mid-market companies"}
+{"annotator":"luca","subject":"Amazon Web Services (AWS)","relation":"SERVES","object":"large enterprises"}
+{"annotator":"luca","subject":"Amazon Web Services (AWS)","relation":"SERVES","object":"developers"}
+{"annotator":"luca","subject":"Amazon Web Services (AWS)","relation":"SERVES","object":"government agencies"}
+{"annotator":"luca","subject":"Amazon Web Services (AWS)","relation":"SERVES","object":"consumers"}
+{"annotator":"luca","subject":"Amazon Web Services (AWS)","relation":"SERVES","object":"educational institutions"}
+{"annotator":"luca","subject":"International","relation":"OFFERS","object":"sponsored ads"}
+{"annotator":"luca","subject":"International","relation":"OFFERS","object":"display advertising"}
+{"annotator":"luca","subject":"International","relation":"OFFERS","object":"video advertising"}
+{"annotator":"luca","subject":"International","relation":"OFFERS","object":"Advertising Services"}
+{"annotator":"luca","subject":"North America","relation":"OFFERS","object":"sponsored ads"}
+{"annotator":"luca","subject":"North America","relation":"OFFERS","object":"display advertising"}
+{"annotator":"luca","subject":"North America","relation":"OFFERS","object":"video advertising"}
+{"annotator":"luca","subject":"North America","relation":"OFFERS","object":"Advertising Services"}
+{"annotator":"luca","subject":"North America","relation":"SERVES","object":"retailers"}
+{"annotator":"luca","subject":"International","relation":"SERVES","object":"retailers"}
+{"annotator":"luca","subject":"North America","relation":"SERVES","object":"manufacturers"}
+{"annotator":"luca","subject":"International","relation":"SERVES","object":"manufacturers"}
+{"annotator":"luca","subject":"North America","relation":"SERVES","object":"small businesses"}
+{"annotator":"luca","subject":"International","relation":"SERVES","object":"small businesses"}
+{"annotator":"luca","subject":"North America","relation":"SERVES","object":"mid-market companies"}
+{"annotator":"luca","subject":"International","relation":"SERVES","object":"mid-market companies"}
+{"annotator":"luca","subject":"North America","relation":"SERVES","object":"large enterprises"}
+{"annotator":"luca","subject":"International","relation":"SERVES","object":"large enterprises"}
+{"annotator":"luca","subject":"Kindle","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"luca","subject":"Fire Tablet","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"luca","subject":"Fire TV","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"luca","subject":"Echo","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"luca","subject":"Ring","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"luca","subject":"Blink","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"luca","subject":"eero","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"luca","subject":"media content","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"luca","subject":"Amazon Prime","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"luca","subject":"on-demand technology services","relation":"MONETIZES_VIA","object":"consumption-based"}
+{"annotator":"luca","subject":"compute services","relation":"MONETIZES_VIA","object":"consumption-based"}
+{"annotator":"luca","subject":"storage services","relation":"MONETIZES_VIA","object":"consumption-based"}
+{"annotator":"luca","subject":"database services","relation":"MONETIZES_VIA","object":"consumption-based"}
+{"annotator":"luca","subject":"artificial intelligence services","relation":"MONETIZES_VIA","object":"consumption-based"}
+{"annotator":"luca","subject":"machine learning services","relation":"MONETIZES_VIA","object":"consumption-based"}
+{"annotator":"luca","subject":"analytics services","relation":"MONETIZES_VIA","object":"service fees"}
+{"annotator":"luca","subject":"sponsored ads","relation":"MONETIZES_VIA","object":"advertising"}
+{"annotator":"luca","subject":"display advertising","relation":"MONETIZES_VIA","object":"advertising"}
+{"annotator":"luca","subject":"video advertising","relation":"MONETIZES_VIA","object":"advertising"}
+{"annotator":"luca","subject":"Advertising Services","relation":"MONETIZES_VIA","object":"advertising"}
+{"annotator":"luca","subject":"AWS Cloud Services","relation":"MONETIZES_VIA","object":"advertising"}
+{"annotator":"zhong","subject":"Amazon","relation":"HAS_SEGMENT","object":"North America"}
+{"annotator":"zhong","subject":"Amazon","relation":"HAS_SEGMENT","object":"International"}
+{"annotator":"zhong","subject":"Amazon","relation":"HAS_SEGMENT","object":"Amazon Web Services (AWS)"}
+{"annotator":"zhong","subject":"North America","relation":"SERVES","object":"consumers"}
+{"annotator":"zhong","subject":"International","relation":"SERVES","object":"consumers"}
+{"annotator":"zhong","subject":"Amazon Web Services (AWS)","relation":"SERVES","object":"small businesses"}
+{"annotator":"zhong","subject":"Amazon Web Services (AWS)","relation":"SERVES","object":"mid-market companies"}
+{"annotator":"zhong","subject":"Amazon Web Services (AWS)","relation":"SERVES","object":"large enterprises"}
+{"annotator":"zhong","subject":"Amazon Web Services (AWS)","relation":"SERVES","object":"developers"}
+{"annotator":"zhong","subject":"Amazon Web Services (AWS)","relation":"SERVES","object":"government agencies"}
+{"annotator":"zhong","subject":"Amazon Web Services (AWS)","relation":"SERVES","object":"educational institutions"}
+{"annotator":"zhong","subject":"North America","relation":"SELLS_THROUGH","object":"online"}
+{"annotator":"zhong","subject":"International","relation":"SELLS_THROUGH","object":"online"}
+{"annotator":"zhong","subject":"North America","relation":"SELLS_THROUGH","object":"retail"}
+{"annotator":"zhong","subject":"International","relation":"SELLS_THROUGH","object":"retail"}
+{"annotator":"zhong","subject":"North America","relation":"OFFERS","object":"Kindle"}
+{"annotator":"zhong","subject":"International","relation":"OFFERS","object":"Kindle"}
+{"annotator":"zhong","subject":"North America","relation":"OFFERS","object":"Fire tablet"}
+{"annotator":"zhong","subject":"International","relation":"OFFERS","object":"Fire tablet"}
+{"annotator":"zhong","subject":"North America","relation":"OFFERS","object":"Fire TV"}
+{"annotator":"zhong","subject":"International","relation":"OFFERS","object":"Fire TV"}
+{"annotator":"zhong","subject":"North America","relation":"OFFERS","object":"Echo"}
+{"annotator":"zhong","subject":"International","relation":"OFFERS","object":"Echo"}
+{"annotator":"zhong","subject":"North America","relation":"OFFERS","object":"Ring"}
+{"annotator":"zhong","subject":"International","relation":"OFFERS","object":"Ring"}
+{"annotator":"zhong","subject":"North America","relation":"OFFERS","object":"Blink"}
+{"annotator":"zhong","subject":"International","relation":"OFFERS","object":"Blink"}
+{"annotator":"zhong","subject":"North America","relation":"OFFERS","object":"eero"}
+{"annotator":"zhong","subject":"International","relation":"OFFERS","object":"eero"}
+{"annotator":"zhong","subject":"North America","relation":"OFFERS","object":"media content"}
+{"annotator":"zhong","subject":"International","relation":"OFFERS","object":"media content"}
+{"annotator":"zhong","subject":"North America","relation":"OFFERS","object":"Amazon Prime"}
+{"annotator":"zhong","subject":"International","relation":"OFFERS","object":"Amazon Prime"}
+{"annotator":"zhong","subject":"North America","relation":"OFFERS","object":"programs"}
+{"annotator":"zhong","subject":"International","relation":"OFFERS","object":"programs"}
+{"annotator":"zhong","subject":"Amazon Web Services (AWS)","relation":"OFFERS","object":"on-demand technology services"}
+{"annotator":"zhong","subject":"Amazon Web Services (AWS)","relation":"OFFERS","object":"compute services"}
+{"annotator":"zhong","subject":"Amazon Web Services (AWS)","relation":"OFFERS","object":"storage services"}
+{"annotator":"zhong","subject":"Amazon Web Services (AWS)","relation":"OFFERS","object":"database services"}
+{"annotator":"zhong","subject":"Amazon Web Services (AWS)","relation":"OFFERS","object":"artificial intelligence services"}
+{"annotator":"zhong","subject":"Amazon Web Services (AWS)","relation":"OFFERS","object":"machine learning services"}
+{"annotator":"zhong","subject":"Amazon Web Services (AWS)","relation":"OFFERS","object":"analytics services"}
+{"annotator":"zhong","subject":"North America","relation":"OFFERS","object":"sponsored ads"}
+{"annotator":"zhong","subject":"International","relation":"OFFERS","object":"sponsored ads"}
+{"annotator":"zhong","subject":"North America","relation":"OFFERS","object":"display advertising"}
+{"annotator":"zhong","subject":"International","relation":"OFFERS","object":"display advertising"}
+{"annotator":"zhong","subject":"North America","relation":"OFFERS","object":"video advertising"}
+{"annotator":"zhong","subject":"International","relation":"OFFERS","object":"video advertising"}
+{"annotator":"zhong","subject":"North America","relation":"OFFERS","object":"advertising services"}
+{"annotator":"zhong","subject":"International","relation":"OFFERS","object":"advertising services"}
+{"annotator":"zhong","subject":"Kindle","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"zhong","subject":"Fire tablet","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"zhong","subject":"Fire TV","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"zhong","subject":"Echo","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"zhong","subject":"Ring","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"zhong","subject":"Blink","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"zhong","subject":"eero","relation":"MONETIZES_VIA","object":"hardware sales"}
+{"annotator":"zhong","subject":"media content","relation":"MONETIZES_VIA","object":"advertising"}
+{"annotator":"zhong","subject":"Amazon Prime","relation":"MONETIZES_VIA","object":"subscription"}
+{"annotator":"zhong","subject":"on-demand technology services","relation":"MONETIZES_VIA","object":"consumption-based"}
+{"annotator":"zhong","subject":"compute services","relation":"MONETIZES_VIA","object":"consumption-based"}
+{"annotator":"zhong","subject":"storage services","relation":"MONETIZES_VIA","object":"consumption-based"}
+{"annotator":"zhong","subject":"database services","relation":"MONETIZES_VIA","object":"consumption-based"}
+{"annotator":"zhong","subject":"artificial intelligence services","relation":"MONETIZES_VIA","object":"consumption-based"}
+{"annotator":"zhong","subject":"machine learning services","relation":"MONETIZES_VIA","object":"consumption-based"}
+{"annotator":"zhong","subject":"analytics services","relation":"MONETIZES_VIA","object":"service fees"}
+{"annotator":"zhong","subject":"sponsored ads","relation":"MONETIZES_VIA","object":"advertising"}
+{"annotator":"zhong","subject":"display advertising","relation":"MONETIZES_VIA","object":"advertising"}
+{"annotator":"zhong","subject":"video advertising","relation":"MONETIZES_VIA","object":"advertising"}
+{"annotator":"zhong","subject":"advertising services","relation":"MONETIZES_VIA","object":"advertising"}

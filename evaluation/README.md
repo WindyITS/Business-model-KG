@@ -42,10 +42,28 @@ Bootstrap confidence intervals live in:
 evaluation/results/bootstrap/
 ```
 
+Regenerate them with:
+
+```bash
+./venv/bin/python -m evaluation.scripts.evaluate --bootstrap --split test --yes
+```
+
 Annotation reliability metrics live in:
 
 ```text
 evaluation/results/annotation_reliability/
+```
+
+Their JSONL inputs live in:
+
+```text
+evaluation/benchmarks/annotation_reliability/
+```
+
+Regenerate them with:
+
+```bash
+./venv/bin/python -m evaluation.scripts.evaluate --annotation-reliability --yes
 ```
 
 These reliability artifacts are JSON/JSONL reporting outputs. They are separate

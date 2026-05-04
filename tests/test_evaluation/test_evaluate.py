@@ -2,6 +2,8 @@ import json
 from pathlib import Path
 
 from evaluation.scripts.evaluate import (
+    annotation_reliability_payload,
+    bootstrap_metrics,
     build_cherry_pick_evaluation_path,
     build_split_evaluation_paths,
     evaluate_paths,
@@ -268,3 +270,95 @@ def test_finalize_result_folder_replaces_existing_results_after_success(tmp_path
 
     assert not staging_dir.exists()
     assert json.loads(stale_file.read_text(encoding="utf-8")) == {"new": True}
+
+
+def test_bootstrap_metrics_computes_paper_score_set(tmp_path: Path):
+    evaluation_root = tmp_path / "evaluation"
+    outputs_root = tmp_path / "outputs"
+    gold = {
+        "subject": "Acme",
+        "subject_type": "Company",
+        "relation": "HAS_SEGMENT",
+        "object": "Cloud",
+        "object_type": "BusinessSegment",
+    }
+    write_jsonl(evaluation_root / "benchmarks" / "test" / "clean" / "alpha.jsonl", [gold])
+    write_jsonl(evaluation_root / "benchmarks" / "test" / "clean" / "beta.jsonl", [gold])
+    write_json(outputs_root / "alpha" / "zero-shot" / "latest" / "resolved_triples.json", {"triples": [gold]})
+    write_json(outputs_root / "beta" / "zero-shot" / "latest" / "resolved_triples.json", {"triples": []})
+
+    payload = bootstrap_metrics(
+        root=evaluation_root,
+        outputs_root=outputs_root,
+        split="test",
+        pipelines=["zero-shot"],
+        companies=["alpha", "beta"],
+        n_bootstrap=10,
+        seed=7,
+    )
+
+    assert payload["point_estimates"]["zero-shot"] == {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 2 / 3,
+        "macro_f1": 0.5,
+        "relaxed_f1": 2 / 3,
+    }
+    assert set(payload["confidence_intervals"]["zero-shot"]) == {
+        "precision",
+        "recall",
+        "f1",
+        "macro_f1",
+        "relaxed_f1",
+    }
+
+
+def test_annotation_reliability_payload_uses_jsonl_inputs(tmp_path: Path):
+    evaluation_root = tmp_path / "evaluation"
+    source_dir = evaluation_root / "benchmarks" / "annotation_reliability"
+    write_jsonl(
+        source_dir / "amazon_inter_annotator_edges.jsonl",
+        [
+            {"annotator": "official", "subject": "Amazon", "relation": "HAS_SEGMENT", "object": "AWS"},
+            {"annotator": "luca", "subject": "Amazon", "relation": "HAS_SEGMENT", "object": "AWS"},
+            {"annotator": "zhong", "subject": "Amazon", "relation": "HAS_SEGMENT", "object": "AWS"},
+            {"annotator": "official", "subject": "AWS", "relation": "SERVES", "object": "developers"},
+            {"annotator": "luca", "subject": "AWS", "relation": "SERVES", "object": "developers"},
+            {"annotator": "zhong", "subject": "AWS", "relation": "SERVES", "object": "enterprises"},
+        ],
+    )
+    write_jsonl(
+        source_dir / "intra_annotator_counts.jsonl",
+        [
+            {
+                "label": "Combined micro",
+                "true_positives": 1,
+                "false_positives": 0,
+                "false_negatives": 1,
+                "precision": 1.0,
+                "recall": 0.5,
+                "f1": 2 / 3,
+                "jaccard": 0.5,
+            },
+            {
+                "label": "Macro average",
+                "true_positives": None,
+                "false_positives": None,
+                "false_negatives": None,
+                "precision": 1.0,
+                "recall": 0.5,
+                "f1": 2 / 3,
+                "jaccard": 0.5,
+            },
+        ],
+    )
+
+    payload = annotation_reliability_payload(evaluation_root)
+
+    inter = payload["summary"]["inter_annotator_amazon"]
+    assert inter["official_edges"] == 2
+    assert inter["candidate_edges"] == 3
+    assert inter["unanimous"] == 1
+    assert inter["majority_only"] == 1
+    assert inter["single_annotator"] == 1
+    assert payload["summary"]["intra_annotator"]["combined_micro"]["f1"] == 2 / 3

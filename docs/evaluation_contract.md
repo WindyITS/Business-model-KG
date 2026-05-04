@@ -172,7 +172,20 @@ Annotation reliability outputs are reporting artifacts, not inputs to the extrac
 evaluation/results/annotation_reliability/
 ```
 
-The inter-annotator Amazon report compares unique normalized five-field triples between Luca and Zhong and reports precision, recall, F1, and Jaccard overall and by relation. The intra-annotator report stores the company-level, combined micro, and macro-average repeatability metrics.
+The JSONL reliability inputs live under:
+
+```text
+evaluation/benchmarks/annotation_reliability/
+```
+
+The inter-annotator Amazon report compares normalized 3-field edges across the official, Luca, and Zhong annotations and reports pairwise Jaccard, average pairwise agreement, three-way Jaccard, edge-support counts, and per-relation reliability. The intra-annotator report stores the company-level, combined micro, and macro-average repeatability metrics.
+
+The evaluator script also computes paper bootstrap confidence intervals:
+
+```bash
+./venv/bin/python -m evaluation.scripts.evaluate --bootstrap --split test --yes
+./venv/bin/python -m evaluation.scripts.evaluate --annotation-reliability --yes
+```
 
 ## Presentation Interpretation
 
