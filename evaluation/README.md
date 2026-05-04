@@ -42,6 +42,15 @@ Bootstrap confidence intervals live in:
 evaluation/results/bootstrap/
 ```
 
+Annotation reliability metrics live in:
+
+```text
+evaluation/results/annotation_reliability/
+```
+
+These reliability artifacts are JSON/JSONL reporting outputs. They are separate
+from the extraction evaluator's five-score metric contract.
+
 ## Run Evaluation
 
 Evaluate all companies in one split for one pipeline:

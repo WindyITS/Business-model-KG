@@ -164,6 +164,16 @@ Each split or cherry-picked run also writes a `summary.json`.
 
 If the target results folder already contains files, the evaluator asks before overwriting. If overwrite is approved, existing results are replaced only after the new evaluation run succeeds. The `--yes` flag supports deliberate non-interactive reruns.
 
+## Annotation Reliability
+
+Annotation reliability outputs are reporting artifacts, not inputs to the extraction evaluator. They live under:
+
+```text
+evaluation/results/annotation_reliability/
+```
+
+The inter-annotator Amazon report compares unique normalized five-field triples between Luca and Zhong and reports precision, recall, F1, and Jaccard overall and by relation. The intra-annotator report stores the company-level, combined micro, and macro-average repeatability metrics.
+
 ## Presentation Interpretation
 
 Use exact 3-field edge metrics as the objective headline:

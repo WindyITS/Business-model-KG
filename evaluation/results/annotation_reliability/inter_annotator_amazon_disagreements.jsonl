@@ -1,0 +1,18 @@
+{"metric_set":"inter_annotator_amazon","source":"luca_only","subject":"Amazon Prime","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"metric_set":"inter_annotator_amazon","source":"luca_only","subject":"Amazon Web Services (AWS)","subject_type":"BusinessSegment","relation":"OFFERS","object":"compute servicess","object_type":"Offering"}
+{"metric_set":"inter_annotator_amazon","source":"luca_only","subject":"compute servicess","subject_type":"Offering","relation":"MONETIZES_VIA","object":"consumption-based","object_type":"RevenueModel"}
+{"metric_set":"inter_annotator_amazon","source":"luca_only","subject":"International","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
+{"metric_set":"inter_annotator_amazon","source":"luca_only","subject":"International","subject_type":"BusinessSegment","relation":"SERVES","object":"manufacturers","object_type":"CustomerType"}
+{"metric_set":"inter_annotator_amazon","source":"luca_only","subject":"International","subject_type":"BusinessSegment","relation":"SERVES","object":"mid-market companies","object_type":"CustomerType"}
+{"metric_set":"inter_annotator_amazon","source":"luca_only","subject":"International","subject_type":"BusinessSegment","relation":"SERVES","object":"retailers","object_type":"CustomerType"}
+{"metric_set":"inter_annotator_amazon","source":"luca_only","subject":"International","subject_type":"BusinessSegment","relation":"SERVES","object":"small businesses","object_type":"CustomerType"}
+{"metric_set":"inter_annotator_amazon","source":"luca_only","subject":"media content","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"metric_set":"inter_annotator_amazon","source":"luca_only","subject":"North America","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
+{"metric_set":"inter_annotator_amazon","source":"luca_only","subject":"North America","subject_type":"BusinessSegment","relation":"SERVES","object":"manufacturers","object_type":"CustomerType"}
+{"metric_set":"inter_annotator_amazon","source":"luca_only","subject":"North America","subject_type":"BusinessSegment","relation":"SERVES","object":"mid-market companies","object_type":"CustomerType"}
+{"metric_set":"inter_annotator_amazon","source":"luca_only","subject":"North America","subject_type":"BusinessSegment","relation":"SERVES","object":"retailers","object_type":"CustomerType"}
+{"metric_set":"inter_annotator_amazon","source":"luca_only","subject":"North America","subject_type":"BusinessSegment","relation":"SERVES","object":"small businesses","object_type":"CustomerType"}
+{"metric_set":"inter_annotator_amazon","source":"zhong_only","subject":"Amazon Prime","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
+{"metric_set":"inter_annotator_amazon","source":"zhong_only","subject":"Amazon Web Services (AWS)","subject_type":"BusinessSegment","relation":"OFFERS","object":"compute services","object_type":"Offering"}
+{"metric_set":"inter_annotator_amazon","source":"zhong_only","subject":"compute services","subject_type":"Offering","relation":"MONETIZES_VIA","object":"consumption-based","object_type":"RevenueModel"}
+{"metric_set":"inter_annotator_amazon","source":"zhong_only","subject":"media content","subject_type":"Offering","relation":"MONETIZES_VIA","object":"advertising","object_type":"RevenueModel"}
