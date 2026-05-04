@@ -272,7 +272,7 @@ def test_finalize_result_folder_replaces_existing_results_after_success(tmp_path
     assert json.loads(stale_file.read_text(encoding="utf-8")) == {"new": True}
 
 
-def test_bootstrap_metrics_computes_paper_score_set(tmp_path: Path):
+def test_bootstrap_metrics_computes_reporting_score_set(tmp_path: Path):
     evaluation_root = tmp_path / "evaluation"
     outputs_root = tmp_path / "outputs"
     gold = {

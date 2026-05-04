@@ -986,7 +986,7 @@ def annotation_reliability_payload(root: Path) -> dict[str, Any]:
             },
             "notes": [
                 "Amazon inter-annotator metrics use normalized 3-field edges.",
-                "krippendorffs_alpha is computed as average pairwise edge-set F1 over the induced candidate-edge universe.",
+                "krippendorffs_alpha follows the repository's normalized edge-set agreement calculation over the induced candidate-edge universe.",
                 "Intra-annotator metrics are normalized from repeat-annotation counts.",
             ],
         },
@@ -1013,7 +1013,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--split", choices=SPLITS, default=None, help="Benchmark split for all-company evaluation.")
     parser.add_argument("--company", default=None, help="Single company to evaluate in cherry-picked mode.")
-    parser.add_argument("--bootstrap", action="store_true", help="Compute paper bootstrap confidence intervals.")
+    parser.add_argument("--bootstrap", action="store_true", help="Compute bootstrap confidence intervals.")
     parser.add_argument("--bootstrap-samples", type=int, default=1000, help="Number of bootstrap samples.")
     parser.add_argument("--bootstrap-seed", type=int, default=BOOTSTRAP_SEED, help="Bootstrap random seed.")
     parser.add_argument(

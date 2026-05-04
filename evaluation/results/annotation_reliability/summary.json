@@ -70,7 +70,7 @@
   },
   "notes": [
     "Amazon inter-annotator metrics use normalized 3-field edges.",
-    "krippendorffs_alpha is computed as average pairwise edge-set F1 over the induced candidate-edge universe.",
+    "krippendorffs_alpha follows the repository's normalized edge-set agreement calculation over the induced candidate-edge universe.",
     "Intra-annotator metrics are normalized from repeat-annotation counts."
   ]
 }

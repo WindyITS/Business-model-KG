@@ -180,7 +180,7 @@ evaluation/benchmarks/annotation_reliability/
 
 The inter-annotator Amazon report compares normalized 3-field edges across the official, Luca, and Zhong annotations and reports pairwise Jaccard, average pairwise agreement, three-way Jaccard, edge-support counts, and per-relation reliability. The intra-annotator report stores the company-level, combined micro, and macro-average repeatability metrics.
 
-The evaluator script also computes paper bootstrap confidence intervals:
+The evaluator script also computes bootstrap confidence intervals:
 
 ```bash
 ./venv/bin/python -m evaluation.scripts.evaluate --bootstrap --split test --yes
