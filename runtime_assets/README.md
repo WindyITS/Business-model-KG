@@ -35,6 +35,10 @@ source finetuning/.venv/bin/activate
 publish-query-stack
 ```
 
+Using the bundle's local planner path requires the main environment's
+`query-stack` extras on Apple Silicon/macOS with working Metal. Hosted query
+fallback does not use this bundle, but it requires `OPENCODE_GO_API_KEY`.
+
 For the full reviewer path, see
 [`../docs/reproducibility.md`](../docs/reproducibility.md). For query runtime
 usage, see [`../docs/runtime_guide.md`](../docs/runtime_guide.md).

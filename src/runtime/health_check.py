@@ -82,8 +82,8 @@ def _check_packaging_tools() -> HealthCheckResult:
 def _check_query_stack(root_dir: Path) -> HealthCheckResult:
     bundle_dir = resolve_query_stack_bundle_dir(root_dir=root_dir)
     hint = (
-        "Routed queries fall back to the hosted planner automatically; publish a bundle with "
-        "publish-query-stack only if you want the local deployed stack available."
+        "Download or publish runtime_assets/query_stack for local routed querying. "
+        "Hosted fallback requires OPENCODE_GO_API_KEY or OPENCODE_API_KEY."
     )
     if not bundle_dir.exists():
         return HealthCheckResult("query stack", "warn", f"published bundle missing at {bundle_dir}", hint)

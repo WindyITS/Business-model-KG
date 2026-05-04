@@ -89,8 +89,9 @@ benchmark triples. It reports exact precision, recall, F1, macro-F1, and a
 relaxed graph-aware F1.
 
 The evaluation island is useful because it separates model extraction from
-measurement. You can reproduce the reported evaluation from public Hugging Face
-artifacts without rerunning every LLM extraction call.
+measurement. You can reproduce the reported evaluation from checked-in
+reference outputs and the public benchmark mirror without rerunning every LLM
+extraction call.
 
 For the reproduction path, see [`reproducibility.md`](./reproducibility.md).
 For metric details, see [`evaluation.md`](./evaluation.md).

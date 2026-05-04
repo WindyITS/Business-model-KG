@@ -140,6 +140,10 @@ The local router/planner bundle is not tracked in Git. A fresh clone will not
 have `runtime_assets/query_stack/` until you download the published bundle or
 rebuild it from the fine-tuning island.
 
+The local planner uses MLX, so the local routed query-stack path is intended
+for Apple Silicon/macOS with working Metal. Extraction, evaluation, Neo4j
+loading, and hosted query fallback remain usable without that local MLX path.
+
 For local routed querying, download the published bundle and install the query
 extras:
 
@@ -166,6 +170,11 @@ Render a read-only Cypher query with the routed stack:
 ./scripts/kg-query-cypher "<question about the graph>"
 ```
 
+Expected success: stdout is a read-only Cypher query with parameters already
+inlined, typically a `MATCH`/`RETURN` statement. If the router sends the
+question to `api_fallback`, configure `OPENCODE_GO_API_KEY` or use the hosted
+fallback command below.
+
 Force hosted fallback only when an OpenCode Go API key is configured:
 
 ```bash
@@ -185,6 +194,11 @@ natural-language query against the graph:
 ```bash
 ./scripts/kg-query "<question about the graph>"
 ```
+
+Expected success: stdout is the row result returned from Neo4j. If MLX or
+Metal is unavailable, use the Neo4j load/status commands as the self-contained
+graph check and use hosted fallback only when an OpenCode Go API key is
+configured.
 
 Query command notes:
 

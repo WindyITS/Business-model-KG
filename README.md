@@ -46,6 +46,7 @@ Requirements:
 - Python 3.10+
 - an OpenAI-compatible local endpoint such as LM Studio if you want to run new extraction calls
 - optionally Docker and Neo4j for graph loading and querying
+- optionally Apple Silicon/macOS with working Metal for the local query-stack planner
 - optionally an OpenCode Go API key for hosted extraction or hosted query fallback
 
 Bootstrap a source checkout:
@@ -75,6 +76,11 @@ docker compose up -d
 ./scripts/kg-neo4j-load
 ./scripts/kg-neo4j-status
 ```
+
+Natural-language querying is optional. The self-contained graph check is the
+Neo4j load/status path above. The local query-stack planner uses MLX and is
+intended for Apple Silicon/macOS; hosted query fallback instead requires an
+OpenCode Go API key.
 
 The full maintainer check is broader: it runs tests, fine-tuning tests,
 compilation checks, wrapper checks, and package smoke installs.

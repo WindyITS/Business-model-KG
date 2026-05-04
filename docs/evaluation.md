@@ -1,7 +1,8 @@
 # Evaluation
 
 This document explains how the extraction evaluation works and how to reproduce
-the reported experiment from the public Hugging Face artifacts.
+the reported experiment from checked-in reference outputs and the public
+benchmark mirror.
 
 ## What Gets Evaluated
 

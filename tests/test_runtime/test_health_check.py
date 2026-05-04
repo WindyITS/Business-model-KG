@@ -66,7 +66,8 @@ class HealthCheckTests(unittest.TestCase):
 
         self.assertEqual(result.status, "warn")
         self.assertIn("published bundle missing", result.detail)
-        self.assertIn("hosted planner automatically", result.hint or "")
+        self.assertIn("local routed querying", result.hint or "")
+        self.assertIn("OPENCODE_GO_API_KEY", result.hint or "")
 
     def test_check_query_stack_is_ok_when_bundle_artifacts_exist(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
