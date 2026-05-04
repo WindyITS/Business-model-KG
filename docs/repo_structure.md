@@ -183,8 +183,8 @@ Evaluation compares gold triples against:
 outputs/<company>/<pipeline>/latest/resolved_triples.json
 ```
 
-See [`../evaluation/README.md`](../evaluation/README.md) and
-[`evaluation_contract.md`](./evaluation_contract.md).
+See [`evaluation.md`](./evaluation.md) and
+[`../evaluation/README.md`](../evaluation/README.md).
 
 ## Fine-Tuning Island
 

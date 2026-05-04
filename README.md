@@ -97,10 +97,8 @@ The evaluator reports only five scores: exact precision, exact recall, exact
 F1, exact macro-F1 by company, and relaxed graph-aware F1. Exact scores use
 normalized 3-field edge agreement over `subject`, `relation`, and `object`.
 
-Use [`evaluation/README.md`](./evaluation/README.md) for the evaluation
-commands and output files. Use
-[`docs/evaluation_contract.md`](./docs/evaluation_contract.md) for the scoring
-contract, normalization rules, and interpretation notes.
+Use [`docs/evaluation.md`](./docs/evaluation.md) for the evaluation workflow,
+public artifact layout, reproduction commands, scoring rules, and output files.
 
 ## Published Artifacts
 
@@ -220,8 +218,8 @@ The docs are split by purpose:
 - [`docs/ontology.md`](./docs/ontology.md): the graph schema, design principles, canonical labels, validation behavior, and place rules
 - [`docs/runtime_guide.md`](./docs/runtime_guide.md): CLI commands, provider settings, Neo4j load/unload/status behavior, query runtime, output artifacts, and prompt workflow
 - [`docs/repo_structure.md`](./docs/repo_structure.md): a detailed map of the repository and what each major directory is for
+- [`docs/evaluation.md`](./docs/evaluation.md): evaluation workflow, public artifact layout, reproduction commands, scoring rules, and output files
 - [`evaluation/README.md`](./evaluation/README.md): benchmark layout, evaluation commands, metrics, result files, and reference datasets
-- [`docs/evaluation_contract.md`](./docs/evaluation_contract.md): the exact evaluation target, matching rules, metric definitions, and interpretation notes
 - [`finetuning/README.md`](./finetuning/README.md): the isolated fine-tuning island for the local query router/planner
 
 ## Repo Map
