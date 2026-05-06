@@ -1,0 +1,5 @@
+{"relation":"HAS_SEGMENT","krippendorffs_alpha":1.0,"three_way_jaccard":1.0}
+{"relation":"OFFERS","krippendorffs_alpha":0.9058201058201059,"three_way_jaccard":0.75}
+{"relation":"SERVES","krippendorffs_alpha":0.7269833936500604,"three_way_jaccard":0.42105263157894735}
+{"relation":"SELLS_THROUGH","krippendorffs_alpha":1.0,"three_way_jaccard":1.0}
+{"relation":"MONETIZES_VIA","krippendorffs_alpha":0.8849593495934959,"three_way_jaccard":0.7083333333333334}

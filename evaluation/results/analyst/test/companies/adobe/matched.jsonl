@@ -7,10 +7,15 @@
 {"subject":"Adobe","subject_type":"Company","relation":"OPERATES_IN","object":"Worldwide","object_type":"Place"}
 {"subject":"Adobe Experience Manager","subject_type":"Offering","relation":"OFFERS","object":"Adobe Experience Manager Forms","object_type":"Offering"}
 {"subject":"Adobe Experience Manager","subject_type":"Offering","relation":"OFFERS","object":"Adobe Experience Manager Sites","object_type":"Offering"}
+{"subject":"Adobe Experience Platform","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"Adobe Experience Platform","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
 {"subject":"Adobe Experience Platform","subject_type":"Offering","relation":"OFFERS","object":"Adobe Customer Journey Analytics","object_type":"Offering"}
 {"subject":"Adobe Experience Platform","subject_type":"Offering","relation":"OFFERS","object":"Adobe Experience Platform AI Assistant","object_type":"Offering"}
 {"subject":"Adobe Experience Platform","subject_type":"Offering","relation":"OFFERS","object":"Adobe Journey Optimizer","object_type":"Offering"}
 {"subject":"Adobe Experience Platform","subject_type":"Offering","relation":"OFFERS","object":"Adobe Real-Time Customer Data Platform","object_type":"Offering"}
+{"subject":"Adobe Firefly Solutions","subject_type":"Offering","relation":"MONETIZES_VIA","object":"consumption-based","object_type":"RevenueModel"}
+{"subject":"Adobe Firefly Solutions","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"Adobe Firefly Solutions","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
 {"subject":"Adobe Firefly Solutions","subject_type":"Offering","relation":"OFFERS","object":"Adobe Firefly App","object_type":"Offering"}
 {"subject":"Adobe Firefly Solutions","subject_type":"Offering","relation":"OFFERS","object":"Adobe Firefly Custom Models","object_type":"Offering"}
 {"subject":"Adobe Firefly Solutions","subject_type":"Offering","relation":"OFFERS","object":"Adobe Firefly Foundry","object_type":"Offering"}
@@ -18,6 +23,8 @@
 {"subject":"Adobe Firefly Solutions","subject_type":"Offering","relation":"OFFERS","object":"Firefly Premium","object_type":"Offering"}
 {"subject":"Adobe Firefly Solutions","subject_type":"Offering","relation":"OFFERS","object":"Firefly Pro","object_type":"Offering"}
 {"subject":"Adobe Firefly Solutions","subject_type":"Offering","relation":"OFFERS","object":"Firefly Standard","object_type":"Offering"}
+{"subject":"Adobe GenStudio","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"Adobe GenStudio","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
 {"subject":"Adobe GenStudio","subject_type":"Offering","relation":"OFFERS","object":"Adobe Experience Manager Assets","object_type":"Offering"}
 {"subject":"Adobe GenStudio","subject_type":"Offering","relation":"OFFERS","object":"Adobe Workfront","object_type":"Offering"}
 {"subject":"Adobe GenStudio","subject_type":"Offering","relation":"OFFERS","object":"GenStudio for Performance Marketing","object_type":"Offering"}
@@ -27,14 +34,19 @@
 {"subject":"Adobe Substance 3D Collection","subject_type":"Offering","relation":"OFFERS","object":"Substance 3D Sampler","object_type":"Offering"}
 {"subject":"Adobe Substance 3D Collection","subject_type":"Offering","relation":"OFFERS","object":"Substance 3D Stager","object_type":"Offering"}
 {"subject":"Adobe Workfront","subject_type":"Offering","relation":"OFFERS","object":"Adobe Workfront Planning","object_type":"Offering"}
+{"subject":"Creative Cloud Pro","subject_type":"Offering","relation":"OFFERS","object":"Adobe After Effects","object_type":"Offering"}
+{"subject":"Creative Cloud Pro","subject_type":"Offering","relation":"OFFERS","object":"Adobe Illustrator","object_type":"Offering"}
+{"subject":"Creative Cloud Pro","subject_type":"Offering","relation":"OFFERS","object":"Adobe Lightroom","object_type":"Offering"}
+{"subject":"Creative Cloud Pro","subject_type":"Offering","relation":"OFFERS","object":"Adobe Photoshop","object_type":"Offering"}
+{"subject":"Creative Cloud Pro","subject_type":"Offering","relation":"OFFERS","object":"Adobe Premiere Pro","object_type":"Offering"}
+{"subject":"Creative Cloud Pro","subject_type":"Offering","relation":"OFFERS","object":"Photography Plan","object_type":"Offering"}
 {"subject":"Digital Experience","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe Analytics","object_type":"Offering"}
 {"subject":"Digital Experience","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe Brand Concierge","object_type":"Offering"}
 {"subject":"Digital Experience","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe Commerce","object_type":"Offering"}
-{"subject":"Digital Experience","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe Experience Manager","object_type":"Offering"}
-{"subject":"Digital Experience","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe Experience Platform","object_type":"Offering"}
-{"subject":"Digital Experience","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe GenStudio","object_type":"Offering"}
+{"subject":"Digital Experience","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe Firefly Solutions","object_type":"Offering"}
 {"subject":"Digital Experience","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe LLM Optimizer","object_type":"Offering"}
 {"subject":"Digital Experience","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe Marketo Engage","object_type":"Offering"}
+{"subject":"Digital Experience","subject_type":"BusinessSegment","relation":"OFFERS","object":"Adobe Workfront","object_type":"Offering"}
 {"subject":"Digital Experience","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"direct sales","object_type":"Channel"}
 {"subject":"Digital Experience","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"system integrators","object_type":"Channel"}
 {"subject":"Digital Media","subject_type":"BusinessSegment","relation":"OFFERS","object":"Acrobat Solutions","object_type":"Offering"}

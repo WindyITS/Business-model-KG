@@ -1,15 +1,13 @@
 {"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"Brooks","object_type":"Offering"}
-{"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"BØRN","object_type":"Offering"}
 {"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"Carolina","object_type":"Offering"}
 {"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"Curvation","object_type":"Offering"}
 {"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"Double-H Boots","object_type":"Offering"}
-{"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"Fruit of the Loom","object_type":"Offering"}
 {"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"JERZEES","object_type":"Offering"}
 {"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"Justin","object_type":"Offering"}
 {"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"Radiant by Vanity Fair","object_type":"Offering"}
 {"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"Russell Athletic","object_type":"Offering"}
 {"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"Spalding","object_type":"Offering"}
-{"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"Söfft","object_type":"Offering"}
+{"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"S√∂fft","object_type":"Offering"}
 {"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"Vassarette","object_type":"Offering"}
 {"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"OFFERS","object":"children's apparel","object_type":"Offering"}
 {"subject":"Apparel and Footwear","subject_type":"BusinessSegment","relation":"SERVES","object":"consumers","object_type":"CustomerType"}
@@ -63,10 +61,8 @@
 {"subject":"Building Products","subject_type":"BusinessSegment","relation":"SERVES","object":"small businesses","object_type":"CustomerType"}
 {"subject":"Burlington Northern Santa Fe","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
 {"subject":"Buses","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
-{"subject":"BØRN","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Carolina","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Commercial Trucks","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
-{"subject":"Curvation","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Double-H Boots","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Electrical Group","subject_type":"BusinessSegment","relation":"OFFERS","object":"electrical wire","object_type":"Offering"}
 {"subject":"Electrical Group","subject_type":"BusinessSegment","relation":"OFFERS","object":"specialty cable","object_type":"Offering"}
@@ -76,14 +72,12 @@
 {"subject":"Electrical Group","subject_type":"BusinessSegment","relation":"SERVES","object":"mid-market companies","object_type":"CustomerType"}
 {"subject":"Electrical Group","subject_type":"BusinessSegment","relation":"SERVES","object":"small businesses","object_type":"CustomerType"}
 {"subject":"Fastener Systems","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
-{"subject":"Flight Simulation Products","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Foodservice Technologies","subject_type":"BusinessSegment","relation":"OFFERS","object":"beverage cooling equipment","object_type":"Offering"}
 {"subject":"Foodservice Technologies","subject_type":"BusinessSegment","relation":"OFFERS","object":"beverage dispensing equipment","object_type":"Offering"}
 {"subject":"Foodservice Technologies","subject_type":"BusinessSegment","relation":"OFFERS","object":"food preparation equipment","object_type":"Offering"}
 {"subject":"Foodservice Technologies","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
 {"subject":"Foodservice Technologies","subject_type":"BusinessSegment","relation":"SERVES","object":"mid-market companies","object_type":"CustomerType"}
 {"subject":"Foodservice Technologies","subject_type":"BusinessSegment","relation":"SERVES","object":"small businesses","object_type":"CustomerType"}
-{"subject":"Fruit of the Loom","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"HVAC systems","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Home Financing","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
 {"subject":"Industrial products manufacturing","subject_type":"BusinessSegment","relation":"OFFERS","object":"Fastener Systems","object_type":"Offering"}
@@ -128,6 +122,12 @@
 {"subject":"Insurance","subject_type":"BusinessSegment","relation":"OFFERS","object":"motorcycle insurance","object_type":"Offering"}
 {"subject":"Insurance","subject_type":"BusinessSegment","relation":"OFFERS","object":"property reinsurance","object_type":"Offering"}
 {"subject":"Insurance","subject_type":"BusinessSegment","relation":"OFFERS","object":"workers compensation insurance","object_type":"Offering"}
+{"subject":"Insurance","subject_type":"BusinessSegment","relation":"OPERATES_IN","object":"Worldwide","object_type":"Place"}
+{"subject":"Insurance","subject_type":"BusinessSegment","relation":"PARTNERS_WITH","object":"Ace Hardware Corporation","object_type":"Company"}
+{"subject":"Insurance","subject_type":"BusinessSegment","relation":"PARTNERS_WITH","object":"Alleghany Corporation","object_type":"Company"}
+{"subject":"Insurance","subject_type":"BusinessSegment","relation":"PARTNERS_WITH","object":"General Motors","object_type":"Company"}
+{"subject":"Insurance","subject_type":"BusinessSegment","relation":"PARTNERS_WITH","object":"Insurance Australia Group Limited","object_type":"Company"}
+{"subject":"Insurance","subject_type":"BusinessSegment","relation":"PARTNERS_WITH","object":"Textron Inc.","object_type":"Company"}
 {"subject":"Insurance","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"direct sales","object_type":"Channel"}
 {"subject":"Insurance","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"online","object_type":"Channel"}
 {"subject":"Insurance","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"resellers","object_type":"Channel"}
@@ -138,14 +138,13 @@
 {"subject":"Insurance","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
 {"subject":"Insurance","subject_type":"BusinessSegment","relation":"SERVES","object":"mid-market companies","object_type":"CustomerType"}
 {"subject":"Insurance","subject_type":"BusinessSegment","relation":"SERVES","object":"small businesses","object_type":"CustomerType"}
-{"subject":"JERZEES","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Justin","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
-{"subject":"Larson-Juhl","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Metal Services","subject_type":"BusinessSegment","relation":"OFFERS","object":"metal pipe","object_type":"Offering"}
 {"subject":"Metal Services","subject_type":"BusinessSegment","relation":"OFFERS","object":"tubing","object_type":"Offering"}
 {"subject":"Metal Services","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
 {"subject":"Metal Services","subject_type":"BusinessSegment","relation":"SERVES","object":"manufacturers","object_type":"CustomerType"}
 {"subject":"Natural Gas Pipeline Services","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"Oriental Trading Company","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Other Consumer Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"Larson-Juhl","object_type":"Offering"}
 {"subject":"Other Consumer Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"alkaline batteries","object_type":"Offering"}
 {"subject":"Other Consumer Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"costumes","object_type":"Offering"}
@@ -155,6 +154,7 @@
 {"subject":"Other Consumer Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"virtual games","object_type":"Offering"}
 {"subject":"Other Consumer Products","subject_type":"BusinessSegment","relation":"SERVES","object":"consumers","object_type":"CustomerType"}
 {"subject":"Other Consumer Products","subject_type":"BusinessSegment","relation":"SERVES","object":"retailers","object_type":"CustomerType"}
+{"subject":"Pampered Chef","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Plumbing & Refrigeration","subject_type":"BusinessSegment","relation":"OFFERS","object":"HVAC systems","object_type":"Offering"}
 {"subject":"Plumbing & Refrigeration","subject_type":"BusinessSegment","relation":"OFFERS","object":"air handling units","object_type":"Offering"}
 {"subject":"Plumbing & Refrigeration","subject_type":"BusinessSegment","relation":"OFFERS","object":"copper tubing","object_type":"Offering"}
@@ -164,12 +164,10 @@
 {"subject":"Plumbing & Refrigeration","subject_type":"BusinessSegment","relation":"OFFERS","object":"plumbing components","object_type":"Offering"}
 {"subject":"Plumbing & Refrigeration","subject_type":"BusinessSegment","relation":"OFFERS","object":"ventilation components","object_type":"Offering"}
 {"subject":"Plumbing & Refrigeration","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
-{"subject":"Plumbing & Refrigeration","subject_type":"BusinessSegment","relation":"SERVES","object":"manufacturers","object_type":"CustomerType"}
 {"subject":"Plumbing & Refrigeration","subject_type":"BusinessSegment","relation":"SERVES","object":"mid-market companies","object_type":"CustomerType"}
 {"subject":"Polyvinyl Chloride (PVC)","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Pontoon Boats","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Private Passenger Automobile Insurance","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
-{"subject":"Radiant by Vanity Fair","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Rail & Leasing","subject_type":"BusinessSegment","relation":"OFFERS","object":"intermodal tank containers leasing","object_type":"Offering"}
 {"subject":"Rail & Leasing","subject_type":"BusinessSegment","relation":"OFFERS","object":"mobile railcar movers","object_type":"Offering"}
 {"subject":"Rail & Leasing","subject_type":"BusinessSegment","relation":"OFFERS","object":"rail switching and loading services","object_type":"Offering"}
@@ -193,7 +191,7 @@
 {"subject":"Retail Solutions","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
 {"subject":"Retail Solutions","subject_type":"BusinessSegment","relation":"SERVES","object":"mid-market companies","object_type":"CustomerType"}
 {"subject":"Retroactive Reinsurance","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
-{"subject":"Russell Athletic","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"See's Candies","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Service and Retailing","subject_type":"BusinessSegment","relation":"OFFERS","object":"Flight Simulation Products","object_type":"Offering"}
 {"subject":"Service and Retailing","subject_type":"BusinessSegment","relation":"OFFERS","object":"aviation training services","object_type":"Offering"}
 {"subject":"Service and Retailing","subject_type":"BusinessSegment","relation":"OFFERS","object":"private aviation services","object_type":"Offering"}
@@ -201,8 +199,6 @@
 {"subject":"Service and Retailing","subject_type":"BusinessSegment","relation":"SERVES","object":"consumers","object_type":"CustomerType"}
 {"subject":"Service and Retailing","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
 {"subject":"Service and Retailing","subject_type":"BusinessSegment","relation":"SERVES","object":"mid-market companies","object_type":"CustomerType"}
-{"subject":"Spalding","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
-{"subject":"Söfft","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Transportation Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"aluminium extrusions","object_type":"Offering"}
 {"subject":"Transportation Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"aluminium tubing","object_type":"Offering"}
 {"subject":"Transportation Products","subject_type":"BusinessSegment","relation":"OFFERS","object":"dry van trailers","object_type":"Offering"}
@@ -214,7 +210,6 @@
 {"subject":"Transportation Products","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
 {"subject":"Transportation Products","subject_type":"BusinessSegment","relation":"SERVES","object":"manufacturers","object_type":"CustomerType"}
 {"subject":"Utility Cargo Trailers","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
-{"subject":"Vassarette","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Water Technologies","subject_type":"BusinessSegment","relation":"OFFERS","object":"water treatment equipment","object_type":"Offering"}
 {"subject":"Water Technologies","subject_type":"BusinessSegment","relation":"SERVES","object":"consumers","object_type":"CustomerType"}
 {"subject":"Water Technologies","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
@@ -226,7 +221,6 @@
 {"subject":"aluminium extrusions","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"aluminium tubing","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"architectural paints","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
-{"subject":"aviation training services","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
 {"subject":"axles","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"beverage cooling equipment","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"beverage dispensing equipment","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
@@ -279,11 +273,9 @@
 {"subject":"modular homes","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"mortgage banking","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
 {"subject":"mortgage originations","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
-{"subject":"motorcycle insurance","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
 {"subject":"parting tools","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"performance coatings","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"plumbing components","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
-{"subject":"plush","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"precision-molded plastic components","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"private aviation services","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}
 {"subject":"property reinsurance","subject_type":"Offering","relation":"MONETIZES_VIA","object":"subscription","object_type":"RevenueModel"}

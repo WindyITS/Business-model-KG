@@ -12,7 +12,7 @@ __pycache__/
 .coverage.*
 *.log
 
-# Virtual environments
+# Virtual environment
 venv/
 .venv/
 .env
@@ -20,10 +20,26 @@ venv/
 !.env.example
 .python-version
 
-# Local build and editor noise
+# Local tool config
+.claude/settings.local.json
+
+# Outputs / scratch
+outputs/**/runs/
+outputs/**/failed/
+outputs/**/.staging/
+notes/
+query_stack_behavior_examples.md
+data/query_planner_curated/
 dist/
 build/
+packaging/
+finetuning/artifacts/
+runtime_assets/query_stack/
+
+# OS
 .DS_Store
+
+# Notebook / editor leftovers
 .ipynb_checkpoints/
 .vscode/
 .idea/

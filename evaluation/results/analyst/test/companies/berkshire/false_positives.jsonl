@@ -93,6 +93,7 @@
 {"subject":"Forest River","subject_type":"Offering","relation":"OFFERS","object":"Pontoon Boats","object_type":"Offering"}
 {"subject":"Forest River","subject_type":"Offering","relation":"OFFERS","object":"Recreational Vehicles","object_type":"Offering"}
 {"subject":"Forest River","subject_type":"Offering","relation":"OFFERS","object":"Utility Cargo Trailers","object_type":"Offering"}
+{"subject":"Fruit of the Loom","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Fruit of the Loom","subject_type":"Offering","relation":"OFFERS","object":"Fruit of the Loom and JERZEES","object_type":"Offering"}
 {"subject":"Fruit of the Loom","subject_type":"Offering","relation":"OFFERS","object":"Russell Athletic and Spalding","object_type":"Offering"}
 {"subject":"Fruit of the Loom","subject_type":"Offering","relation":"OFFERS","object":"Vanity Fair Brands","object_type":"Offering"}
@@ -139,6 +140,7 @@
 {"subject":"Johns Manville","subject_type":"Offering","relation":"OFFERS","object":"Reinforcement Fiberglass","object_type":"Offering"}
 {"subject":"Johns Manville","subject_type":"Offering","relation":"OFFERS","object":"Technical Nonwovens","object_type":"Offering"}
 {"subject":"LSPI","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
+{"subject":"Larson-Juhl","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Lubrizol","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Lubrizol","subject_type":"Offering","relation":"OFFERS","object":"Lubrizol Additives","object_type":"Offering"}
 {"subject":"Lubrizol","subject_type":"Offering","relation":"OFFERS","object":"Lubrizol Advanced Materials","object_type":"Offering"}
@@ -209,7 +211,6 @@
 {"subject":"NetJets","subject_type":"Offering","relation":"OFFERS","object":"NetJets Card Program","object_type":"Offering"}
 {"subject":"NetJets","subject_type":"Offering","relation":"OFFERS","object":"NetJets Leases","object_type":"Offering"}
 {"subject":"NetJets","subject_type":"Offering","relation":"OFFERS","object":"NetJets Shares","object_type":"Offering"}
-{"subject":"Oriental Trading Company","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Oriental Trading Company","subject_type":"Offering","relation":"OFFERS","object":"Fun Express","object_type":"Offering"}
 {"subject":"Oriental Trading Company","subject_type":"Offering","relation":"OFFERS","object":"MindWare","object_type":"Offering"}
 {"subject":"Oriental Trading Company","subject_type":"Offering","relation":"OFFERS","object":"Morris Costumes and HalloweenExpress.com","object_type":"Offering"}
@@ -219,7 +220,6 @@
 {"subject":"OxyChem","subject_type":"Offering","relation":"OFFERS","object":"Chlor-Alkali Products","object_type":"Offering"}
 {"subject":"OxyChem","subject_type":"Offering","relation":"OFFERS","object":"Chlorinated Organics","object_type":"Offering"}
 {"subject":"OxyChem","subject_type":"Offering","relation":"OFFERS","object":"Polyvinyl Chloride (PVC)","object_type":"Offering"}
-{"subject":"Pampered Chef","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Pilot Travel Centers","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Pilot Travel Centers","subject_type":"Offering","relation":"MONETIZES_VIA","object":"service fees","object_type":"RevenueModel"}
 {"subject":"Pilot Travel Centers","subject_type":"Offering","relation":"OFFERS","object":"EV Charging","object_type":"Offering"}
@@ -236,7 +236,6 @@
 {"subject":"Richline","subject_type":"Offering","relation":"OFFERS","object":"LeachGarner","object_type":"Offering"}
 {"subject":"Richline","subject_type":"Offering","relation":"OFFERS","object":"Richline Jewelry","object_type":"Offering"}
 {"subject":"Richline","subject_type":"Offering","relation":"OFFERS","object":"Rio Grande","object_type":"Offering"}
-{"subject":"See's Candies","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Service and Retailing","subject_type":"BusinessSegment","relation":"OFFERS","object":"Berkshire Hathaway Automotive","object_type":"Offering"}
 {"subject":"Service and Retailing","subject_type":"BusinessSegment","relation":"OFFERS","object":"Business Wire","object_type":"Offering"}
 {"subject":"Service and Retailing","subject_type":"BusinessSegment","relation":"OFFERS","object":"CORT","object_type":"Offering"}

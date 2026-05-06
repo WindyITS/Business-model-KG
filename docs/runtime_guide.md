@@ -120,34 +120,85 @@ Notes:
 
 ## Querying
 
-Generate a read-only Cypher query from a natural-language question:
+The query commands can render read-only Cypher or run a natural-language
+question against the current Neo4j graph.
 
-```bash
-./scripts/kg-query-cypher "Which companies sell to developers through direct sales?"
-```
-
-Generate the query and run it against the current Neo4j database:
-
-```bash
-./scripts/kg-query "Which companies sell to developers through direct sales?"
-```
+`kg-query-cypher` can render a query without Neo4j. `kg-query` also needs Neo4j
+running and loaded with saved graph outputs.
 
 The routed query commands try the published local query-stack bundle first.
-They fall back to hosted free-form Cypher generation when the local stack is
-unavailable, errors, or declines to handle the request.
+The router sends a query to the local planner only when its `local` probability
+is at least `0.97`; below that fixed gate it chooses the stronger non-local
+class, either `api_fallback` or `refuse`. The commands fall back to hosted
+free-form Cypher generation when the local stack is unavailable, errors, or the
+router selects `api_fallback`. If the router selects `refuse`, the command
+returns an unsupported-request result instead of using the hosted fallback.
 
-Force hosted fallback only:
+### Local Query-Stack Bundle
+
+The local router/planner bundle is not tracked in Git. A fresh clone will not
+have `runtime_assets/query_stack/` until you download the published bundle or
+rebuild it from the fine-tuning island.
+
+The local planner uses MLX, so the local routed query-stack path is intended
+for Apple Silicon/macOS with working Metal. Extraction, evaluation, Neo4j
+loading, and hosted query fallback remain usable without that local MLX path.
+
+For local routed querying, download the published bundle and install the query
+extras:
 
 ```bash
-./scripts/kg-query-cypher "Which company segments sell through marketplaces?" --stack fallback
+./venv/bin/python -m pip install "huggingface_hub[cli]"
+./venv/bin/huggingface-cli download WindyITS/business-model-kg-query-stack \
+  --local-dir runtime_assets/query_stack
+./venv/bin/python -m pip install -e ".[query-stack]"
+```
+
+Without this bundle, routed query commands can still use hosted fallback when a
+fallback provider and API key are configured, but the local planner path will
+not be available.
+
+For hosted fallback, configure an OpenCode Go API key:
+
+```bash
+export OPENCODE_GO_API_KEY=your_key_here
+```
+
+Render a read-only Cypher query with the routed stack:
+
+```bash
+./scripts/kg-query-cypher "<question about the graph>"
+```
+
+Expected success: stdout is a read-only Cypher query with parameters already
+inlined, typically a `MATCH`/`RETURN` statement. If the router sends the
+question to `api_fallback`, configure `OPENCODE_GO_API_KEY` or use the hosted
+fallback command below.
+
+Force hosted fallback only when an OpenCode Go API key is configured:
+
+```bash
+./scripts/kg-query-cypher "<question about the graph>" --stack fallback
 ```
 
 Override the local query-stack bundle:
 
 ```bash
-./scripts/kg-query-cypher "Which company segments sell through marketplaces?" \
-  --local-stack-bundle-dir /path/to/runtime_assets/query_stack/current
+./scripts/kg-query-cypher "<question about the graph>" \
+  --local-stack-bundle-dir /path/to/runtime_assets/query_stack
 ```
+
+After Neo4j is running and saved outputs have been loaded, run a
+natural-language query against the graph:
+
+```bash
+./scripts/kg-query "<question about the graph>"
+```
+
+Expected success: stdout is the row result returned from Neo4j. If MLX or
+Metal is unavailable, use the Neo4j load/status commands as the self-contained
+graph check and use hosted fallback only when an OpenCode Go API key is
+configured.
 
 Query command notes:
 
@@ -394,7 +445,7 @@ Remove local caches and scratch artifacts without touching saved outputs:
 ./scripts/clean_local_artifacts.sh
 ```
 
-Run a local readiness check:
+Run a light local readiness check:
 
 ```bash
 ./scripts/kg-health-check
@@ -406,11 +457,12 @@ Skip Neo4j probing:
 ./scripts/kg-health-check --skip-neo4j
 ```
 
-Run the fuller maintainer check:
+Run the full maintainer check:
 
 ```bash
 bash ./scripts/check_repo.sh
 ```
 
-`.github/workflows/checks.yml` runs the same repo-check script on pushes and
-pull requests.
+The full maintainer check runs tests, fine-tuning tests, compilation checks,
+wrapper checks, and package smoke installs. It is intentionally broader than a
+quick reviewer smoke check.

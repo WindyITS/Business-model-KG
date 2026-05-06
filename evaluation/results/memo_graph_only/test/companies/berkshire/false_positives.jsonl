@@ -38,6 +38,7 @@
 {"subject":"Forest River","subject_type":"Offering","relation":"OFFERS","object":"Marine","object_type":"Offering"}
 {"subject":"Forest River","subject_type":"Offering","relation":"OFFERS","object":"Recreational Vehicles","object_type":"Offering"}
 {"subject":"Forest River","subject_type":"Offering","relation":"OFFERS","object":"Utility Cargo Trailers","object_type":"Offering"}
+{"subject":"Fruit of the Loom","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Fruit of the Loom","subject_type":"Offering","relation":"OFFERS","object":"Fruit of the Loom Brand","object_type":"Offering"}
 {"subject":"Fruit of the Loom","subject_type":"Offering","relation":"OFFERS","object":"Russell Athletic","object_type":"Offering"}
 {"subject":"Fruit of the Loom","subject_type":"Offering","relation":"OFFERS","object":"Spalding","object_type":"Offering"}

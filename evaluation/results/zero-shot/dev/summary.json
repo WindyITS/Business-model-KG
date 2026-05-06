@@ -10,15 +10,13 @@
       "gold_path": "/Users/giuliosighieri/Desktop/kg-v0/evaluation/benchmarks/dev/clean/apple.jsonl",
       "prediction_path": "/Users/giuliosighieri/Desktop/kg-v0/outputs/apple/zero-shot/latest/resolved_triples.json",
       "gold_triples": 86,
-      "gold_unique_triples": 86,
       "predicted_triples": 100,
-      "predicted_unique_triples": 100,
-      "true_positives": 45,
-      "false_positives": 55,
-      "false_negatives": 41,
+      "gold_unique_edges": 86,
+      "predicted_unique_edges": 100,
       "precision": 0.45,
       "recall": 0.5232558139534884,
-      "f1": 0.48387096774193555
+      "f1": 0.48387096774193555,
+      "relaxed_f1": 0.5322580645161291
     },
     {
       "company": "Google",
@@ -29,15 +27,13 @@
       "gold_path": "/Users/giuliosighieri/Desktop/kg-v0/evaluation/benchmarks/dev/clean/google.jsonl",
       "prediction_path": "/Users/giuliosighieri/Desktop/kg-v0/outputs/google/zero-shot/latest/resolved_triples.json",
       "gold_triples": 50,
-      "gold_unique_triples": 50,
       "predicted_triples": 53,
-      "predicted_unique_triples": 53,
-      "true_positives": 33,
-      "false_positives": 20,
-      "false_negatives": 17,
+      "gold_unique_edges": 50,
+      "predicted_unique_edges": 53,
       "precision": 0.6226415094339622,
       "recall": 0.66,
-      "f1": 0.6407766990291262
+      "f1": 0.6407766990291262,
+      "relaxed_f1": 0.6699029126213591
     },
     {
       "company": "Microsoft",
@@ -48,15 +44,13 @@
       "gold_path": "/Users/giuliosighieri/Desktop/kg-v0/evaluation/benchmarks/dev/clean/microsoft.jsonl",
       "prediction_path": "/Users/giuliosighieri/Desktop/kg-v0/outputs/microsoft/zero-shot/latest/resolved_triples.json",
       "gold_triples": 120,
-      "gold_unique_triples": 120,
       "predicted_triples": 79,
-      "predicted_unique_triples": 79,
-      "true_positives": 38,
-      "false_positives": 41,
-      "false_negatives": 82,
+      "gold_unique_edges": 120,
+      "predicted_unique_edges": 79,
       "precision": 0.4810126582278481,
       "recall": 0.31666666666666665,
-      "f1": 0.38190954773869346
+      "f1": 0.38190954773869346,
+      "relaxed_f1": 0.4472361809045226
     },
     {
       "company": "Palantir",
@@ -67,25 +61,22 @@
       "gold_path": "/Users/giuliosighieri/Desktop/kg-v0/evaluation/benchmarks/dev/clean/palantir.jsonl",
       "prediction_path": "/Users/giuliosighieri/Desktop/kg-v0/outputs/palantir/zero-shot/latest/resolved_triples.json",
       "gold_triples": 36,
-      "gold_unique_triples": 36,
       "predicted_triples": 20,
-      "predicted_unique_triples": 20,
-      "true_positives": 6,
-      "false_positives": 14,
-      "false_negatives": 30,
+      "gold_unique_edges": 36,
+      "predicted_unique_edges": 20,
       "precision": 0.3,
       "recall": 0.16666666666666666,
-      "f1": 0.21428571428571427
+      "f1": 0.21428571428571427,
+      "relaxed_f1": 0.21428571428571427
     }
   ],
   "aggregate": {
     "evaluated_company_count": 4,
     "missing_prediction_count": 0,
-    "true_positives": 122,
-    "false_positives": 130,
-    "false_negatives": 170,
     "precision": 0.48412698412698413,
     "recall": 0.4178082191780822,
-    "f1": 0.4485294117647059
+    "f1": 0.4485294117647059,
+    "macro_f1": 0.43021073219886735,
+    "relaxed_f1": 0.4944852941176471
   }
 }

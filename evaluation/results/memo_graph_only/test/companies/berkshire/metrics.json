@@ -6,14 +6,12 @@
   "status": "evaluated",
   "gold_path": "/Users/giuliosighieri/Desktop/kg-v0/evaluation/benchmarks/test/clean/berkshire.jsonl",
   "prediction_path": "/Users/giuliosighieri/Desktop/kg-v0/outputs/berkshire/memo_graph_only/latest/resolved_triples.json",
-  "gold_triples": 327,
-  "gold_unique_triples": 327,
+  "gold_triples": 317,
   "predicted_triples": 121,
-  "predicted_unique_triples": 121,
-  "true_positives": 21,
-  "false_positives": 100,
-  "false_negatives": 306,
-  "precision": 0.17355371900826447,
-  "recall": 0.06422018348623854,
-  "f1": 0.09375000000000001
+  "gold_unique_edges": 317,
+  "predicted_unique_edges": 121,
+  "precision": 0.1652892561983471,
+  "recall": 0.06309148264984227,
+  "f1": 0.09132420091324202,
+  "relaxed_f1": 0.11529680365296804
 }

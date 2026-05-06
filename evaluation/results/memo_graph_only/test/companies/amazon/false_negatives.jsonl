@@ -1,3 +1,4 @@
+{"subject":"AWS Cloud Services","subject_type":"Offering","relation":"MONETIZES_VIA","object":"advertising","object_type":"RevenueModel"}
 {"subject":"Amazon Prime","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Amazon Web Services (AWS)","subject_type":"BusinessSegment","relation":"OFFERS","object":"analytics services","object_type":"Offering"}
 {"subject":"Amazon Web Services (AWS)","subject_type":"BusinessSegment","relation":"OFFERS","object":"artificial intelligence services","object_type":"Offering"}
@@ -6,6 +7,7 @@
 {"subject":"Amazon Web Services (AWS)","subject_type":"BusinessSegment","relation":"OFFERS","object":"machine learning services","object_type":"Offering"}
 {"subject":"Amazon Web Services (AWS)","subject_type":"BusinessSegment","relation":"OFFERS","object":"on-demand technology services","object_type":"Offering"}
 {"subject":"Amazon Web Services (AWS)","subject_type":"BusinessSegment","relation":"OFFERS","object":"storage services","object_type":"Offering"}
+{"subject":"Amazon Web Services (AWS)","subject_type":"BusinessSegment","relation":"SERVES","object":"consumers","object_type":"CustomerType"}
 {"subject":"Amazon Web Services (AWS)","subject_type":"BusinessSegment","relation":"SERVES","object":"mid-market companies","object_type":"CustomerType"}
 {"subject":"Amazon Web Services (AWS)","subject_type":"BusinessSegment","relation":"SERVES","object":"small businesses","object_type":"CustomerType"}
 {"subject":"Blink","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
@@ -28,14 +30,7 @@
 {"subject":"International","subject_type":"BusinessSegment","relation":"SERVES","object":"mid-market companies","object_type":"CustomerType"}
 {"subject":"International","subject_type":"BusinessSegment","relation":"SERVES","object":"small businesses","object_type":"CustomerType"}
 {"subject":"Kindle","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
-{"subject":"North America","subject_type":"BusinessSegment","relation":"OFFERS","object":"Blink","object_type":"Offering"}
-{"subject":"North America","subject_type":"BusinessSegment","relation":"OFFERS","object":"Echo","object_type":"Offering"}
-{"subject":"North America","subject_type":"BusinessSegment","relation":"OFFERS","object":"Fire TV","object_type":"Offering"}
-{"subject":"North America","subject_type":"BusinessSegment","relation":"OFFERS","object":"Fire Tablet","object_type":"Offering"}
-{"subject":"North America","subject_type":"BusinessSegment","relation":"OFFERS","object":"Kindle","object_type":"Offering"}
-{"subject":"North America","subject_type":"BusinessSegment","relation":"OFFERS","object":"Ring","object_type":"Offering"}
 {"subject":"North America","subject_type":"BusinessSegment","relation":"OFFERS","object":"display advertising","object_type":"Offering"}
-{"subject":"North America","subject_type":"BusinessSegment","relation":"OFFERS","object":"eero","object_type":"Offering"}
 {"subject":"North America","subject_type":"BusinessSegment","relation":"OFFERS","object":"media content","object_type":"Offering"}
 {"subject":"North America","subject_type":"BusinessSegment","relation":"OFFERS","object":"programs","object_type":"Offering"}
 {"subject":"North America","subject_type":"BusinessSegment","relation":"OFFERS","object":"sponsored ads","object_type":"Offering"}

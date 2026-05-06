@@ -20,13 +20,6 @@
 {"subject":"Kindle","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"North America","subject_type":"BusinessSegment","relation":"OFFERS","object":"Advertising Services","object_type":"Offering"}
 {"subject":"North America","subject_type":"BusinessSegment","relation":"OFFERS","object":"Amazon Prime","object_type":"Offering"}
-{"subject":"North America","subject_type":"BusinessSegment","relation":"OFFERS","object":"Blink","object_type":"Offering"}
-{"subject":"North America","subject_type":"BusinessSegment","relation":"OFFERS","object":"Echo","object_type":"Offering"}
-{"subject":"North America","subject_type":"BusinessSegment","relation":"OFFERS","object":"Fire TV","object_type":"Offering"}
-{"subject":"North America","subject_type":"BusinessSegment","relation":"OFFERS","object":"Fire Tablet","object_type":"Offering"}
-{"subject":"North America","subject_type":"BusinessSegment","relation":"OFFERS","object":"Kindle","object_type":"Offering"}
-{"subject":"North America","subject_type":"BusinessSegment","relation":"OFFERS","object":"Ring","object_type":"Offering"}
-{"subject":"North America","subject_type":"BusinessSegment","relation":"OFFERS","object":"eero","object_type":"Offering"}
 {"subject":"North America","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"online","object_type":"Channel"}
 {"subject":"North America","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"retail","object_type":"Channel"}
 {"subject":"North America","subject_type":"BusinessSegment","relation":"SERVES","object":"consumers","object_type":"CustomerType"}

@@ -1,0 +1,168 @@
+# Evaluation
+
+This document explains how the extraction evaluation works and how to reproduce
+the reported experiment from checked-in reference outputs and the public
+benchmark mirror.
+
+## What Gets Evaluated
+
+The evaluator compares clean gold benchmark triples against generated pipeline
+outputs.
+
+Gold benchmarks live under:
+
+```text
+evaluation/benchmarks/dev/clean/
+evaluation/benchmarks/test/clean/
+```
+
+Each benchmark file is JSONL, with one file per company. The evaluator
+normalizes every row into a 3-field edge:
+
+```text
+subject, relation, object
+```
+
+Predictions live under:
+
+```text
+outputs/<company>/<pipeline>/latest/resolved_triples.json
+```
+
+The repository ships compact reference outputs in that layout, including the
+run metadata needed by evaluation and Neo4j loading.
+
+The three evaluated pipelines are:
+
+```text
+zero-shot
+memo_graph_only
+analyst
+```
+
+## Reported Metrics
+
+Extraction evaluation reports only these metrics:
+
+- precision
+- recall
+- F1
+- macro-F1
+- relaxed F1
+
+Exact metrics use normalized 3-field edge equality. Relaxed F1 uses the
+graph-aware relaxed matcher implemented in `evaluation/scripts/evaluate.py`.
+
+The relaxed matcher uses weighted partial credit to capture graph-near matches
+that are not exact string-identical triples:
+
+- exact typed-triple match: `1.00`
+- company alias or lexical normalization match: `0.90`
+- subject/object parent-child hierarchy relation: `0.75`
+- segment roll-up relation: `0.50`
+
+Those weights are part of the relaxed matcher. They are not additional reported
+metrics.
+
+Bootstrap confidence intervals are generated separately from the same benchmark
+and output files. Annotation reliability is also generated separately from the
+annotation inputs in:
+
+```text
+evaluation/benchmarks/annotation_reliability/
+```
+
+## Public Artifacts
+
+The public benchmark artifact is published at:
+
+```text
+https://huggingface.co/datasets/WindyITS/business-model-kg-benchmark-outputs
+```
+
+The Hugging Face dataset contains benchmark files:
+
+```text
+benchmarks/
+```
+
+The benchmark folder can be copied directly into the repo as
+`evaluation/benchmarks/`.
+
+Reference extraction outputs are shipped with this repository. The local
+evaluator expects predictions at:
+
+```text
+outputs/<company>/<pipeline>/latest/resolved_triples.json
+```
+
+Those checked-in `latest/` folders include the run metadata needed for both
+evaluation and Neo4j loading.
+
+## Reproduce From Hugging Face
+
+The canonical step-by-step reproduction recipe lives in
+[`reproducibility.md`](./reproducibility.md#island-2-reproduce-extraction-evaluation).
+Use that recipe for the exact download, copy, and evaluator commands.
+
+For evaluation-focused readers, the important contract is:
+
+- bootstrap the main environment before using `./venv/bin/...`
+- use benchmark files under `evaluation/benchmarks/`
+- use checked-in reference predictions under `outputs/<company>/<pipeline>/latest/`
+- run `evaluation.scripts.evaluate` for each pipeline and split
+
+Run bootstrap confidence intervals:
+
+```bash
+./venv/bin/python -m evaluation.scripts.evaluate \
+  --bootstrap \
+  --split test \
+  --yes
+```
+
+Run annotation reliability:
+
+```bash
+./venv/bin/python -m evaluation.scripts.evaluate \
+  --annotation-reliability \
+  --yes
+```
+
+## Generated Results
+
+Extraction results are written to:
+
+```text
+evaluation/results/<pipeline>/<split>/
+```
+
+Each company folder contains:
+
+```text
+metrics.json
+matched.jsonl
+false_positives.jsonl
+false_negatives.jsonl
+relaxed_matches.jsonl
+```
+
+Each split also writes:
+
+```text
+summary.json
+```
+
+Bootstrap results are written to:
+
+```text
+evaluation/results/bootstrap/
+```
+
+Annotation reliability results are written to:
+
+```text
+evaluation/results/annotation_reliability/
+```
+
+All generated result folders are overwritten only after the new run succeeds.

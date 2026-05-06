@@ -2,7 +2,6 @@
 {"subject":"Berkshire Hathaway Energy","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
 {"subject":"Brooks","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Burlington Northern Santa Fe","subject_type":"BusinessSegment","relation":"SERVES","object":"manufacturers","object_type":"CustomerType"}
-{"subject":"Fruit of the Loom","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Insurance","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"direct sales","object_type":"Channel"}
 {"subject":"Insurance","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"online","object_type":"Channel"}
 {"subject":"Insurance","subject_type":"BusinessSegment","relation":"SELLS_THROUGH","object":"resellers","object_type":"Channel"}
@@ -12,6 +11,8 @@
 {"subject":"Insurance","subject_type":"BusinessSegment","relation":"SERVES","object":"healthcare organizations","object_type":"CustomerType"}
 {"subject":"Insurance","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}
 {"subject":"Insurance","subject_type":"BusinessSegment","relation":"SERVES","object":"small businesses","object_type":"CustomerType"}
-{"subject":"Larson-Juhl","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Oriental Trading Company","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"Pampered Chef","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
+{"subject":"See's Candies","subject_type":"Offering","relation":"MONETIZES_VIA","object":"hardware sales","object_type":"RevenueModel"}
 {"subject":"Service and Retailing","subject_type":"BusinessSegment","relation":"SERVES","object":"consumers","object_type":"CustomerType"}
 {"subject":"Service and Retailing","subject_type":"BusinessSegment","relation":"SERVES","object":"large enterprises","object_type":"CustomerType"}

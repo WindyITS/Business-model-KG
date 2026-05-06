@@ -3,17 +3,43 @@ requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "business-model-kg-eval-handoff"
+name = "business-model-kg"
 version = "0.1.0"
-description = "Evaluation handoff for the Business Model KG project."
+description = "Local pipelines and runtime tooling for business-model knowledge graphs."
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = []
+authors = [
+    {name = "Giulio Sighieri"},
+    {name = "Luca Amigoni"},
+    {name = "Yucheng Zhong"},
+    {name = "Ion Babin"},
+    {name = "Giovanni Ciaramella"},
+]
+dependencies = [
+    "neo4j==6.1.0",
+    "openai==2.30.0",
+    "pydantic==2.12.5",
+]
 
 [project.optional-dependencies]
 dev = [
+    "numpy>=1.26,<3",
     "pytest>=8,<9",
 ]
+query-stack = [
+    "mlx-lm>=0.22,<1",
+    "torch>=2.6,<3",
+    "transformers>=4.51,<5",
+]
+
+[project.scripts]
+kg-pipeline = "runtime.main:main"
+kg-query = "runtime.query:main_query"
+kg-query-cypher = "runtime.query_cypher:main"
+kg-neo4j-unload = "runtime.neo4j_admin:main"
+kg-neo4j-load = "runtime.neo4j_load:main"
+kg-neo4j-status = "runtime.neo4j_status:main"
+kg-health-check = "runtime.health_check:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
@@ -21,10 +47,27 @@ package-dir = {"" = "src"}
 [tool.setuptools.packages.find]
 where = ["src"]
 include = [
+    "graph",
+    "graph.*",
+    "llm",
+    "llm.*",
+    "llm_extraction",
+    "llm_extraction.*",
+    "ontology",
+    "ontology.*",
     "runtime",
     "runtime.*",
+    "training",
+    "training.*",
 ]
 
-[tool.pytest.ini_options]
-testpaths = ["tests/test_evaluation"]
-pythonpath = [".", "src"]
+[tool.setuptools.package-data]
+ontology = ["ontology.json"]
+llm_extraction = [
+    "_bundled_prompts/README.md",
+    "_bundled_prompts/analyst/README.md",
+    "_bundled_prompts/analyst/*.txt",
+    "_bundled_prompts/memo_graph_only/README.md",
+    "_bundled_prompts/memo_graph_only/*.txt",
+    "_bundled_prompts/zero-shot/*.txt",
+]

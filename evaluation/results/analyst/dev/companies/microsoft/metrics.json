@@ -7,13 +7,11 @@
   "gold_path": "/Users/giuliosighieri/Desktop/kg-v0/evaluation/benchmarks/dev/clean/microsoft.jsonl",
   "prediction_path": "/Users/giuliosighieri/Desktop/kg-v0/outputs/microsoft/analyst/latest/resolved_triples.json",
   "gold_triples": 120,
-  "gold_unique_triples": 120,
   "predicted_triples": 116,
-  "predicted_unique_triples": 116,
-  "true_positives": 70,
-  "false_positives": 46,
-  "false_negatives": 50,
+  "gold_unique_edges": 120,
+  "predicted_unique_edges": 116,
   "precision": 0.603448275862069,
   "recall": 0.5833333333333334,
-  "f1": 0.5932203389830508
+  "f1": 0.5932203389830508,
+  "relaxed_f1": 0.6694915254237288
 }

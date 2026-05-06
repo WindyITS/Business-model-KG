@@ -11,7 +11,7 @@ from typing import Any
 
 
 COMPANY_SLUG_RE = re.compile(r"[^a-z0-9]+")
-PIPELINE_NAMES = ("analyst", "zero-shot")
+PIPELINE_NAMES = ("analyst", "memo_graph_only", "zero-shot")
 LEGACY_OUTPUT_DIR_RE = re.compile(
     rf"^(?P<source_stem>.+)_(?P<pipeline>{'|'.join(re.escape(name) for name in PIPELINE_NAMES)})_pipeline_(?P<run_token>\d{{8}}T\d{{6}}Z(?:_\d+)?)$"
 )

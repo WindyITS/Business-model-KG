@@ -7,13 +7,11 @@
   "gold_path": "/Users/giuliosighieri/Desktop/kg-v0/evaluation/benchmarks/dev/clean/palantir.jsonl",
   "prediction_path": "/Users/giuliosighieri/Desktop/kg-v0/outputs/palantir/memo_graph_only/latest/resolved_triples.json",
   "gold_triples": 36,
-  "gold_unique_triples": 36,
   "predicted_triples": 22,
-  "predicted_unique_triples": 22,
-  "true_positives": 12,
-  "false_positives": 10,
-  "false_negatives": 24,
+  "gold_unique_edges": 36,
+  "predicted_unique_edges": 22,
   "precision": 0.5454545454545454,
   "recall": 0.3333333333333333,
-  "f1": 0.41379310344827586
+  "f1": 0.41379310344827586,
+  "relaxed_f1": 0.41379310344827586
 }

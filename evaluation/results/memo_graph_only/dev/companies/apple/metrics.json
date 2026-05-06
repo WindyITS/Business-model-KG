@@ -7,13 +7,11 @@
   "gold_path": "/Users/giuliosighieri/Desktop/kg-v0/evaluation/benchmarks/dev/clean/apple.jsonl",
   "prediction_path": "/Users/giuliosighieri/Desktop/kg-v0/outputs/apple/memo_graph_only/latest/resolved_triples.json",
   "gold_triples": 86,
-  "gold_unique_triples": 86,
   "predicted_triples": 110,
-  "predicted_unique_triples": 110,
-  "true_positives": 12,
-  "false_positives": 98,
-  "false_negatives": 74,
+  "gold_unique_edges": 86,
+  "predicted_unique_edges": 110,
   "precision": 0.10909090909090909,
   "recall": 0.13953488372093023,
-  "f1": 0.12244897959183672
+  "f1": 0.12244897959183672,
+  "relaxed_f1": 0.24234693877551022
 }

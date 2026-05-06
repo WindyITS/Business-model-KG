@@ -9,16 +9,14 @@
       "status": "evaluated",
       "gold_path": "/Users/giuliosighieri/Desktop/kg-v0/evaluation/benchmarks/test/clean/adobe.jsonl",
       "prediction_path": "/Users/giuliosighieri/Desktop/kg-v0/outputs/adobe/memo_graph_only/latest/resolved_triples.json",
-      "gold_triples": 85,
-      "gold_unique_triples": 85,
+      "gold_triples": 108,
       "predicted_triples": 77,
-      "predicted_unique_triples": 77,
-      "true_positives": 31,
-      "false_positives": 46,
-      "false_negatives": 54,
-      "precision": 0.4025974025974026,
-      "recall": 0.36470588235294116,
-      "f1": 0.38271604938271603
+      "gold_unique_edges": 108,
+      "predicted_unique_edges": 77,
+      "precision": 0.5454545454545454,
+      "recall": 0.3888888888888889,
+      "f1": 0.454054054054054,
+      "relaxed_f1": 0.47027027027027024
     },
     {
       "company": "Amazon",
@@ -28,16 +26,14 @@
       "status": "evaluated",
       "gold_path": "/Users/giuliosighieri/Desktop/kg-v0/evaluation/benchmarks/test/clean/amazon.jsonl",
       "prediction_path": "/Users/giuliosighieri/Desktop/kg-v0/outputs/amazon/memo_graph_only/latest/resolved_triples.json",
-      "gold_triples": 80,
-      "gold_unique_triples": 80,
+      "gold_triples": 75,
       "predicted_triples": 48,
-      "predicted_unique_triples": 48,
-      "true_positives": 22,
-      "false_positives": 26,
-      "false_negatives": 58,
+      "gold_unique_edges": 75,
+      "predicted_unique_edges": 48,
       "precision": 0.4583333333333333,
-      "recall": 0.275,
-      "f1": 0.34374999999999994
+      "recall": 0.29333333333333333,
+      "f1": 0.35772357723577236,
+      "relaxed_f1": 0.38211382113821135
     },
     {
       "company": "Berkshire",
@@ -47,16 +43,14 @@
       "status": "evaluated",
       "gold_path": "/Users/giuliosighieri/Desktop/kg-v0/evaluation/benchmarks/test/clean/berkshire.jsonl",
       "prediction_path": "/Users/giuliosighieri/Desktop/kg-v0/outputs/berkshire/memo_graph_only/latest/resolved_triples.json",
-      "gold_triples": 327,
-      "gold_unique_triples": 327,
+      "gold_triples": 317,
       "predicted_triples": 121,
-      "predicted_unique_triples": 121,
-      "true_positives": 21,
-      "false_positives": 100,
-      "false_negatives": 306,
-      "precision": 0.17355371900826447,
-      "recall": 0.06422018348623854,
-      "f1": 0.09375000000000001
+      "gold_unique_edges": 317,
+      "predicted_unique_edges": 121,
+      "precision": 0.1652892561983471,
+      "recall": 0.06309148264984227,
+      "f1": 0.09132420091324202,
+      "relaxed_f1": 0.11529680365296804
     },
     {
       "company": "Walmart",
@@ -67,25 +61,22 @@
       "gold_path": "/Users/giuliosighieri/Desktop/kg-v0/evaluation/benchmarks/test/clean/walmart.jsonl",
       "prediction_path": "/Users/giuliosighieri/Desktop/kg-v0/outputs/walmart/memo_graph_only/latest/resolved_triples.json",
       "gold_triples": 41,
-      "gold_unique_triples": 41,
       "predicted_triples": 44,
-      "predicted_unique_triples": 44,
-      "true_positives": 18,
-      "false_positives": 26,
-      "false_negatives": 23,
+      "gold_unique_edges": 41,
+      "predicted_unique_edges": 44,
       "precision": 0.4090909090909091,
       "recall": 0.43902439024390244,
-      "f1": 0.42352941176470593
+      "f1": 0.42352941176470593,
+      "relaxed_f1": 0.4588235294117647
     }
   ],
   "aggregate": {
     "evaluated_company_count": 4,
     "missing_prediction_count": 0,
-    "true_positives": 92,
-    "false_positives": 198,
-    "false_negatives": 441,
-    "precision": 0.31724137931034485,
-    "recall": 0.1726078799249531,
-    "f1": 0.2235722964763062
+    "precision": 0.35172413793103446,
+    "recall": 0.18853974121996303,
+    "f1": 0.2454873646209386,
+    "macro_f1": 0.3316578109919436,
+    "relaxed_f1": 0.26895306859205775
   }
 }
